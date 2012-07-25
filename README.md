@@ -1,4 +1,4 @@
-imap
-====
+IMAP library
+============
 
-Receive and send e-mails over IMAP
+Receive and send e-mails over IMAP.
