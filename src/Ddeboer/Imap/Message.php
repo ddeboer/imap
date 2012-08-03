@@ -148,18 +148,32 @@ class Message extends Message\Part
         return $this->parts;
     }
 
+    /**
+     * Get body HTML
+     *
+     * @return string | null Null if message has no HTML message part
+     */
     public function getBodyHtml()
     {
         $parts = $this->getParts();
-
-        return $parts[1]->getContent();
+        if ($parts) {
+            return $parts[1]->getDecodedContent();
+        }
     }
 
+    /**
+     * Get body text
+     *
+     * @return string
+     */
     public function getBodyText()
     {
         $parts = $this->getParts();
+        if ($parts) {
+            return $parts[0]->getDecodedContent();
+        }
 
-        return $parts[0]->getContent();
+        return $this->getDecodedContent();
     }
 
     protected function loadStructure()
