@@ -20,6 +20,7 @@ class Part
     const ENCODING_BINARY = 'binary';
     const ENCODING_BASE64 = 'base64';
     const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
+    const ENCODING_UNKNOWN = 'unknown';
 
     const SUBTYPE_TEXT = 'TEXT';
     const SUBTYPE_HTML = 'HTML';
@@ -40,7 +41,8 @@ class Part
         1 => self::ENCODING_8BIT,
         2 => self::ENCODING_BINARY,
         3 => self::ENCODING_BASE64,
-        4 => self::ENCODING_QUOTED_PRINTABLE
+        4 => self::ENCODING_QUOTED_PRINTABLE,
+        5 => self::ENCODING_UNKNOWN
     );
 
     protected $type;
