@@ -62,7 +62,7 @@ class Part
 
     protected $messageNumber;
 
-    protected $partNumber;
+    protected $partNumber = 1;
 
     protected $structure;
 
@@ -138,7 +138,7 @@ class Part
     }
 
     /**
-     * Get decoded part content 
+     * Get decoded part content
      *
      * @return string
      */
@@ -154,8 +154,13 @@ class Part
                     $this->decodedContent = \quoted_printable_decode($this->getContent());
                     break;
 
+                case self::ENCODING_7BIT:
+                case self::ENCODING_8BIT:
+                    // No decoding required
+                    break;
+
                 default:
-                    throw new \UnexpectedValueException('Cannot decode ' . $encoding);
+                    throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
             }
         }
 
