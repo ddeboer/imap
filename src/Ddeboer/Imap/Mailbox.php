@@ -48,6 +48,16 @@ class Mailbox implements \IteratorAggregate
     }
 
     /**
+     * Get a message by message number
+     *
+     * @param int $number Message number
+     */
+    public function getMessage($number)
+    {
+        return new Message($this->stream, $number);
+    }
+
+    /**
      * Get messages in this mailbox
      *
      * @return MessageIterator
