@@ -41,7 +41,7 @@ class Connection
     public function getMailbox($name)
     {
         foreach ($this->getMailboxes() as $mailbox) {
-            if ($name === $mailbox) {
+            if (strcasecmp($name, $mailbox) === 0) {
                 if (false === \imap_reopen($this->resource, $this->server . $mailbox)) {
                     throw new \Exception('Could not open mailbox ' . $mailbox);
                 }
