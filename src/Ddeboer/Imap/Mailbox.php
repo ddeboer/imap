@@ -51,6 +51,8 @@ class Mailbox implements \IteratorAggregate
      * Get a message by message number
      *
      * @param int $number Message number
+     *
+     * @return Message
      */
     public function getMessage($number)
     {
