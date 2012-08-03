@@ -4,6 +4,9 @@ namespace Ddeboer\Imap\Message;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * A message part
+ */
 class Part
 {
     const TYPE_TEXT = 'text';
@@ -65,6 +68,8 @@ class Part
 
     protected $content;
 
+    protected $decodedContent;
+
     /**
      * Constructor
      *
@@ -114,6 +119,11 @@ class Part
         return $this->parameters;
     }
 
+    /**
+     * Get raw part content
+     *
+     * @return string
+     */
     public function getContent()
     {
         if (null === $this->content) {
@@ -125,6 +135,36 @@ class Part
         }
 
         return $this->content;
+    }
+
+    /**
+     * Get decoded part content 
+     *
+     * @return string
+     */
+    public function getDecodedContent()
+    {
+        if (null === $this->decodedContent) {
+            switch ($this->getEncoding()) {
+                case self::ENCODING_BASE64:
+                   $this->decodedContent = \base64_decode($this->getContent());
+                    break;
+
+                case self::ENCODING_QUOTED_PRINTABLE:
+                    $this->decodedContent = \quoted_printable_decode($this->getContent());
+                    break;
+
+                default:
+                    throw new \UnexpectedValueException('Cannot decode ' . $encoding);
+            }
+        }
+
+        // Convert to UTF-8 if text is not already UTF-8
+        if (strtolower($this->getCharset()) != 'utf-8') {
+            $this->decodedContent = \mb_convert_encoding($this->decodedContent, 'UTF-8');
+        }
+
+        return $this->decodedContent;
     }
 
     public function getStructure()
