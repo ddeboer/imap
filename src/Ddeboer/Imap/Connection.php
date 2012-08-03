@@ -14,7 +14,7 @@ class Connection
     public function __construct($resource, $server)
     {
         if (!is_resource($resource)) {
-            throw new \InvalidArgumentException('$stream must be a resource');
+            throw new \InvalidArgumentException('$resource must be a resource');
         }
 
         $this->resource = $resource;
