@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * A message part
  */
-class Part
+class Part implements \RecursiveIterator
 {
     const TYPE_TEXT = 'text';
     const TYPE_MULTIPART = 'multipart';
@@ -62,7 +62,7 @@ class Part
 
     protected $messageNumber;
 
-    protected $partNumber = 1;
+    protected $partNumber;
 
     protected $structure;
 
@@ -70,11 +70,17 @@ class Part
 
     protected $decodedContent;
 
+    protected $parts = array();
+
+    protected $key = 0;
+
+    protected $disposition;
+
     /**
      * Constructor
      *
      * @param \stdClass $part   The part
-     * @param int       $number The part number
+     * @param string $number The part number
      */
     public function __construct($stream, $messageNumber, $partNumber = null, $structure = null)
     {
@@ -164,8 +170,10 @@ class Part
             }
         }
 
-        // Convert to UTF-8 if text is not already UTF-8
-        if (strtolower($this->getCharset()) != 'utf-8') {
+        // If this part is a text part, try to convert its encoding to UTF-8.
+        // We don't want to convert an attachment's encoding.
+        if ($this->getType() === self::TYPE_TEXT
+            && strtolower($this->getCharset()) != 'utf-8') {
             $this->decodedContent = \mb_convert_encoding($this->decodedContent, 'UTF-8');
         }
 
@@ -194,9 +202,16 @@ class Part
     {
         $this->type = $this->typesMap[$structure->type];
         $this->encoding = $this->encodingsMap[$structure->encoding];
+        $this->subtype = $structure->subtype;
 
         if (isset($structure->bytes)) {
             $this->bytes = $structure->bytes;
+        }
+
+        foreach (array('disposition', 'bytes', 'description') as $optional) {
+            if (isset($structure->$optional)) {
+                $this->$optional = $structure->$optional;
+            }
         }
 
         $this->parameters = new ArrayCollection();
@@ -204,10 +219,78 @@ class Part
             $this->parameters->set($parameter->attribute, $parameter->value);
         }
 
-        if (isset($structure->parts)) {
-            foreach ($structure->parts as $key => $partStructure) {
-                $this->parts[] = new Part($this->stream, $this->messageNumber, ($key+1), $partStructure);
+        if (isset($structure->dparameters)) {
+            foreach ($structure->dparameters as $parameter) {
+                $this->parameters->set($parameter->attribute, $parameter->value);
             }
         }
+
+        if (isset($structure->parts)) {
+            foreach ($structure->parts as $key => $partStructure) {
+                if (null === $this->partNumber) {
+                    $partNumber = ($key+1);
+                } else {
+                    $partNumber = (string) ($this->partNumber . '.' . ($key+1));
+                }
+
+                if (isset($partStructure->disposition)
+                    && $partStructure->disposition == 'attachment') {
+                    $attachment = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
+                    $this->parts[] = $attachment;
+                } else {
+                    $this->parts[] = new Part($this->stream, $this->messageNumber, $partNumber, $partStructure);
+                }
+            }
+        }
+    }
+
+    /**
+     * Get an array of all parts for this message
+     *
+     * @return Message\Part[]
+     */
+    public function getParts()
+    {
+        return $this->parts;
+    }
+
+    public function current()
+    {
+        return $this->parts[$this->key];
+    }
+
+    public function getChildren()
+    {
+        return $this->current();
+    }
+
+    public function hasChildren()
+    {
+        return count($this->parts) > 0;
+    }
+
+    public function key()
+    {
+        return $this->key;
+    }
+
+    public function next()
+    {
+        ++$this->key;
+    }
+
+    public function rewind()
+    {
+        $this->key = 0;
+    }
+
+    public function valid()
+    {
+        return isset($this->parts[$this->key]);
+    }
+
+    public function getDisposition()
+    {
+        return $this->disposition;
     }
 }
