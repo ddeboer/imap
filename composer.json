@@ -1,5 +1,7 @@
 {
     "name": "ddeboer/imap",
+    "description": "Receive and send e-mails over IMAP",
+    "tags": [ "email", "mail", "imap" ],
     "authors": [
         {
             "name": "David de Boer",
