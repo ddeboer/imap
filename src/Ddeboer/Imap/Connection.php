@@ -10,6 +10,7 @@ class Connection
     protected $server;
     protected $resource;
     protected $mailboxes;
+    protected $mailboxNames;
 
     public function __construct($resource, $server)
     {
@@ -22,16 +23,15 @@ class Connection
     }
 
     /**
-     * Get a list of mailboxes
+     * Get a list of mailboxes (also known as folders)
      *
      * @return array
      */
     public function getMailboxes()
     {
         if (null === $this->mailboxes) {
-            $mailboxes = \imap_getmailboxes($this->resource, $this->server, '*');
-            foreach ($mailboxes as $mailbox) {
-                $this->mailboxes[] = str_replace($this->server, '', $mailbox->name);
+            foreach ($this->getMailboxNames() as $mailboxName) {
+                $this->mailboxes[] = $this->getMailbox($mailboxName);
             }
         }
 
@@ -40,21 +40,28 @@ class Connection
 
     public function getMailbox($name)
     {
-        foreach ($this->getMailboxes() as $mailbox) {
-            if (strcasecmp($name, $mailbox) === 0) {
-                if (false === \imap_reopen($this->resource, $this->server . $mailbox)) {
-                    throw new \Exception('Could not open mailbox ' . $mailbox);
-                }
-
-                return new Mailbox($mailbox, $this->resource);
-            }
-        }
-
-        throw new \InvalidArgumentException('Mailbox ' . $name . ' not found');
+        return new Mailbox($this->server . $name, $this->resource);
     }
 
+    /**
+     * Count number of messages not in any mailbox
+     *
+     * @return int
+     */
     public function count()
     {
         return \imap_num_msg($this->resource);
+    }
+
+    protected function getMailboxNames()
+    {
+        if (null === $this->mailboxNames) {
+            $mailboxes = \imap_getmailboxes($this->resource, $this->server, '*');
+            foreach ($mailboxes as $mailbox) {
+                $this->mailboxNames[] = str_replace($this->server, '', $mailbox->name);
+            }
+        }
+
+        return $this->mailboxNames;
     }
 }
