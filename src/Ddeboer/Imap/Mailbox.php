@@ -3,7 +3,8 @@
 namespace Ddeboer\Imap;
 
 /**
- * An IMAP mailbox
+ * An IMAP mailbox (commonly referred to as a ‘folder’)
+ *
  */
 class Mailbox implements \IteratorAggregate
 {
@@ -17,10 +18,21 @@ class Mailbox implements \IteratorAggregate
      * @param string   $name   Mailbox name
      * @param resource $stream PHP IMAP resource
      */
-    public function __construct($name, $stream)
+    public function __construct($mailbox, $stream)
     {
-        $this->name = $name;
+        $this->mailbox = $mailbox;
         $this->stream = $stream;
+        $this->name = substr($mailbox, strpos($mailbox, '}')+1);
+    }
+
+    /**
+     * Get mailbox name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -30,6 +42,7 @@ class Mailbox implements \IteratorAggregate
      */
     public function count()
     {
+        $this->init();
         return \imap_num_msg($this->stream);
     }
 
@@ -41,6 +54,7 @@ class Mailbox implements \IteratorAggregate
     public function getMessages()
     {
         if (null === $this->messageIds) {
+            $this->init();
             $this->messageIds = \imap_search($this->stream, 'ALL');
         }
 
@@ -56,6 +70,8 @@ class Mailbox implements \IteratorAggregate
      */
     public function getMessage($number)
     {
+        $this->init();
+
         return new Message($this->stream, $number);
     }
 
@@ -66,6 +82,16 @@ class Mailbox implements \IteratorAggregate
      */
     public function getIterator()
     {
+        $this->init();
+
         return new MessageIterator($this->stream);
+    }
+
+    protected function init()
+    {
+        $check = \imap_check($this->stream);
+        if ($check->Mailbox != $this->mailbox) {
+            \imap_reopen($this->stream, $this->mailbox);
+        }
     }
 }
