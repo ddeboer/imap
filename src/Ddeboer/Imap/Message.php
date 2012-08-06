@@ -7,8 +7,8 @@ class Message extends Message\Part
     protected $stream;
     protected $id;
     protected $headers;
-    protected $parts;
     protected $body;
+    protected $attachments;
 
     public function __construct($stream, $messageNumber)
     {
@@ -139,25 +139,17 @@ class Message extends Message\Part
     }
 
     /**
-     * Get an array of all parts for this message
-     *
-     * @return Message\Part[]
-     */
-    public function getParts()
-    {
-        return $this->parts;
-    }
-
-    /**
      * Get body HTML
      *
      * @return string | null Null if message has no HTML message part
      */
     public function getBodyHtml()
     {
-        $parts = $this->getParts();
-        if ($parts) {
-            return $parts[1]->getDecodedContent();
+        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $part) {
+            if ($part->getSubtype() == 'HTML') {
+                return $part->getDecodedContent();
+            }
         }
     }
 
@@ -168,12 +160,38 @@ class Message extends Message\Part
      */
     public function getBodyText()
     {
-        $parts = $this->getParts();
-        if ($parts) {
-            return $parts[0]->getDecodedContent();
+        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $part) {
+            if ($part->getSubtype() == 'PLAIN') {
+                return $part->getDecodedContent();
+            }
         }
 
+        // If message has no parts, return content of message itself.
         return $this->getDecodedContent();
+    }
+
+    /**
+     * Get attachments (if any) linked to this e-mail
+     *
+     * @return Message\Attachment[]
+     */
+    public function getAttachments()
+    {
+        if (null === $this->attachments) {
+            foreach ($this->getParts() as $part) {
+                if ($part instanceof Message\Attachment) {
+                    $this->attachments[] = $part;
+                }
+            }
+        }
+
+        return $this->attachments;
+    }
+
+    public function hasAttachments()
+    {
+        return count($this->getAttachments()) > 0;
     }
 
     protected function loadStructure()
