@@ -2,6 +2,9 @@
 
 namespace Ddeboer\Imap;
 
+/**
+ * An IMAP message (e-mail)
+ */
 class Message extends Message\Part
 {
     protected $stream;
@@ -10,6 +13,12 @@ class Message extends Message\Part
     protected $body;
     protected $attachments;
 
+    /**
+     * Constructor
+     *
+     * @param \resource $stream        IMAP stream
+     * @param int       $messageNumber Message number
+     */
     public function __construct($stream, $messageNumber)
     {
         $this->stream = $stream;
@@ -189,11 +198,19 @@ class Message extends Message\Part
         return $this->attachments;
     }
 
+    /**
+     * Does this message have attachments?
+     *
+     * @return int
+     */
     public function hasAttachments()
     {
         return count($this->getAttachments()) > 0;
     }
 
+    /**
+     * Load message structure
+     */
     protected function loadStructure()
     {
         $structure = \imap_fetchstructure($this->stream, $this->messageNumber);
