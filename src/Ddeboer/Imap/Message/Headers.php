@@ -43,6 +43,8 @@ class Headers
                 $recipients[] = new EmailAddress($to->mailbox, $to->host, $to->personal);
             }
             $this->array['to'] = $recipients;
+        } else {
+            $this->array['to'] = array();
         }
     }
 
