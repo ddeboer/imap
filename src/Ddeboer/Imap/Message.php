@@ -52,7 +52,7 @@ class Message extends Message\Part
     /**
      * Get message recipients (from headers)
      *
-     * @return EmailAddress[] | null Null if message has no To recipients
+     * @return EmailAddress[] Empty array in case message has no To: recipients
      */
     public function getTo()
     {
