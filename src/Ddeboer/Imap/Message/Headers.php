@@ -15,10 +15,11 @@ class Headers
 
         // Decode subject, as it may be UTF-8 encoded
         if (isset($headers->subject)) {
-            $this->array['subject'] = '';
+            $subject = '';
             foreach (\imap_mime_header_decode($headers->subject) as $part) {
-                $this->array['subject'] .= $part->text;
+                $subject .= $part->text;
             }
+            $this->array['subject'] = mb_convert_encoding($subject, 'UTF-8');
         }
 
         $this->array['msgno'] = (int) $this->array['msgno'];
