@@ -62,7 +62,7 @@ class Part implements \RecursiveIterator
 
     protected $messageNumber;
 
-    protected $partNumber;
+    protected $partNumber = 1;
 
     protected $structure;
 
