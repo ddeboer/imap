@@ -62,7 +62,7 @@ class Part implements \RecursiveIterator
 
     protected $messageNumber;
 
-    protected $partNumber = 1;
+    protected $partNumber;
 
     protected $structure;
 
@@ -228,7 +228,7 @@ class Part implements \RecursiveIterator
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
                 if (null === $this->partNumber) {
-                    $partNumber = ($key+1);
+                    $partNumber = 1;
                 } else {
                     $partNumber = (string) ($this->partNumber . '.' . ($key+1));
                 }
