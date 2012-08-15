@@ -40,7 +40,11 @@ class Headers
         if (isset($this->array['to'])) {
             $recipients = array();
             foreach ($this->array['to'] as $to) {
-                $recipients[] = new EmailAddress($to->mailbox, $to->host, $to->personal);
+                $recipients[] = new EmailAddress(
+                    str_replace('\'', '', $to->mailbox),
+                    str_replace('\'', '', $to->host),
+                    $to->personal
+                );
             }
             $this->array['to'] = $recipients;
         } else {
