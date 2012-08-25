@@ -168,13 +168,17 @@ class Part implements \RecursiveIterator
                 default:
                     throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
             }
-        }
 
-        // If this part is a text part, try to convert its encoding to UTF-8.
-        // We don't want to convert an attachment's encoding.
-        if ($this->getType() === self::TYPE_TEXT
-            && strtolower($this->getCharset()) != 'utf-8') {
-            $this->decodedContent = \mb_convert_encoding($this->decodedContent, 'UTF-8');
+            // If this part is a text part, try to convert its encoding to UTF-8.
+            // We don't want to convert an attachment's encoding.
+            if ($this->getType() === self::TYPE_TEXT
+                && strtolower($this->getCharset()) != 'utf-8') {
+                $this->decodedContent = \mb_convert_encoding(
+                    $this->decodedContent,
+                    'UTF-8',
+                    $this->getCharset()
+                );
+            }
         }
 
         return $this->decodedContent;
@@ -228,7 +232,7 @@ class Part implements \RecursiveIterator
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
                 if (null === $this->partNumber) {
-                    $partNumber = 1;
+                    $partNumber = ($key + 1);
                 } else {
                     $partNumber = (string) ($this->partNumber . '.' . ($key+1));
                 }
