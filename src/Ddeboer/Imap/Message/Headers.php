@@ -2,8 +2,6 @@
 
 namespace Ddeboer\Imap\Message;
 
-use Ddeboer\Headers\Mail\MailHeaders;
-
 class Headers
 {
     protected $array = array();
