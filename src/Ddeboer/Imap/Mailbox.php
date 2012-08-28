@@ -75,6 +75,10 @@ class Mailbox implements \IteratorAggregate
 
         $queryString = implode(' ', $query);
         $messageNumbers = \imap_search($this->stream, $queryString);
+        if (false == $messageNumbers) {
+            // \imap_search can also return false
+            $messageNumbers = array();
+        }
 
         return new MessageIterator($this->stream, $messageNumbers);
     }
