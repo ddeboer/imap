@@ -2,6 +2,8 @@
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Search\DateRange;
+
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
  *
@@ -50,16 +52,31 @@ class Mailbox implements \IteratorAggregate
     /**
      * Get message ids
      *
-     * @return array
+     * @return MessageIterator
      */
-    public function getMessages()
+    public function getMessages(DateRange $dateRange = null)
     {
-        if (null === $this->messageIds) {
-            $this->init();
-            $this->messageIds = \imap_search($this->stream, 'ALL');
+        $this->init();
+
+        $query = array();
+        if ($dateRange) {
+            if ($dateRange->getFrom()) {
+                $query[] = 'SINCE ' . $dateRange->getFrom()->format('Y-m-d');
+            }
+
+            if ($dateRange->getUntil()) {
+                $query[] = 'BEFORE ' . $dateRange->getUntil()->format('Y-m-d');
+            }
         }
 
-        return $this->messageIds;
+        if (count($query) === 0) {
+            $query[] = 'ALL';
+        }
+
+        $queryString = implode(' ', $query);
+        $messageNumbers = \imap_search($this->stream, $queryString);
+
+        return new MessageIterator($this->stream, $messageNumbers);
     }
 
     /**
@@ -85,7 +102,7 @@ class Mailbox implements \IteratorAggregate
     {
         $this->init();
 
-        return new MessageIterator($this->stream);
+        return $this->getMessages();
     }
 
     /**
@@ -99,3 +116,4 @@ class Mailbox implements \IteratorAggregate
         }
     }
 }
+
