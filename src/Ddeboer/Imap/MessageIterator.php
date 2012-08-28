@@ -2,44 +2,31 @@
 
 namespace Ddeboer\Imap;
 
-class MessageIterator implements \Iterator
+class MessageIterator extends \ArrayIterator
 {
-    protected $key;
     protected $stream;
 
-    public function __construct($stream)
+    /**
+     * Constructor
+     *
+     * @param \resource $stream         IMAP stream
+     * @param array     $messageNumbers Array of message numbers
+     */
+    public function __construct($stream, array $messageNumbers)
     {
         $this->stream = $stream;
-        $this->count = \imap_num_msg($stream);
+        
+        parent::__construct($messageNumbers);
     }
 
     /**
-     * Get message
-     * 
+     * Get current message
+     *
      * @return Message
      */
     public function current()
     {
-        return new Message($this->stream, $this->key);
-    }
-
-    public function key()
-    {
-        return $this->key;
-    }
-
-    public function next()
-    {
-        $this->key++;
-    }
-
-    public function rewind()
-    {
-        $this->key = 1;
-    }
-
-    public function valid()
-    {
-        return $this->key <= $this->count;
+        return new Message($this->stream, parent::current());
     }
 }
+
