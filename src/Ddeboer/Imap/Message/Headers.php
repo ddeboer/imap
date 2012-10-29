@@ -32,7 +32,11 @@ class Headers
 
         if (isset($this->array['from'])) {
             $from = current($this->array['from']);
-            $this->array['from'] = new EmailAddress($from->mailbox, $from->host, \imap_utf8($from->personal));
+            $this->array['from'] = new EmailAddress(
+                $from->mailbox,
+                $from->host,
+                isset($from->personal) ? \imap_utf8($from->personal) : null
+            );
         }
 
         if (isset($this->array['to'])) {
@@ -41,7 +45,7 @@ class Headers
                 $recipients[] = new EmailAddress(
                     str_replace('\'', '', $to->mailbox),
                     str_replace('\'', '', $to->host),
-                    \imap_utf8($to->personal)
+                    isset($from->personal) ? \imap_utf8($from->personal) : null
                 );
             }
             $this->array['to'] = $recipients;
