@@ -45,7 +45,7 @@ class Headers
                 $recipients[] = new EmailAddress(
                     str_replace('\'', '', $to->mailbox),
                     str_replace('\'', '', $to->host),
-                    isset($from->personal) ? \imap_utf8($from->personal) : null
+                    isset($to->personal) ? \imap_utf8($to->personal) : null
                 );
             }
             $this->array['to'] = $recipients;
