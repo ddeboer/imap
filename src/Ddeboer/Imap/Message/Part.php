@@ -219,12 +219,12 @@ class Part implements \RecursiveIterator
 
         $this->parameters = new ArrayCollection();
         foreach ($structure->parameters as $parameter) {
-            $this->parameters->set($parameter->attribute, $parameter->value);
+            $this->parameters->set(strtolower($parameter->attribute), $parameter->value);
         }
 
         if (isset($structure->dparameters)) {
             foreach ($structure->dparameters as $parameter) {
-                $this->parameters->set($parameter->attribute, $parameter->value);
+                $this->parameters->set(strtolower($parameter->attribute), $parameter->value);
             }
         }
 
@@ -237,7 +237,7 @@ class Part implements \RecursiveIterator
                 }
 
                 if (isset($partStructure->disposition)
-                    && $partStructure->disposition == 'attachment') {
+                    && strtolower($partStructure->disposition) == 'attachment') {
                     $attachment = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
                     $this->parts[] = $attachment;
                 } else {
