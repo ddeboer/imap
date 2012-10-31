@@ -9,7 +9,6 @@ use Ddeboer\Imap\Message\EmailAddress;
  */
 class Message extends Message\Part
 {
-    protected $stream;
     protected $id;
     protected $headers;
     protected $body;
