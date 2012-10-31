@@ -185,11 +185,12 @@ class Message extends Message\Part
     /**
      * Get attachments (if any) linked to this e-mail
      *
-     * @return Message\Attachment[]
+     * @return array Instances of Ddeboer\Imap\Message\Attachment
      */
     public function getAttachments()
     {
         if (null === $this->attachments) {
+            $this->attachments = array();
             foreach ($this->getParts() as $part) {
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;
