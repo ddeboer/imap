@@ -11,6 +11,9 @@ class Attachment extends Part
 
     protected $data;
 
+    /**
+     * @var string MIME type of an attachment
+     */
     protected $contentType;
 
     protected $size;
@@ -38,5 +41,30 @@ class Attachment extends Part
     public function getSize()
     {
         return $this->parameters->get('size');
+    }
+
+    /**
+     * Returns content type of an attachment
+     *
+     * @return string
+     */
+    public function getContentType()
+    {
+        if ($this->contentType !== null) {
+            return $this->contentType;
+        }
+
+        $this->contentType = $this->type;
+
+        if ($this->subtype) {
+            if ($this->contentType) {
+                $this->contentType .= '/';
+            }
+            $this->contentType .= $this->subtype;
+        }
+
+        $this->contentType = strtolower($this->contentType);
+
+        return $this->contentType;
     }
 }
