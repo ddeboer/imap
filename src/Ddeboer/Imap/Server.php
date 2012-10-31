@@ -13,7 +13,12 @@ class Server
 
     public function __construct($hostname, $port = '993')
     {
-        $this->server = '{' . $hostname . ':' . $port . '/imap}';
+        if ($port == 993) {
+            $cert = 'ssl';
+        } else {
+            $cert = 'novalidate-cert';
+        }
+        $this->server = '{' . $hostname . ':' . $port . '/imap/' . $cert . '}';
     }
 
     /**
@@ -27,7 +32,7 @@ class Server
      */
     public function authenticate($username, $password)
     {
-        $resource = @\imap_open($this->server, $username, $password, null, 1, array('DISABLE_AUTHENTICATOR' => 'GSSAPI'));
+        $resource = @\imap_open($this->server, $username, $password, null, 1);
 
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
