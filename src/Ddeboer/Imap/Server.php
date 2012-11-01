@@ -11,14 +11,16 @@ class Server
     protected $connection;
     protected $mailboxes;
 
-    public function __construct($hostname, $port = '993')
+    /**
+     * Constructor
+     *
+     * @param string $hostname
+     * @param int    $port
+     * @param string $flags
+     */
+    public function __construct($hostname, $port = 993, $flags = '/imap/ssl/validate-cert')
     {
-        if ($port == 993) {
-            $cert = 'ssl';
-        } else {
-            $cert = 'novalidate-cert';
-        }
-        $this->server = '{' . $hostname . ':' . $port . '/imap/' . $cert . '}';
+        $this->server = "{{$hostname}:{$port}{$flags}}";
     }
 
     /**
