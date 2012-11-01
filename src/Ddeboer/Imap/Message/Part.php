@@ -244,8 +244,10 @@ class Part implements \RecursiveIterator
                     $this->parts[] = new Part($this->stream, $this->messageNumber, $partNumber, $partStructure);
                 }
             }
-        } elseif ($this->partNumber != 1) {
-            $this->parts[] = new Part($this->stream, $this->messageNumber, 1, $structure);
+        } elseif ($this->partNumber === null) {
+            $part = clone $this;
+            $part->partNumber = 1;
+            $this->parts[] = $part;
         }
     }
 
