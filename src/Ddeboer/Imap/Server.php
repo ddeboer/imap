@@ -6,21 +6,45 @@ use Ddeboer\Imap\Exception\AuthenticationFailedException;
 
 class Server
 {
+    /**
+     * @var string Internet domain name or bracketed IP address of server
+     */
     protected $hostname;
+
+    /**
+     * @var int TCP port number
+     */
     protected $port;
+
+    /**
+     * @var string Optional flags
+     */
+    protected $flags;
+
     protected $connection;
-    protected $mailboxes;
 
     /**
      * Constructor
      *
-     * @param string $hostname
-     * @param int    $port
-     * @param string $flags
+     * @param string $hostname Internet domain name or bracketed IP address of server
+     * @param int    $port     TCP port number
+     * @param string $flags    Optional flags
      */
     public function __construct($hostname, $port = 993, $flags = '/imap/ssl/validate-cert')
     {
-        $this->server = "{{$hostname}:{$port}{$flags}}";
+        $this->hostname = $hostname;
+        $this->port = $port;
+        $this->flags = $flags;
+    }
+
+    /**
+     * Glues hostname, port and flags and returns result
+     *
+     * @return string
+     */
+    protected function getServerString()
+    {
+        return "{{$this->hostname}:{$this->port}{$this->flags}}";
     }
 
     /**
@@ -34,7 +58,7 @@ class Server
      */
     public function authenticate($username, $password)
     {
-        $resource = @\imap_open($this->server, $username, $password, null, 1);
+        $resource = @\imap_open($this->getServerString(), $username, $password, null, 1);
 
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
