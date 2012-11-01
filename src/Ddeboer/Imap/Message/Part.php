@@ -244,13 +244,15 @@ class Part implements \RecursiveIterator
                     $this->parts[] = new Part($this->stream, $this->messageNumber, $partNumber, $partStructure);
                 }
             }
+        } elseif ($this->partNumber != 1) {
+            $this->parts[] = new Part($this->stream, $this->messageNumber, 1, $structure);
         }
     }
 
     /**
      * Get an array of all parts for this message
      *
-     * @return Message\Part[]
+     * @return array Instances of Message\Part
      */
     public function getParts()
     {
