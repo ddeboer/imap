@@ -9,7 +9,6 @@ use Ddeboer\Imap\Message\EmailAddress;
  */
 class Message extends Message\Part
 {
-    protected $stream;
     protected $id;
     protected $headers;
     protected $body;
@@ -190,6 +189,7 @@ class Message extends Message\Part
     public function getAttachments()
     {
         if (null === $this->attachments) {
+            $this->attachments = array();
             foreach ($this->getParts() as $part) {
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;

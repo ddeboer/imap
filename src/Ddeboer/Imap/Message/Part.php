@@ -48,6 +48,8 @@ class Part implements \RecursiveIterator
         5 => self::ENCODING_UNKNOWN
     );
 
+    protected $stream;
+
     protected $type;
 
     protected $subtype;
