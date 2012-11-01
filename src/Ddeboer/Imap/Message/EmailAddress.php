@@ -22,6 +22,22 @@ class EmailAddress
         return $this->address;
     }
 
+    /**
+     * Returns address with person name
+     *
+     * @return string
+     */
+    public function getFullAddress()
+    {
+        if ($this->name) {
+            $address = sprintf("%s <%s@%s>", $this->name, $this->mailbox, $this->hostname);
+        } else {
+            $address = sprintf("%s@%s",$this->mailbox, $this->hostname);
+        }
+
+        return $address;
+    }
+
     public function getMailbox()
     {
         return $this->mailbox;
