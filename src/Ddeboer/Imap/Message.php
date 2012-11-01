@@ -184,7 +184,7 @@ class Message extends Message\Part
     /**
      * Get attachments (if any) linked to this e-mail
      *
-     * @return array Instances of Ddeboer\Imap\Message\Attachment
+     * @return Message\Attachment[]
      */
     public function getAttachments()
     {
