@@ -13,11 +13,27 @@ class Headers
 
         // Decode subject, as it may be UTF-8 encoded
         if (isset($headers->subject)) {
+            $charset = 'default';
             $subject = '';
             foreach (\imap_mime_header_decode($headers->subject) as $part) {
                 $subject .= $part->text;
+                
+                if ('default' === $charset) {
+                    if ('default' !== $part->charset) {
+                        $charset = $part->charset;
+                    }
+                } else {
+                    if ($charset !== $part->charset) {
+                        throw new \Exception('this subject contains 2+ different charsets!');
+                    }
+                }
             }
-            $this->array['subject'] = mb_convert_encoding($subject, 'UTF-8');
+            
+            if ('default' !== $charset) {
+                $this->array['subject'] = \iconv($charset, 'UTF-8//IGNORE', $subject);
+            } else {
+                $this->array['subject'] = $subject;
+            }
         }
 
         $this->array['msgno'] = (int) $this->array['msgno'];

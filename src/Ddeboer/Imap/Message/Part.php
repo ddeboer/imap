@@ -173,9 +173,10 @@ class Part implements \RecursiveIterator
             // We don't want to convert an attachment's encoding.
             if ($this->getType() === self::TYPE_TEXT
                 && strtolower($this->getCharset()) != 'utf-8') {
-                $this->decodedContent = \mb_convert_encoding(
-                    $this->decodedContent,
-                    'UTF-8'
+                $this->decodedContent = \iconv(
+                    $this->getCharset(),
+                    'UTF-8//IGNORE',
+                    $this->decodedContent
                 );
             }
         }
