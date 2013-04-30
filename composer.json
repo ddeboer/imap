@@ -2,6 +2,7 @@
     "name": "ddeboer/imap",
     "description": "Receive and send e-mails over IMAP",
     "tags": [ "email", "mail", "imap" ],
+    "license": "MIT",
     "authors": [
         {
             "name": "David de Boer",
