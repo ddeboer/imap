@@ -54,27 +54,12 @@ class Mailbox implements \IteratorAggregate
      *
      * @return MessageIterator
      */
-    public function getMessages(DateRange $dateRange = null)
+    public function getMessages(SearchExpression $search = null)
     {
         $this->init();
+        $query = ($search ? (string) $search : 'ALL');
 
-        $query = array();
-        if ($dateRange) {
-            if ($dateRange->getFrom()) {
-                $query[] = 'SINCE ' . $dateRange->getFrom()->format('Y-m-d');
-            }
-
-            if ($dateRange->getUntil()) {
-                $query[] = 'BEFORE ' . $dateRange->getUntil()->format('Y-m-d');
-            }
-        }
-
-        if (count($query) === 0) {
-            $query[] = 'ALL';
-        }
-
-        $queryString = implode(' ', $query);
-        $messageNumbers = \imap_search($this->stream, $queryString);
+        $messageNumbers = \imap_search($this->stream, $query);
         if (false == $messageNumbers) {
             // \imap_search can also return false
             $messageNumbers = array();
