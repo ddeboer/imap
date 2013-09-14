@@ -27,6 +27,7 @@ class Headers
         }
 
         if (isset($this->array['date'])) {
+            $this->array['date'] = preg_replace('/(.*)\(.*\)/', '$1', $this->array['date']);
             $this->array['date'] = new \DateTime($this->array['date']);
         }
 
