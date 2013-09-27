@@ -2,6 +2,8 @@
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\Exception;
+
 /**
  * A connection to an IMAP server that is authenticated for a user
  */
@@ -63,5 +65,31 @@ class Connection
         }
 
         return $this->mailboxNames;
+    }
+
+    /**
+     * Create mailbox
+     *
+     * @param $name
+     * @return Mailbox
+     * @throws Exception
+     */
+    public function createMailbox($name)
+    {
+        if (\imap_createmailbox($this->resource, $this->server . $name)) {
+
+            $mailbox = $this->getMailbox($name);
+
+            if ($this->mailboxNames) {
+                $this->mailboxNames[] = $name;
+            }
+            if ($this->mailboxes) {
+                $this->mailboxes[] = $mailbox;
+            }
+
+            return $mailbox;
+        }
+
+        throw new Exception("Can not create '{$name}' mailbox at '{$this->server}'");
     }
 }
