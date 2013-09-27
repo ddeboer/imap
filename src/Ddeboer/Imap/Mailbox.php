@@ -10,6 +10,7 @@ use Ddeboer\Imap\Search\DateRange;
  */
 class Mailbox implements \IteratorAggregate
 {
+    protected $mailbox;
     protected $name;
     protected $stream;
     protected $messageIds;

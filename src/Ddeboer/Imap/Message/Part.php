@@ -87,7 +87,8 @@ class Part implements \RecursiveIterator
         $this->stream = $stream;
         $this->messageNumber = $messageNumber;
         $this->partNumber = $partNumber;
-        $this->structure = $this->parseStructure($structure);
+        $this->structure = $structure;
+        $this->parseStructure($structure);
     }
 
     public function getCharset()
