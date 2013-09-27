@@ -95,6 +95,18 @@ class Mailbox implements \IteratorAggregate
     }
 
     /**
+     * Delete all messages marked for deletion
+     *
+     * @return boolean
+     */
+    public function expunge()
+    {
+        $this->init();
+
+        return \imap_expunge($this->stream);
+    }
+
+    /**
      * If connection is not currently in this mailbox, switch it to this mailbox
      */
     protected function init()
