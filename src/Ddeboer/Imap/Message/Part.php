@@ -137,7 +137,7 @@ class Part implements \RecursiveIterator
             $this->content = \imap_fetchbody(
                 $this->stream,
                 $this->messageNumber,
-                $this->partNumber
+                $this->partNumber ?: 1
             );
         }
 
