@@ -2,6 +2,8 @@
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\Exception;
+
 /**
  * A connection to an IMAP server that is authenticated for a user
  */
