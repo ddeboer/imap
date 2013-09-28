@@ -64,4 +64,15 @@ class Connection
 
         return $this->mailboxNames;
     }
+
+    /**
+     * Close connection
+     *
+     * @param int $flag
+     * @return bool
+     */
+    public function close($flag = 0)
+    {
+        return \imap_close($this->resource, $flag);
+    }
 }

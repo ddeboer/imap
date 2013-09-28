@@ -218,4 +218,25 @@ class Message extends Message\Part
         $structure = \imap_fetchstructure($this->stream, $this->messageNumber);
         $this->parseStructure($structure);
     }
+
+    /**
+     * Delete message
+     */
+    public function delete()
+    {
+        // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
+        $this->headers = null;
+
+        return \imap_delete($this->stream, $this->messageNumber);
+    }
+
+    /**
+     * Move message to another mailbox
+     * @param Mailbox $mailbox
+     * @return bool
+     */
+    public function move(Mailbox $mailbox)
+    {
+        return \imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName());
+    }
 }
