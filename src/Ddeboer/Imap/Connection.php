@@ -40,7 +40,7 @@ class Connection
 
     public function getMailbox($name)
     {
-        return new Mailbox($this->server . $name, $this->resource);
+        return new Mailbox($this->server . \imap_utf7_encode($name), $this->resource);
     }
 
     /**
@@ -58,7 +58,7 @@ class Connection
         if (null === $this->mailboxNames) {
             $mailboxes = \imap_getmailboxes($this->resource, $this->server, '*');
             foreach ($mailboxes as $mailbox) {
-                $this->mailboxNames[] = str_replace($this->server, '', $mailbox->name);
+                $this->mailboxNames[] = \imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
             }
         }
 
