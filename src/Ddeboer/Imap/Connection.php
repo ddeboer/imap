@@ -68,6 +68,32 @@ class Connection
     }
 
     /**
+     * Create mailbox
+     *
+     * @param $name
+     * @return Mailbox
+     * @throws Exception
+     */
+    public function createMailbox($name)
+    {
+        if (\imap_createmailbox($this->resource, $this->server . $name)) {
+
+            $mailbox = $this->getMailbox($name);
+
+            if ($this->mailboxNames) {
+                $this->mailboxNames[] = $name;
+            }
+            if ($this->mailboxes) {
+                $this->mailboxes[] = $mailbox;
+            }
+
+            return $mailbox;
+        }
+
+        throw new Exception("Can not create '{$name}' mailbox at '{$this->server}'");
+    }
+
+    /**
      * Close connection
      *
      * @param int $flag
