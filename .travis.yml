@@ -7,6 +7,8 @@ env:
   global:
     secure: V8aW+aAwXMzPckjoPH6nls86NqoHPHWJYwwGO47n4xYKsgHHHWaerh7Ggtuit+u24YXgrETLxKa0chadN9REOGw6aNae9eIgM6w8+5dS2llmCCoCTmz+bhoT+tq84GS6IJMEIr2lEInPzQre5FJEU6HEn4FAFFA3tgJa89/pAv0=
 before_script:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq php5-imap
   - echo "extension = imap.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer install --dev
 script: phpunit --coverage-text
