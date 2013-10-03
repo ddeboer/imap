@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Ddeboer IMAP tests">
+        <testsuite name="ddeboer/imap">
             <directory suffix="Test.php">./tests/</directory>
         </testsuite>
     </testsuites>
