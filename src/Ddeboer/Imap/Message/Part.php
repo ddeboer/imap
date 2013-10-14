@@ -128,16 +128,17 @@ class Part implements \RecursiveIterator
 
     /**
      * Get raw part content
-     *
+     * @param int $fetch_options imap_fetchbody options
      * @return string
      */
-    public function getContent()
+    public function getContent($fetch_options = 0)
     {
         if (null === $this->content) {
             $this->content = \imap_fetchbody(
                 $this->stream,
                 $this->messageNumber,
-                $this->partNumber ?: 1
+                $this->partNumber ?: 1,
+                $fetch_options
             );
         }
 
@@ -146,24 +147,24 @@ class Part implements \RecursiveIterator
 
     /**
      * Get decoded part content
-     *
+     * @param int $fetch_options imap_fetchbody options
      * @return string
      */
-    public function getDecodedContent()
+    public function getDecodedContent($fetch_options = 0)
     {
         if (null === $this->decodedContent) {
             switch ($this->getEncoding()) {
                 case self::ENCODING_BASE64:
-                   $this->decodedContent = \base64_decode($this->getContent());
+                   $this->decodedContent = \base64_decode($this->getContent($fetch_options));
                     break;
 
                 case self::ENCODING_QUOTED_PRINTABLE:
-                    $this->decodedContent = \quoted_printable_decode($this->getContent());
+                    $this->decodedContent = \quoted_printable_decode($this->getContent($fetch_options));
                     break;
 
                 case self::ENCODING_7BIT:
                 case self::ENCODING_8BIT:
-                    $this->decodedContent = $this->getContent();
+                    $this->decodedContent = $this->getContent($fetch_options);
                     break;
 
                 default:
