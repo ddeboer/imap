@@ -34,7 +34,7 @@ class Server
     {
         $this->hostname = $hostname;
         $this->port = $port;
-        $this->flags = $flags;
+        $this->flags = '/'.ltrim($flags, '/');
     }
 
     /**
