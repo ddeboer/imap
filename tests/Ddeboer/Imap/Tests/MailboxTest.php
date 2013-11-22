@@ -22,6 +22,10 @@ class MailboxTest extends AbstractTest
         }
 
         $this->mailbox = $this->getConnection()->createMailbox('testing');
+
+        $this->createTestMessage($this->mailbox, 'Message 1');
+        $this->createTestMessage($this->mailbox, 'Message 2');
+        $this->createTestMessage($this->mailbox, 'Message 3');
     }
 
     public function testGetName()
@@ -40,7 +44,7 @@ class MailboxTest extends AbstractTest
 
     public function testCount()
     {
-        $this->assertEquals(0, $this->mailbox->count());
+        $this->assertEquals(3, $this->mailbox->count());
     }
 
     public function tearDown()

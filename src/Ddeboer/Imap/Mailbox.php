@@ -119,6 +119,18 @@ class Mailbox implements \IteratorAggregate
     }
 
     /**
+     * Add a message to the mailbox
+     *
+     * @param string $message
+     *
+     * @return boolean
+     */
+    public function addMessage($message)
+    {
+        return \imap_append($this->stream, $this->mailbox, $message);
+    }
+
+    /**
      * If connection is not currently in this mailbox, switch it to this mailbox
      */
     protected function init()
