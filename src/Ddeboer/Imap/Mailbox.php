@@ -2,7 +2,7 @@
 
 namespace Ddeboer\Imap;
 
-use Ddeboer\Imap\Search\DateRange;
+use Ddeboer\Imap\Exception\Exception;
 
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
@@ -93,6 +93,17 @@ class Mailbox implements \IteratorAggregate
         $this->init();
 
         return $this->getMessages();
+    }
+
+    /**
+     * Delete this mailbox
+     *
+     */
+    public function delete()
+    {
+        if (false === \imap_deletemailbox($this->stream, $this->mailbox)) {
+            throw new Exception('Mailbox ' . $this->name . ' could not be deleted');
+        }
     }
 
     /**
