@@ -169,7 +169,9 @@ class Part implements \RecursiveIterator
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
             if ($this->getType() === self::TYPE_TEXT
-                && strtolower($this->getCharset()) != 'utf-8') {
+                && null !== $this->getCharset()
+                && strtolower($this->getCharset()) != 'utf-8'
+            ) {
                 $this->decodedContent = \mb_convert_encoding(
                     $this->decodedContent,
                     'UTF-8'
@@ -304,7 +306,7 @@ class Part implements \RecursiveIterator
      */
     protected function doGetContent($keepUnseen = false)
     {
-        $this->content = \imap_fetchbody(
+        return \imap_fetchbody(
             $this->stream,
             $this->messageNumber,
             $this->partNumber ?: 1,

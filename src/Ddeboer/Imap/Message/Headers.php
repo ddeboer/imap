@@ -15,9 +15,11 @@ class Headers
         if (isset($headers->subject)) {
             $subject = '';
             foreach (\imap_mime_header_decode($headers->subject) as $part) {
-                $subject .= $part->text;
+                // $part->charset can also be 'default', i.e. plain US-ASCII
+                $charset = $part->charset == 'default' ? 'auto' : $part->charset;
+                $subject .= \mb_convert_encoding($part->text, 'UTF-8', $charset);
             }
-            $this->array['subject'] = mb_convert_encoding($subject, 'UTF-8');
+            $this->array['subject'] = $subject;
         }
 
         $this->array['msgno'] = (int) $this->array['msgno'];

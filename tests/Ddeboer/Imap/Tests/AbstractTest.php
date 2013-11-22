@@ -64,16 +64,16 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     protected function createTestMessage(
         Mailbox $mailbox,
-        $subject = 'Don\t panic!',
+        $subject = 'Don\'t panic!',
+        $contents = 'Don\'t forget your towel',
         $from = 'someone@there.com',
-        $to = 'me@here.com',
-        $contents = 'Don\'t forget your towel'
+        $to = 'me@here.com'
     ) {
         $message = "From: $from\r\n"
             . "To: $to\r\n"
             . "Subject: $subject\r\n"
             . "\r\n"
-            . "$contents\r\n";
+            . "$contents";
 
         $mailbox->addMessage($message);
     }
