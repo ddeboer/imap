@@ -149,30 +149,30 @@ class Message extends Message\Part
 
     /**
      * Get body HTML
-     *
+     * @param int $fetch_options imap_fetchbody options http://php.net/manual/en/function.imap-fetchbody.php
      * @return string | null Null if message has no HTML message part
      */
-    public function getBodyHtml()
+    public function getBodyHtml($fetch_options = 0)
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
             if ($part->getSubtype() == 'HTML') {
-                return $part->getDecodedContent();
+                return $part->getDecodedContent($fetch_options);
             }
         }
     }
 
     /**
      * Get body text
-     *
+     * @param int $fetch_options imap_fetchbody options http://php.net/manual/en/function.imap-fetchbody.php
      * @return string
      */
-    public function getBodyText()
+    public function getBodyText($fetch_options = 0)
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
             if ($part->getSubtype() == 'PLAIN') {
-                return $part->getDecodedContent();
+                return $part->getDecodedContent($fetch_options);
             }
         }
 
