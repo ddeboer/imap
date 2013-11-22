@@ -14,14 +14,7 @@ class MailboxTest extends AbstractTest
 
     public function setUp()
     {
-        try {
-            $mailbox = $this->getConnection()->getMailbox('testing');
-            $mailbox->delete();
-        } catch (MailboxDoesNotExistException $e) {
-            // Ignore mailbox not found
-        }
-
-        $this->mailbox = $this->getConnection()->createMailbox('testing');
+        $this->mailbox = $this->createMailbox('test-mailbox');
 
         $this->createTestMessage($this->mailbox, 'Message 1');
         $this->createTestMessage($this->mailbox, 'Message 2');
@@ -30,7 +23,7 @@ class MailboxTest extends AbstractTest
 
     public function testGetName()
     {
-        $this->assertEquals('testing', $this->mailbox->getName());
+        $this->assertEquals('test-mailbox', $this->mailbox->getName());
     }
 
     public function testGetMessages()
@@ -45,14 +38,5 @@ class MailboxTest extends AbstractTest
     public function testCount()
     {
         $this->assertEquals(3, $this->mailbox->count());
-    }
-
-    public function tearDown()
-    {
-        try {
-//            $this->mailbox->delete();
-        } catch (\Exception $e) {
-            // Ignore
-        }
     }
 }
