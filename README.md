@@ -1,7 +1,10 @@
 IMAP library
 ============
+[![Build Status](https://travis-ci.org/ddeboer/imap.png?branch=master)](https://travis-ci.org/ddeboer/imap)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?s=a83ac467d051bcf7814c775e44c7f7c9c33e70ff)](https://scrutinizer-ci.com/g/ddeboer/imap/)
+[![Code Coverage](https://scrutinizer-ci.com/g/ddeboer/imap/badges/coverage.png?s=3e48db42c17436dc8a485042da691d46a3bec28f)](https://scrutinizer-ci.com/g/ddeboer/imap/)
 
-Receive and send e-mails over IMAP.
+A PHP 5.3+ library to read and process e-mails over IMAP.
 
 Reading e-mail
 --------------
