@@ -192,6 +192,13 @@ class Message extends Message\Part
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;
                 }
+                if($part->hasChildren()) {
+                    foreach($part->getParts() AS $child_part) {
+                        if ($child_part instanceof Message\Attachment) {
+                            $this->attachments[] = $child_part;
+                        }
+                    }
+                }
             }
         }
 
