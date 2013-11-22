@@ -252,7 +252,7 @@ class Part implements \RecursiveIterator
     /**
      * Get an array of all parts for this message
      *
-     * @return Message\Part[]
+     * @return self[]
      */
     public function getParts()
     {
