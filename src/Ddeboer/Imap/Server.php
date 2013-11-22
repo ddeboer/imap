@@ -4,6 +4,10 @@ namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\AuthenticationFailedException;
 
+/**
+ * An IMAP server
+ *
+ */
 class Server
 {
     /**
@@ -21,6 +25,9 @@ class Server
      */
     protected $flags;
 
+    /**
+     * @var Connection
+     */
     protected $connection;
 
     /**
