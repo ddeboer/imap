@@ -134,11 +134,7 @@ class Part implements \RecursiveIterator
     public function getContent()
     {
         if (null === $this->content) {
-            $this->content = \imap_fetchbody(
-                $this->stream,
-                $this->messageNumber,
-                $this->partNumber ?: 1
-            );
+            $this->content = $this->doGetContent();
         }
 
         return $this->content;
@@ -297,5 +293,22 @@ class Part implements \RecursiveIterator
     public function getDisposition()
     {
         return $this->disposition;
+    }
+
+    /**
+     * Get raw message content
+     *
+     * @param bool $keepUnseen Whether to keep the message unseen.
+     *                         Default behaviour is set set the seen flag when
+     *                         getting content.
+     */
+    protected function doGetContent($keepUnseen = false)
+    {
+        $this->content = \imap_fetchbody(
+            $this->stream,
+            $this->messageNumber,
+            $this->partNumber ?: 1,
+            $keepUnseen ? \FT_PEEK : 0
+        );
     }
 }

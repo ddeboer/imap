@@ -14,6 +14,11 @@ class Message extends Message\Part
     protected $attachments;
 
     /**
+     * @var boolean
+     */
+    protected $keepUnseen = false;
+
+    /**
      * Constructor
      *
      * @param \resource $stream        IMAP stream
@@ -90,6 +95,20 @@ class Message extends Message\Part
     }
 
     /**
+     * Get raw part content
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        // Null headers, so subsequent calls to getHeaders() will return
+        // updated seen flag
+        $this->headers = null;
+
+        return $this->doGetContent($this->keepUnseen);
+    }
+
+    /**
      * Get message answered flag value (from headers)
      *
      * @return boolean
@@ -117,6 +136,16 @@ class Message extends Message\Part
     public function isDraft()
     {
         return $this->getHeaders()->get('draft');
+    }
+
+    /**
+     * Has the message been marked as read?
+     *
+     * @return boolean
+     */
+    public function isSeen()
+    {
+        return 'U' != $this->getHeaders()->get('unseen');
     }
 
     /**
@@ -243,5 +272,21 @@ class Message extends Message\Part
     public function move(Mailbox $mailbox)
     {
         return \imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName());
+    }
+
+    /**
+     * Prevent the message from being marked as seen
+     *
+     * Defaults to false, so messages that are read will be marked as seen.
+     *
+     * @param bool $bool
+     *
+     * @return Message
+     */
+    public function keepUnseen($bool = true)
+    {
+        $this->keepUnseen = (bool) $bool;
+
+        return $this;
     }
 }
