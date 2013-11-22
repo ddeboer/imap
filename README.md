@@ -6,6 +6,15 @@ IMAP library
 
 A PHP 5.3+ library to read and process e-mails over IMAP.
 
+Installation
+------------
+
+The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
+
+```bash
+$ composer require ddeboer/imap:@stable
+```
+
 Reading e-mail
 --------------
 
