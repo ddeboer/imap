@@ -8,15 +8,15 @@ use Ddeboer\Imap\Connection;
 
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
-    protected $connection;
+    protected static $connection;
 
     /**
      * @return Connection
      * @throws \RuntimeException
      */
-    protected function getConnection()
+    protected static function getConnection()
     {
-        if (null === $this->connection) {
+        if (null === self::$connection) {
             $server = new Server('imap.gmail.com');
 
             if (false === \getenv('EMAIL_USERNAME')) {
@@ -31,10 +31,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
                 );
             }
 
-            $this->connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
+            self::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
         }
 
-        return $this->connection;
+        return self::$connection;
     }
 
     /**
