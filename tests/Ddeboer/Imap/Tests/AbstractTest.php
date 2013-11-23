@@ -48,7 +48,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function createMailbox($name)
     {
         try {
-            $mailbox = $this->getConnection()->getMailbox($name);
+            $mailbox = self::getConnection()->getMailbox($name);
             $messages = $mailbox->getMessages();
 
             foreach ($messages as $message) {
