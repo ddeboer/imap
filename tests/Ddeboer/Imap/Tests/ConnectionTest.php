@@ -21,7 +21,7 @@ class ConnectionTest extends AbstractTest
 
     public function testGetMailbox()
     {
-        $mailbox = self::getConnection()->getMailbox('INBOX');
+        $mailbox = static::getConnection()->getMailbox('INBOX');
         $this->assertInstanceOf('\Ddeboer\Imap\Mailbox', $mailbox);
     }
 
@@ -30,6 +30,6 @@ class ConnectionTest extends AbstractTest
      */
     public function testGetInvalidMailbox()
     {
-        self::getConnection()->getMailbox('does-not-exist');
+        static::getConnection()->getMailbox('does-not-exist');
     }
 }

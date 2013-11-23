@@ -26,7 +26,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        self::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
+        static::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
     }
 
     /**
@@ -35,7 +35,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     protected static function getConnection()
     {
-        return self::$connection;
+        return static::$connection;
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function createMailbox($name)
     {
         try {
-            $mailbox = self::getConnection()->getMailbox($name);
+            $mailbox = static::getConnection()->getMailbox($name);
             $messages = $mailbox->getMessages();
 
             foreach ($messages as $message) {
@@ -60,7 +60,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             // Ignore mailbox not found
         }
 
-        return self::getConnection()->createMailbox($name);
+        return static::getConnection()->createMailbox($name);
     }
 
     protected function createTestMessage(
