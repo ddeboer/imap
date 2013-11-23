@@ -6,12 +6,12 @@ class ConnectionTest extends AbstractTest
 {
     public function testCount()
     {
-        $this->assertInternalType('int', $this->getConnection()->count());
+        $this->assertInternalType('int', self::getConnection()->count());
     }
 
     public function testGetMailboxes()
     {
-        $mailboxes = $this->getConnection()->getMailboxes();
+        $mailboxes = self::getConnection()->getMailboxes();
         $this->assertInternalType('array', $mailboxes);
 
         foreach ($mailboxes as $mailbox) {
@@ -21,7 +21,7 @@ class ConnectionTest extends AbstractTest
 
     public function testGetMailbox()
     {
-        $mailbox = $this->getConnection()->getMailbox('INBOX');
+        $mailbox = self::getConnection()->getMailbox('INBOX');
         $this->assertInstanceOf('\Ddeboer\Imap\Mailbox', $mailbox);
     }
 
@@ -30,6 +30,6 @@ class ConnectionTest extends AbstractTest
      */
     public function testGetInvalidMailbox()
     {
-        $this->getConnection()->getMailbox('does-not-exist');
+        self::getConnection()->getMailbox('does-not-exist');
     }
 }

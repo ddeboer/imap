@@ -28,11 +28,12 @@ class MailboxTest extends AbstractTest
 
     public function testGetMessages()
     {
-        $inbox = $this->getConnection()->getMailbox('INBOX');
-        $messages = $inbox->getMessages();
-        foreach ($messages as $m) {
-
+        $i = 0;
+        foreach ($this->mailbox->getMessages() as $message) {
+            $i++;
         }
+
+        $this->assertEquals(3, $i);
     }
 
     public function testCount()

@@ -10,30 +10,31 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     protected static $connection;
 
+    public static function setUpBeforeClass()
+    {
+        $server = new Server('imap.gmail.com');
+
+        if (false === \getenv('EMAIL_USERNAME')) {
+            throw new \RuntimeException(
+                'Please set environment variable EMAIL_USERNAME before running functional tests'
+            );
+        }
+
+        if (false === \getenv('EMAIL_PASSWORD')) {
+            throw new \RuntimeException(
+                'Please set environment variable EMAIL_PASSWORD before running functional tests'
+            );
+        }
+        echo 'AUTHENTICATING';
+        self::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
+    }
+
     /**
      * @return Connection
      * @throws \RuntimeException
      */
     protected static function getConnection()
     {
-        if (null === self::$connection) {
-            $server = new Server('imap.gmail.com');
-
-            if (false === \getenv('EMAIL_USERNAME')) {
-                throw new \RuntimeException(
-                    'Please set environment variable EMAIL_USERNAME before running functional tests'
-                );
-            }
-
-            if (false === \getenv('EMAIL_PASSWORD')) {
-                throw new \RuntimeException(
-                    'Please set environment variable EMAIL_PASSWORD before running functional tests'
-                );
-            }
-
-            self::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
-        }
-
         return self::$connection;
     }
 
