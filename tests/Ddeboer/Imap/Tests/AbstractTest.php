@@ -25,7 +25,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
                 'Please set environment variable EMAIL_PASSWORD before running functional tests'
             );
         }
-        echo 'AUTHENTICATING';
+
         self::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
     }
 
@@ -60,7 +60,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             // Ignore mailbox not found
         }
 
-        return $this->getConnection()->createMailbox($name);
+        return self::getConnection()->createMailbox($name);
     }
 
     protected function createTestMessage(
