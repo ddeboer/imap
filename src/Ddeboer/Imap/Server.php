@@ -45,16 +45,6 @@ class Server
     }
 
     /**
-     * Glues hostname, port and flags and returns result
-     *
-     * @return string
-     */
-    protected function getServerString()
-    {
-        return "{{$this->hostname}:{$this->port}{$this->flags}}";
-    }
-
-    /**
      * Authenticate connection
      *
      * @param string $username Username
@@ -80,5 +70,15 @@ class Server
         imap_alerts();
 
         return new Connection($resource, $this->connection);
+    }
+
+    /**
+     * Glues hostname, port and flags and returns result
+     *
+     * @return string
+     */
+    protected function getServerString()
+    {
+        return "{{$this->hostname}:{$this->port}{$this->flags}}";
     }
 }
