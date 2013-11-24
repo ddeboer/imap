@@ -12,18 +12,17 @@ class Mailbox implements \IteratorAggregate
 {
     protected $mailbox;
     protected $name;
-    protected $stream;
 
     /**
      * Constructor
      *
-     * @param string   $name   Mailbox name
-     * @param resource $stream PHP IMAP resource
+     * @param string     $name       Mailbox name
+     * @param Connection $connection IMAP connection
      */
-    public function __construct($name, $stream)
+    public function __construct($name, Connection $connection)
     {
         $this->mailbox = $name;
-        $this->stream = $stream;
+        $this->connection = $connection;
         $this->name = substr($name, strpos($name, '}')+1);
     }
 
@@ -46,7 +45,7 @@ class Mailbox implements \IteratorAggregate
     {
         $this->init();
 
-        return \imap_num_msg($this->stream);
+        return \imap_num_msg($this->connection->getResource());
     }
 
     /**
@@ -59,15 +58,16 @@ class Mailbox implements \IteratorAggregate
     public function getMessages(SearchExpression $search = null)
     {
         $this->init();
+
         $query = ($search ? (string) $search : 'ALL');
 
-        $messageNumbers = \imap_search($this->stream, $query);
+        $messageNumbers = \imap_search($this->connection->getResource(), $query);
         if (false == $messageNumbers) {
             // \imap_search can also return false
             $messageNumbers = array();
         }
 
-        return new MessageIterator($this->stream, $messageNumbers);
+        return new MessageIterator($this->connection->getResource(), $messageNumbers);
     }
 
     /**
@@ -81,7 +81,7 @@ class Mailbox implements \IteratorAggregate
     {
         $this->init();
 
-        return new Message($this->stream, $number);
+        return new Message($this->connection->getResource(), $number);
     }
 
     /**
@@ -102,9 +102,7 @@ class Mailbox implements \IteratorAggregate
      */
     public function delete()
     {
-        if (false === \imap_deletemailbox($this->stream, $this->mailbox)) {
-            throw new Exception('Mailbox ' . $this->name . ' could not be deleted');
-        }
+        $this->connection->deleteMailbox($this);
     }
 
     /**
@@ -116,7 +114,7 @@ class Mailbox implements \IteratorAggregate
     {
         $this->init();
 
-        return \imap_expunge($this->stream);
+        return \imap_expunge($this->connection->getResource());
     }
 
     /**
@@ -128,7 +126,7 @@ class Mailbox implements \IteratorAggregate
      */
     public function addMessage($message)
     {
-        return \imap_append($this->stream, $this->mailbox, $message);
+        return \imap_append($this->connection->getResource(), $this->mailbox, $message);
     }
 
     /**
@@ -136,9 +134,9 @@ class Mailbox implements \IteratorAggregate
      */
     protected function init()
     {
-        $check = \imap_check($this->stream);
+        $check = \imap_check($this->connection->getResource());
         if ($check->Mailbox != $this->mailbox) {
-            \imap_reopen($this->stream, $this->mailbox);
+            \imap_reopen($this->connection->getResource(), $this->mailbox);
         }
     }
 }

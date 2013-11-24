@@ -63,7 +63,7 @@ class Connection
             throw new MailboxDoesNotExistException($name);
         }
 
-        return new Mailbox($this->server . \imap_utf7_encode($name), $this->resource);
+        return new Mailbox($this->server . \imap_utf7_encode($name), $this);
     }
 
     /**
@@ -87,21 +87,12 @@ class Connection
     public function createMailbox($name)
     {
         if (\imap_createmailbox($this->resource, $this->server . $name)) {
+            $this->mailboxNames = $this->mailboxes = null;
 
-            $mailbox = $this->getMailbox($name);
-
-            if ($this->mailboxNames) {
-                $this->mailboxNames[] = $name;
-            }
-            if ($this->mailboxes) {
-                $this->mailboxes[] = $mailbox;
-            }
-
-            return $mailbox;
+            return $this->getMailbox($name);
         }
 
         throw new Exception("Can not create '{$name}' mailbox at '{$this->server}'");
-
     }
 
     /**
@@ -114,6 +105,28 @@ class Connection
     public function close($flag = 0)
     {
         return \imap_close($this->resource, $flag);
+    }
+
+    public function deleteMailbox(Mailbox $mailbox)
+    {
+        if (false === \imap_deletemailbox(
+            $this->resource,
+            $this->server . $mailbox->getName()
+        )) {
+            throw new Exception('Mailbox ' . $mailbox->getName() . ' could not be deleted');
+        }
+
+        $this->mailboxes = $this->mailboxNames = null;
+    }
+
+    /**
+     * Get IMAP resource
+     *
+     * @return resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
     }
 
     protected function getMailboxNames()
