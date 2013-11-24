@@ -62,7 +62,7 @@ foreach ($messages as $message) {
 ```
 
 Get message number and unique [message id](http://en.wikipedia.org/wiki/Message-ID)
-in the form <...>::
+in the form <...>:
 
 ```php
 $message->getNumber();
@@ -82,7 +82,7 @@ $message->isDraft();
 $message->isSeen();
 ```
 
-Get message headers as a \Ddeboer\Imap\Message\Headers object:
+Get message headers as a [\Ddeboer\Imap\Message\Headers](/src/Ddeboer/Imap/Message/Headers.php) object:
 
 ```php
 $message->getHeaders();
@@ -149,8 +149,8 @@ If you have your own Gmail (test) account, you can run the tests locally:
 
 ```bash
 $ composer install --dev
-$ export EMAIL_USERNAME="your_username"
-$ export EMAIL_PASSWORD="your_password"
+$ export EMAIL_USERNAME="your_gmail_username"
+$ export EMAIL_PASSWORD="your_gmail_password"
 $ vendor/bin/phpunit
 ```
 
