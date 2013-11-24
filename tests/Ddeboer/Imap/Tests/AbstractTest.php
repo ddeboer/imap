@@ -31,7 +31,6 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @return Connection
-     * @throws \RuntimeException
      */
     protected static function getConnection()
     {
@@ -41,26 +40,40 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     /**
      * Create a mailbox
      *
+     * If the mailbox already exists, it will be deleted first
+     *
      * @param string $name Mailbox name
      *
      * @return Mailbox
      */
     protected function createMailbox($name)
     {
-        try {
-            $mailbox = static::getConnection()->getMailbox($name);
-            $messages = $mailbox->getMessages();
+        $uniqueName = $name . uniqid();
 
-            foreach ($messages as $message) {
-                $message->delete();
-            }
-            $mailbox->expunge();
-            $mailbox->delete();
+        try {
+            $mailbox = static::getConnection()->getMailbox($uniqueName);
+            $this->deleteMailbox($mailbox);
         } catch (MailboxDoesNotExistException $e) {
             // Ignore mailbox not found
         }
 
-        return static::getConnection()->createMailbox($name);
+        return static::getConnection()->createMailbox($uniqueName);
+    }
+
+    /**
+     * Delete a mailbox and all its messages
+     *
+     * @param Mailbox $mailbox
+     */
+    protected function deleteMailbox(Mailbox $mailbox)
+    {
+        // Move all messages in the mailbox to Gmail trash
+        $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
+
+        foreach ($mailbox->getMessages() as $message) {
+            $message->move($trash);
+        }
+        $mailbox->delete();
     }
 
     protected function createTestMessage(

@@ -12,14 +12,19 @@ class MessageTest extends AbstractTest
     public function setUp()
     {
         $this->mailbox = $this->createMailbox('test-message');
-        $this->createTestMessage($this->mailbox, 'Message A');
-        $this->createTestMessage($this->mailbox, 'Message B');
-        $this->createTestMessage($this->mailbox, 'Message C');
-        $this->createTestMessage($this->mailbox, 'lietuviškos raidės', 'lietuviškos raidės');
+    }
+
+    public function tearDown()
+    {
+        $this->deleteMailbox($this->mailbox);
     }
 
     public function testKeepUnseen()
     {
+        $this->createTestMessage($this->mailbox, 'Message A');
+        $this->createTestMessage($this->mailbox, 'Message B');
+        $this->createTestMessage($this->mailbox, 'Message C');
+
         $message = $this->mailbox->getMessage(1);
         $this->assertFalse($message->isSeen());
 
@@ -35,7 +40,9 @@ class MessageTest extends AbstractTest
 
     public function testSubjectEncoding()
     {
-        $message = $this->mailbox->getMessage(4);
+        $this->createTestMessage($this->mailbox, 'lietuviškos raidės', 'lietuviškos raidės');
+
+        $message = $this->mailbox->getMessage(1);
         $this->assertEquals('lietuviškos raidės', $message->getSubject());
         $this->assertEquals('lietuviškos raidės', $message->getBodyText());
     }
