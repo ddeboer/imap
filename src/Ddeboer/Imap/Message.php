@@ -268,7 +268,7 @@ class Message extends Message\Part
      */
     public function move(Mailbox $mailbox)
     {
-        if (!\imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName())) {
+        if (!\imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName(), \CP_UID)) {
             throw new MessageMoveException($this->messageNumber, $mailbox->getName());
         }
 
@@ -296,7 +296,7 @@ class Message extends Message\Part
      */
     protected function loadStructure()
     {
-        $structure = \imap_fetchstructure($this->stream, $this->messageNumber);
+        $structure = \imap_fetchstructure($this->stream, $this->messageNumber, \FT_UID);
         $this->parseStructure($structure);
     }
 }

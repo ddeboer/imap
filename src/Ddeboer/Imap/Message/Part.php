@@ -303,6 +303,8 @@ class Part implements \RecursiveIterator
      * @param bool $keepUnseen Whether to keep the message unseen.
      *                         Default behaviour is set set the seen flag when
      *                         getting content.
+     *
+     * @return string
      */
     protected function doGetContent($keepUnseen = false)
     {
@@ -310,7 +312,7 @@ class Part implements \RecursiveIterator
             $this->stream,
             $this->messageNumber,
             $this->partNumber ?: 1,
-            $keepUnseen ? \FT_PEEK : 0
+            \FT_UID | ($keepUnseen ? \FT_PEEK : null)
         );
     }
 }

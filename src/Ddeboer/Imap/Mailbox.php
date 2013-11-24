@@ -61,7 +61,7 @@ class Mailbox implements \IteratorAggregate
 
         $query = ($search ? (string) $search : 'ALL');
 
-        $messageNumbers = \imap_search($this->connection->getResource(), $query);
+        $messageNumbers = \imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
             // \imap_search can also return false
             $messageNumbers = array();
@@ -108,13 +108,15 @@ class Mailbox implements \IteratorAggregate
     /**
      * Delete all messages marked for deletion
      *
-     * @return boolean
+     * @return Mailbox
      */
     public function expunge()
     {
         $this->init();
 
-        return \imap_expunge($this->connection->getResource());
+        \imap_expunge($this->connection->getResource());
+
+        return $this;
     }
 
     /**
