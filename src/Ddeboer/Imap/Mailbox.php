@@ -13,7 +13,6 @@ class Mailbox implements \IteratorAggregate
     protected $mailbox;
     protected $name;
     protected $stream;
-    protected $messageIds;
 
     /**
      * Constructor
