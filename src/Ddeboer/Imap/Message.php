@@ -3,6 +3,8 @@
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Message\EmailAddress;
+use Ddeboer\Imap\Exception\MessageDeleteException;
+use Ddeboer\Imap\Exception\MessageMoveException;
 
 /**
  * An IMAP message (e-mail)
@@ -245,15 +247,6 @@ class Message extends Message\Part
     }
 
     /**
-     * Load message structure
-     */
-    protected function loadStructure()
-    {
-        $structure = \imap_fetchstructure($this->stream, $this->messageNumber);
-        $this->parseStructure($structure);
-    }
-
-    /**
      * Delete message
      */
     public function delete()
@@ -261,17 +254,25 @@ class Message extends Message\Part
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->headers = null;
 
-        return \imap_delete($this->stream, $this->messageNumber);
+        if (!\imap_delete($this->stream, $this->messageNumber)) {
+            throw new MessageCannotBeDeletedException($this->messageNumber);
+        }
     }
 
     /**
      * Move message to another mailbox
      * @param Mailbox $mailbox
-     * @return bool
+     *
+     * @throws MessageMoveException
+     * @return Message
      */
     public function move(Mailbox $mailbox)
     {
-        return \imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName());
+        if (!\imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName())) {
+            throw new MessageMoveException($this->messageNumber, $mailbox->getName());
+        }
+
+        return $this;
     }
 
     /**
@@ -288,5 +289,14 @@ class Message extends Message\Part
         $this->keepUnseen = (bool) $bool;
 
         return $this;
+    }
+
+    /**
+     * Load message structure
+     */
+    protected function loadStructure()
+    {
+        $structure = \imap_fetchstructure($this->stream, $this->messageNumber);
+        $this->parseStructure($structure);
     }
 }
