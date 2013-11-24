@@ -53,6 +53,8 @@ class Mailbox implements \IteratorAggregate
     /**
      * Get message ids
      *
+     * @param SearchExpression $search Search expression (optional)
+     *
      * @return MessageIterator
      */
     public function getMessages(SearchExpression $search = null)
