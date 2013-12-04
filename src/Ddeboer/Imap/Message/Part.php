@@ -172,10 +172,7 @@ class Part implements \RecursiveIterator
                 && null !== $this->getCharset()
                 && strtolower($this->getCharset()) != 'utf-8'
             ) {
-                $this->decodedContent = \mb_convert_encoding(
-                    $this->decodedContent,
-                    'UTF-8'
-                );
+                $this->decodedContent = \iconv($this->getCharset(), 'utf-8', $this->decodedContent);
             }
         }
 
