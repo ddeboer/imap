@@ -27,7 +27,9 @@ class Attachment extends Part
      */
     public function getFilename()
     {
-        return $this->parameters->get('filename');
+        if(isset($this->parameters['filename'])) {
+            return $this->parameters['filename'];
+        }
     }
 
     /**
@@ -37,6 +39,8 @@ class Attachment extends Part
      */
     public function getSize()
     {
-        return $this->parameters->get('size');
+        if(isset($this->parameters['size'])) {
+            return $this->parameters['size'];
+        }
     }
 }

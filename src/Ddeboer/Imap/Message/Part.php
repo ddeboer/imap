@@ -2,8 +2,6 @@
 
 namespace Ddeboer\Imap\Message;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * A message part
  */
@@ -93,7 +91,9 @@ class Part implements \RecursiveIterator
 
     public function getCharset()
     {
-        return $this->parameters->get('charset');
+        if(isset($this->parameters['charset'])) {
+            return $this->parameters['charset'];
+        }
     }
 
     public function getType()
@@ -216,14 +216,15 @@ class Part implements \RecursiveIterator
             }
         }
 
-        $this->parameters = new ArrayCollection();
+
+        $this->parameters = array();
         foreach ($structure->parameters as $parameter) {
-            $this->parameters->set(strtolower($parameter->attribute), $parameter->value);
+            $this->parameters[strtolower($parameter->attribute)] = $parameter->value;
         }
 
         if (isset($structure->dparameters)) {
-            foreach ($structure->dparameters as $parameter) {
-                $this->parameters->set(strtolower($parameter->attribute), $parameter->value);
+            foreach ($structure->parameters as $parameter) {
+                $this->parameters[strtolower($parameter->attribute)] = $parameter->value;
             }
         }
 
