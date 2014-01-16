@@ -175,11 +175,11 @@ class Message extends Message\Part
             // \imap_header returns only a subset of all mail headers,
             // but it does include the message flags.
 
-            if($rawHeaders) {
+            if ($rawHeaders) {
                 $rawHeaders = imap_fetchheader($this->stream, $message_number);
             }
 
-            $headers = \imap_header($this->stream, $message_number);
+            $headers = imap_header($this->stream, $message_number);
 
             // Would be useful if we weren't already calling imap_header()
             //$headers = imap_rfc822_parse_headers($rawHeaders);
