@@ -141,5 +141,13 @@ class Mailbox implements \IteratorAggregate
             \imap_reopen($this->connection->getResource(), $this->mailbox);
         }
     }
+	
+	/**
+	 * Deletes all messages in this mailbox
+	 */
+	public function clearMessages()
+	{
+		\imap_delete($this->connection->getResource(),'1:*');
+	}
 }
 
