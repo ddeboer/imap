@@ -37,7 +37,7 @@ over them:
 ```php
 $mailboxes = $connection->getMailboxes();
 
-foreach ($mailboxes and $mailbox) {
+foreach ($mailboxes as $mailbox) {
     // $mailbox is instance of \Ddeboer\Imap\Mailbox
     printf('Mailbox %s has %s messages', $mailbox->getName(), $mailbox->count());
 }
