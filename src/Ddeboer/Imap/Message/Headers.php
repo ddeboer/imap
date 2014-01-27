@@ -16,8 +16,8 @@ class Headers
             $subject = '';
             foreach (\imap_mime_header_decode($headers->subject) as $part) {
                 // $part->charset can also be 'default', i.e. plain US-ASCII
-                $charset = $part->charset == 'default' ? 'auto' : $part->charset;
-                $subject .= \mb_convert_encoding($part->text, 'UTF-8', $charset);
+                $charset = $part->charset == 'default' ? 'ASCII' : $part->charset;
+                $subject .= \iconv($charset, 'UTF-8', $part->text);
             }
             $this->array['subject'] = $subject;
         }
