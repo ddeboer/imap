@@ -218,12 +218,12 @@ class Part implements \RecursiveIterator
 
         $this->parameters = new ArrayCollection();
         foreach ($structure->parameters as $parameter) {
-            $this->parameters->set(strtolower($parameter->attribute), $parameter->value);
+            $this->parameters->set(strtolower($parameter->attribute), $this->getParameterValue($parameter));
         }
 
         if (isset($structure->dparameters)) {
             foreach ($structure->dparameters as $parameter) {
-                $this->parameters->set(strtolower($parameter->attribute), $parameter->value);
+                $this->parameters->set(strtolower($parameter->attribute), $this->getParameterValue($parameter));
             }
         }
 
@@ -245,6 +245,17 @@ class Part implements \RecursiveIterator
                 }
             }
         }
+    }
+
+    private function getParameterValue($parameter)
+    {
+        $value = $parameter->value;
+        $value = \imap_utf8($value);
+        $value = \imap_mime_header_decode($value);
+        $value = \array_map(function ($value) { return $value->text; }, $value);
+        $value = \implode('', $value);
+
+        return $value;
     }
 
     /**
