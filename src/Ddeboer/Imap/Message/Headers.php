@@ -45,11 +45,13 @@ class Headers
         if (isset($this->array['to'])) {
             $recipients = array();
             foreach ($this->array['to'] as $to) {
-                $recipients[] = new EmailAddress(
-                    str_replace('\'', '', $to->mailbox),
-                    str_replace('\'', '', $to->host),
-                    isset($to->personal) ? \imap_utf8($to->personal) : null
-                );
+                if (isset($to->host)) {
+                    $recipients[] = new EmailAddress(
+                        str_replace('\'', '', $to->mailbox),
+                        str_replace('\'', '', $to->host),
+                        isset($to->personal) ? \imap_utf8($to->personal) : null
+                    );
+                }
             }
             $this->array['to'] = $recipients;
         } else {
