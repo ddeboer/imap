@@ -202,7 +202,10 @@ class Part implements \RecursiveIterator
 
     protected function parseStructure(\stdClass $structure)
     {
-        $this->type = $this->typesMap[$structure->type];
+        if (isset($this->typesMap[$structure->type]))
+            $this->type = $this->typesMap[$structure->type];
+        else
+            $this->type = self::TYPE_OTHER;
         $this->encoding = $this->encodingsMap[$structure->encoding];
         $this->subtype = $structure->subtype;
 
