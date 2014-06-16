@@ -8,6 +8,8 @@ class Headers
 
     public function __construct(\stdClass $headers)
     {
+        $headers = $this->decodeHeaders($headers);
+
         // Store all headers as lowercase
         $this->array = array_change_key_case((array) $headers);
 
@@ -54,6 +56,24 @@ class Headers
             $this->array['to'] = $recipients;
         } else {
             $this->array['to'] = array();
+        }
+    }
+
+    private function decodeHeaders($header)
+    {
+        if (is_scalar($header)) {
+            return \imap_utf8($header);
+
+        } elseif (is_array($header) || $header instanceof \stdClass) {
+            foreach ($header as $key => &$value) {
+                $value = $this->decodeHeaders($value);
+            }
+
+            return $header;
+
+        } else {
+            $hint = is_object($header) ? get_class($header) : gettype($header);
+            throw new \InvalidArgumentException("Invalid \$header argument. Expected scalar, array or \\stdClass instance, {$hint} given");
         }
     }
 
