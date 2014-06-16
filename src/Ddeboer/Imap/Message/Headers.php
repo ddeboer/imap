@@ -13,17 +13,6 @@ class Headers
         // Store all headers as lowercase
         $this->array = array_change_key_case((array) $headers);
 
-        // Decode subject, as it may be UTF-8 encoded
-        if (isset($headers->subject)) {
-            $subject = '';
-            foreach (\imap_mime_header_decode($headers->subject) as $part) {
-                // $part->charset can also be 'default', i.e. plain US-ASCII
-                $charset = $part->charset == 'default' ? 'auto' : $part->charset;
-                $subject .= \mb_convert_encoding($part->text, 'UTF-8', $charset);
-            }
-            $this->array['subject'] = $subject;
-        }
-
         $this->array['msgno'] = (int) $this->array['msgno'];
 
         foreach (array('answered', 'deleted', 'draft') as $flag) {
