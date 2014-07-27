@@ -28,5 +28,16 @@ class MessageIterator extends \ArrayIterator
     {
         return new Message($this->stream, parent::current());
     }
-}
 
+    /**
+     * Get message on index
+     * @param int $index
+     * @return Message
+     */
+    public function offsetGet($index)
+    {
+        parent::offsetGet($index);
+        return new Message($this->stream, parent::offsetGet($index));
+    }
+
+}
