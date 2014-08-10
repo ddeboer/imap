@@ -3,7 +3,7 @@
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Message\EmailAddress;
-use Ddeboer\Imap\Exception\MessageDeleteException;
+use Ddeboer\Imap\Exception\MessageCannotBeDeletedException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 
 /**
