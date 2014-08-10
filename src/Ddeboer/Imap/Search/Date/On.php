@@ -3,9 +3,6 @@
 namespace Ddeboer\Imap\Search\Date;
 
 use Ddeboer\Imap\Search\Date;
-use Ddeboer\Imap\Search\Condition;
-
-use DateTime;
 
 /**
  * Represents a date on condition. Messages must have a date matching the

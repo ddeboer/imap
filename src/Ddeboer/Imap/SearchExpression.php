@@ -19,7 +19,7 @@ class SearchExpression
     /**
      * Adds a new condition to the expression.
      *
-     * @param Condition $condition The condition to be added.
+     * @param  Condition        $condition The condition to be added.
      * @return SearchExpression
      */
     public function addCondition(Condition $condition)

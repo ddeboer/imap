@@ -14,4 +14,4 @@ class MessageMoveException extends Exception
             )
         );
     }
-} 
+}

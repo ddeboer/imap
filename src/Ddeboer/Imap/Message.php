@@ -3,7 +3,7 @@
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Message\EmailAddress;
-use Ddeboer\Imap\Exception\MessageCannotBeDeletedException;
+use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 
 /**
@@ -223,8 +223,8 @@ class Message extends Message\Part
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;
                 }
-                if($part->hasChildren()) {
-                    foreach($part->getParts() AS $child_part) {
+                if ($part->hasChildren()) {
+                    foreach ($part->getParts() AS $child_part) {
                         if ($child_part instanceof Message\Attachment) {
                             $this->attachments[] = $child_part;
                         }
@@ -255,7 +255,7 @@ class Message extends Message\Part
         $this->headers = null;
 
         if (!\imap_delete($this->stream, $this->messageNumber)) {
-            throw new MessageCannotBeDeletedException($this->messageNumber);
+            throw new MessageDeleteException($this->messageNumber);
         }
     }
 

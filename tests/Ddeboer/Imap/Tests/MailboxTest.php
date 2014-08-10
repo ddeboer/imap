@@ -3,7 +3,6 @@
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Mailbox;
-use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 
 class MailboxTest extends AbstractTest
 {

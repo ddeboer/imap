@@ -2,8 +2,6 @@
 
 namespace Ddeboer\Imap;
 
-use Ddeboer\Imap\Exception\Exception;
-
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
  *
@@ -53,7 +51,7 @@ class Mailbox implements \IteratorAggregate
      *
      * @param SearchExpression $search Search expression (optional)
      *
-     * @return MessageIterator
+     * @return MessageIterator|Message[]
      */
     public function getMessages(SearchExpression $search = null)
     {
@@ -142,4 +140,3 @@ class Mailbox implements \IteratorAggregate
         }
     }
 }
-

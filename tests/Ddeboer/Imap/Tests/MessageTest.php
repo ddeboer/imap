@@ -46,4 +46,4 @@ class MessageTest extends AbstractTest
         $this->assertEquals('lietuviškos raidės', $message->getSubject());
         $this->assertEquals('lietuviškos raidės', $message->getBodyText());
     }
-} 
+}

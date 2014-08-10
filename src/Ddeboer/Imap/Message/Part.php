@@ -80,7 +80,7 @@ class Part implements \RecursiveIterator
      * Constructor
      *
      * @param \stdClass $part   The part
-     * @param string $number The part number
+     * @param string    $number The part number
      */
     public function __construct($stream, $messageNumber, $partNumber = null, $structure = null)
     {

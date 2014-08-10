@@ -15,7 +15,7 @@ class MessageIterator extends \ArrayIterator
     public function __construct($stream, array $messageNumbers)
     {
         $this->stream = $stream;
-        
+
         parent::__construct($messageNumbers);
     }
 
@@ -29,4 +29,3 @@ class MessageIterator extends \ArrayIterator
         return new Message($this->stream, parent::current());
     }
 }
-
