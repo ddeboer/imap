@@ -9,8 +9,8 @@ php:
 env:
   global:
   - secure: dT+Srfm2l/hI7eXv+Fxy2QsOTTuunCQEhHq9SdX1W8MUafGszbtJhew4NY7ZT5UJzgJ3XN69tkfnEoiZb3vU0jzGVyJOahNkUFo2yRADz8ZWQWwPrfCmZGWCbh7J+cxb9cA0wUh9E3qsmwMoLVpBwnPlolAiGCm1SKxBYw/QrxM=
-  - secure: BHJVDL3aH3hzcL8ZrLzHfkSKeUfgwRmxQhAA9kpeZnH8/uHQrdb4UeH4SYHVGhYv8LBz4Jxxsu0W0YxHbBOgwZYQT+lzWC/nDRbPQQtsw8B4hoJkvdlkkIwHzfGZ1ct1kLTPTz36x2puEoz9YKXCATKCNth7DogOEl0xxLLHH3k=
-  
+  - secure: "V9m0u6xxjtsHapzm9Yj4jTm+bP5/I9yuElfzZyCP29D4lq9FCra/ygldx9xUfkCkCgroPWfeeDKfoozpoJcrzdH82KCQ9N908y9xM0FeCWLP/KJBCEvPPTVFpv2z+7NouSSOllBEaMXECUCZxOIxhrmhy4/ua42CrUaUtU9rMjU="
+
 before_script:
   - composer install --dev
 
