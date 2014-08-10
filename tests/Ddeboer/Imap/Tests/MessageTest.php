@@ -38,13 +38,32 @@ class MessageTest extends AbstractTest
         $this->assertFalse($message->isSeen());
     }
 
-    public function testSubjectEncoding()
+    public function testEncoding7Bit()
     {
         $this->createTestMessage($this->mailbox, 'lietuviškos raidės', 'lietuviškos raidės');
 
         $message = $this->mailbox->getMessage(1);
         $this->assertEquals('lietuviškos raidės', $message->getSubject());
         $this->assertEquals('lietuviškos raidės', $message->getBodyText());
+    }
+
+    public function testEncodingQuotedPrintable()
+    {
+        $boundary = 'Mailer=123';
+        $raw = "Subject: ESPAÑA\r\n"
+            . "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n"
+            . "--$boundary\r\n"
+            . "Content-Transfer-Encoding: quoted-printable\r\n"
+            . "Content-Type: text/html\r\n\tcharset=\"windows-1252\"\r\n"
+            . "\r\n"
+            . "<html><body>Espa=F1a</body></html>\r\n\r\n"
+            . "--$boundary--\r\n\r\n";
+
+        $this->mailbox->addMessage($raw);
+
+        $message = $this->mailbox->getMessage(1);
+        $this->assertEquals('ESPAÑA', $message->getSubject());
+        $this->assertEquals("<html><body>España</body></html>\r\n", $message->getBodyHtml());
     }
 
     public function testBcc()
