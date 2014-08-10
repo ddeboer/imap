@@ -46,4 +46,15 @@ class MessageTest extends AbstractTest
         $this->assertEquals('lietuviškos raidės', $message->getSubject());
         $this->assertEquals('lietuviškos raidės', $message->getBodyText());
     }
+
+    public function testBcc()
+    {
+        $raw = "Subject: Undisclosed recipients\r\n";
+        $this->mailbox->addMessage($raw);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertEquals('Undisclosed recipients', $message->getSubject());
+        $this->assertCount(0, $message->getTo());
+    }
 }
