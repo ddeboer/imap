@@ -1,12 +1,21 @@
 language: php
+
 php:
-- '5.5'
-- '5.4'
-- '5.3'
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+
 env:
   global:
   - secure: dT+Srfm2l/hI7eXv+Fxy2QsOTTuunCQEhHq9SdX1W8MUafGszbtJhew4NY7ZT5UJzgJ3XN69tkfnEoiZb3vU0jzGVyJOahNkUFo2yRADz8ZWQWwPrfCmZGWCbh7J+cxb9cA0wUh9E3qsmwMoLVpBwnPlolAiGCm1SKxBYw/QrxM=
   - secure: BHJVDL3aH3hzcL8ZrLzHfkSKeUfgwRmxQhAA9kpeZnH8/uHQrdb4UeH4SYHVGhYv8LBz4Jxxsu0W0YxHbBOgwZYQT+lzWC/nDRbPQQtsw8B4hoJkvdlkkIwHzfGZ1ct1kLTPTz36x2puEoz9YKXCATKCNth7DogOEl0xxLLHH3k=
+  
 before_script:
-- composer install --dev
-script: phpunit --coverage-text
+  - composer install --dev
+
+script: phpunit --coverage-clover=coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
