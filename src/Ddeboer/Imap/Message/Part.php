@@ -154,7 +154,7 @@ class Part implements \RecursiveIterator
                     break;
 
                 case self::ENCODING_QUOTED_PRINTABLE:
-                    $this->decodedContent = \utf8_encode( \quoted_printable_decode($this->getContent()));
+                    $this->decodedContent =  \utf8_encode(\quoted_printable_decode($this->getContent()));
                     break;
 
                 case self::ENCODING_7BIT:
