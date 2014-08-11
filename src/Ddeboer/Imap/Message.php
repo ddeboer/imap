@@ -165,14 +165,27 @@ class Message extends Message\Part
      *
      * @return Message\Headers
      */
-    public function getHeaders()
+    public function getHeaders($rawHeaders = false)
     {
         if (null === $this->headers) {
+            
+            $message_number = imap_msgno($this->stream, $this->messageNumber);
+            
             // \imap_header is much faster than \imap_fetchheader
             // \imap_header returns only a subset of all mail headers,
             // but it does include the message flags.
-            $headers = \imap_header($this->stream, $this->messageNumber);
-            $this->headers = new Message\Headers($headers);
+
+            if ($rawHeaders) {
+                $rawHeaders = imap_fetchheader($this->stream, $message_number);
+            }
+
+            $headers = imap_header($this->stream, $message_number);
+
+            // Would be useful if we weren't already calling imap_header()
+            //$headers = imap_rfc822_parse_headers($rawHeaders);
+
+            $this->headers = new Message\Headers($headers, $rawHeaders ?: null);
+
         }
 
         return $this->headers;

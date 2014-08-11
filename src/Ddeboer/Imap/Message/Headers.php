@@ -5,9 +5,12 @@ namespace Ddeboer\Imap\Message;
 class Headers
 {
     protected $array = array();
+    protected $rawHeaders = null;
 
-    public function __construct(\stdClass $headers)
+    public function __construct(\stdClass $headers, $rawHeaders = null)
     {
+        $this->rawHeaders = $rawHeaders;
+
         // Store all headers as lowercase
         $this->array = array_change_key_case((array) $headers);
 
