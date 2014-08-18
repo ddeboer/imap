@@ -224,7 +224,7 @@ class Message extends Message\Part
                     $this->attachments[] = $part;
                 }
                 if ($part->hasChildren()) {
-                    foreach ($part->getParts() AS $child_part) {
+                    foreach ($part->getParts() as $child_part) {
                         if ($child_part instanceof Message\Attachment) {
                             $this->attachments[] = $child_part;
                         }
