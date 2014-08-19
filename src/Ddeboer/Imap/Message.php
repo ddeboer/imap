@@ -248,6 +248,8 @@ class Message extends Message\Part
 
     /**
      * Delete message
+     *
+     * @throws MessageDeleteException
      */
     public function delete()
     {

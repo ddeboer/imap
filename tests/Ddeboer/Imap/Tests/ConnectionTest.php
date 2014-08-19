@@ -34,8 +34,16 @@ class ConnectionTest extends AbstractTest
 
         $name = 'test' . uniqid();
         $mailbox = $connection->createMailbox($name);
-        $this->assertEquals($name, $mailbox->getName(), 'Correct mailbox must be returned from create');
-        $this->assertEquals($name, $connection->getMailbox($name)->getName(), 'Correct mailbox must be returned from connection');
+        $this->assertEquals(
+            $name,
+            $mailbox->getName(),
+            'Correct mailbox must be returned from create'
+        );
+        $this->assertEquals(
+            $name,
+            $connection->getMailbox($name)->getName(),
+            'Correct mailbox must be returned from connection'
+        );
 
         $mailbox->delete();
         $connection->getMailbox($name);
