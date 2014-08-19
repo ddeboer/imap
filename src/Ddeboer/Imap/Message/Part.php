@@ -238,7 +238,8 @@ class Part implements \RecursiveIterator
                 if (isset($partStructure->disposition)
                     && (strtolower($partStructure->disposition) == 'attachment'
                         || strtolower($partStructure->disposition) == 'inline')
-                    && strtoupper($partStructure->subtype) != "PLAIN") {
+                    && strtoupper($partStructure->subtype) != "PLAIN"
+                ) {
                     $attachment = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
                     $this->parts[] = $attachment;
                 } else {
