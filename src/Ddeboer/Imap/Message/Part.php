@@ -150,7 +150,7 @@ class Part implements \RecursiveIterator
         if (null === $this->decodedContent) {
             switch ($this->getEncoding()) {
                 case self::ENCODING_BASE64:
-                   $this->decodedContent = \base64_decode($this->getContent());
+                    $this->decodedContent = \base64_decode($this->getContent());
                     break;
 
                 case self::ENCODING_QUOTED_PRINTABLE:
@@ -236,8 +236,10 @@ class Part implements \RecursiveIterator
                 }
 
                 if (isset($partStructure->disposition)
-                    && (strtolower($partStructure->disposition) == 'attachment' || strtolower($partStructure->disposition) == 'inline' )
-                    && strtoupper ($partStructure->subtype) != "PLAIN") {
+                    && (strtolower($partStructure->disposition) == 'attachment'
+                        || strtolower($partStructure->disposition) == 'inline')
+                    && strtoupper($partStructure->subtype) != "PLAIN"
+                ) {
                     $attachment = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
                     $this->parts[] = $attachment;
                 } else {

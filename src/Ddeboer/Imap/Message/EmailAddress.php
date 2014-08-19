@@ -32,7 +32,7 @@ class EmailAddress
         if ($this->name) {
             $address = sprintf("%s <%s@%s>", $this->name, $this->mailbox, $this->hostname);
         } else {
-            $address = sprintf("%s@%s",$this->mailbox, $this->hostname);
+            $address = sprintf("%s@%s", $this->mailbox, $this->hostname);
         }
 
         return $address;
