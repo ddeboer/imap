@@ -159,6 +159,7 @@ class Part implements \RecursiveIterator
 
                 case self::ENCODING_7BIT:
                 case self::ENCODING_8BIT:
+                case self::ENCODING_BINARY:
                     $this->decodedContent = $this->getContent();
                     break;
 
