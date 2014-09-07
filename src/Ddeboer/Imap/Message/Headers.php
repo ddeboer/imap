@@ -6,7 +6,7 @@ class Headers
 {
     protected $array = array();
 
-    public function __construct(\stdClass $headers)
+	public function __construct(\stdClass $headers, $rawHeaders = null)
     {
         // Store all headers as lowercase
         $this->array = array_change_key_case((array) $headers);
@@ -55,6 +55,8 @@ class Headers
         } else {
             $this->array['to'] = array();
         }
+		
+		$this->array['rawheaders'] = $rawHeaders;
     }
 
     public function current()
