@@ -173,13 +173,13 @@ class Message extends Message\Part
             // but it does include the message flags.
             $headers = \imap_header($this->stream, \imap_msgno($this->stream, $this->messageNumber));
 
-            if( $rawHeaders !== false )
+            //if( $rawHeaders !== false )
             {
                 $rawHeaders = \imap_fetchheader($this->stream, \imap_msgno($this->stream, $this->messageNumber));
                 $this->headers = new Message\Headers($headers, $rawHeaders);
             }
-            else
-                 $this->headers = new Message\Headers($headers);
+            /*else
+                 $this->headers = new Message\Headers($headers);*/
         }
 
         return $this->headers;
