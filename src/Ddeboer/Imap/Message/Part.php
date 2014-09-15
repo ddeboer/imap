@@ -236,17 +236,22 @@ class Part implements \RecursiveIterator
                     $partNumber = (string) ($this->partNumber . '.' . ($key+1));
                 }
 
-	            $partParameters = new ArrayCollection();
-	            foreach ($partStructure->parameters as $partParameter) {
-		            $partParameters->set(strtolower($partParameter->attribute), $partParameter->value);
+	            // Special case for attachments ?
+	            $attachmentFoundByFilename = false;
+	            if (isset($partStructure->ifparameters) && $partStructure->ifparameters === 1) {
+		            foreach($partStructure->parameters as $partParameter) {
+			            if (strtolower($partParameter->attribute) === 'name' || strtolower($partParameter->attribute) === 'filename') {
+				            $attachmentFoundByFilename = true;
+				            break 1; // No need to go on after we've found what we were looking for
+			            }
+		            }
 	            }
 
                 if ((isset($partStructure->disposition)
                     && (strtolower($partStructure->disposition) == 'attachment'
                         || strtolower($partStructure->disposition) == 'inline')
                     && strtoupper($partStructure->subtype) != "PLAIN")
-                    || $partParameters->containsKey('name')
-                    || $partParameters->containsKey('filename')
+                    || $attachmentFoundByFilename
                 ) {
 	                $attachment = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
 	                $this->parts[] = $attachment;
