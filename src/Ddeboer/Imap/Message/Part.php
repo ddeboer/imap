@@ -248,7 +248,7 @@ class Part implements \RecursiveIterator
                     || $partParameters->containsKey('name')
                     || $partParameters->containsKey('filename')
                 ) {
-	                $attachment    = new Attachment( $this->stream, $this->messageNumber, $partNumber, $partStructure );
+	                $attachment = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
 	                $this->parts[] = $attachment;
                 } else {
                     $this->parts[] = new Part($this->stream, $this->messageNumber, $partNumber, $partStructure);
