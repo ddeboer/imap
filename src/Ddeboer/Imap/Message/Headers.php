@@ -47,7 +47,7 @@ class Headers
             foreach ($this->array['to'] as $to) {
                 $recipients[] = new EmailAddress(
                     str_replace('\'', '', $to->mailbox),
-                    str_replace('\'', '', $to->host),
+                    isset($to->host) ? str_replace('\'', '', $to->host) : 'unknown',
                     isset($to->personal) ? \imap_utf8($to->personal) : null
                 );
             }
