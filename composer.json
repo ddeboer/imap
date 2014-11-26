@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        
+        "ext-imap": "*",
         "ext-mbstring": "*",
         "doctrine/common": "*"
     },
