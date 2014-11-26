@@ -37,7 +37,7 @@ class Server
      * @param int    $port     TCP port number
      * @param string $flags    Optional flags
      */
-    public function __construct($hostname, $port = 993, $flags = '/imap/ssl/validate-cert')
+    public function __construct($hostname, $port = 993, $flags = '/imap/ssl/novalidate-cert')
     {
         $this->hostname = $hostname;
         $this->port = $port;
