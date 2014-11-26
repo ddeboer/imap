@@ -13,7 +13,7 @@ Installation
 The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
 
 ```bash
-$ composer require ddeboer/imap:@stable
+$ composer require jhonn921007/imap:@stable
 ```
 
 Usage
