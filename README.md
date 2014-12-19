@@ -18,7 +18,7 @@ $ composer require ddeboer/imap:@stable
 
 Requirements
 ------------
-[PHP IMAP extension installed](http://php.net/manual/es/book.imap.php)
+[PHP IMAP extension](http://php.net/manual/en/book.imap.php) installed
 
 Usage
 -----
