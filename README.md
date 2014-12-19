@@ -16,6 +16,10 @@ The recommended way to install the IMAP library is through [Composer](http://get
 $ composer require ddeboer/imap:@stable
 ```
 
+Requirements
+------------
+[PHP IMAP extension installed](http://php.net/manual/es/book.imap.php)
+
 Usage
 -----
 
