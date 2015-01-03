@@ -55,6 +55,48 @@ class Headers
         } else {
             $this->array['to'] = array();
         }
+
+        if (isset($this->array['cc'])) {
+            $recipients = array();
+            foreach ($this->array['cc'] as $cc) {
+                $recipients[] = new EmailAddress(
+                    str_replace('\'', '', $cc->mailbox),
+                    str_replace('\'', '', $cc->host),
+                    isset($cc->personal) ? \imap_utf8($cc->personal) : null
+                );
+            }
+            $this->array['cc'] = $recipients;
+        } else {
+            $this->array['cc'] = array();
+        }
+
+        if (isset($this->array['sender'])) {
+            $senders = array();
+            foreach ($this->array['sender'] as $sender) {
+                $senders[] = new EmailAddress(
+                    str_replace('\'', '', $sender->mailbox),
+                    str_replace('\'', '', $sender->host),
+                    isset($sender->personal) ? \imap_utf8($sender->personal) : null
+                );
+            }
+            $this->array['sender'] = $senders;
+        } else {
+            $this->array['sender'] = array();
+        }
+
+        if (isset($this->array['reply_to'])) {
+            $recipients = array();
+            foreach ($this->array['reply_to'] as $reply_to) {
+                $recipients[] = new EmailAddress(
+                    str_replace('\'', '', $reply_to->mailbox),
+                    str_replace('\'', '', $reply_to->host),
+                    isset($reply_to->personal) ? \imap_utf8($reply_to->personal) : null
+                );
+            }
+            $this->array['reply_to'] = $recipients;
+        } else {
+            $this->array['reply_to'] = array();
+        }
     }
 
     public function current()
