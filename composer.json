@@ -1,5 +1,5 @@
 {
-    "name": "ddeboer/imap",
+    "name": "jhonn921007/imap",
     "description": "Receive and send e-mails over IMAP",
     "tags": [ "email", "mail", "imap" ],
     "license": "MIT",
@@ -7,6 +7,10 @@
         {
             "name": "David de Boer",
             "email": "david@ddeboer.nl"
+        },
+        {
+            "name": "Jhonnatan Rodriguez",
+            "email": "jhonn@creatribes.com"
         }
     ],
     "require": {

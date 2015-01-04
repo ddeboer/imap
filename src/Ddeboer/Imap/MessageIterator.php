@@ -16,7 +16,7 @@ class MessageIterator extends \ArrayIterator
     {
         $this->stream = $stream;
 
-        parent::__construct($messageNumbers);
+        parent::__construct(array_reverse($messageNumbers));
     }
 
     /**

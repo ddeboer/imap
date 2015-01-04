@@ -45,6 +45,14 @@ class Mailbox implements \IteratorAggregate
 
         return \imap_num_msg($this->connection->getResource());
     }
+    
+    public function getUnread()
+    {
+      $this->init();
+
+      $comprobar = imap_mailboxmsginfo($this->connection->getResource());
+      return $comprobar->Unread;
+    }
 
     /**
      * Get message ids
