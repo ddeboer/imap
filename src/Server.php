@@ -25,7 +25,7 @@ class Server
     private $flags;
 
     /**
-     * @var Connection
+     * @var string
      */
     private $connection;
 
@@ -65,7 +65,7 @@ class Server
      * @param string $username Username
      * @param string $password Password
      *
-     * @return \Ddeboer\Imap\Connection
+     * @return Connection
      * @throws AuthenticationFailedException
      */
     public function authenticate($username, $password)
