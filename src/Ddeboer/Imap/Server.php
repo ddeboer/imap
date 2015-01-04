@@ -39,6 +39,10 @@ class Server
      */
     public function __construct($hostname, $port = 993, $flags = '/imap/ssl/validate-cert')
     {
+        if (!function_exists('\imap_open')) {
+            throw new \RuntimeException('IMAP extension must be enabled');
+        }
+        
         $this->hostname = $hostname;
         $this->port = $port;
         $this->flags = $flags ? '/' . ltrim($flags, '/') : '';
