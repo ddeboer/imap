@@ -10,16 +10,16 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
  */
 class Connection
 {
-    protected $server;
-    protected $resource;
-    protected $mailboxes;
-    protected $mailboxNames;
+    private $server;
+    private $resource;
+    private $mailboxes;
+    private $mailboxNames;
 
     /**
      * Constructor
      *
-     * @param \resource $resource
-     * @param string    $server
+     * @param resource $resource
+     * @param string   $server
      *
      * @throws \InvalidArgumentException
      */
@@ -129,7 +129,12 @@ class Connection
         return $this->resource;
     }
 
-    protected function getMailboxNames()
+    /**
+     * Get mailbox names
+     * 
+     * @return array
+     */
+    private function getMailboxNames()
     {
         if (null === $this->mailboxNames) {
             $mailboxes = \imap_getmailboxes($this->resource, $this->server, '*');

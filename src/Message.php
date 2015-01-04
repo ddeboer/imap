@@ -11,20 +11,19 @@ use Ddeboer\Imap\Exception\MessageMoveException;
  */
 class Message extends Message\Part
 {
-    protected $stream;
-    protected $headers;
-    protected $attachments;
+    private $headers;
+    private $attachments;
 
     /**
      * @var boolean
      */
-    protected $keepUnseen = false;
+    private $keepUnseen = false;
 
     /**
      * Constructor
      *
-     * @param \resource $stream        IMAP stream
-     * @param int       $messageNumber Message number
+     * @param resource $stream        IMAP stream
+     * @param int      $messageNumber Message number
      */
     public function __construct($stream, $messageNumber)
     {
@@ -296,7 +295,7 @@ class Message extends Message\Part
     /**
      * Load message structure
      */
-    protected function loadStructure()
+    private function loadStructure()
     {
         $structure = \imap_fetchstructure($this->stream, $this->messageNumber, \FT_UID);
         $this->parseStructure($structure);

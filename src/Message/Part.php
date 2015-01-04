@@ -58,7 +58,12 @@ class Part implements \RecursiveIterator
 
     protected $lines;
 
+    /**
+     * @var ArrayCollection
+     */
     protected $parameters;
+    
+    protected $stream;
 
     protected $messageNumber;
 
@@ -79,11 +84,17 @@ class Part implements \RecursiveIterator
     /**
      * Constructor
      *
-     * @param \stdClass $part   The part
-     * @param string    $number The part number
+     * @param resource  $stream        IMAP stream
+     * @param int       $messageNumber Message number
+     * @param int       $partNumber    Part number (optional)
+     * @param \stdClass $structure     Part structure
      */
-    public function __construct($stream, $messageNumber, $partNumber = null, $structure = null)
-    {
+    public function __construct(
+        $stream,
+        $messageNumber,
+        $partNumber = null,
+        \stdClass $structure = null
+    ) {
         $this->stream = $stream;
         $this->messageNumber = $messageNumber;
         $this->partNumber = $partNumber;
@@ -152,17 +163,14 @@ class Part implements \RecursiveIterator
                 case self::ENCODING_BASE64:
                     $this->decodedContent = \base64_decode($this->getContent());
                     break;
-
                 case self::ENCODING_QUOTED_PRINTABLE:
                     $this->decodedContent =  \utf8_encode(\quoted_printable_decode($this->getContent()));
                     break;
-
                 case self::ENCODING_7BIT:
                 case self::ENCODING_8BIT:
                 case self::ENCODING_BINARY:
                     $this->decodedContent = $this->getContent();
                     break;
-
                 default:
                     throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
             }

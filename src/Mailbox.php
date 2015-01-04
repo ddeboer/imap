@@ -8,8 +8,8 @@ namespace Ddeboer\Imap;
  */
 class Mailbox implements \IteratorAggregate
 {
-    protected $mailbox;
-    protected $name;
+    private $mailbox;
+    private $name;
 
     /**
      * Constructor
@@ -132,7 +132,7 @@ class Mailbox implements \IteratorAggregate
     /**
      * If connection is not currently in this mailbox, switch it to this mailbox
      */
-    protected function init()
+    private function init()
     {
         $check = \imap_check($this->connection->getResource());
         if ($check->Mailbox != $this->mailbox) {

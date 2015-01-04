@@ -4,10 +4,10 @@ namespace Ddeboer\Imap\Message;
 
 class EmailAddress
 {
-    protected $mailbox;
-    protected $hostname;
-    protected $name;
-    protected $address;
+    private $mailbox;
+    private $hostname;
+    private $name;
+    private $address;
 
     public function __construct($mailbox, $hostname, $name = null)
     {

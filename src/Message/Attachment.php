@@ -7,14 +7,6 @@ namespace Ddeboer\Imap\Message;
  */
 class Attachment extends Part
 {
-    protected $filename;
-
-    protected $data;
-
-    protected $contentType;
-
-    protected $size;
-
     public function __construct($stream, $messageNumber, $partNumber = null, $structure = null)
     {
         parent::__construct($stream, $messageNumber, $partNumber, $structure);

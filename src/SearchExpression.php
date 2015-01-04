@@ -14,7 +14,7 @@ class SearchExpression
      *
      * @var array
      */
-    protected $conditions = array();
+    private $conditions = array();
 
     /**
      * Adds a new condition to the expression.

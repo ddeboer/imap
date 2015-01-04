@@ -4,7 +4,7 @@ namespace Ddeboer\Imap;
 
 class MessageIterator extends \ArrayIterator
 {
-    protected $stream;
+    private $stream;
 
     /**
      * Constructor

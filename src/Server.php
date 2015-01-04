@@ -12,27 +12,27 @@ class Server
     /**
      * @var string Internet domain name or bracketed IP address of server
      */
-    protected $hostname;
+    private $hostname;
 
     /**
      * @var int TCP port number
      */
-    protected $port;
+    private $port;
 
     /**
      * @var string Optional flags
      */
-    protected $flags;
+    private $flags;
 
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     /**
      * @var array
      */
-    protected $parameters;
+    private $parameters;
 
     /**
      * Constructor
@@ -44,9 +44,9 @@ class Server
      * @param array  $parameters Connection parameters
      */
     public function __construct(
-        $hostname, 
-        $port = 993, 
-        $flags = '/imap/ssl/validate-cert', 
+        $hostname,
+        $port = 993,
+        $flags = '/imap/ssl/validate-cert',
         $parameters = array()
     ) {
         if (!function_exists('\imap_open')) {
@@ -71,10 +71,10 @@ class Server
     public function authenticate($username, $password)
     {
         $resource = @\imap_open(
-            $this->getServerString(), 
-            $username, 
-            $password, 
-            null, 
+            $this->getServerString(),
+            $username,
+            $password,
+            null,
             1,
             $this->parameters
         );
@@ -99,8 +99,13 @@ class Server
      *
      * @return string
      */
-    protected function getServerString()
+    private function getServerString()
     {
-        return "{{$this->hostname}:{$this->port}{$this->flags}}";
+        return sprintf(
+            '{%s:%s%s}',
+            $this->hostname,
+            $this->port,
+            $this->flags
+        );
     }
 }
