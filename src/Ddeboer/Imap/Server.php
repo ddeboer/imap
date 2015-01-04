@@ -49,13 +49,13 @@ class Server
      *
      * @param string $username Username
      * @param string $password Password
+     * @param array  $params
      *
      * @return \Ddeboer\Imap\Connection
-     * @throws AuthenticationFailedException
      */
-    public function authenticate($username, $password)
+    public function authenticate($username, $password, $params = [])
     {
-        $resource = @\imap_open($this->getServerString(), $username, $password, null, 1);
+        $resource = @\imap_open($this->getServerString(), $username, $password, null, 1, $params);
 
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
