@@ -6,7 +6,6 @@ use Ddeboer\Imap\Exception\AuthenticationFailedException;
 
 /**
  * An IMAP server
- *
  */
 class Server
 {
@@ -31,14 +30,25 @@ class Server
     protected $connection;
 
     /**
+     * @var array
+     */
+    protected $parameters;
+
+    /**
      * Constructor
      *
-     * @param string $hostname Internet domain name or bracketed IP address of server
-     * @param int    $port     TCP port number
-     * @param string $flags    Optional flags
+     * @param string $hostname   Internet domain name or bracketed IP address
+        *                        of server
+     * @param int    $port       TCP port number
+     * @param string $flags      Optional flags
+     * @param array  $parameters Connection parameters
      */
-    public function __construct($hostname, $port = 993, $flags = '/imap/ssl/validate-cert')
-    {
+    public function __construct(
+        $hostname, 
+        $port = 993, 
+        $flags = '/imap/ssl/validate-cert', 
+        $parameters = array()
+    ) {
         if (!function_exists('\imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
         }
@@ -46,6 +56,7 @@ class Server
         $this->hostname = $hostname;
         $this->port = $port;
         $this->flags = $flags ? '/' . ltrim($flags, '/') : '';
+        $this->parameters = $parameters;
     }
 
     /**
@@ -59,7 +70,14 @@ class Server
      */
     public function authenticate($username, $password)
     {
-        $resource = @\imap_open($this->getServerString(), $username, $password, null, 1);
+        $resource = @\imap_open(
+            $this->getServerString(), 
+            $username, 
+            $password, 
+            null, 
+            1,
+            $this->parameters
+        );
 
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
