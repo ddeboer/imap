@@ -13,8 +13,12 @@ Installation
 The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
 
 ```bash
-$ composer require ddeboer/imap:@stable
+$ composer require ddeboer/imap
 ```
+
+This command requires you to have Composer installed globally, as explained
+in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
+of the Composer documentation.
 
 Requirements
 ------------
