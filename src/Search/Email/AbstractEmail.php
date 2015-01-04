@@ -1,11 +1,13 @@
 <?php
 
-namespace Ddeboer\Imap\Search;
+namespace Ddeboer\Imap\Search\Email;
+
+use Ddeboer\Imap\Search\AbstractCondition;
 
 /**
  * Represents an email condition.
  */
-abstract class Email extends Condition
+abstract class AbstractEmail extends AbstractCondition
 {
     /**
      * Email address for the condition.

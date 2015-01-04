@@ -1,13 +1,14 @@
 <?php
 
-namespace Ddeboer\Imap\Search;
+namespace Ddeboer\Imap\Search\Date;
 
 use DateTime;
+use Ddeboer\Imap\Search\AbstractCondition;
 
 /**
  * Represents a date condition.
  */
-abstract class Date extends Condition
+abstract class AbstractDate extends AbstractCondition
 {
     /**
      * Format for dates to be sent to the IMAP server.

@@ -5,7 +5,7 @@ namespace Ddeboer\Imap\Search;
 /**
  * Represents a condition that can be used in a search expression.
  */
-abstract class Condition
+abstract class AbstractCondition
 {
     /**
      * Converts the condition to a string that can be sent to the IMAP server.

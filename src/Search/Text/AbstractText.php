@@ -1,12 +1,14 @@
 <?php
 
-namespace Ddeboer\Imap\Search;
+namespace Ddeboer\Imap\Search\Text;
+
+use Ddeboer\Imap\Search\AbstractCondition;
 
 /**
  * Represents a text based condition. Text based conditions use a contains
  * restriction.
  */
-abstract class Text extends Condition
+abstract class AbstractText extends AbstractCondition
 {
     /**
      * Text to be used for the condition.

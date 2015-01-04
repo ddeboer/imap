@@ -2,13 +2,11 @@
 
 namespace Ddeboer\Imap\Search\Date;
 
-use Ddeboer\Imap\Search\Date;
-
 /**
  * Represents a date after condition. Messages must have a date after the
  * specified date in order to match the condition.
  */
-class After extends Date
+class After extends AbstractDate
 {
     /**
      * Returns the keyword that the condition represents.

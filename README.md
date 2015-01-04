@@ -70,6 +70,23 @@ foreach ($messages as $message) {
 }
 ```
 
+#### Searching for Messages
+
+```php
+use Ddeboer\Imap\SearchExpression;
+use Ddeboer\Imap\Search\Email\To;
+use Ddeboer\Imap\Search\Text\Body;
+
+$search = new SearchExpression();
+$search->addCondition(new To('me@here.com'))
+    ->addCondition(new Body('contents'))
+;
+
+$messages = $mailbox->getMessages($search);
+```
+
+#### Message Properties and Operations
+
 Get message number and unique [message id](http://en.wikipedia.org/wiki/Message-ID)
 in the form <...>:
 

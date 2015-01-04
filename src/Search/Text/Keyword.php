@@ -2,8 +2,6 @@
 
 namespace Ddeboer\Imap\Search\Text;
 
-use Ddeboer\Imap\Search\Text;
-
 /**
  * Represents a keyword text contains condition. Messages must have a keyword
  * matching the specified text in order to match the condition.

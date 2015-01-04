@@ -2,13 +2,13 @@
 
 namespace Ddeboer\Imap\Search\LogicalOperator;
 
-use Ddeboer\Imap\Search\Condition;
+use Ddeboer\Imap\Search\AbstractCondition;
 
 /**
  * Represents an OR operator. Messages only need to match one of the conditions
  * after this operator to match the expression.
  */
-class OrConditions extends Condition
+class OrConditions extends AbstractCondition
 {
     /**
      * Returns the keyword that the condition represents.
