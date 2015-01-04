@@ -8,19 +8,10 @@ class Headers
 
     public function __construct(\stdClass $headers)
     {
+        $headers = $this->decodeHeaders($headers);
+
         // Store all headers as lowercase
         $this->array = array_change_key_case((array) $headers);
-
-        // Decode subject, as it may be UTF-8 encoded
-        if (isset($headers->subject)) {
-            $subject = '';
-            foreach (\imap_mime_header_decode($headers->subject) as $part) {
-                // $part->charset can also be 'default', i.e. plain US-ASCII
-                $charset = $part->charset == 'default' ? 'auto' : $part->charset;
-                $subject .= \mb_convert_encoding($part->text, 'UTF-8', $charset);
-            }
-            $this->array['subject'] = $subject;
-        }
 
         $this->array['msgno'] = (int) $this->array['msgno'];
 
@@ -54,6 +45,24 @@ class Headers
             $this->array['to'] = $recipients;
         } else {
             $this->array['to'] = array();
+        }
+    }
+
+    private function decodeHeaders($header)
+    {
+        if (is_scalar($header)) {
+            return \imap_utf8($header);
+
+        } elseif (is_array($header) || $header instanceof \stdClass) {
+            foreach ($header as $key => &$value) {
+                $value = $this->decodeHeaders($value);
+            }
+
+            return $header;
+
+        } else {
+            $hint = is_object($header) ? get_class($header) : gettype($header);
+            throw new \InvalidArgumentException("Invalid \$header argument. Expected scalar, array or \\stdClass instance, {$hint} given");
         }
     }
 
