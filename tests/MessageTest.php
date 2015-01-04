@@ -76,4 +76,19 @@ class MessageTest extends AbstractTest
         $this->assertEquals('Undisclosed recipients', $message->getSubject());
         $this->assertCount(0, $message->getTo());
     }
+    
+    public function testDelete()
+    {
+        $this->createTestMessage($this->mailbox, 'Message A');
+        $this->createTestMessage($this->mailbox, 'Message B');
+        $this->createTestMessage($this->mailbox, 'Message C');
+
+        $message = $this->mailbox->getMessage(3);
+        $message->delete();
+
+        $this->assertCount(2, $this->mailbox);
+        foreach ($this->mailbox->getMessages() as $message) {
+            $this->assertNotEquals('Message C', $message->getSubject());
+        }
+    }
 }
