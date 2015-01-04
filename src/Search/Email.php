@@ -39,7 +39,7 @@ abstract class Email extends Condition
     /**
      * Converts the condition to a string that can be sent to the IMAP server.
      *
-     * @return string.
+     * @return string
      */
     public function __toString()
     {
