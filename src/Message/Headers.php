@@ -23,9 +23,7 @@ class Headers extends ArrayCollection
         if (isset($headers->subject)) {
             $subject = '';
             foreach (\imap_mime_header_decode($headers->subject) as $part) {
-                // $part->charset can also be 'default', i.e. plain US-ASCII
-                $charset = $part->charset == 'default' ? 'auto' : $part->charset;
-                $subject .= \mb_convert_encoding($part->text, 'UTF-8', $charset);
+                $subject .= $this->convertToUtf8($part->text, $part->charset);
             }
             $array['subject'] = $subject;
         }
@@ -77,5 +75,39 @@ class Headers extends ArrayCollection
     public function get($key)
     {
         return parent::get(strtolower($key));
+    }
+
+    /**
+     * Convert subject part to UTF-8
+     *
+     * @param string $text
+     * @param string $charset
+     *
+     * @return string
+     */
+    protected function convertToUtf8($text, $charset)
+    {
+        $uppercaseCharset = strtoupper($charset);
+
+        $charsetMap = array(
+            'WINDOWS-1257' => 'ISO-8859-13',
+            'UTF-7'        => 'UTF7-IMAP',
+        );
+        if (isset($charsetMap[$uppercaseCharset])) {
+            $charset          = $charsetMap[$uppercaseCharset];
+            $uppercaseCharset = strtoupper($charset);
+        }
+
+        $supportedEncodings = array_map('strtoupper', mb_list_encodings());
+        if (!in_array($uppercaseCharset, $supportedEncodings)) {
+            if (function_exists('iconv') && !in_array($charset, array('auto', 'default'))) {
+                return iconv($charset, 'UTF-8', $text);
+            }
+            else {
+                $charset = 'auto';
+            }
+        }
+
+        return mb_convert_encoding($text, 'UTF-8', $charset);
     }
 }
