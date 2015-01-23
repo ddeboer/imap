@@ -1,6 +1,6 @@
 {
     "name": "ddeboer/imap",
-    "description": "Object-oriented IMAP library for PHP 5.3+",
+    "description": "Object-oriented IMAP library for PHP 5+",
     "keywords": [ "email", "mail", "imap" ],
     "license": "MIT",
     "authors": [
@@ -14,6 +14,7 @@
         }   
     ],
     "require": {
+        "php": ">=5.4.0",
         "ext-imap": "*",
         "doctrine/common": "~2",
         "ddeboer/transcoder": "~1"
