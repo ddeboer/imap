@@ -112,4 +112,15 @@ class MessageTest extends AbstractTest
             $this->assertNotEquals('Message C', $message->getSubject());
         }
     }
+    
+    public function testGetAttachments()
+    {
+        $this->mailbox->addMessage(file_get_contents(__DIR__.'/fixtures/attachments'));
+        $message = $this->mailbox->getMessage(1);
+        $atts = $message->getAttachments();
+        
+        foreach ($atts as $a) {
+            var_dump($a);
+        }
+    }
 }
