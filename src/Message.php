@@ -62,7 +62,7 @@ class Message extends Message\Part
      */
     public function getTo()
     {
-        return $this->getHeaders()->get('to');
+        return $this->getHeaders()->get('to') ?: [];
     }
 
     /**
