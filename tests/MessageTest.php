@@ -65,7 +65,9 @@ class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
         $this->assertEquals('ESPAÑA', $message->getSubject());
         $this->assertEquals("<html><body>España</body></html>\r\n", $message->getBodyHtml());
-        $this->assertEquals(new \DateTime('2014-06-13 17:18:44'), $message->getDate());
+        
+        $expected = new \DateTime('2014-06-13 17:18:44');
+        $this->assertEquals($expected->getTimestamp(), $message->getDate()->getTimestamp());
     }
 
     public function testBcc()
