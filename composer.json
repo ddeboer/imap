@@ -15,10 +15,12 @@
     ],
     "require": {
         "ext-imap": "*",
-        "ext-mbstring": "*",
-        "doctrine/common": "~2"
+        "doctrine/common": "~2",
+        "ddeboer/transcoder": "~1"
     },
     "require-dev": {
+        "ext-mbstring": "*",
+        "ext-iconv": "*",
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {

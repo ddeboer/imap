@@ -2,6 +2,7 @@
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Transcoder\Transcoder;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -178,12 +179,11 @@ class Part implements \RecursiveIterator
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
             if ($this->getType() === self::TYPE_TEXT
-                && null !== $this->getCharset()
                 && strtolower($this->getCharset()) != 'utf-8'
             ) {
-                $this->decodedContent = \mb_convert_encoding(
+                $this->decodedContent = Transcoder::create()->transcode(
                     $this->decodedContent,
-                    'UTF-8'
+                    $this->getCharset()
                 );
             }
         }

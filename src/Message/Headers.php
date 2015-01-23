@@ -2,6 +2,7 @@
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Transcoder\Transcoder;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -19,13 +20,13 @@ class Headers extends ArrayCollection
         // Store all headers as lowercase
         $array = array_change_key_case((array) $headers);
 
-        // Decode subject, as it may be UTF-8 encoded
+        // Transcode subject to UTF-8 if needed
         if (isset($headers->subject)) {
             $subject = '';
             foreach (\imap_mime_header_decode($headers->subject) as $part) {
                 // $part->charset can also be 'default', i.e. plain US-ASCII
                 $charset = $part->charset == 'default' ? 'auto' : $part->charset;
-                $subject .= \mb_convert_encoding($part->text, 'UTF-8', $charset);
+                $subject .= $this->convertToUtf8($part->text, $charset);
             }
             $array['subject'] = $subject;
         }
@@ -77,5 +78,10 @@ class Headers extends ArrayCollection
     public function get($key)
     {
         return parent::get(strtolower($key));
+    }
+    
+    private function convertToUtf8($string, $fromCharset)
+    {
+        return Transcoder::create()->transcode($string, $fromCharset);
     }
 }
