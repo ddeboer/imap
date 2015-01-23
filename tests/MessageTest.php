@@ -54,7 +54,7 @@ class MessageTest extends AbstractTest
             . "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n"
             . "--$boundary\r\n"
             . "Content-Transfer-Encoding: quoted-printable\r\n"
-            . "Content-Type: text/html\r\n\tcharset=\"windows-1252\"\r\n"
+            . "Content-Type: text/html; charset=\"windows-1252\"\r\n"
             . "\r\n"
             . "<html><body>Espa=F1a</body></html>\r\n\r\n"
             . "--$boundary--\r\n\r\n";
