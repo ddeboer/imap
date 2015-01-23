@@ -9,7 +9,7 @@ class Exception extends \RuntimeException
     public function __construct($message, $code = null, $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->errors = \imap_errors();
+        $this->errors = imap_errors();
     }
 
     /**

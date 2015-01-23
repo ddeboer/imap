@@ -57,11 +57,4 @@ class EmailAddress
     {
         return $this->getAddress();
     }
-
-    public static function fromString($address)
-    {
-        $parts = explode('@', $address);
-
-        return new self($parts[0], $parts[1]);
-    }
 }

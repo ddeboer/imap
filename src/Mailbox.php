@@ -43,7 +43,7 @@ class Mailbox implements \IteratorAggregate
     {
         $this->init();
 
-        return \imap_num_msg($this->connection->getResource());
+        return imap_num_msg($this->connection->getResource());
     }
 
     /**
@@ -59,9 +59,9 @@ class Mailbox implements \IteratorAggregate
 
         $query = ($search ? (string) $search : 'ALL');
 
-        $messageNumbers = \imap_search($this->connection->getResource(), $query, \SE_UID);
+        $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
-            // \imap_search can also return false
+            // imap_search can also return false
             $messageNumbers = array();
         }
 
@@ -112,7 +112,7 @@ class Mailbox implements \IteratorAggregate
     {
         $this->init();
 
-        \imap_expunge($this->connection->getResource());
+        imap_expunge($this->connection->getResource());
 
         return $this;
     }
@@ -126,7 +126,7 @@ class Mailbox implements \IteratorAggregate
      */
     public function addMessage($message)
     {
-        return \imap_append($this->connection->getResource(), $this->mailbox, $message);
+        return imap_append($this->connection->getResource(), $this->mailbox, $message);
     }
 
     /**
@@ -134,9 +134,9 @@ class Mailbox implements \IteratorAggregate
      */
     private function init()
     {
-        $check = \imap_check($this->connection->getResource());
+        $check = imap_check($this->connection->getResource());
         if ($check->Mailbox != $this->mailbox) {
-            \imap_reopen($this->connection->getResource(), $this->mailbox);
+            imap_reopen($this->connection->getResource(), $this->mailbox);
         }
     }
 }

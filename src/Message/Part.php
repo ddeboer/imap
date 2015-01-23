@@ -319,7 +319,7 @@ class Part implements \RecursiveIterator
      */
     protected function doGetContent($keepUnseen = false)
     {
-        return \imap_fetchbody(
+        return imap_fetchbody(
             $this->stream,
             $this->messageNumber,
             $this->partNumber ?: 1,

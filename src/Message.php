@@ -167,10 +167,10 @@ class Message extends Message\Part
     public function getHeaders()
     {
         if (null === $this->headers) {
-            // \imap_header is much faster than \imap_fetchheader
-            // \imap_header returns only a subset of all mail headers,
+            // imap_header is much faster than imap_fetchheader
+            // imap_header returns only a subset of all mail headers,
             // but it does include the message flags.
-            $headers = \imap_header($this->stream, \imap_msgno($this->stream, $this->messageNumber));
+            $headers = imap_header($this->stream, imap_msgno($this->stream, $this->messageNumber));
             $this->headers = new Message\Headers($headers);
         }
 
@@ -255,7 +255,7 @@ class Message extends Message\Part
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->headers = null;
 
-        if (!\imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
+        if (!imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
             throw new MessageDeleteException($this->messageNumber);
         }
     }
@@ -269,7 +269,7 @@ class Message extends Message\Part
      */
     public function move(Mailbox $mailbox)
     {
-        if (!\imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName(), \CP_UID)) {
+        if (!imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName(), \CP_UID)) {
             throw new MessageMoveException($this->messageNumber, $mailbox->getName());
         }
 
@@ -297,7 +297,7 @@ class Message extends Message\Part
      */
     private function loadStructure()
     {
-        $structure = \imap_fetchstructure($this->stream, $this->messageNumber, \FT_UID);
+        $structure = imap_fetchstructure($this->stream, $this->messageNumber, \FT_UID);
         $this->parseStructure($structure);
     }
 }

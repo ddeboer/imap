@@ -49,7 +49,7 @@ class Server
         $flags = '/imap/ssl/validate-cert',
         $parameters = array()
     ) {
-        if (!function_exists('\imap_open')) {
+        if (!function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
         }
         
@@ -70,7 +70,7 @@ class Server
      */
     public function authenticate($username, $password)
     {
-        $resource = @\imap_open(
+        $resource = @imap_open(
             $this->getServerString(),
             $username,
             $password,

@@ -63,7 +63,7 @@ class Connection
             throw new MailboxDoesNotExistException($name);
         }
 
-        return new Mailbox($this->server . \imap_utf7_encode($name), $this);
+        return new Mailbox($this->server . imap_utf7_encode($name), $this);
     }
 
     /**
@@ -73,7 +73,7 @@ class Connection
      */
     public function count()
     {
-        return \imap_num_msg($this->resource);
+        return imap_num_msg($this->resource);
     }
 
     /**
@@ -86,7 +86,7 @@ class Connection
      */
     public function createMailbox($name)
     {
-        if (\imap_createmailbox($this->resource, $this->server . $name)) {
+        if (imap_createmailbox($this->resource, $this->server . $name)) {
             $this->mailboxNames = $this->mailboxes = null;
 
             return $this->getMailbox($name);
@@ -104,12 +104,12 @@ class Connection
      */
     public function close($flag = 0)
     {
-        return \imap_close($this->resource, $flag);
+        return imap_close($this->resource, $flag);
     }
 
     public function deleteMailbox(Mailbox $mailbox)
     {
-        if (false === \imap_deletemailbox(
+        if (false === imap_deletemailbox(
             $this->resource,
             $this->server . $mailbox->getName()
         )) {
@@ -137,9 +137,9 @@ class Connection
     private function getMailboxNames()
     {
         if (null === $this->mailboxNames) {
-            $mailboxes = \imap_getmailboxes($this->resource, $this->server, '*');
+            $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
             foreach ($mailboxes as $mailbox) {
-                $this->mailboxNames[] = \imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
+                $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
             }
         }
 
