@@ -2,6 +2,9 @@
 
 namespace Ddeboer\Imap\Message;
 
+/**
+ * An e-mail address
+ */
 class EmailAddress
 {
     private $mailbox;
@@ -9,12 +12,15 @@ class EmailAddress
     private $name;
     private $address;
 
-    public function __construct($mailbox, $hostname, $name = null)
+    public function __construct($mailbox, $hostname = null, $name = null)
     {
         $this->mailbox = $mailbox;
         $this->hostname = $hostname;
         $this->name = $name;
-        $this->address = $mailbox . '@' . $hostname;
+        
+        if ($hostname) {
+            $this->address = $mailbox . '@' . $hostname;
+        }
     }
 
     public function getAddress()

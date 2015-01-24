@@ -67,6 +67,25 @@ class MessageTest extends AbstractTest
         $this->assertEquals("<html><body>España</body></html>\r\n", $message->getBodyHtml());
         $this->assertEquals(new \DateTime('2014-06-13 17:18:44+0200'), $message->getDate());
     }
+    
+    public function testEmailAddress()
+    {
+        $this->mailbox->addMessage($this->getFixture('email_address'));
+        $message = $this->mailbox->getMessage(1);
+        
+        $from = $message->getFrom();
+        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $from);
+        $this->assertEquals('no_host', $from->getMailbox());
+
+        $cc = $message->getCc();
+        $this->assertCount(2, $cc);
+        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[0]);
+        $this->assertEquals('This one is right', $cc[0]->getName());
+        $this->assertEquals('ding@dong.com', $cc[0]->getAddress());
+        
+        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[1]);
+        $this->assertEquals('No-address', $cc[1]->getMailbox());
+    }
 
     public function testBcc()
     {

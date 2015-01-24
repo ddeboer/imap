@@ -56,13 +56,23 @@ class Message extends Message\Part
     }
 
     /**
-     * Get message recipients (from headers)
+     * Get To recipients
      *
      * @return EmailAddress[] Empty array in case message has no To: recipients
      */
     public function getTo()
     {
         return $this->getHeaders()->get('to') ?: [];
+    }
+
+    /**
+     * Get Cc recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no CC: recipients
+     */
+    public function getCc()
+    {
+        return $this->getHeaders()->get('cc') ?: [];
     }
 
     /**

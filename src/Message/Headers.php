@@ -45,8 +45,11 @@ class Headers extends ArrayCollection
             case 'msgno':
                 return (int)$value;
             case 'answered':
+                // no break
             case 'deleted':
+                // no break
             case 'draft':
+                // no break
             case 'unseen':
                 return (bool)trim($value);
             case 'date':
@@ -57,9 +60,11 @@ class Headers extends ArrayCollection
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':
+                // no break
+            case 'cc':
                 $emails = [];
-                foreach ($value as $to) {
-                    $emails[] = $this->decodeEmailAddress($to);
+                foreach ($value as $address) {
+                    $emails[] = $this->decodeEmailAddress($address);
                 }
             
                 return $emails;
@@ -87,7 +92,7 @@ class Headers extends ArrayCollection
     {
         return new EmailAddress(
             $value->mailbox,
-            $value->host,
+            isset($value->host) ? $value->host : null,
             isset($value->personal) ? $this->decodeHeader($value->personal) : null
         );
     }

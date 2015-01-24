@@ -91,4 +91,9 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
         $mailbox->addMessage($message);
     }
+    
+    protected function getFixture($fixture)
+    {
+        return file_get_contents(__DIR__ . '/fixtures/' . $fixture);
+    }
 }
