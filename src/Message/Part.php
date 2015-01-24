@@ -18,6 +18,7 @@ class Part implements \RecursiveIterator
     const TYPE_IMAGE = 'image';
     const TYPE_VIDEO = 'video';
     const TYPE_OTHER = 'other';
+    const TYPE_UNKNOWN = 'unknown';
 
     const ENCODING_7BIT = '7bit';
     const ENCODING_8BIT = '8bit';
@@ -211,7 +212,12 @@ class Part implements \RecursiveIterator
 
     protected function parseStructure(\stdClass $structure)
     {
-        $this->type = $this->typesMap[$structure->type];
+        if (isset($this->typesMap[$structure->type])) {
+            $this->type = $this->typesMap[$structure->type];
+        } else {
+            $this->type = self::TYPE_UNKNOWN;
+        }
+        
         $this->encoding = $this->encodingsMap[$structure->encoding];
         $this->subtype = $structure->subtype;
 
