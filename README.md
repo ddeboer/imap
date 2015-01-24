@@ -171,12 +171,18 @@ Running the tests
 This library is functionally tested on [Travis CI](https://travis-ci.org/ddeboer/imap)
 against the Gmail IMAP server.
 
-If you have your own Gmail (test) account, you can run the tests locally:
+If you have your own IMAP (test) account, you can run the tests locally by 
+providing your IMAP (e.g., Gmail) credentials:
 
 ```bash
 $ composer install --dev
-$ export EMAIL_USERNAME="your_gmail_username"
-$ export EMAIL_PASSWORD="your_gmail_password"
-$ vendor/bin/phpunit
+$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" vendor/bin/phpunit
+```
+
+You can also set an `EMAIL_SERVER` variable, which defaults to `imap.gmail.com`:
+
+```bash
+$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" EMAIL_SERVER="imap.you.com" vendor/bin/phpunit
+
 ```
 

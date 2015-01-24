@@ -70,7 +70,14 @@ class Server
      */
     public function authenticate($username, $password)
     {
-        $resource = @imap_open(
+        // Wrap imap_open, which gives notices instead of exceptions
+        set_error_handler(
+            function ($nr, $message) use ($username) {
+                throw new AuthenticationFailedException($username, $message);
+            }
+        );
+        
+        $resource = imap_open(
             $this->getServerString(),
             $username,
             $password,
@@ -82,6 +89,8 @@ class Server
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
         }
+        
+        restore_error_handler();
 
         $check = imap_check($resource);
         $mailbox = $check->Mailbox;
