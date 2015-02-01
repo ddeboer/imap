@@ -10,6 +10,7 @@ class Mailbox implements \IteratorAggregate
 {
     private $mailbox;
     private $name;
+    private $connection;
 
     /**
      * Constructor
