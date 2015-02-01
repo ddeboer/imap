@@ -10,6 +10,13 @@ A PHP 5.4+ library to read and process e-mails over IMAP.
 Installation
 ------------
 
+Make sure the [PHP IMAP extension](http://php.net/manual/en/book.imap.php)
+is installed. For instance on Debian:
+
+```bash
+# apt-get install php5-imap
+```
+
 The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
 
 ```bash
@@ -20,14 +27,10 @@ This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
 
-Requirements
-------------
-[PHP IMAP extension](http://php.net/manual/en/book.imap.php) installed
-
 Usage
 -----
 
-### Connect and authenticate
+### Connect and Authenticate
 
 ```php
 use Ddeboer\Imap\Server;
@@ -38,9 +41,23 @@ $server = new Server('imap.gmail.com');
 $connection = $server->authenticate('my_username', 'my_password');
 ```
 
+#### Options 
+
+You can specify port, [flags and parameters](http://php.net/manual/en/function.imap-open.php) 
+to the server: 
+
+```php
+$server = new Server(
+    $hostname, // required
+    $port,     // defaults to 993
+    $flags,    // defaults to '/imap/ssl/validate-cert'
+    $parameters
+);
+```
+
 ### Mailboxes
 
-Retrieve mailboxes (also known as mail folders) from mailserver and iterate
+Retrieve mailboxes (also known as mail folders) from the mail server and iterate
 over them:
 
 ```php
@@ -50,6 +67,12 @@ foreach ($mailboxes as $mailbox) {
     // $mailbox is instance of \Ddeboer\Imap\Mailbox
     printf('Mailbox %s has %s messages', $mailbox->getName(), $mailbox->count());
 }
+```
+
+Or retrieve a specific mailbox:
+
+```php
+$mailbox = $connection->getMailbox('INBOX');
 ```
 
 Delete a mailbox:
@@ -143,7 +166,7 @@ $mailbox->getMessage(2)->delete();
 $mailbox->expunge();
 ```
 
-### Message attachments
+### Message Attachments
 
 Get message attachments (both inline and attached) and iterate over them:
 
@@ -158,14 +181,14 @@ foreach ($attachments as $attachment) {
 Download a message attachment to a local file:
 
 ```php
-// getDecodedContent() decodes the attachments contents automatically:
-\file_put_contents(
+// getDecodedContent() decodes the attachment’s contents automatically:
+file_put_contents(
     '/my/local/dir/' . $attachment->getFilename(),
     $attachment->getDecodedContent()
 );
 ```
 
-Running the tests
+Running the Tests
 -----------------
 
 This library is functionally tested on [Travis CI](https://travis-ci.org/ddeboer/imap)

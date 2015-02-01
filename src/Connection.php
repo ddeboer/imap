@@ -59,7 +59,7 @@ class Connection
      */
     public function getMailbox($name)
     {
-        if (!\in_array($name, $this->getMailboxNames())) {
+        if (!in_array($name, $this->getMailboxNames())) {
             throw new MailboxDoesNotExistException($name);
         }
 
