@@ -112,15 +112,30 @@ class MessageTest extends AbstractTest
             $this->assertNotEquals('Message C', $message->getSubject());
         }
     }
-    
+
+    /**
+     * @dataProvider getAttachmentFixture
+     */
     public function testGetAttachments()
     {
-        $this->mailbox->addMessage(file_get_contents(__DIR__.'/fixtures/attachments'));
-        $message = $this->mailbox->getMessage(1);
-        $atts = $message->getAttachments();
+        $this->mailbox->addMessage(
+            $this->getFixture('attachment_encoded_filename')
+        );
         
-        foreach ($atts as $a) {
-            var_dump($a);
-        }
+        $message = $this->mailbox->getMessage(1);
+        $this->assertCount(1, $message->getAttachments());
+        $attachment = $message->getAttachments()[0];
+        $this->assertEquals(
+            'Prostřeno_2014_poslední volné termíny.xls',
+            $attachment->getFilename()
+        );
+    }
+    
+    public function getAttachmentFixture()
+    {
+        return [
+            [ 'attachment_no_disposition' ],
+            [ 'attachment_encoded_filename' ]
+        ];
     }
 }
