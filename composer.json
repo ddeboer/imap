@@ -16,7 +16,6 @@
     "require": {
         "php": ">=5.4.0",
         "ext-imap": "*",
-        "doctrine/common": "~2",
         "ddeboer/transcoder": "~1"
     },
     "require-dev": {

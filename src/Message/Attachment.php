@@ -7,11 +7,6 @@ namespace Ddeboer\Imap\Message;
  */
 class Attachment extends Part
 {
-    public function __construct($stream, $messageNumber, $partNumber = null, $structure = null)
-    {
-        parent::__construct($stream, $messageNumber, $partNumber, $structure);
-    }
-
     /**
      * Get attachment filename
      *
@@ -19,7 +14,8 @@ class Attachment extends Part
      */
     public function getFilename()
     {
-        return $this->parameters->get('filename');
+        return $this->parameters->get('filename')
+            ?: $this->parameters->get('name');
     }
 
     /**

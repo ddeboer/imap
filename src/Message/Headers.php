@@ -2,13 +2,12 @@
 
 namespace Ddeboer\Imap\Message;
 
-use Ddeboer\Transcoder\Transcoder;
-use Doctrine\Common\Collections\ArrayCollection;
+use Ddeboer\Imap\Parameters;
 
 /**
  * Collection of message headers
  */
-class Headers extends ArrayCollection
+class Headers extends Parameters
 {
     /**
      * Constructor
@@ -21,10 +20,8 @@ class Headers extends ArrayCollection
         $headers = array_change_key_case((array) $headers);
 
         foreach ($headers as $key => $value) {
-            $headers[$key] = $this->parseHeader($key, $value);
+            $this->parameters[$key] = $this->parseHeader($key, $value);
         }
-        
-        parent::__construct($headers);
     }
 
     /**
@@ -53,7 +50,7 @@ class Headers extends ArrayCollection
             case 'unseen':
                 return (bool)trim($value);
             case 'date':
-                $value = $this->decodeHeader($value);
+                $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
 
                 return new \DateTime($value);
@@ -69,23 +66,10 @@ class Headers extends ArrayCollection
             
                 return $emails;
             case 'subject':
-                return $this->decodeHeader($value);
+                return $this->decode($value);
             default:
                 return $value;
         }
-    }
-       
-    private function decodeHeader($header)
-    {
-        $decoded = '';
-        $parts = imap_mime_header_decode($header);
-        foreach ($parts as $part) {
-            $charset = 'default' == $part->charset ? 'auto' : $part->charset;
-            // imap_utf8 doesn't seem to work properly, so use Transcoder instead
-            $decoded .= Transcoder::create()->transcode($part->text, $charset);
-        }
-        
-        return $decoded;
     }
 
     private function decodeEmailAddress($value)
@@ -93,7 +77,7 @@ class Headers extends ArrayCollection
         return new EmailAddress(
             $value->mailbox,
             isset($value->host) ? $value->host : null,
-            isset($value->personal) ? $this->decodeHeader($value->personal) : null
+            isset($value->personal) ? $this->decode($value->personal) : null
         );
     }
 }
