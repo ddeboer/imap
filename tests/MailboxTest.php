@@ -43,6 +43,15 @@ class MailboxTest extends AbstractTest
         $this->assertEquals(3, $i);
     }
 
+    /**
+     * @expectedException \Ddeboer\Imap\Exception\MessageDoesNotExistException
+     * @expectedExceptionMessageRegExp /Message 666 does not exist.*Bad message number/
+     */
+    public function testGetMessageThrowsException()
+    {
+        $this->mailbox->getMessage(666);
+    }
+
     public function testCount()
     {
         $this->assertEquals(3, $this->mailbox->count());

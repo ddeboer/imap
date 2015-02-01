@@ -2,6 +2,7 @@
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageMoveException;
@@ -307,7 +308,23 @@ class Message extends Message\Part
      */
     private function loadStructure()
     {
-        $structure = imap_fetchstructure($this->stream, $this->messageNumber, \FT_UID);
+        set_error_handler(
+            function ($nr, $error) {
+                throw new MessageDoesNotExistException(
+                    $this->messageNumber,
+                    $error
+                );
+            }
+        );
+        
+        $structure = imap_fetchstructure(
+            $this->stream,
+            $this->messageNumber,
+            \FT_UID
+        );
+        
+        restore_error_handler();
+        
         $this->parseStructure($structure);
     }
 }
