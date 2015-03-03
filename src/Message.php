@@ -327,4 +327,18 @@ class Message extends Message\Part
         
         $this->parseStructure($structure);
     }
+
+    /**
+     * Save Message with MessageNumber to Disk
+     *
+     * @param $save_path
+     * @return bool
+     */
+    public function saveMessageToDisk($save_path)
+    {
+        $res = imap_savebody($this->stream, $save_path, $this->messageNumber);
+
+        return $res;
+    }
+
 }
