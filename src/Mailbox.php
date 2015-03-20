@@ -136,7 +136,7 @@ class Mailbox implements \IteratorAggregate
     private function init()
     {
         $check = imap_check($this->connection->getResource());
-        if ($check->Mailbox != $this->mailbox) {
+        if ($check === false || $check->Mailbox != $this->mailbox) {
             imap_reopen($this->connection->getResource(), $this->mailbox);
         }
     }
