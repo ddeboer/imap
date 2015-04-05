@@ -41,6 +41,6 @@ class Attachment extends Part
      */
     public function getSize()
     {
-        return $this->parameters->get('size');
+        return $this->getBytes();
     }
 }
