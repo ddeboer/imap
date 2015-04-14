@@ -15,12 +15,13 @@ class Mailbox implements \IteratorAggregate
     /**
      * Constructor
      *
-     * @param string     $name       Mailbox name
+     * @param string     $name       Mailbox object from imap_getmailboxes
      * @param Connection $connection IMAP connection
      */
-    public function __construct($name, Connection $connection)
+    public function __construct($mboxInfo, Connection $connection)
     {
-        $this->mailbox = $name;
+        $this->mailbox =  $mboxInfo;
+        $name = $mboxInfo->name;
         $this->connection = $connection;
         $this->name = substr($name, strpos($name, '}')+1);
     }
@@ -45,6 +46,25 @@ class Mailbox implements \IteratorAggregate
         $this->init();
 
         return imap_num_msg($this->connection->getResource());
+    }
+
+    public function getAttributes()
+    {
+        $attributes = array();
+        $mask = $this->mailbox->attributes;
+        if(($mask & LATT_NOINFERIORS) == LATT_NOINFERIORS){
+            $attributes[] = 'noinferiors';
+        }
+        if(($mask & LATT_NOSELECT) == LATT_NOSELECT){
+            $attributes[] = 'noselect';
+        }
+        if(($mask & LATT_MARKED) == LATT_MARKED){
+            $attributes[] = 'marked';
+        }
+        if(($mask & LATT_UNMARKED) == LATT_UNMARKED){
+            $attributes[] = 'unmarked';
+        }
+        return $attributes;
     }
 
     /**
@@ -136,8 +156,8 @@ class Mailbox implements \IteratorAggregate
     private function init()
     {
         $check = imap_check($this->connection->getResource());
-        if ($check === false || $check->Mailbox != $this->mailbox) {
-            imap_reopen($this->connection->getResource(), $this->mailbox);
+        if ($check === false || $check->Mailbox != $this->mailbox->name) {
+            imap_reopen($this->connection->getResource(), $this->mailbox->name);
         }
     }
 }

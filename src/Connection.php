@@ -13,7 +13,7 @@ class Connection
     private $server;
     private $resource;
     private $mailboxes;
-    private $mailboxNames;
+    private $mailboxList;
 
     /**
      * Constructor
@@ -41,8 +41,8 @@ class Connection
     public function getMailboxes()
     {
         if (null === $this->mailboxes) {
-            foreach ($this->getMailboxNames() as $mailboxName) {
-                $this->mailboxes[] = $this->getMailbox($mailboxName);
+            foreach ($this->getMailboxList() as $mailbox) {
+                $this->mailboxes[] = new Mailbox($mailbox, $this);
             }
         }
 
@@ -59,11 +59,14 @@ class Connection
      */
     public function getMailbox($name)
     {
-        if (!in_array($name, $this->getMailboxNames())) {
+        $list = $this->getMailboxList();
+
+        if (!array_key_exists($name, $list)) {
             throw new MailboxDoesNotExistException($name);
         }
 
-        return new Mailbox($this->server . imap_utf7_encode($name), $this);
+        //no name transcoding, keep it encoded
+        return new Mailbox($list[$name], $this);
     }
 
     /**
@@ -86,6 +89,7 @@ class Connection
      */
     public function createMailbox($name)
     {
+        //name must be encoded in utf7
         if (imap_createmailbox($this->resource, $this->server . $name)) {
             $this->mailboxNames = $this->mailboxes = null;
 
@@ -131,18 +135,33 @@ class Connection
 
     /**
      * Get mailbox names
-     * 
+     *
      * @return array
      */
-    private function getMailboxNames()
+    public function getMailboxNames()
     {
-        if (null === $this->mailboxNames) {
-            $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
-            foreach ($mailboxes as $mailbox) {
-                $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
-            }
+        $list = $this->getMailboxList();
+        if(is_null($list)){
+            return array();
         }
 
-        return $this->mailboxNames;
+        return array_keys($list);
+
+    }
+
+    protected function getMailBoxList()
+    {
+        if(!is_null($this->mailboxList)){
+            return $this->mailboxList;
+        }
+
+        $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
+        $this->mailboxList = array();
+
+        foreach ($mailboxes as $mailbox) {
+            $name =  str_replace($this->server, '', $mailbox->name);
+            $this->mailboxList[$name] = $mailbox;
+        }
+        return $this->mailboxList;
     }
 }
