@@ -2,6 +2,7 @@
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\Exception;
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
  *
@@ -65,6 +66,17 @@ class Mailbox implements \IteratorAggregate
             $attributes[] = 'unmarked';
         }
         return $attributes;
+    }
+
+    public function getStatus()
+    {
+        $status = imap_status($this->connection->getResource(),$this->mailbox->name,SA_ALL);
+
+        if($status){
+            return (array) $status;
+        }
+
+        throw new Exception("Can not get mailbox status at '{$this->mailbox->name}'");
     }
 
     /**
