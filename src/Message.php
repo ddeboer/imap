@@ -34,6 +34,7 @@ class Message extends Message\Part
         $this->loadStructure();
     }
 
+
     /**
      * Get message id
      *
@@ -44,6 +45,11 @@ class Message extends Message\Part
     public function getId()
     {
         return $this->getHeaders()->get('message_id');
+    }
+
+    public function getUid()
+    {
+        return $this->messageNumber;
     }
 
     /**
@@ -316,15 +322,15 @@ class Message extends Message\Part
                 );
             }
         );
-        
+
         $structure = imap_fetchstructure(
             $this->stream,
             $this->messageNumber,
             \FT_UID
         );
-        
+
         restore_error_handler();
-        
+
         $this->parseStructure($structure);
     }
 }
