@@ -229,6 +229,7 @@ class Message extends Message\Part
     public function getAttachments()
     {
         if (null === $this->attachments) {
+            $this->attachments = array();
             foreach ($this->getParts() as $part) {
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;
