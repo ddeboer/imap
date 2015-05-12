@@ -26,7 +26,7 @@ class Headers extends Parameters
 
     /**
      * Get header
-     * 
+     *
      * @param string $key
      *
      * @return string
@@ -35,7 +35,7 @@ class Headers extends Parameters
     {
         return parent::get(strtolower($key));
     }
-    
+
     private function parseHeader($key, $value)
     {
         switch ($key) {
@@ -63,7 +63,7 @@ class Headers extends Parameters
                 foreach ($value as $address) {
                     $emails[] = $this->decodeEmailAddress($address);
                 }
-            
+
                 return $emails;
             case 'subject':
                 return $this->decode($value);

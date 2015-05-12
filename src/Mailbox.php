@@ -70,6 +70,10 @@ class Mailbox implements \IteratorAggregate
 
     public function getStatus()
     {
+        if(in_array('noselect',$this->getAttributes())){
+            return array();
+        }
+
         $status = imap_status($this->connection->getResource(),$this->mailbox->name,SA_ALL);
 
         if($status){
@@ -92,6 +96,7 @@ class Mailbox implements \IteratorAggregate
 
         $query = ($search ? (string) $search : 'ALL');
 
+        //var_dump($query);
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
             // imap_search can also return false

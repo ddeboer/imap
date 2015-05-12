@@ -27,8 +27,9 @@ class Part implements \RecursiveIterator
     const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
     const ENCODING_UNKNOWN = 'unknown';
 
-    const SUBTYPE_TEXT = 'TEXT';
-    const SUBTYPE_HTML = 'HTML';
+    const SUBTYPE_PLAIN = 'plain';
+    const SUBTYPE_TEXT = 'text';
+    const SUBTYPE_HTML = 'html';
 
     protected $typesMap = array(
         0 => self::TYPE_TEXT,
@@ -64,7 +65,7 @@ class Part implements \RecursiveIterator
      * @var Parameters
      */
     protected $parameters;
-    
+
     protected $stream;
 
     protected $messageNumber;
@@ -217,9 +218,9 @@ class Part implements \RecursiveIterator
         } else {
             $this->type = self::TYPE_UNKNOWN;
         }
-        
+
         $this->encoding = $this->encodingsMap[$structure->encoding];
-        $this->subtype = $structure->subtype;
+        $this->subtype = strtolower($structure->subtype);
 
         if (isset($structure->bytes)) {
             $this->bytes = $structure->bytes;
@@ -230,12 +231,12 @@ class Part implements \RecursiveIterator
                 $this->$optional = $structure->$optional;
             }
         }
-        
+
         $this->parameters = new Parameters();
         if (is_array($structure->parameters)) {
             $this->parameters->add($structure->parameters);
         }
-        
+
         if (isset($structure->dparameters)) {
             $this->parameters->add($structure->dparameters);
         }
@@ -325,7 +326,7 @@ class Part implements \RecursiveIterator
             \FT_UID | ($keepUnseen ? \FT_PEEK : null)
         );
     }
-    
+
     private function isAttachment($part)
     {
         // Attachment with correct Content-Disposition header
@@ -348,7 +349,7 @@ class Part implements \RecursiveIterator
                 }
             }
         }
-        
+
         return false;
     }
 }

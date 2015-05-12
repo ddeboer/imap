@@ -203,7 +203,7 @@ class Message extends Message\Part
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
-            if ($part->getSubtype() == 'HTML') {
+            if ($part->getSubtype() == self::SUBTYPE_HTML) {
                 return $part->getDecodedContent();
             }
         }
@@ -218,7 +218,7 @@ class Message extends Message\Part
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
-            if ($part->getSubtype() == 'PLAIN') {
+            if ($part->getSubtype() == self::SUBTYPE_PLAIN) {
                 return $part->getDecodedContent();
             }
         }
