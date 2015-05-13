@@ -3,6 +3,7 @@
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Transcoder\Transcoder;
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
  *
@@ -37,6 +38,10 @@ class Mailbox implements \IteratorAggregate
         return $this->name;
     }
 
+    public function getDecodedName()
+    {
+        return Transcoder::create()->transcode($this->name,"UTF7-IMAP");
+    }
     /**
      * Get number of messages in this mailbox
      *
