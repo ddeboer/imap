@@ -23,9 +23,15 @@ class Mailbox implements \IteratorAggregate
     public function __construct($mboxInfo, Connection $connection)
     {
         $this->mailbox =  $mboxInfo;
-        $name = $mboxInfo->name;
         $this->connection = $connection;
+
+        $name = $mboxInfo->name;
         $this->name = substr($name, strpos($name, '}')+1);
+    }
+
+    public function getPath()
+    {
+        return $this->mailbox->name;
     }
 
     /**
@@ -75,6 +81,8 @@ class Mailbox implements \IteratorAggregate
 
     public function getStatus()
     {
+        $this->init();
+
         if(in_array('noselect',$this->getAttributes())){
             return array();
         }
@@ -111,6 +119,21 @@ class Mailbox implements \IteratorAggregate
         return new MessageIterator($this->connection->getResource(), $messageNumbers);
     }
 
+    public function getMessageNumbers(SearchExpression $search = null,$sort = SORTARRIVAL)
+    {
+        $this->init();
+
+        $query = ($search ? (string) $search : 'ALL');
+
+        $messageNumbers = imap_sort($this->connection->getResource(),$sort,0,\SE_UID | \SE_NOPREFETCH,$query);
+        if (false == $messageNumbers) {
+            // imap_search can also return false
+            $messageNumbers = array();
+        }
+
+        return $messageNumbers;
+    }
+
     /**
      * Get a message by message number
      *
@@ -124,6 +147,17 @@ class Mailbox implements \IteratorAggregate
 
         return new Message($this->connection->getResource(), $number);
     }
+
+    //public function getMessageBody($number)
+    //{
+        //$this->init();
+
+        //return imap_body(
+            //$this->connection->getResource(),
+            //$number,
+            //\FT_UID // | \FT_PEEK
+        //);
+    //}
 
     /**
      * Get messages in this mailbox
