@@ -19,7 +19,11 @@ class Headers extends Parameters
         // Store all headers as lowercase
         $headers = array_change_key_case((array) $headers);
 
+        //var_dump(array_keys($headers));
+
+        //var_dump("headers",$headers);
         foreach ($headers as $key => $value) {
+            //var_dump($key);
             $this->parameters[$key] = $this->parseHeader($key, $value);
         }
     }
