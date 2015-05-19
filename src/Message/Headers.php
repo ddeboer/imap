@@ -16,10 +16,32 @@ class Headers extends Parameters
      */
     public function __construct(\stdClass $headers)
     {
+        //"date"
+        //"subject"
+        //"in_reply_to"
+        //"message_id"
+        //"toaddress"
+        //"to"
+        //"fromaddress"
+        //"from"
+        //"reply_toaddress"
+        //"reply_to"
+        //"senderaddress"
+        //"sender"
+        //"recent"
+        //"unseen"
+        //"flagged"
+        //"answered"
+        //"deleted"
+        //"draft"
+        //"msgno"
+        //"maildate"
+        //"size"
+        //"udate"
+
         // Store all headers as lowercase
         $headers = array_change_key_case((array) $headers);
 
-        //var_dump(array_keys($headers));
 
         //var_dump("headers",$headers);
         foreach ($headers as $key => $value) {
@@ -57,7 +79,13 @@ class Headers extends Parameters
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
 
-                return new \DateTime($value);
+                try {
+                    return new \DateTime($value);
+                }catch(\Exception $e){
+                    return new \DateTime(date('Y-m-d H:i:s',0));
+                }
+            case 'sender':
+                //nobreak
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':

@@ -63,6 +63,16 @@ class Message extends Message\Part
     }
 
     /**
+     * Get message sender (from headers)
+     *
+     * @return EmailAddress
+     */
+    public function getSender()
+    {
+        return $this->getHeaders()->get('sender');
+    }
+
+    /**
      * Get To recipients
      *
      * @return EmailAddress[] Empty array in case message has no To: recipients
@@ -199,12 +209,12 @@ class Message extends Message\Part
      *
      * @return string | null Null if message has no HTML message part
      */
-    public function getBodyHtml()
+    public function getBodyHtml($forcedCharset = null)
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
             if ($part->getSubtype() == self::SUBTYPE_HTML) {
-                return $part->getDecodedContent();
+                return $part->getDecodedContent($forcedCharset);
             }
         }
     }
@@ -214,19 +224,23 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getBodyText()
+    public function getBodyText($forcedCharset = null)
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
             if ($part->getSubtype() == self::SUBTYPE_PLAIN) {
-                return $part->getDecodedContent();
+                return $part->getDecodedContent($forcedCharset);
             }
         }
 
         // If message has no parts, return content of message itself.
-        return $this->getDecodedContent();
+        return $this->getDecodedContent($forcedCharset);
     }
 
+    public function getRaw()
+    {
+        return imap_fetchbody($this->stream, $this->messageNumber, "");
+    }
     /**
      * Get attachments (if any) linked to this e-mail
      *

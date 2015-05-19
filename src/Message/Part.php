@@ -4,6 +4,7 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
 use Ddeboer\Transcoder\Transcoder;
+use Ddeboer\Imap\Exception\UnknownCharsetException;
 
 /**
  * A message part
@@ -159,7 +160,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getDecodedContent()
+    public function getDecodedContent($forcedCharset = null)
     {
         if (null === $this->decodedContent) {
             switch ($this->getEncoding()) {
@@ -178,14 +179,20 @@ class Part implements \RecursiveIterator
                     throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
             }
 
+            if(is_null($this->getCharset())){
+                throw new UnknownCharsetException($this->messageNumber);
+            }
+
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
             if ($this->getType() === self::TYPE_TEXT
-                && strtolower($this->getCharset()) != 'utf-8'
+                && ( strtolower($this->getCharset()) != 'utf-8' || !is_null($forcedCharset) )
             ) {
+
                 $this->decodedContent = Transcoder::create()->transcode(
                     $this->decodedContent,
-                    $this->getCharset()
+                    $this->getCharset(),
+                    $forcedCharset
                 );
             }
         }
@@ -219,7 +226,13 @@ class Part implements \RecursiveIterator
             $this->type = self::TYPE_UNKNOWN;
         }
 
-        $this->encoding = $this->encodingsMap[$structure->encoding];
+        if(array_key_exists($structure->encoding,$this->encodingsMap)){
+            $this->encoding = $this->encodingsMap[$structure->encoding];
+        }else{
+            var_dump('no encoding',$structure->encoding);
+            var_dump($this->doGetContent());
+
+        }
         $this->subtype = strtolower($structure->subtype);
 
         if (isset($structure->bytes)) {
