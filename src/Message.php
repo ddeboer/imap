@@ -241,6 +241,15 @@ class Message extends Message\Part
     {
         return imap_fetchbody($this->stream, $this->messageNumber, "");
     }
+
+    public function getOverview()
+    {
+        $res = imap_fetch_overview($this->stream, $this->messageNumber, \FT_UID);
+        if(!empty($res)){
+            return (array)reset($res);
+        }
+        return array();
+    }
     /**
      * Get attachments (if any) linked to this e-mail
      *

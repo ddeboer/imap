@@ -75,6 +75,8 @@ class Headers extends Parameters
                 // no break
             case 'unseen':
                 return (bool)trim($value);
+            case 'maildate':
+                // no break
             case 'date':
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
@@ -84,6 +86,7 @@ class Headers extends Parameters
                 }catch(\Exception $e){
                     return new \DateTime(date('Y-m-d H:i:s',0));
                 }
+
             case 'sender':
                 //nobreak
             case 'from':
