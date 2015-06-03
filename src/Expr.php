@@ -39,9 +39,9 @@ class Expr extends AbstractCondition
         return $this;
     }
 
-    public function after(DateTime $date)
+    public function since(DateTime $date)
     {
-        $this->operatos[] =  new Date\After($date);
+        $this->operatos[] =  new Date\Since($date);
         return $this;
     }
 

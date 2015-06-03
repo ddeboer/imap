@@ -119,7 +119,13 @@ class Mailbox implements \IteratorAggregate
         return new MessageIterator($this->connection->getResource(), $messageNumbers);
     }
 
-    public function getMessageNumbers(SearchExpression $search = null,$sort = SORTARRIVAL)
+    /**
+     * Возвращает массив UID писем по критерию и сортировке
+     *
+     * @param int $sort SORTDATE | SORTARRIVAL |..
+     * @return void
+     **/
+    public function getMessageNumbers(SearchExpression $search = null,$sort = \SORTARRIVAL)
     {
         $this->init();
 
