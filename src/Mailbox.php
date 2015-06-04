@@ -48,6 +48,7 @@ class Mailbox implements \IteratorAggregate
     {
         return Transcoder::create()->transcode($this->name,"UTF7-IMAP");
     }
+
     /**
      * Get number of messages in this mailbox
      *

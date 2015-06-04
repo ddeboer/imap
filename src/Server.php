@@ -35,6 +35,21 @@ class Server
     private $parameters;
 
     /**
+     * @var int Options bitmask
+     *
+     * OP_READONLY - Open mailbox read-only
+     * OP_ANONYMOUS - Don't use or update a .newsrc for news (NNTP only)
+     * OP_HALFOPEN - For IMAP and NNTP names, open a connection but don't open a mailbox.
+     * CL_EXPUNGE - Expunge mailbox automatically upon mailbox close (see also imap_delete() and imap_expunge())
+     * OP_DEBUG - Debug protocol negotiations
+     * OP_SHORTCACHE - Short (elt-only) caching
+     * OP_SILENT - Don't pass up events (internal use)
+     * OP_PROTOTYPE - Return driver prototype
+     * OP_SECURE - Don't do non-secure authentication
+     */
+    private $options;
+
+    /**
      * Constructor
      *
      * @param string $hostname   Internet domain name or bracketed IP address
@@ -47,16 +62,18 @@ class Server
         $hostname,
         $port = 993,
         $flags = '/imap/ssl/validate-cert',
-        $parameters = array()
+        $parameters = array(),
+        $options = 0
     ) {
         if (!function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
         }
-        
+
         $this->hostname = $hostname;
         $this->port = $port;
         $this->flags = $flags ? '/' . ltrim($flags, '/') : '';
         $this->parameters = $parameters;
+        $this->options = $options;
     }
 
     /**
@@ -76,12 +93,12 @@ class Server
                 throw new AuthenticationFailedException($username, $message);
             }
         );
-        
+
         $resource = imap_open(
             $this->getServerString(),
             $username,
             $password,
-            null,
+            $this->options,
             1,
             $this->parameters
         );
@@ -89,7 +106,7 @@ class Server
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
         }
-        
+
         restore_error_handler();
 
         $check = imap_check($resource);
