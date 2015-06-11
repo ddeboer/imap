@@ -109,8 +109,9 @@ class Headers extends Parameters
 
     private function decodeEmailAddress($value)
     {
+        $mailbox = property_exists($value,'mailbox')?$value->mailbox:null; //sometimes property is not exists
         return new EmailAddress(
-            $value->mailbox,
+            $mailbox,
             isset($value->host) ? $value->host : null,
             isset($value->personal) ? $this->decode($value->personal) : null
         );

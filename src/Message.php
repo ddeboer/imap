@@ -204,6 +204,22 @@ class Message extends Message\Part
         return $this->headers;
     }
 
+    public function hasPartType($type)
+    {
+        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $part) {
+            if ($part->getSubtype() == $type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasBodyHtml()
+    {
+        return $this->hasPartType(self::SUBTYPE_HTML);
+    }
+
     /**
      * Get body HTML
      *
