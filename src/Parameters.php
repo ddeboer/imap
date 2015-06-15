@@ -4,6 +4,7 @@ namespace Ddeboer\Imap;
 
 use Ddeboer\Transcoder\Transcoder;
 use Ddeboer\Transcoder\Exception\IllegalCharacterException;
+use Exception;
 
 class Parameters
 {
@@ -41,6 +42,7 @@ class Parameters
     {
         $decoded = '';
         $parts = imap_mime_header_decode($value);
+        try{
         foreach ($parts as $part) {
             $charset = 'default' == $part->charset ? 'auto' : $part->charset;
             // imap_utf8 doesn't seem to work properly, so use Transcoder instead
@@ -50,6 +52,7 @@ class Parameters
                 //no warn, itis reality
             }
         }
+        }catch(Exception $e){};
 
         return $decoded;
     }
