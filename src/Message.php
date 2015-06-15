@@ -153,7 +153,7 @@ class Message extends Message\Part
      */
     public function isDeleted()
     {
-        return $this->getHeaders()->get('deleted');
+        return $this->getHeaders()->get('deleted') == 'D';
     }
 
     /**
@@ -163,7 +163,7 @@ class Message extends Message\Part
      */
     public function isDraft()
     {
-        return $this->getHeaders()->get('draft');
+        return $this->getHeaders()->get('draft') == 'X';
     }
 
     /**
@@ -173,7 +173,17 @@ class Message extends Message\Part
      */
     public function isSeen()
     {
-        return 'U' != $this->getHeaders()->get('unseen');
+        $recent = $this->getHeaders()->get('recent');
+        $seen = $this->getHeaders()->get('unseen');
+
+        return 'R' == $recent
+            || (strlen($recent)==0  && strlen($seen) ==0);
+    }
+
+
+    public function isRecent()
+    {
+        return strlen($this->getHeaders()->get('recent')) == 1; //R or N
     }
 
     /**

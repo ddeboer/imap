@@ -67,6 +67,10 @@ class Headers extends Parameters
         switch ($key) {
             case 'msgno':
                 return (int)$value;
+            case 'recent':
+                // no break
+            case 'flagged':
+                // no break
             case 'answered':
                 // no break
             case 'deleted':
@@ -74,7 +78,7 @@ class Headers extends Parameters
             case 'draft':
                 // no break
             case 'unseen':
-                return (bool)trim($value);
+                return trim($value);
             case 'maildate':
                 // no break
             case 'date':
