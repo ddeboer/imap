@@ -28,20 +28,20 @@ class Expr extends AbstractCondition
 
     public function on(DateTime $date )
     {
-        $this->operatos[] =  new Date\On($date);
+        $this->operators[] =  new Date\On($date);
         return $this;
     }
 
     public function orX()
     {
-        $this->operatos[] =  new LogicalOperator\OrConditions();
+        $this->operators[] =  new LogicalOperator\OrConditions();
 
         return $this;
     }
 
     public function since(DateTime $date)
     {
-        $this->operatos[] =  new Date\Since($date);
+        $this->operators[] =  new Date\Since($date);
         return $this;
     }
 
