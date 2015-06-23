@@ -74,8 +74,13 @@ class Headers extends Parameters
 
     private function decodeEmailAddress($value)
     {
+        if(!isset($value->mailbox)){
+            $mailbox = 'undisclosed';
+        } else {
+            $mailbox = $value->mailbox;
+        }
         return new EmailAddress(
-            $value->mailbox,
+            $mailbox,
             isset($value->host) ? $value->host : null,
             isset($value->personal) ? $this->decode($value->personal) : null
         );
