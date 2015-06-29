@@ -82,11 +82,15 @@ class Mailbox implements \IteratorAggregate
 
     public function getStatus()
     {
-        $this->init();
+        //this prevent errors Notice: Unknown: [NONEXISTENT] Unknown Mailbox: [Gmail] (now in authenticated state) (Failure) (errflg=2) in Unknown on line 0
+        //http://docs.maildev.com/article/61-gmail-nonexistent-unknown-mailbox
 
         if(in_array('noselect',$this->getAttributes())){
             return array();
         }
+
+        $this->init();
+
 
         $status = imap_status($this->connection->getResource(),$this->mailbox->name,SA_ALL);
 
