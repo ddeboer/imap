@@ -220,8 +220,9 @@ class Part implements \RecursiveIterator
 
     protected function parseStructure(\stdClass $structure)
     {
-        if (isset($this->typesMap[$structure->type])) {
-            $this->type = $this->typesMap[$structure->type];
+        $type = strtolower($structure->type);
+        if (isset($this->typesMap[$type])) {
+            $this->type = $this->typesMap[$type];
         } else {
             $this->type = self::TYPE_UNKNOWN;
         }
@@ -231,7 +232,6 @@ class Part implements \RecursiveIterator
         }else{
             var_dump('no encoding',$structure->encoding);
             var_dump($this->doGetContent());
-
         }
         $this->subtype = strtolower($structure->subtype);
 
@@ -346,7 +346,7 @@ class Part implements \RecursiveIterator
         if (isset($part->disposition)) {
             if (('attachment' === strtolower($part->disposition)
                 || 'inline' === strtolower($part->disposition))
-            && strtoupper($part->subtype) != "PLAIN"
+            && strtoupper($part->subtype) != self::SUBTYPE_PLAIN
             ) {
                 return true;
             }

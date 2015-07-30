@@ -214,17 +214,6 @@ class Message extends Message\Part
         return $this->headers;
     }
 
-    public function hasPartType($type)
-    {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if ($part->getSubtype() == $type) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public function hasBodyHtml()
     {
         return $this->hasPartType(self::SUBTYPE_HTML);
@@ -237,12 +226,7 @@ class Message extends Message\Part
      */
     public function getBodyHtml($forcedCharset = null)
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if ($part->getSubtype() == self::SUBTYPE_HTML) {
-                return $part->getDecodedContent($forcedCharset);
-            }
-        }
+        return $this->getBody(self::SUBTYPE_HTML,$forcedCharset);
     }
 
     /**
@@ -252,15 +236,38 @@ class Message extends Message\Part
      */
     public function getBodyText($forcedCharset = null)
     {
+        return $this->getBody(self::SUBTYPE_PLAIN,$forcedCharset);
+    }
+
+    public function hasPartType($type)
+    {
+        if($this->getSubtype() == $type){
+            return true;
+        }
+
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
-            if ($part->getSubtype() == self::SUBTYPE_PLAIN) {
+            if ($part->getSubtype() == $type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getBody($subtype,$forcedCharset)
+    {
+        if ($this->getSubtype() == $subtype) {
+            return $this->getDecodedContent($forcedCharset);
+        }
+
+        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $part) {
+            if ($part->getSubtype() == $subtype) {
                 return $part->getDecodedContent($forcedCharset);
             }
         }
 
-        // If message has no parts, return content of message itself.
-        return $this->getDecodedContent($forcedCharset);
+        return null;
     }
 
     public function getRaw()

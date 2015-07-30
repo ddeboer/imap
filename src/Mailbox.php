@@ -214,7 +214,7 @@ class Mailbox implements \IteratorAggregate
      */
     public function addMessage($message)
     {
-        return imap_append($this->connection->getResource(), $this->mailbox, $message);
+        return imap_append($this->connection->getResource(), $this->mailbox->name, $message);
     }
 
     /**
