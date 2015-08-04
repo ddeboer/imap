@@ -13,6 +13,7 @@ use Ddeboer\Imap\Exception\MessageMoveException;
 class Message extends Message\Part
 {
     private $headers;
+    private $extHeaders;
     private $attachments;
 
     /**
@@ -59,7 +60,7 @@ class Message extends Message\Part
      */
     public function getFrom()
     {
-        return $this->getHeaders()->get('from');
+        return $this->getExtendedHeaders()->get('from');
     }
 
     /**
@@ -69,7 +70,7 @@ class Message extends Message\Part
      */
     public function getSender()
     {
-        return $this->getHeaders()->get('sender');
+        return $this->getExtendedHeaders()->get('sender');
     }
 
     /**
@@ -79,17 +80,27 @@ class Message extends Message\Part
      */
     public function getTo()
     {
-        return $this->getHeaders()->get('to') ?: [];
+        return $this->getExtendedHeaders()->get('to') ?: [];
     }
 
     /**
-     * Get Cc recipients
+     * Get CC recipients
      *
      * @return EmailAddress[] Empty array in case message has no CC: recipients
      */
     public function getCc()
     {
-        return $this->getHeaders()->get('cc') ?: [];
+        return $this->getExtendedHeaders()->get('cc') ?: [];
+    }
+
+    /**
+     * Get BCC recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no BCC: recipients
+     */
+    public function getBcc()
+    {
+        return $this->getExtendedHeaders()->get('bcc') ?: [];
     }
 
     /**
@@ -197,7 +208,9 @@ class Message extends Message\Part
     }
 
     /**
-     * Get message headers
+     * Get message headers with flags (small part of all)
+     * Returns only last recipient in from\cc\bcc field - seems this ability is broken
+     * inside cclient lib
      *
      * @return Message\Headers
      */
@@ -212,6 +225,28 @@ class Message extends Message\Part
         }
 
         return $this->headers;
+    }
+
+    /**
+     * Return all headers of message without flags
+     * if header present multiple times it will be returned as array
+     * from first to last by chronological order
+     *
+     * @return Message\ExtendedHeaders
+     **/
+    public function getExtendedHeaders()
+    {
+
+        if(is_null($this->extHeaders)){
+
+            //instead of imap_fetchbody we can use
+            //$headers = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
+            $headersText = imap_fetchbody($this->stream, $this->messageNumber, '0', FT_UID);
+
+            $this->extHeaders = new Message\ExtendedHeaders($headersText);
+        }
+
+        return $this->extHeaders;
     }
 
     public function hasBodyHtml()
@@ -272,7 +307,7 @@ class Message extends Message\Part
 
     public function getRaw()
     {
-        return imap_fetchbody($this->stream, $this->messageNumber, "");
+        return imap_fetchbody($this->stream, $this->messageNumber, "",\FT_UID);
     }
 
     public function getOverview()
