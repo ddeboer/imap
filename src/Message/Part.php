@@ -347,13 +347,22 @@ class Part implements \RecursiveIterator
     private function isAttachment($part)
     {
         // Attachment with correct Content-Disposition header
+
         if (isset($part->disposition)) {
-            if (('attachment' === strtolower($part->disposition)
-                || 'inline' === strtolower($part->disposition))
-            && strtoupper($part->subtype) != self::SUBTYPE_PLAIN
-            ) {
+            $disposition = strtolower($part->disposition);
+            if ('attachment' === $disposition) {
                 return true;
             }
+            $subtype = strtolower($part->subtype);
+            if('inline' === $disposition
+                && (
+                    $subtype == self::SUBTYPE_PLAIN
+                    || $subtype == self::SUBTYPE_HTML
+                )
+            ){
+                return false;
+            }
+            return true;
         }
 
         // Attachment without Content-Disposition header
