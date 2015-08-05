@@ -95,6 +95,7 @@ class ExtendedHeaders extends Parameters
     {
         if($name == 'from'
             || $name == 'sender'
+            || $name == 'reply-to'
             || $name == 'to'
             || $name == 'cc'
             || $name == 'bcc'
@@ -106,7 +107,7 @@ class ExtendedHeaders extends Parameters
             $items = imap_rfc822_parse_adrlist($value,'example.com');
 
             foreach($items as $k =>$item){
-                if($item->host === '.SYNTAX-ERROR.'){
+                if(!property_exists($item,'host') || $item->host === '.SYNTAX-ERROR.'){
                     unset($items[$k]);
                     continue;
                 }
@@ -115,14 +116,19 @@ class ExtendedHeaders extends Parameters
 
             if($name == 'from'
                 || $name == 'sender'
+                || $name == 'reply-to'
             ){
-                return empty($items)?null:current($items);
+                return empty($items)?null:reset($items);
             }
             return $items;
         }
 
         if($name == 'received'){
             return $this->parseReceivedHeader($value);
+        }
+
+        if($name == 'return-path'){
+            $value = preg_replace('/.*<([^<>]+)>.*/','$1',$value);
         }
 
         return $value;
@@ -153,7 +159,7 @@ class ExtendedHeaders extends Parameters
         //                    ";"    date-time         ; time received}
 
         $result = [];
-        if(strpos($value,';') !== 0){
+        if(strpos($value,';') !== false){
             list($value,$date) = explode(';',$value);
             $result['date'] = $this->decodeDate($date);
         }

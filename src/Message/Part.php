@@ -369,4 +369,16 @@ class Part implements \RecursiveIterator
 
         return false;
     }
+
+    public function debugParts($pref = '')
+    {
+        $res = sprintf("%s%s %s/%s\n",$pref,get_class($this),$this->getType(),$this->getSubType());
+        $pref .= '    ';
+
+        foreach($this->parts as $part){
+            $res .= $part->debugParts($pref);
+        }
+
+        return $res;
+    }
 }

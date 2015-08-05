@@ -251,7 +251,7 @@ class Message extends Message\Part
 
     public function hasBodyHtml()
     {
-        return $this->hasPartType(self::SUBTYPE_HTML);
+        return $this->hasBodyType(self::SUBTYPE_HTML);
     }
 
     /**
@@ -274,18 +274,27 @@ class Message extends Message\Part
         return $this->getBody(self::SUBTYPE_PLAIN,$forcedCharset);
     }
 
-    public function hasPartType($type)
+    public function hasBodyType($subtype)
     {
-        if($this->getSubtype() == $type){
+        if($this->getSubtype() == $subtype){
             return true;
         }
 
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if ($part->getSubtype() == $type) {
+        $list = $this->parts;
+        while($part = array_shift($list)){
+
+            if( $part instanceof Message\Attachment){
+                continue;
+            }
+
+            if($part->getSubtype() == $subtype){
                 return true;
             }
+            foreach($part->parts as $subPart){
+                array_push($list,$subPart);
+            }
         }
+
         return false;
     }
 
@@ -295,10 +304,18 @@ class Message extends Message\Part
             return $this->getDecodedContent($forcedCharset);
         }
 
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if ($part->getSubtype() == $subtype) {
+        $list = $this->parts;
+        while($part = array_shift($list)){
+
+            if( $part instanceof Message\Attachment){
+                continue;
+            }
+
+            if($part->getSubtype() == $subtype){
                 return $part->getDecodedContent($forcedCharset);
+            }
+            foreach($part->parts as $subPart){
+                array_push($list,$subPart);
             }
         }
 

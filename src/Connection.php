@@ -14,6 +14,7 @@ class Connection
     private $resource;
     private $mailboxes;
     private $mailboxList;
+    protected $closed = false;
 
     /**
      * Constructor
@@ -40,6 +41,9 @@ class Connection
      */
     public function getMailboxes()
     {
+        if($this->closed){
+            return true;
+        }
         if (null === $this->mailboxes) {
             foreach ($this->getMailboxList() as $mailbox) {
                 $this->mailboxes[] = new Mailbox($mailbox, $this);
@@ -59,6 +63,9 @@ class Connection
      */
     public function getMailbox($name)
     {
+        if($this->closed){
+            return true;
+        }
         $list = $this->getMailboxList();
 
         if (!array_key_exists($name, $list)) {
@@ -76,6 +83,9 @@ class Connection
      */
     public function count()
     {
+        if($this->closed){
+            return true;
+        }
         return imap_num_msg($this->resource);
     }
 
@@ -89,6 +99,9 @@ class Connection
      */
     public function createMailbox($name)
     {
+        if($this->closed){
+            return true;
+        }
         //name must be encoded in utf7
         if (imap_createmailbox($this->resource, $this->server . $name)) {
             $this->mailboxNames = $this->mailboxes = null;
@@ -108,11 +121,29 @@ class Connection
      */
     public function close($flag = 0)
     {
+        if($this->closed){
+            return true;
+        }
+
+        $this->closed = true;
         return imap_close($this->resource, $flag);
+    }
+
+    public function clearCache()
+    {
+        if($this->closed){
+            return true;
+        }
+
+        return imap_gc($this->resource, IMAP_GC_ELT|IMAP_GC_TEXTS|IMAP_GC_ENV);
     }
 
     public function deleteMailbox(Mailbox $mailbox)
     {
+        if($this->closed){
+            return false;
+        }
+
         if (false === imap_deletemailbox(
             $this->resource,
             $this->server . $mailbox->getName()

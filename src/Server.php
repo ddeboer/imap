@@ -49,6 +49,7 @@ class Server
      */
     private $options;
 
+    private $lastError;
     /**
      * Constructor
      *
@@ -88,11 +89,8 @@ class Server
     public function authenticate($username, $password)
     {
         // Wrap imap_open, which gives notices instead of exceptions
-        set_error_handler(
-            function ($nr, $message) use ($username) {
-                throw new AuthenticationFailedException($username, $message);
-            }
-        );
+        set_error_handler([$this,'errorHandler']);
+        $this->lastError = null;
 
         $resource = imap_open(
             $this->getServerString(),
@@ -103,11 +101,15 @@ class Server
             $this->parameters
         );
 
+        restore_error_handler();
+        if($this->lastError){
+            throw $this->lastError;
+        }
+
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
         }
 
-        restore_error_handler();
 
         $check = imap_check($resource);
         $mailbox = $check->Mailbox;
@@ -133,5 +135,10 @@ class Server
             $this->port,
             $this->flags
         );
+    }
+
+    public function errorHandler($nr,$message)
+    {
+        $this->lastError = new AuthenticationFailedException('not set', $message);
     }
 }
