@@ -174,8 +174,10 @@ class ExtendedHeaders extends Parameters
 
         $result = [];
         if(strpos($value,';') !== false){
-            list($value,$date) = explode(';',$value);
-            $result['date'] = $this->decodeDate($date);
+            list($value,$date) = $this->splitReceivedDate($value);
+            if($date){
+                $result['date'] = $this->decodeDate($date);
+            }
         }
 
         $regex = "@([[:space:]](from|via|with|id|by|for)(?:[[:space:]]))@mui";
@@ -212,6 +214,19 @@ class ExtendedHeaders extends Parameters
         }
 
         return $result;
+    }
+
+    protected function splitReceivedDate($value)
+    {
+        $len = mb_strlen($value);
+        $lastPos =  strrpos($value,';');
+        if($lastPos ===false){
+            return [$value,null];
+        }
+
+        $date = mb_substr($value,$lastPos+1);
+        $other = mb_substr($value,0,$len - 1 - mb_strlen($date) );
+        return [$other,$date];
     }
 
     protected function decodeDate($value)
