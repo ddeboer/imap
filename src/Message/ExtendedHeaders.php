@@ -19,7 +19,7 @@ class ExtendedHeaders extends Parameters
     {
         $items = self::parse($headersText);
 
-
+        $multiple = ['received'];
         foreach($items as $k => $item){
             $name = strtolower($item['name']);
             $value = $this->parseHeader($name,$item['value']);
@@ -29,9 +29,10 @@ class ExtendedHeaders extends Parameters
                    $this->parameters[$name] = array($this->parameters[$name]);
                }
                $this->parameters[$name][] = $value;
+               continue;
             }
 
-            if(in_array($name,['received'])){
+            if(in_array($name,$multiple)){
 
                 $this->parameters[$name][] = $value;
             }else{
@@ -103,8 +104,7 @@ class ExtendedHeaders extends Parameters
             if(strpos($value,'undisclosed-recipients') !==false){
                 return null;
             }
-            //as alternative we can use mailparse_rfc822_parse_addresses
-            $items = imap_rfc822_parse_adrlist($value,'example.com');
+            $items = $this->parseAddrList($value);
 
             foreach($items as $k =>$item){
                 if(!property_exists($item,'host') || $item->host === '.SYNTAX-ERROR.'){
@@ -133,6 +133,20 @@ class ExtendedHeaders extends Parameters
 
         return $value;
     }
+
+    protected function parseAddrList($value)
+    {
+        //$value = trim(preg_replace('@("(?:[[:space:]])*")@ui','', $value));
+        //if(empty($value)){
+            //return [];
+        //}
+
+        //as alternative we can use mailparse_rfc822_parse_addresses
+        $value = imap_rfc822_parse_adrlist($value,'example.com');
+        //var_dump($value);
+        return $value;
+    }
+
 
     private function decodeEmailAddress($value)
     {
@@ -205,6 +219,7 @@ class ExtendedHeaders extends Parameters
 
         $value = $this->decode($value);
         $value =  preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
+        $value = str_replace(array(' UT',' UCT'),' UTC',$value);
         return new DateTime($value);
     }
 }
