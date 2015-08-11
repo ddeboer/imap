@@ -255,25 +255,30 @@ class Message extends Message\Part
     }
 
     /**
-     * Get body HTML
+     * Get body HTML part
      *
-     * @return string | null Null if message has no HTML message part
+     * @return  Message\Part | null Null if message has no HTML message part
      */
-    public function getBodyHtml($forcedCharset = null)
+    public function getBodyHtml()
     {
-        return $this->getBody(self::SUBTYPE_HTML,$forcedCharset);
+        return $this->getBody(self::SUBTYPE_HTML);
     }
 
     /**
-     * Get body text
+     * Get body part
      *
-     * @return string
+     * @return Message\Part
      */
-    public function getBodyText($forcedCharset = null)
+    public function getBodyText()
     {
-        return $this->getBody(self::SUBTYPE_PLAIN,$forcedCharset);
+        return $this->getBody(self::SUBTYPE_PLAIN);
     }
 
+    /**
+     * Returns part by subtype
+     *
+     * @return Message\Part
+     **/
     public function hasBodyType($subtype)
     {
         if($this->getSubtype() == $subtype){
@@ -298,10 +303,10 @@ class Message extends Message\Part
         return false;
     }
 
-    public function getBody($subtype,$forcedCharset)
+    public function getBody($subtype)
     {
         if ($this->getSubtype() == $subtype) {
-            return $this->getDecodedContent($forcedCharset);
+            return $this;
         }
 
         $list = $this->parts;
@@ -312,7 +317,7 @@ class Message extends Message\Part
             }
 
             if($part->getSubtype() == $subtype){
-                return $part->getDecodedContent($forcedCharset);
+                return $part;
             }
             foreach($part->parts as $subPart){
                 array_push($list,$subPart);

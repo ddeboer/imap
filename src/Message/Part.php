@@ -3,8 +3,7 @@
 namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
-use Ddeboer\Transcoder\Transcoder;
-use Ddeboer\Imap\Exception\UnknownCharsetException;
+use Ddeboer\Imap\Exception\UnknownEncodingException;
 
 /**
  * A message part
@@ -160,7 +159,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getDecodedContent($forcedCharset = null)
+    public function getDecodedContent()
     {
         if (null === $this->decodedContent) {
             switch ($this->getEncoding()) {
@@ -176,28 +175,7 @@ class Part implements \RecursiveIterator
                     $this->decodedContent = $this->getContent();
                     break;
                 default:
-                    throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
-            }
-
-
-            // If this part is a text part, try to convert its encoding to UTF-8.
-            // We don't want to convert an attachment's encoding.
-            if ($this->getType() === self::TYPE_TEXT){
-
-                if(is_null($this->getCharset())){
-                    throw new UnknownCharsetException($this->messageNumber);
-                }
-
-                if(( strtolower($this->getCharset()) != 'utf-8'
-                     || !is_null($forcedCharset) )
-                ) {
-
-                    $this->decodedContent = Transcoder::create()->transcode(
-                        $this->decodedContent,
-                        $this->getCharset(),
-                        $forcedCharset
-                    );
-                }
+                    throw new UnknownEncodingException($this->messageNumber, $this->getEncoding());
             }
         }
 
