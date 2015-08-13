@@ -3,6 +3,7 @@
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Exception\MailboxOpenException;
 use Ddeboer\Transcoder\Transcoder;
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
@@ -14,6 +15,7 @@ class Mailbox implements \IteratorAggregate
     private $name;
     private $connection;
 
+    private $lastException;
     /**
      * Constructor
      *
@@ -159,17 +161,6 @@ class Mailbox implements \IteratorAggregate
         return new Message($this->connection->getResource(), $number);
     }
 
-    //public function getMessageBody($number)
-    //{
-        //$this->init();
-
-        //return imap_body(
-            //$this->connection->getResource(),
-            //$number,
-            //\FT_UID // | \FT_PEEK
-        //);
-    //}
-
     /**
      * Get messages in this mailbox
      *
@@ -214,6 +205,7 @@ class Mailbox implements \IteratorAggregate
      */
     public function addMessage($message)
     {
+        $this->init();
         return imap_append($this->connection->getResource(), $this->mailbox->name, $message);
     }
 
@@ -224,7 +216,39 @@ class Mailbox implements \IteratorAggregate
     {
         $check = imap_check($this->connection->getResource());
         if ($check === false || $check->Mailbox != $this->mailbox->name) {
-            imap_reopen($this->connection->getResource(), $this->mailbox->name);
+
+            set_error_handler([$this,'errorHandler']);
+            $this->setLastException(null);
+
+            $result = imap_reopen($this->connection->getResource(), $this->mailbox->name);
+
+            restore_error_handler();
+
+            if(!$result){
+                throw new MailboxOpenException($this->mailbox->name);
+            }
+
+            $ex = $this->getLastException();
+            if($ex){
+                throw $ex;
+            }
         }
+
+    }
+
+    protected function getLastException()
+    {
+        return $this->lastException;
+    }
+
+    protected function setLastException(Exception $e = null)
+    {
+        $this->lastException = $e;
+    }
+
+    public function errorHandler ($nr, $error)
+    {
+        $this->lastException = new Exception($error);
+        return  true;
     }
 }

@@ -84,6 +84,7 @@ class Part implements \RecursiveIterator
 
     protected $disposition;
 
+    private $lastException;
     /**
      * Constructor
      *
@@ -367,5 +368,15 @@ class Part implements \RecursiveIterator
         }
 
         return $res;
+    }
+
+    protected function getLastException()
+    {
+        return $this->lastException;
+    }
+
+    protected function setLastException(Exception $e = null)
+    {
+        $this->lastException = $e;
     }
 }

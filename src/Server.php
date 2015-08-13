@@ -140,5 +140,6 @@ class Server
     public function errorHandler($nr,$message)
     {
         $this->lastError = new AuthenticationFailedException('not set', $message);
+        return true;
     }
 }

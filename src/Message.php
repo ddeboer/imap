@@ -427,14 +427,8 @@ class Message extends Message\Part
      */
     private function loadStructure()
     {
-        set_error_handler(
-            function ($nr, $error) {
-                throw new MessageDoesNotExistException(
-                    $this->messageNumber,
-                    $error
-                );
-            }
-        );
+        set_error_handler([$this,'errorHandler']);
+        $this->setLastException(null);
 
         $structure = imap_fetchstructure(
             $this->stream,
@@ -442,8 +436,21 @@ class Message extends Message\Part
             \FT_UID
         );
 
+        $ex = $this->getLastException();
+        if($ex){
+            throw $ex;
+        }
+
         restore_error_handler();
 
         $this->parseStructure($structure);
+    }
+
+    public function errorHandler ($nr, $error) {
+        $this->lastException = new MessageDoesNotExistException(
+            $this->messageNumber,
+            $error
+        );
+        return  true;
     }
 }
