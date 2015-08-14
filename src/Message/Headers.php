@@ -85,7 +85,11 @@ class Headers extends Parameters
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
                 $value = str_replace(array(' UT',' UCT'),' UTC',$value);
-                return new \DateTime($value);
+                try{
+                    return new \DateTime($value);
+                }catch(\Exception $e){
+                    return null;
+                }
 
             case 'sender':
                 //nobreak

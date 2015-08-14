@@ -20,6 +20,7 @@ class Part implements \RecursiveIterator
     const TYPE_OTHER = 'other';
     const TYPE_UNKNOWN = 'unknown';
 
+    //http://www.w3.org/Protocols/rfc1341/5_Content-Transfer-Encoding.html
     const ENCODING_7BIT = '7bit';
     const ENCODING_8BIT = '8bit';
     const ENCODING_BINARY = 'binary';
@@ -48,7 +49,9 @@ class Part implements \RecursiveIterator
         2 => self::ENCODING_BINARY,
         3 => self::ENCODING_BASE64,
         4 => self::ENCODING_QUOTED_PRINTABLE,
-        5 => self::ENCODING_UNKNOWN
+        5 => self::ENCODING_UNKNOWN,
+        6 => self::ENCODING_QUOTED_PRINTABLE,// for case "quoted/printable"
+        7 => self::ENCODING_QUOTED_PRINTABLE,// for case "quoted/printable"
     );
 
     protected $type;
@@ -210,12 +213,15 @@ class Part implements \RecursiveIterator
             $this->type = self::TYPE_UNKNOWN;
         }
 
+        //var_dump('encoding',$structure->encoding);
         if(array_key_exists($structure->encoding,$this->encodingsMap)){
             $this->encoding = $this->encodingsMap[$structure->encoding];
-        }else{
-            var_dump('no encoding',$structure->encoding);
-            var_dump($this->doGetContent());
         }
+        //else{
+            //var_dump('no encoding',$structure->encoding);
+            //var_dump($this->doGetContent());
+        //}
+
         $this->subtype = strtolower($structure->subtype);
 
         if (isset($structure->bytes)) {

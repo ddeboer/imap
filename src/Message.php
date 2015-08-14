@@ -21,6 +21,8 @@ class Message extends Message\Part
      */
     private $keepUnseen = false;
 
+    protected $rawHeaders;
+    protected $rawBody;
     /**
      * Constructor
      *
@@ -249,6 +251,12 @@ class Message extends Message\Part
         return $this->extHeaders;
     }
 
+
+    public function hasBodyText()
+    {
+        return $this->hasBodyType(self::SUBTYPE_PLAIN);
+    }
+
     public function hasBodyHtml()
     {
         return $this->hasBodyType(self::SUBTYPE_HTML);
@@ -329,7 +337,19 @@ class Message extends Message\Part
 
     public function getRaw()
     {
-        return imap_fetchbody($this->stream, $this->messageNumber, "",\FT_UID);
+        if(is_null($this->rawBody)){
+             $this->rawBody = imap_fetchbody($this->stream, $this->messageNumber, "",\FT_UID);
+        }
+        return $this->rawBody;
+    }
+
+    public function getRawHeaders()
+    {
+        if(is_null($this->rawHeaders)){
+            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
+        //return imap_fetchbody($this->stream, $this->messageNumber, '0', FT_UID);
+        }
+        return $this->rawHeaders;
     }
 
     public function getOverview()

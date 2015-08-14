@@ -8,9 +8,9 @@ class UnknownEncodingException extends Exception
     {
         parent::__construct(
             sprintf(
-                'Cannot decode %s in message ',
-                $encoding,
-                $messageNumber
+                'Cannot decode message uid: %s with encoding "%s"',
+                $messageNumber,
+                $encoding
             )
         );
     }

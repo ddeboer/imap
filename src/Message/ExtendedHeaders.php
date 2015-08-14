@@ -5,6 +5,7 @@ namespace Ddeboer\Imap\Message;
 use Ddeboer\Imap\Parameters;
 
 use DateTime;
+use Exception;
 /**
  * Collection of message headers
  */
@@ -18,6 +19,7 @@ class ExtendedHeaders extends Parameters
     public function __construct($headersText)
     {
         $items = self::parse($headersText);
+
 
         $multiple = ['received'];
         foreach($items as $k => $item){
@@ -61,24 +63,25 @@ class ExtendedHeaders extends Parameters
      **/
     public static function parse($headersText)
     {
-        $regexp = "@^([a-zA-Z\-]+):[[:space:]]{1,}@mui";
-        $lineFolding = "@[\r\n][[:space:]]{1,}@mui";
+        $regexp = "@^([a-zA-Z\-]+):[[:space:]]{1,}@mi";
+        $lineFolding = "@[\r\n][[:space:]]{1,}@mi";
 
         $matches = [];
         if(!preg_match_all($regexp,$headersText,$matches,PREG_OFFSET_CAPTURE)){
             return array();
         }
 
+        //do not use unicode functions
 
         $headers = [];
         $end = null;
         $len = strlen($headersText);
         while($match = array_pop($matches[0])){
             $end = is_null($end)?null:$end-$match[1];
-            $full_header = mb_substr($headersText,$match[1],$end);
+            $full_header = substr($headersText,$match[1],$end);
 
             //cut off line folding
-            $value = mb_substr($full_header,strlen($match[0]));
+            $value = substr($full_header,strlen($match[0]));
             $value = preg_replace($lineFolding,' ',$value);
             $value = trim($value);
 
@@ -136,23 +139,22 @@ class ExtendedHeaders extends Parameters
 
     protected function parseAddrList($value)
     {
-        //$value = trim(preg_replace('@("(?:[[:space:]])*")@ui','', $value));
-        //if(empty($value)){
-            //return [];
-        //}
+        $value = $this->decode($value);
 
         //as alternative we can use mailparse_rfc822_parse_addresses
         $value = imap_rfc822_parse_adrlist($value,'example.com');
-        //var_dump($value);
+
         return $value;
     }
 
 
     private function decodeEmailAddress($value)
     {
+
         $mailbox = property_exists($value,'mailbox')?$value->mailbox:null; //sometimes property is not exists
         $host = property_exists($value,'host') ? $value->host : null;
         $personal = property_exists($value, 'personal') ? $this->decode($value->personal) : null;
+
 
         return new EmailAddress(
             $mailbox,
@@ -180,7 +182,7 @@ class ExtendedHeaders extends Parameters
             }
         }
 
-        $regex = "@([[:space:]](from|via|with|id|by|for)(?:[[:space:]]))@mui";
+        $regex = "@([[:space:]](from|via|with|id|by|for)(?:[[:space:]]))@mi";
 
         $value = ' '.$value; //hint for regexp
         $matches = [];
@@ -190,9 +192,9 @@ class ExtendedHeaders extends Parameters
 
         $end = null;
         while($match = array_pop($matches[0])){
-            $keyLength = mb_strlen($match[0]);
+            $keyLength = strlen($match[0]);
             $end = is_null($end)?null:$end-$match[1]-$keyLength;
-            $part = mb_substr($value,$match[1]+$keyLength,$end);
+            $part = substr($value,$match[1]+$keyLength,$end);
 
             $key = trim($match[0]);
             $part = trim($part);
@@ -218,14 +220,14 @@ class ExtendedHeaders extends Parameters
 
     protected function splitReceivedDate($value)
     {
-        $len = mb_strlen($value);
+        $len = strlen($value);
         $lastPos =  strrpos($value,';');
         if($lastPos ===false){
             return [$value,null];
         }
 
-        $date = mb_substr($value,$lastPos+1);
-        $other = mb_substr($value,0,$len - 1 - mb_strlen($date) );
+        $date = substr($value,$lastPos+1);
+        $other = substr($value,0,$len - 1 - strlen($date) );
         return [$other,$date];
     }
 
@@ -234,7 +236,11 @@ class ExtendedHeaders extends Parameters
 
         $value = $this->decode($value);
         $value =  preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
-        $value = str_replace(array(' UT',' UCT'),' UTC',$value);
-        return new DateTime($value);
+        $value =  preg_replace('/(UT|UCT)(?!C)/','UTC',$value);
+        try{
+            return new DateTime($value);
+        }catch(Exception $e){
+            return null;
+        }
     }
 }
