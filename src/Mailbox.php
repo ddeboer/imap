@@ -132,13 +132,13 @@ class Mailbox implements \IteratorAggregate
      * @param int $sort SORTDATE | SORTARRIVAL |..
      * @return void
      **/
-    public function getMessageNumbers(SearchExpression $search = null,$sort = \SORTARRIVAL)
+    public function getMessageNumbers(SearchExpression $search = null,$sort = \SORTARRIVAL,$reverse = false)
     {
         $this->init();
 
         $query = ($search ? (string) $search : 'ALL');
 
-        $messageNumbers = imap_sort($this->connection->getResource(),$sort,0,\SE_UID | \SE_NOPREFETCH,$query);
+        $messageNumbers = imap_sort($this->connection->getResource(),$sort,(int)$reverse,\SE_UID | \SE_NOPREFETCH,$query);
         if (false == $messageNumbers) {
             // imap_search can also return false
             $messageNumbers = array();
