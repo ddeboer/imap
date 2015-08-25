@@ -142,7 +142,7 @@ class ExtendedHeaders extends Parameters
         $value = $this->decode($value);
 
         //as alternative we can use mailparse_rfc822_parse_addresses
-        $value = imap_rfc822_parse_adrlist($value,'example.com');
+        $value = imap_rfc822_parse_adrlist($value,'nodomain');
 
         return $value;
     }
