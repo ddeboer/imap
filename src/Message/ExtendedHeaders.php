@@ -190,7 +190,7 @@ class ExtendedHeaders extends Parameters
             return $result;
         }
 
-        $end = null;
+        $end = strlen($value);
         while($match = array_pop($matches[0])){
             $keyLength = strlen($match[0]);
             $end = is_null($end)?null:$end-$match[1]-$keyLength;

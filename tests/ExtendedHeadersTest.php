@@ -6,6 +6,10 @@ use Ddeboer\Imap\Message\ExtendedHeaders;
 
 class ExtendedHeadersTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        date_default_timezone_set("UTC");
+    }
     /**
      * Testing wrong encoding in header
      *
@@ -60,5 +64,63 @@ TXT;
         }
 
         $this->assertEquals(2,$i);
+    }
+
+    /**
+     * @dataProvider getReceivedHeaders
+     *
+     * @return void
+     * @author skoryukin
+     **/
+    public function testReceivedParse($keys,$header)
+    {
+        $eh = new ExtendedHeaders('');
+        $result = $this->invokeMethod($eh,'parseReceivedHeader',[$header]);
+
+        foreach($keys as $key){
+            $this->assertNotEmpty($result[$key],'Empty '.$key);
+        }
+    }
+    public function getReceivedHeaders()
+    {
+        $result = [];
+        $result[] =
+        [['from','by','with','id','for','date'],
+        "Received: from fastsrv.yandex.ru ([37.140.190.55])
+            by mxback7o.mail.yandex.net with LMTP id ICkSHJ1E2Ost
+            for <skoryukin@team.amocrm.com>; Wed, 26 Aug 2015 13:12:20 +0300"];
+        $result[] =
+        [['from','by','with','id','for'],
+        'received: from mxfront1o.mail.yandex.net ([127.0.0.1])
+            by mxfront1o.mail.yandex.net with lmtp id epw0kp53
+            for <popsofts@ya.ru>; fri, 3 hй«ир…ш€lйоhй«ие…ш€lйцhй«иz…ш€hлt$ hй«иm…ш€hлt$hhй«и`…ш€hлі$а 2014 11:14:25 +0400'];
+        $result[] =
+        [['from','by','with','id','date'],
+        'Received: from uspmta167011.emsmtp.com (uspmta167011.emsmtp.com [212.69.167.11])
+            by mxfront1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id iIG70au6aA-EPPGs0VL;
+            Fri,  3 Jan 2014 11:14:25 +0400'];
+        $result[] =
+        [['from','by','id','for'],
+        'Received: from (10.200.200.53) by uspmta167011.emsmtp.com id hophl216nec4 for <popsofts@ya.ru>; Fri, 3 Jan 2014
+        TXT'];
+
+        return $result;
+    }
+    /**
+     * Call protected/private method of a class.
+     *
+     * @param object &$object    Instantiated object that we will run method on.
+     * @param string $methodName Method name to call
+     * @param array  $parameters Array of parameters to pass into method.
+     *
+     * @return mixed Method return.
+     */
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
     }
 }
