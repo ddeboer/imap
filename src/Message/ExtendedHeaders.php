@@ -233,10 +233,15 @@ class ExtendedHeaders extends Parameters
 
     protected function decodeDate($value)
     {
-
         $value = $this->decode($value);
+
+        if(empty($value)){
+            return null;
+        }
+
         $value =  preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
         $value =  preg_replace('/(UT|UCT)(?!C)/','UTC',$value);
+
         try{
             return new DateTime($value);
         }catch(Exception $e){

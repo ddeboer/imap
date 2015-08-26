@@ -338,7 +338,7 @@ class Message extends Message\Part
     public function getRaw()
     {
         if(is_null($this->rawBody)){
-             $this->rawBody = imap_fetchbody($this->stream, $this->messageNumber, "",\FT_UID);
+             $this->rawBody = imap_fetchbody($this->stream, $this->messageNumber, "",\FT_UID| \FT_PEEK);
         }
         return $this->rawBody;
     }
@@ -346,8 +346,9 @@ class Message extends Message\Part
     public function getRawHeaders()
     {
         if(is_null($this->rawHeaders)){
-            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
-        //return imap_fetchbody($this->stream, $this->messageNumber, '0', FT_UID);
+            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID );
+            //|\FT_PREFETCHTEXT
+        //return imap_fetchbody($this->stream, $this->messageNumber, '0', \FT_UID| \FT_PEEK);
         }
         return $this->rawHeaders;
     }
