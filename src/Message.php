@@ -250,7 +250,7 @@ class Message extends Message\Part
     /**
      * Does this message have attachments?
      *
-     * @return int
+     * @return bool
      */
     public function hasAttachments()
     {
