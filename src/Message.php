@@ -291,7 +291,7 @@ class Message extends Message\Part
     /**
      * Prevent the message from being marked as seen
      *
-     * Defaults to false, so messages that are read will be marked as seen.
+     * Defaults to true, so messages that are read will be still marked as unseen.
      *
      * @param bool $bool
      *
