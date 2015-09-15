@@ -154,11 +154,11 @@ class Mailbox implements \IteratorAggregate
      *
      * @return Message
      */
-    public function getMessage($number)
+    public function getMessage($number,$lazyLoad = false)
     {
         $this->init();
 
-        return new Message($this->connection->getResource(), $number);
+        return new Message($this->connection->getResource(), $number,$lazyLoad);
     }
 
     /**

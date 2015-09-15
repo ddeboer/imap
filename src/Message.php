@@ -23,18 +23,22 @@ class Message extends Message\Part
 
     protected $rawHeaders;
     protected $rawBody;
+
+    protected $loaded = false;
     /**
      * Constructor
      *
      * @param resource $stream        IMAP stream
      * @param int      $messageNumber Message number
      */
-    public function __construct($stream, $messageNumber)
+    public function __construct($stream, $messageNumber,$lazyLoad = false)
     {
         $this->stream = $stream;
         $this->messageNumber = $messageNumber;
 
-        $this->loadStructure();
+        if(!$lazyLoad){
+            $this->loadStructure();
+        }
     }
 
 
@@ -145,6 +149,7 @@ class Message extends Message\Part
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
         $this->headers = null;
+        $this->needLoad();
 
         return $this->doGetContent($this->keepUnseen);
     }
@@ -289,6 +294,8 @@ class Message extends Message\Part
      **/
     public function hasBodyType($subtype)
     {
+        $this->needLoad();
+
         if($this->getSubtype() == $subtype){
             return true;
         }
@@ -313,6 +320,8 @@ class Message extends Message\Part
 
     public function getBody($subtype)
     {
+        $this->needLoad();
+
         if ($this->getSubtype() == $subtype) {
             return $this;
         }
@@ -367,6 +376,8 @@ class Message extends Message\Part
      */
     public function getAttachments()
     {
+        $this->needLoad();
+
         if (null === $this->attachments) {
             foreach ($this->getParts() as $part) {
                 if ($part instanceof Message\Attachment) {
@@ -392,6 +403,8 @@ class Message extends Message\Part
      */
     public function hasAttachments()
     {
+        $this->needLoad();
+
         return count($this->getAttachments()) > 0;
     }
 
@@ -463,7 +476,25 @@ class Message extends Message\Part
 
         restore_error_handler();
 
+        if(!$structure){
+            throw new MessageDoesNotExistException(
+                $this->messageNumber,
+                'empty structure'
+            );
+        }
+
         $this->parseStructure($structure);
+        $this->loaded = true;
+    }
+
+    protected function needLoad()
+    {
+        if($this->loaded){
+            return true;
+        }
+
+        $this->loadStructure();
+        return true;
     }
 
     public function errorHandler ($nr, $error) {
