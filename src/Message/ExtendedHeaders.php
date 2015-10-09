@@ -139,12 +139,11 @@ class ExtendedHeaders extends Parameters
 
     protected function parseAddrList($value)
     {
-        $value = $this->decode($value);
+        $items = imap_rfc822_parse_adrlist($value,'nodomain');
 
         //as alternative we can use mailparse_rfc822_parse_addresses
-        $value = imap_rfc822_parse_adrlist($value,'nodomain');
 
-        return $value;
+        return $items;
     }
 
 
