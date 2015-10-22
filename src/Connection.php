@@ -195,4 +195,12 @@ class Connection
         }
         return $this->mailboxList;
     }
+
+    public function ping()
+    {
+        if($this->closed){
+            return true;
+        }
+        imap_ping($this->resource);
+    }
 }
