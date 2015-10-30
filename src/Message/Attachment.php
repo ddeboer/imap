@@ -22,33 +22,24 @@ class Attachment extends Part
         //RFCs 2047, 2231 and 5987
         //http://tools.ietf.org/html/rfc5987
 
-        $markers = ["UTF-8''","windows-1251''"];
-        $found = false;
-        foreach($markers as $marker){
 
-            $found = (stripos($fname,$marker) === 0);
-            if($found){
-                $fname = substr($fname,strlen($marker));//no mb!
-                $fname = urldecode($fname);
+        $matches = [];
+        if(preg_match("@^([^']+)''(.*)@ui",$fname,$matches)){
 
-            }
+            $fname = urldecode($matches[2]);
 
-            if($found && $marker == "windows-1251''"){
 
-                try{
-                    $fname = Transcoder::create()->transcode(
-                        $fname,
-                        "windows-1251",
-                        "UTF-8"
-                    );
-                }catch(Exception $e){
-                    $fname = 'filename_wrong_enc';
-                }
-            }
-            if($found){
-                break;
+            try{
+                $fname = Transcoder::create()->transcode(
+                    $fname,
+                    $matches[1],
+                    "UTF-8//IGNORE"
+                );
+            }catch(Exception $e){
+                $fname = 'filename_wrong_enc';
             }
         }
+
 
         return $fname;
     }
