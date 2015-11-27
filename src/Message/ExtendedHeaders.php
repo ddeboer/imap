@@ -26,7 +26,6 @@ class ExtendedHeaders extends Parameters
         $headersText = $this->fixEncoding($headersText);
         $items = self::parse($headersText);
 
-
         $multiple = ['received'];
         foreach($items as $k => $item){
             $name = strtolower($item['name']);
@@ -138,6 +137,10 @@ class ExtendedHeaders extends Parameters
 
         if($name == 'return-path'){
             $value = preg_replace('/.*<([^<>]+)>.*/','$1',$value);
+        }
+
+        if($name == 'subject'){
+            return $this->decode($value);
         }
 
         return $value;
