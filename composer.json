@@ -3,7 +3,17 @@
     "description": "Object-oriented IMAP for PHP",
     "keywords": [ "email", "mail", "imap" ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Sawered/transcoder.git"
+        }
+    ],
     "authors": [
+        {
+            "name": "Sergey Koryukin",
+            "email": "sawered@gmail.com"
+        },
         {
             "name": "David de Boer",
             "email": "david@ddeboer.nl"
@@ -16,7 +26,7 @@
     "require": {
         "php": ">=5.4.0",
         "ext-imap": "*",
-        "ddeboer/transcoder": "~1"
+        "ddeboer/transcoder": "dev-master"
     },
     "require-dev": {
         "ext-mbstring": "*",

@@ -3,6 +3,8 @@
 namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
+use Ddeboer\Transcoder\Transcoder;
+use Ddeboer\Transcoder\MBTranscoder;
 
 use DateTime;
 use Exception;
@@ -18,6 +20,10 @@ class ExtendedHeaders extends Parameters
      */
     public function __construct($headersText)
     {
+        //некоторые умники не кодируют тему письма, и кодировка заголовков
+        //не 7/8 бит и не UTF-8 после парсинга заголовков восстановить
+        //кодировку уже не получится, поэтому попытаемся это сделать в самом начале
+        $headersText = $this->fixEncoding($headersText);
         $items = self::parse($headersText);
 
 
@@ -246,5 +252,36 @@ class ExtendedHeaders extends Parameters
         }catch(Exception $e){
             return null;
         }
+    }
+
+    /**
+     * Tries to right decode wrong coded header fields like subject
+     *
+     * @return string
+     **/
+    public function fixEncoding($content)
+    {
+        $matches = [];
+        $charset = null;
+        if(preg_match('@^Content-Type:.*charset=([^=[:space:]]+)@mi',$content,$matches)){
+            $charset = $matches[1];
+        }elseif(preg_match('@^Content.*charset=([^=[:space:]]+)@mi',$content,$matches)){
+            $charset = $matches[1];
+        }
+
+        if(!is_null($charset)){
+
+            try{
+                $content =  Transcoder::create()->transcode(
+                    $content,
+                    $charset,
+                    'UTF-8'
+                );
+                $content = MBTranscoder::removeInvalidUTF8Bytes($content);
+            }catch(RuntimeException $e){
+                return $content;
+            }
+        }
+        return $content;
     }
 }

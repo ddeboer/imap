@@ -357,7 +357,7 @@ class Message extends Message\Part
         if(is_null($this->rawHeaders)){
             $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID );
             //|\FT_PREFETCHTEXT
-        //return imap_fetchbody($this->stream, $this->messageNumber, '0', \FT_UID| \FT_PEEK);
+            //$this->rawHeaders = imap_fetchbody($this->stream, $this->messageNumber, '0', \FT_UID| \FT_PEEK);
         }
         return $this->rawHeaders;
     }

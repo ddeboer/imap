@@ -49,7 +49,6 @@ Content-Type: multipart/alternative; boundary="B_ALT_4e20557a491ae"
 TXT;
 
         $result =  ExtendedHeaders::parse($header);
-        //var_export($result);
         $i = 0;
         foreach($result as $item ){
             if($item['name'] == 'Message-ID'){
@@ -81,6 +80,7 @@ TXT;
             $this->assertNotEmpty($result[$key],'Empty '.$key);
         }
     }
+
     public function getReceivedHeaders()
     {
         $result = [];
@@ -106,6 +106,41 @@ TXT;
 
         return $result;
     }
+
+    public function testWrongSubjectDecoding()
+    {
+        $header =<<<TXT
+UmVjZWl2ZWQ6IGZyb20gbXhmcm9udDNqLm1haWwueWFuZGV4Lm5ldCAoWzEyNy4wLjAuMV0pDQoJ
+YnkgbXhmcm9udDNqLm1haWwueWFuZGV4Lm5ldCB3aXRoIExNVFAgaWQgQWhtZTZoaWQNCglmb3Ig
+PGluZm9AcXNvZnQucnU+OyBUdWUsIDggU2VwIDIwMTUgMDY6NTQ6NTYgKzAzMDANClJlY2VpdmVk
+OiBmcm9tIG1hcnRpbmlxdWUubXR1LnJ1IChtYXJ0aW5pcXVlLm10dS5ydSBbNjIuMTE4LjI1NC4x
+NTBdKQ0KCWJ5IG14ZnJvbnQzai5tYWlsLnlhbmRleC5uZXQgKG53c210cC9ZYW5kZXgpIHdpdGgg
+RVNNVFAgaWQgeTgyT0ZWejBLYi1zdHJlYlRxRDsNCglUdWUsICA4IFNlcCAyMDE1IDA2OjU0OjU1
+ICswMzAwDQpYLVlhbmRleC1Gcm9udDogbXhmcm9udDNqLm1haWwueWFuZGV4Lm5ldA0KWC1ZYW5k
+ZXgtVGltZU1hcms6IDE0NDE2ODQ0OTUNClgtWWFuZGV4LVNwYW06IDENClJlY2VpdmVkOiBmcm9t
+IGh3Zi1iZTA0LWludC5tdHUucnUgKGh3Zi1iZTA0Lm10dS5ydSBbNjIuMTE4LjI1NC4xNl0pDQoJ
+YnkgbWFpbC5ob3N0aW5nLnJ1IChQb3N0Zml4KSB3aXRoIEVTTVRQIGlkIDU4OTU5NzNDDQoJZm9y
+IDxpbmZvQHh4LnJ1PjsgVHVlLCAgOCBTZXAgMjAxNSAwNjo1NDozNCArMDMwMCAoTVNLKQ0KUmVj
+ZWl2ZWQ6IChmcm9tIHRlLXNAbG9jYWxob3N0KQ0KCWJ5IGh3Zi1iZTA0LWludC5tdHUucnUgKDgu
+MTMuOC84LjEyLjEwL1N1Ym1pdCkgaWQgdDg4M3NYRDAwMTE0MTI7DQoJVHVlLCA4IFNlcCAyMDE1
+IDA2OjU0OjMzICswMzAwIChNU0spDQoJKGVudmVsb3BlLWZyb20gdGUtcykNCkRhdGU6IFR1ZSwg
+OCBTZXAgMjAxNSAwNjo1NDozMyArMDMwMCAoTVNLKQ0KTWVzc2FnZS1JZDogPDIzNTQudDg4M3NY
+RDAwMTE0MTJAaHdmLWJlMDQtaW50Lm10dS5ydT4NClRvOiBpbmZvQHh4LnJ1DQpTdWJqZWN0OiDM
+0C0wMSDv7uPu5O376SDq7uzv5e3x4PLu8Cwg7+704PHg5O3u5SDw5ePz6+jw7uLg7ejlLCDq7u3y
+8O7r/CDS7uHwLCDz7/Dg4uvl7ejlIO3g8e7x4OzoDQpDb250ZW50LXR5cGU6IHRleHQvaHRtbDsN
+CWNoYXJzZXQ9d2luZG93cy0xMjUxDQpGcm9tOiB0ZS1zQHRlLXMucnUNClgtTWFpbGVyOiBQSFAv
+NC40LjQNCk1pbWUtVmVyc2lvbjogMS4wDQpSZXR1cm4tUGF0aDogZGV2bnVsbEBob3N0aW5nLnJ1
+DQpYLVlhbmRleC1Gb3J3YXJkOiAwOTlkYzBhNzAwN2I5ZGMyMDlhOTRjZTUzMGJkZjFiOQ0KWC1Z
+YW5kZXgtRmlsdGVyOiAyMDkwMDAwMDAwMDAwMTUyMjgxDQpYLVlhbmRleC1GaWx0ZXI6IDIwOTAw
+MDAwMDAwMDA4MjUyMDYNClgtWWFuZGV4LUZpbHRlcjogMjA5MDAwMDAwMDAwMDgzNDczNQ0K
+TXT;
+        $header = base64_decode($header);
+        $h = new ExtendedHeaders($header);
+
+        $subj = "МР-01 погодный компенсатор, пофасадное регулирование, контроль Тобр, управление насосами";
+        $this->assertEquals($subj,$h->get('subject'));
+    }
+
     /**
      * Call protected/private method of a class.
      *
