@@ -38,20 +38,52 @@ class Parameters
         return $this->parameters;
     }
 
+
     protected function decode($value)
     {
         $decoded = '';
         $parts = imap_mime_header_decode($value);
-        try{
-        foreach ($parts as $part) {
-            $charset = 'default' == $part->charset ? 'auto' : $part->charset;
-            // imap_utf8 doesn't seem to work properly, so use Transcoder instead
-            try{
-                $decoded .= Transcoder::create()->transcode($part->text, $charset);
-            }catch(IllegalCharacterException $e){
-                //no warn, itis reality
-            }
+
+        if(empty($parts)){
+            return $decoded;
         }
+        try{
+            $encs = [];
+            $str = '';
+            foreach ($parts as $part) {
+                $encs[] = $part->charset;
+                $str .= $part->text;
+            }
+            $encs = array_unique($encs);
+
+            if(count($encs) == 1){
+
+                //Google sometimes split title into several
+                //chunks with same encoding,so for correct
+                // processing we must concat them before transcoding
+                $enc = reset($encs);
+                $charset = 'default' == $enc ? 'auto' : $part->charset;
+                // imap_utf8 doesn't seem to work properly, so use Transcoder instead
+                try{
+                    return  Transcoder::create()->transcode($str, $charset);
+                }catch(IllegalCharacterException $e){
+                    //no warn, itis reality
+                    return $decoded;
+                }
+            }
+
+            //if encoding of parts is diffrent
+            //i don see such situation, but keep in mind
+            foreach ($parts as $part) {
+                $charset = 'default' == $part->charset ? 'auto' : $part->charset;
+                // imap_utf8 doesn't seem to work properly, so use Transcoder instead
+                try{
+                    $decoded .= Transcoder::create()->transcode($part->text, $charset);
+                }catch(IllegalCharacterException $e){
+                    //no warn, itis reality
+                }
+
+            }
         }catch(Exception $e){};
 
         return $decoded;
