@@ -264,13 +264,7 @@ class ExtendedHeaders extends Parameters
      **/
     public function fixEncoding($content)
     {
-        $matches = [];
-        $charset = null;
-        if(preg_match('@^Content-Type:.*charset=([^=[:space:]]+)@mi',$content,$matches)){
-            $charset = $matches[1];
-        }elseif(preg_match('@^Content.*charset=([^=[:space:]]+)@mi',$content,$matches)){
-            $charset = $matches[1];
-        }
+        $charset = $this->getCharset($content);
 
         if(!is_null($charset)){
 
@@ -286,5 +280,25 @@ class ExtendedHeaders extends Parameters
             }
         }
         return $content;
+    }
+
+    /**
+     * tries to find the charset of message
+     *
+     * @return string
+     * @author skoryukin
+     **/
+    protected function getCharset($content)
+    {
+        $matches = [];
+        $charset = null;
+
+        if(preg_match('@^Content-Type:.*charset=([^;=[:space:]]+)[;]*@mi',$content,$matches)){
+            $charset = $matches[1];
+        }elseif(preg_match('@^Content.*charset=([^;=[:space:]]+)[;]*@mi',$content,$matches)){
+            $charset = $matches[1];
+        }
+
+        return $charset;
     }
 }

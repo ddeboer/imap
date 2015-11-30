@@ -142,6 +142,66 @@ TXT;
     }
 
     /**
+     * @dataProvider getContentTypeHeaders
+     *
+     * @return void
+     * @author skoryukin
+     **/
+    public function testContentEncodingParsing($header,$charset)
+    {
+
+        $h = new ExtendedHeaders($header);
+
+        $result = $this->invokeMethod($h,'getCharset',[$header]);
+
+        $this->assertEquals($charset,$result);
+    }
+
+    public function getContentTypeHeaders()
+    {
+        $result = array();
+        $str =<<<TXT
+X-Mailer: CommuniGate Pro WebUser v5.1.16
+Date: Sat, 28 Nov 2015 21:39:17 +0500
+Message-ID: <web-128688995@xxx.ru>
+Content-Type: text/plain;charset=koi8-r;format="flowed"
+Content-Transfer-Encoding: 8bit
+X-Yandex-Forward: 4e8bd3945adfad1576e187aa491ae502
+TXT;
+        $result[] = [$str,'koi8-r'];
+
+        $str =<<<TXT
+X-Mailer: CommuniGate Pro WebUser v5.1.16
+Date: Sat, 28 Nov 2015 21:39:17 +0500
+Message-ID: <web-128688995@xxx.ru>
+Content-Type: text/plain;charset=koi8-r
+Content-Transfer-Encoding: 8bit
+X-Yandex-Forward: 4e8bd3945adfad1576e187aa491ae502
+TXT;
+        $result[] = [$str,'koi8-r'];
+
+        $str =<<<TXT
+X-Mailer: PDG.ru mail sender
+X-Priority: 3 (Normal)
+Message-ID: <4e20557a49160@xxx.ru>
+Mime-Version: 1.0
+Content-Type: multipart/alternative; boundary="B_ALT_4e20557a491ae"
+TXT;
+        $result[] = [$str,null];
+
+        $str =<<<TXT
+X-Mailer: PDG.ru mail sender
+X-Priority: 3 (Normal)
+Message-ID: <4e20557a49160@xxx.ru>
+Content-Type: multipart/alternative; charset=windows-1251
+Mime-Version: 1.0
+TXT;
+        $result[] = [$str,'windows-1251'];
+
+        return $result;
+    }
+
+    /**
      * Call protected/private method of a class.
      *
      * @param object &$object    Instantiated object that we will run method on.
