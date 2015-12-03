@@ -16,17 +16,43 @@ class Headers extends Parameters
      */
     public function __construct(\stdClass $headers)
     {
+        //"date"
+        //"subject"
+        //"in_reply_to"
+        //"message_id"
+        //"toaddress"
+        //"to"
+        //"fromaddress"
+        //"from"
+        //"reply_toaddress"
+        //"reply_to"
+        //"senderaddress"
+        //"sender"
+        //"recent"
+        //"unseen"
+        //"flagged"
+        //"answered"
+        //"deleted"
+        //"draft"
+        //"msgno"
+        //"maildate"
+        //"size"
+        //"udate"
+
         // Store all headers as lowercase
         $headers = array_change_key_case((array) $headers);
 
+
+        //var_dump("headers",$headers);
         foreach ($headers as $key => $value) {
+            //var_dump($key);
             $this->parameters[$key] = $this->parseHeader($key, $value);
         }
     }
 
     /**
      * Get header
-     * 
+     *
      * @param string $key
      *
      * @return string
@@ -35,12 +61,16 @@ class Headers extends Parameters
     {
         return parent::get(strtolower($key));
     }
-    
+
     private function parseHeader($key, $value)
     {
         switch ($key) {
             case 'msgno':
                 return (int)$value;
+            case 'recent':
+                // no break
+            case 'flagged':
+                // no break
             case 'answered':
                 // no break
             case 'deleted':
@@ -48,12 +78,21 @@ class Headers extends Parameters
             case 'draft':
                 // no break
             case 'unseen':
-                return (bool)trim($value);
+                return trim($value);
+            case 'maildate':
+                // no break
             case 'date':
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
+                $value = str_replace(array(' UT',' UCT'),' UTC',$value);
+                try{
+                    return new \DateTime($value);
+                }catch(\Exception $e){
+                    return null;
+                }
 
-                return new \DateTime($value);
+            case 'sender':
+                //nobreak
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':
@@ -63,7 +102,7 @@ class Headers extends Parameters
                 foreach ($value as $address) {
                     $emails[] = $this->decodeEmailAddress($address);
                 }
-            
+
                 return $emails;
             case 'subject':
                 return $this->decode($value);
@@ -74,8 +113,9 @@ class Headers extends Parameters
 
     private function decodeEmailAddress($value)
     {
+        $mailbox = property_exists($value,'mailbox')?$value->mailbox:null; //sometimes property is not exists
         return new EmailAddress(
-            $value->mailbox,
+            $mailbox,
             isset($value->host) ? $value->host : null,
             isset($value->personal) ? $this->decode($value->personal) : null
         );
