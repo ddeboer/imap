@@ -35,6 +35,22 @@ class Server
     private $parameters;
 
     /**
+     * @var int Options bitmask
+     *
+     * OP_READONLY - Open mailbox read-only
+     * OP_ANONYMOUS - Don't use or update a .newsrc for news (NNTP only)
+     * OP_HALFOPEN - For IMAP and NNTP names, open a connection but don't open a mailbox.
+     * CL_EXPUNGE - Expunge mailbox automatically upon mailbox close (see also imap_delete() and imap_expunge())
+     * OP_DEBUG - Debug protocol negotiations
+     * OP_SHORTCACHE - Short (elt-only) caching
+     * OP_SILENT - Don't pass up events (internal use)
+     * OP_PROTOTYPE - Return driver prototype
+     * OP_SECURE - Don't do non-secure authentication
+     */
+    private $options;
+
+    private $lastError;
+    /**
      * Constructor
      *
      * @param string $hostname   Internet domain name or bracketed IP address
@@ -47,16 +63,18 @@ class Server
         $hostname,
         $port = 993,
         $flags = '/imap/ssl/validate-cert',
-        $parameters = array()
+        $parameters = array(),
+        $options = 0
     ) {
         if (!function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
         }
-        
+
         $this->hostname = $hostname;
         $this->port = $port;
         $this->flags = $flags ? '/' . ltrim($flags, '/') : '';
         $this->parameters = $parameters;
+        $this->options = $options;
     }
 
     /**
@@ -71,26 +89,27 @@ class Server
     public function authenticate($username, $password)
     {
         // Wrap imap_open, which gives notices instead of exceptions
-        set_error_handler(
-            function ($nr, $message) use ($username) {
-                throw new AuthenticationFailedException($username, $message);
-            }
-        );
-        
+        set_error_handler([$this,'errorHandler']);
+        $this->lastError = null;
+
         $resource = imap_open(
             $this->getServerString(),
             $username,
             $password,
-            null,
+            $this->options,
             1,
             $this->parameters
         );
 
+        restore_error_handler();
+        if($this->lastError){
+            throw $this->lastError;
+        }
+
         if (false === $resource) {
             throw new AuthenticationFailedException($username);
         }
-        
-        restore_error_handler();
+
 
         $check = imap_check($resource);
         $mailbox = $check->Mailbox;
@@ -116,5 +135,11 @@ class Server
             $this->port,
             $this->flags
         );
+    }
+
+    public function errorHandler($nr,$message)
+    {
+        $this->lastError = new AuthenticationFailedException('not set', $message);
+        return true;
     }
 }
