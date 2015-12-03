@@ -13,6 +13,7 @@ use Ddeboer\Imap\Exception\MessageMoveException;
 class Message extends Message\Part
 {
     private $headers;
+    private $extHeaders;
     private $attachments;
 
     /**
@@ -20,19 +21,27 @@ class Message extends Message\Part
      */
     private $keepUnseen = false;
 
+    protected $rawHeaders;
+    protected $rawBody;
+
+    protected $loaded = false;
+    public static $charset = 'UTF-8';
     /**
      * Constructor
      *
      * @param resource $stream        IMAP stream
      * @param int      $messageNumber Message number
      */
-    public function __construct($stream, $messageNumber)
+    public function __construct($stream, $messageNumber,$lazyLoad = false)
     {
         $this->stream = $stream;
         $this->messageNumber = $messageNumber;
 
-        $this->loadStructure();
+        if(!$lazyLoad){
+            $this->loadStructure();
+        }
     }
+
 
     /**
      * Get message id
@@ -46,6 +55,11 @@ class Message extends Message\Part
         return $this->getHeaders()->get('message_id');
     }
 
+    public function getUid()
+    {
+        return $this->messageNumber;
+    }
+
     /**
      * Get message sender (from headers)
      *
@@ -53,7 +67,17 @@ class Message extends Message\Part
      */
     public function getFrom()
     {
-        return $this->getHeaders()->get('from');
+        return $this->getExtendedHeaders()->get('from');
+    }
+
+    /**
+     * Get message sender (from headers)
+     *
+     * @return EmailAddress
+     */
+    public function getSender()
+    {
+        return $this->getExtendedHeaders()->get('sender');
     }
 
     /**
@@ -63,17 +87,27 @@ class Message extends Message\Part
      */
     public function getTo()
     {
-        return $this->getHeaders()->get('to') ?: [];
+        return $this->getExtendedHeaders()->get('to') ?: [];
     }
 
     /**
-     * Get Cc recipients
+     * Get CC recipients
      *
      * @return EmailAddress[] Empty array in case message has no CC: recipients
      */
     public function getCc()
     {
-        return $this->getHeaders()->get('cc') ?: [];
+        return $this->getExtendedHeaders()->get('cc') ?: [];
+    }
+
+    /**
+     * Get BCC recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no BCC: recipients
+     */
+    public function getBcc()
+    {
+        return $this->getExtendedHeaders()->get('bcc') ?: [];
     }
 
     /**
@@ -111,13 +145,14 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getContent($keepUnseen = false)
+    public function getContent()
     {
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
         $this->headers = null;
+        $this->needLoad();
 
-        return $this->doGetContent($this->keepUnseen ? $this->keepUnseen : $keepUnseen);
+        return $this->doGetContent($this->keepUnseen);
     }
 
     /**
@@ -137,7 +172,7 @@ class Message extends Message\Part
      */
     public function isDeleted()
     {
-        return $this->getHeaders()->get('deleted');
+        return $this->getHeaders()->get('deleted') == 'D';
     }
 
     /**
@@ -147,7 +182,7 @@ class Message extends Message\Part
      */
     public function isDraft()
     {
-        return $this->getHeaders()->get('draft');
+        return $this->getHeaders()->get('draft') == 'X';
     }
 
     /**
@@ -157,7 +192,17 @@ class Message extends Message\Part
      */
     public function isSeen()
     {
-        return 'U' != $this->getHeaders()->get('unseen');
+        $recent = $this->getHeaders()->get('recent');
+        $seen = $this->getHeaders()->get('unseen');
+
+        return 'R' == $recent
+            || (strlen($recent)==0  && strlen($seen) ==0);
+    }
+
+
+    public function isRecent()
+    {
+        return strlen($this->getHeaders()->get('recent')) == 1; //R or N
     }
 
     /**
@@ -171,7 +216,9 @@ class Message extends Message\Part
     }
 
     /**
-     * Get message headers
+     * Get message headers with flags (small part of all)
+     * Returns only last recipient in from\cc\bcc field - seems this ability is broken
+     * inside cclient lib
      *
      * @return Message\Headers
      */
@@ -189,38 +236,141 @@ class Message extends Message\Part
     }
 
     /**
-     * Get body HTML
+     * Return all headers of message without flags
+     * if header present multiple times it will be returned as array
+     * from first to last by chronological order
      *
-     * @return string | null Null if message has no HTML message part
-     */
-    public function getBodyHtml()
+     * @return Message\ExtendedHeaders
+     **/
+    public function getExtendedHeaders()
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if ($part->getSubtype() == 'HTML') {
-                return $part->getDecodedContent($this->keepUnseen);
-            }
+
+        if(is_null($this->extHeaders)){
+
+            //instead of imap_fetchbody we can use
+            //$headers = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
+            $headersText = imap_fetchbody($this->stream, $this->messageNumber, '0', FT_UID);
+
+            $this->extHeaders = new Message\ExtendedHeaders($headersText);
         }
+
+        return $this->extHeaders;
+    }
+
+
+    public function hasBodyText()
+    {
+        return $this->hasBodyType(self::SUBTYPE_PLAIN);
+    }
+
+    public function hasBodyHtml()
+    {
+        return $this->hasBodyType(self::SUBTYPE_HTML);
     }
 
     /**
-     * Get body text
+     * Get body HTML part
      *
-     * @return string
+     * @return  Message\Part | null Null if message has no HTML message part
+     */
+    public function getBodyHtml()
+    {
+        return $this->getBody(self::SUBTYPE_HTML);
+    }
+
+    /**
+     * Get body part
+     *
+     * @return Message\Part
      */
     public function getBodyText()
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if ($part->getSubtype() == 'PLAIN') {
-                return $part->getDecodedContent($this->keepUnseen);
+        return $this->getBody(self::SUBTYPE_PLAIN);
+    }
+
+    /**
+     * Returns part by subtype
+     *
+     * @return Message\Part
+     **/
+    public function hasBodyType($subtype)
+    {
+        $this->needLoad();
+
+        if($this->getSubtype() == $subtype){
+            return true;
+        }
+
+        $list = $this->parts;
+        while($part = array_shift($list)){
+
+            if( $part instanceof Message\Attachment){
+                continue;
+            }
+
+            if($part->getSubtype() == $subtype){
+                return true;
+            }
+            foreach($part->parts as $subPart){
+                array_push($list,$subPart);
             }
         }
 
-        // If message has no parts, return content of message itself.
-        return $this->getDecodedContent($this->keepUnseen);
+        return false;
     }
 
+    public function getBody($subtype)
+    {
+        $this->needLoad();
+
+        if ($this->getSubtype() == $subtype) {
+            return $this;
+        }
+
+        $list = $this->parts;
+        while($part = array_shift($list)){
+
+            if( $part instanceof Message\Attachment){
+                continue;
+            }
+
+            if($part->getSubtype() == $subtype){
+                return $part;
+            }
+            foreach($part->parts as $subPart){
+                array_push($list,$subPart);
+            }
+        }
+
+        return null;
+    }
+
+    public function getRaw()
+    {
+        if(is_null($this->rawBody)){
+             $this->rawBody = imap_fetchbody($this->stream, $this->messageNumber, "",\FT_UID| \FT_PEEK);
+        }
+        return $this->rawBody;
+    }
+
+    public function getRawHeaders()
+    {
+        if(is_null($this->rawHeaders)){
+            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID );
+            //|\FT_PREFETCHTEXT
+        //return imap_fetchbody($this->stream, $this->messageNumber, '0', \FT_UID| \FT_PEEK);
+        }
+        return $this->rawHeaders;
+    }
+
+    public function getOverview()
+    {
+        $res = imap_fetch_overview($this->stream, $this->messageNumber, \FT_UID);
+        if(!empty($res)){
+            return (array)reset($res);
+        }
+        return array();
+    }
     /**
      * Get attachments (if any) linked to this e-mail
      *
@@ -228,8 +378,10 @@ class Message extends Message\Part
      */
     public function getAttachments()
     {
+        $this->needLoad();
+
         if (null === $this->attachments) {
-            $this->attachments = array();
+            $this->attachments = array();//Fix COGIVEA
             foreach ($this->getParts() as $part) {
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;
@@ -250,10 +402,12 @@ class Message extends Message\Part
     /**
      * Does this message have attachments?
      *
-     * @return bool
+     * @return int
      */
     public function hasAttachments()
     {
+        $this->needLoad();
+
         return count($this->getAttachments()) > 0;
     }
 
@@ -291,7 +445,7 @@ class Message extends Message\Part
     /**
      * Prevent the message from being marked as seen
      *
-     * Defaults to true, so messages that are read will be still marked as unseen.
+     * Defaults to false, so messages that are read will be marked as seen.
      *
      * @param bool $bool
      *
@@ -309,14 +463,8 @@ class Message extends Message\Part
      */
     private function loadStructure()
     {
-        set_error_handler(
-            function ($nr, $error) {
-                throw new MessageDoesNotExistException(
-                    $this->messageNumber,
-                    $error
-                );
-            }
-        );
+        set_error_handler([$this,'errorHandler']);
+        $this->setLastException(null);
 
         $structure = imap_fetchstructure(
             $this->stream,
@@ -324,8 +472,39 @@ class Message extends Message\Part
             \FT_UID
         );
 
+        $ex = $this->getLastException();
+        if($ex){
+            throw $ex;
+        }
+
         restore_error_handler();
 
+        if(!$structure){
+            throw new MessageDoesNotExistException(
+                $this->messageNumber,
+                'empty structure'
+            );
+        }
+
         $this->parseStructure($structure);
+        $this->loaded = true;
+    }
+
+    protected function needLoad()
+    {
+        if($this->loaded){
+            return true;
+        }
+
+        $this->loadStructure();
+        return true;
+    }
+
+    public function errorHandler ($nr, $error) {
+        $this->lastException = new MessageDoesNotExistException(
+            $this->messageNumber,
+            $error
+        );
+        return  true;
     }
 }
