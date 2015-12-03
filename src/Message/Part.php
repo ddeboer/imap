@@ -64,7 +64,7 @@ class Part implements \RecursiveIterator
      * @var Parameters
      */
     protected $parameters;
-    
+
     protected $stream;
 
     protected $messageNumber;
@@ -144,10 +144,10 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getContent()
+    public function getContent($keepUnseen = false)
     {
         if (null === $this->content) {
-            $this->content = $this->doGetContent();
+            $this->content = $this->doGetContent($keepUnseen);
         }
 
         return $this->content;
@@ -158,20 +158,20 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getDecodedContent()
+    public function getDecodedContent($keepUnseen = false)
     {
         if (null === $this->decodedContent) {
             switch ($this->getEncoding()) {
                 case self::ENCODING_BASE64:
-                    $this->decodedContent = base64_decode($this->getContent());
+                    $this->decodedContent = base64_decode($this->getContent($keepUnseen));
                     break;
                 case self::ENCODING_QUOTED_PRINTABLE:
-                    $this->decodedContent =  quoted_printable_decode($this->getContent());
+                    $this->decodedContent =  quoted_printable_decode($this->getContent($keepUnseen));
                     break;
                 case self::ENCODING_7BIT:
                 case self::ENCODING_8BIT:
                 case self::ENCODING_BINARY:
-                    $this->decodedContent = $this->getContent();
+                    $this->decodedContent = $this->getContent($keepUnseen);
                     break;
                 default:
                     throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
@@ -217,7 +217,7 @@ class Part implements \RecursiveIterator
         } else {
             $this->type = self::TYPE_UNKNOWN;
         }
-        
+
         $this->encoding = $this->encodingsMap[$structure->encoding];
         $this->subtype = $structure->subtype;
 
@@ -230,12 +230,12 @@ class Part implements \RecursiveIterator
                 $this->$optional = $structure->$optional;
             }
         }
-        
+
         $this->parameters = new Parameters();
         if (is_array($structure->parameters)) {
             $this->parameters->add($structure->parameters);
         }
-        
+
         if (isset($structure->dparameters)) {
             $this->parameters->add($structure->dparameters);
         }
@@ -325,7 +325,7 @@ class Part implements \RecursiveIterator
             \FT_UID | ($keepUnseen ? \FT_PEEK : null)
         );
     }
-    
+
     private function isAttachment($part)
     {
         // Attachment with correct Content-Disposition header
@@ -348,7 +348,7 @@ class Part implements \RecursiveIterator
                 }
             }
         }
-        
+
         return false;
     }
 }
