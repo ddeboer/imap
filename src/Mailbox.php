@@ -6,7 +6,7 @@ use Ddeboer\Imap\Exception\Exception;
 use Ddeboer\Imap\Exception\MailboxOpenException;
 use Ddeboer\Transcoder\Transcoder;
 /**
- * An IMAP mailbox (commonly referred to as a âfolderâ)
+ * An IMAP mailbox (commonly referred to as a 'folder')
  *
  */
 class Mailbox implements \IteratorAggregate
@@ -127,7 +127,7 @@ class Mailbox implements \IteratorAggregate
     }
 
     /**
-     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ Ð¼Ð°ÑÑÐ¸Ð² UID Ð¿Ð¸ÑÐµÐ¼ Ð¿Ð¾ ÐºÑÐ¸ÑÐµÑÐ¸Ñ Ð¸ ÑÐ¾ÑÑÐ¸ÑÐ¾Ð²ÐºÐµ
+     * Recuperation UID
      *
      * @param int $sort SORTDATE | SORTARRIVAL |..
      * @return void
