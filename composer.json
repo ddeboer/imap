@@ -5,6 +5,10 @@
     "license": "MIT",
     "authors": [
         {
+            "name": "Cogivea",
+            "email": "support@cogivea.com"
+        },        
+        {
             "name": "David de Boer",
             "email": "david@ddeboer.nl"
         },

@@ -39,4 +39,9 @@ class SearchExpression
     {
         return implode(' ', $this->conditions);
     }
+
+    public function expr()
+    {
+        return new Expr();
+    }
 }
