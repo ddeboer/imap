@@ -151,7 +151,7 @@ class Part implements \RecursiveIterator
         if ($this->type !== "message") {
             throw new Exception("Attachment is not embedded message");
         }
-        $message = new EmbeddedMessage($this->stream, $this->messageNumber, $this->partNumber);
+        return new EmbeddedMessage($this->stream, $this->messageNumber, $this->partNumber);
     }
 
     public function getMimeHeader()
