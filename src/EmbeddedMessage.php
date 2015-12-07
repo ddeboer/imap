@@ -9,13 +9,15 @@
 
 namespace Ddeboer\Imap;
 
-
 use Ddeboer\Imap\Exception\Exception;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\EmbeddedAttachment;
 
 class EmbeddedMessage extends Message\Part
 {
+    /**
+     * @var string
+     */
     private $rawMimeHeader;
     private $parsedHeader;
 
