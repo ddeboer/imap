@@ -2,6 +2,8 @@
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\EmbeddedMessage\EmbeddedMessage;
+use Ddeboer\Imap\Exception\Exception;
 use Ddeboer\Imap\Parameters;
 use Ddeboer\Transcoder\Transcoder;
 
@@ -137,6 +139,19 @@ class Part implements \RecursiveIterator
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    public function isEmbeddedMessage()
+    {
+        return $this->type === "message";
+    }
+
+    public function getEmbeddedMessage()
+    {
+        if ($this->type !== "message") {
+            throw new Exception("Attachment is not embedded message");
+        }
+        return new EmbeddedMessage($this->stream, $this->messageNumber, $this->partNumber);
     }
 
     /**
