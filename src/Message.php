@@ -65,6 +65,16 @@ class Message extends Message\Part
     {
         return $this->getHeaders()->get('to') ?: [];
     }
+    
+    /**
+     * Get Replay to recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no Replay to: recipients
+     */
+    public function getReplayTo()
+    {
+        return $this->getHeaders()->get('replay_to') ?: [];
+    }
 
     /**
      * Get Cc recipients
