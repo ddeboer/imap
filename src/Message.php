@@ -73,7 +73,7 @@ class Message extends Message\Part
      */
     public function getReplayTo()
     {
-        return $this->getHeaders()->get('replay_to') ?: [];
+        return $this->getHeaders()->get('reply_to') ?: [];
     }
 
     /**
