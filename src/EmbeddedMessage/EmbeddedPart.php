@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Artem Evsin
- * Company: Cofis CZ
- * Date: 10.12.15
- * Time: 8:32
- */
-
 namespace Ddeboer\Imap\EmbeddedMessage;
 
 /**
  * Class EmbeddedPart
- * @author Artem Evsin <artem.evsin@cofis.cz>
+ * @author Artem Evsin <artem@evsin.cz>
+ * @author Cofis CZ <www.cofis.cz>
  * @package Ddeboer\Imap\EmbeddedMessage
  */
 class EmbeddedPart

@@ -1,22 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Artem Evsin
- * Company: Cofis CZ
- * Date: 7.12.15
- * Time: 8:31
- */
-
 namespace Ddeboer\Imap\EmbeddedMessage;
 
 /**
  * Class EmbeddedAttachment
- * @author Artem Evsin <artem.evsin@cofis.cz>
+ * @author Artem Evsin <artem@evsin.cz>
+ * @author Cofis CZ <www.cofis.cz>
  * @package Ddeboer\Imap\EmbeddedMessage
  */
 class EmbeddedAttachment extends EmbeddedPart
 {
-
     /**
      * @param $contentType
      * @param $filename
