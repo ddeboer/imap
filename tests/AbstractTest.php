@@ -12,7 +12,12 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $server = new Server('imap.gmail.com');
+        if (false === \getenv('EMAIL_SERVER')) {
+            $server = new Server('imap.gmail.com');
+        } else {
+            $server = new Server(\getenv('EMAIL_SERVER'));
+        }
+
 
         if (false === \getenv('EMAIL_USERNAME')) {
             throw new \RuntimeException(
@@ -91,7 +96,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
         $mailbox->addMessage($message);
     }
-    
+
     protected function getFixture($fixture)
     {
         return file_get_contents(__DIR__ . '/fixtures/' . $fixture);

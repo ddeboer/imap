@@ -67,12 +67,12 @@ class MessageTest extends AbstractTest
         $this->assertEquals("<html><body>España</body></html>\r\n", $message->getBodyHtml());
         $this->assertEquals(new \DateTime('2014-06-13 17:18:44+0200'), $message->getDate());
     }
-    
+
     public function testEmailAddress()
     {
         $this->mailbox->addMessage($this->getFixture('email_address'));
         $message = $this->mailbox->getMessage(1);
-        
+
         $from = $message->getFrom();
         $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $from);
         $this->assertEquals('no_host', $from->getMailbox());
@@ -82,9 +82,15 @@ class MessageTest extends AbstractTest
         $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[0]);
         $this->assertEquals('This one is right', $cc[0]->getName());
         $this->assertEquals('ding@dong.com', $cc[0]->getAddress());
-        
+
         $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[1]);
         $this->assertEquals('No-address', $cc[1]->getMailbox());
+
+        $replyTo = $message->getReplyTo();
+        $this->assertCount(1, $replyTo);
+        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $replyTo[0]);
+        $this->assertEquals('This one is right', $replyTo[0]->getName());
+        $this->assertEquals('tic@tac.toe', $replyTo[0]->getAddress());
     }
 
     public function testBcc()
@@ -97,7 +103,7 @@ class MessageTest extends AbstractTest
         $this->assertEquals('Undisclosed recipients', $message->getSubject());
         $this->assertCount(0, $message->getTo());
     }
-    
+
     public function testDelete()
     {
         $this->createTestMessage($this->mailbox, 'Message A');
@@ -121,7 +127,7 @@ class MessageTest extends AbstractTest
         $this->mailbox->addMessage(
             $this->getFixture('attachment_encoded_filename')
         );
-        
+
         $message = $this->mailbox->getMessage(1);
         $this->assertCount(1, $message->getAttachments());
         $attachment = $message->getAttachments()[0];
@@ -130,7 +136,7 @@ class MessageTest extends AbstractTest
             $attachment->getFilename()
         );
     }
-    
+
     public function getAttachmentFixture()
     {
         return [
