@@ -65,6 +65,16 @@ class Message extends Message\Part
     {
         return $this->getHeaders()->get('to') ?: [];
     }
+    
+    /**
+     * Get Reply To recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no Reply To: recipients
+     */
+    public function getReplyTo()
+    {
+        return $this->getHeaders()->get('reply_to') ?: [];
+    }
 
     /**
      * Get Cc recipients
