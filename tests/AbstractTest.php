@@ -15,7 +15,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         if (false === \getenv('EMAIL_SERVER')) {
             $server = new Server('imap.gmail.com');
         } else {
-            $server = new Server('imap.mail.yahoo.com');
+            $server = new Server(\getenv('EMAIL_SERVER'));
         }
 
 
