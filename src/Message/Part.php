@@ -4,6 +4,7 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
 use Ddeboer\Transcoder\Transcoder;
+use Ddeboer\Transcoder\Exception\UndetectableEncodingException;
 
 /**
  * A message part
@@ -182,10 +183,18 @@ class Part implements \RecursiveIterator
             if ($this->getType() === self::TYPE_TEXT
                 && strtolower($this->getCharset()) != 'utf-8'
             ) {
-                $this->decodedContent = Transcoder::create()->transcode(
-                    $this->decodedContent,
-                    $this->getCharset()
-                );
+                try
+                {
+                    $transcoded = Transcoder::create()->transcode(
+                        $this->decodedContent,
+                        $this->getCharset()
+                    );
+                    $this->decodedContent = $transcoded;
+                }
+                catch (UndetectableEncodingException $e)
+                {
+                    // fallback to decodedContent, without transcode
+                }
             }
         }
 
