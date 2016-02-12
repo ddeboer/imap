@@ -2,6 +2,9 @@
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\EmbeddedMessage\EmbeddedMessage;
+use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
 use Ddeboer\Imap\Parameters;
 use Ddeboer\Transcoder\Transcoder;
 
@@ -137,6 +140,24 @@ class Part implements \RecursiveIterator
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    public function isEmbeddedMessage()
+    {
+        return $this->type === "message";
+    }
+
+    /**
+     * Return embedded message
+     * @throws Exception when tryi
+     * @return EmbeddedMessage
+     */
+    public function getEmbeddedMessage()
+    {
+        if ($this->type !== "message") {
+            throw new NotEmbeddedMessageException;
+        }
+        return new EmbeddedMessage($this->stream, $this->messageNumber, $this->partNumber);
     }
 
     /**
@@ -331,8 +352,8 @@ class Part implements \RecursiveIterator
         // Attachment with correct Content-Disposition header
         if (isset($part->disposition)) {
             if (('attachment' === strtolower($part->disposition)
-                || 'inline' === strtolower($part->disposition))
-            && strtoupper($part->subtype) != "PLAIN"
+                    || 'inline' === strtolower($part->disposition))
+                && strtoupper($part->subtype) != "PLAIN"
             ) {
                 return true;
             }
