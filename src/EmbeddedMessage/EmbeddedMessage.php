@@ -202,9 +202,12 @@ class EmbeddedMessage
      */
     private function loadStructure()
     {
-        $this->content = imap_fetchbody($this->stream, $this->messageNumber, $this->partNumber, FT_UID);
         $this->rawMimeHeader = imap_fetchmime($this->stream, $this->messageNumber, $this->partNumber, FT_UID);
-        $this->parsedHeader = imap_rfc822_parse_headers($this->content);
+
+        $this->parsedHeader = imap_rfc822_parse_headers($this->getContent());
+        if (!count((array)$this->parsedHeader)) {
+            $this->parsedHeader = imap_rfc822_parse_headers($this->rawMimeHeader);
+        }
 
         //Message ID
         $this->id = $this->parsedHeader->message_id;
@@ -236,7 +239,19 @@ class EmbeddedMessage
         $this->date = new \DateTime($this->parsedHeader->date);
 
         //Subject
-        $this->subject = imap_utf8($this->parsedHeader->subject);
+        if (preg_match('/=\?(.*?)\?(.*?)\?/', $this->parsedHeader->subject, $matchSubject)) {
+            $subjectEncoding = strtolower($matchSubject[1]);
+            switch ($subjectEncoding) {
+                case "utf-8":
+                    $this->subject = mb_decode_mimeheader($this->parsedHeader->subject);
+                    break;
+                default:
+                    $this->subject = quoted_printable_decode(imap_utf8($this->parsedHeader->subject));
+                    break;
+            }
+        } else {
+            $this->subject = imap_utf8($this->parsedHeader->subject);
+        }
 
         $this->structure = $this->parseStructure();
 
@@ -255,15 +270,16 @@ class EmbeddedMessage
         $structure = [];
 
         if (!$part) {
+
             //in first iteration we have to get main boundary
-            $content = trim($this->getContent());
-            $boundary = $this->getBoundary($this->content);
-            if (!$boundary && $this->isBase64($content)) {
-                //if embedded mail contains only attachment, content IS this attachment (without structure)
-                //so we add mime header to attachment's content and create part from it
-                $content = $this->rawMimeHeader.$content;
-                return array($this->createPart($content));
+
+            $boundary = $this->getMainBoundary($this->getContent());
+            $partialStructure = $this->splitToParts($this->getContent(), $boundary);
+
+            foreach ($partialStructure as $part) {
+                $structure[] = $this->parseStructure($part);
             }
+            return $structure;
         } else {
             $content = trim($part);
             $boundary = $this->getBoundary($content);
@@ -300,6 +316,10 @@ class EmbeddedMessage
      */
     private function createPart($partContent)
     {
+        if (!$partContent) {
+            return null;
+        }
+
         //TODO add support for inline images (parse it to html)
         $part = new EmbeddedPart($partContent);
 
@@ -348,6 +368,21 @@ class EmbeddedMessage
     }
 
     /**
+     * Return main boundary for embedded message
+     *
+     * @param string $content
+     * @return bool|string
+     */
+    private function getMainBoundary($content)
+    {
+        if (!preg_match("/^--(.*)$/m", $content, $match)) {
+            return false;
+        }
+
+        return trim($match[1]);
+    }
+
+    /**
      * Extract boundary from string.
      * Returns empty string if boundary cannot be found
      *
@@ -374,13 +409,42 @@ class EmbeddedMessage
     }
 
     /**
-     * Check if given string is base64 encoded string
+     * Split message content to parts
      *
-     * @param $string
-     * @return bool
+     * @param string $content
+     * @param string $mainBoundary
+     * @return array
      */
-    private function isBase64($string)
+    private function splitToParts($content, $mainBoundary)
     {
-        return (bool)base64_decode($string);
+        $boundary = "--".$mainBoundary;
+        $boundaryEnd = "--".$mainBoundary."--";
+
+        $parts = [];
+
+        $currentPart = [];
+
+        $lines = explode("\r\n", $content);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (!$line) {
+                continue;
+            } elseif ($line == $boundary && !$currentPart) {
+                //first line - nothing to save
+            } elseif ($line == $boundary) {
+                //end of part and beginning of new part
+                $parts[] = implode("\r\n", $currentPart);
+                $currentPart = [];
+            } elseif ($line == $boundaryEnd) {
+                //end of content
+                $parts[] = implode("\r\n", $currentPart);
+                $currentPart = [];
+            } else {
+                //other lines
+                $currentPart[] = $line;
+            }
+        }
+
+        return $parts;
     }
 }
