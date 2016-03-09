@@ -271,7 +271,12 @@ class EmbeddedPart
      */
     private function parseBoundary()
     {
-        return $this->getRegexPart($this->partContent, "/boundary=(.*?)(?: |\n|;)/m");
+        $pattern = '/boundary=(.*?)(?:$|\s)/m';
+        if (!preg_match($pattern, $this->partContent, $match)) {
+            return false;
+        }
+
+        return trim($match[1], " \t\n\r\0\x0B\"");
     }
 
     /**
@@ -332,6 +337,19 @@ class EmbeddedPart
      */
     private function parseContent()
     {
+        if ($this->contentTransferEncoding == "base64") {
+            $a = explode("\r\n", $this->partContent);
+            foreach ($a as $key => $line) {
+                if (!preg_match('/^([A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}==)$/m', $line)) {
+                    unset($a[$key]);
+                }
+            }
+
+            $b = implode("\r\n", $a);
+
+            return $b;
+        }
+
         $patterns = [
             "/^(Content-.*)/m",
             "/^( .*)/m",
@@ -353,6 +371,7 @@ class EmbeddedPart
             "/^(Date:.*)/m",
             "/^(Message-ID:.*)/m",
             "/^(SpamDiagnostic.*)/m",
+            "/^(\\s+filename.*)/m",
         ];
         $trim = trim(preg_replace($patterns, "", $this->partContent));
         return $trim;
