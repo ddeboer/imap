@@ -190,6 +190,20 @@ class Message extends Message\Part
             $headers = imap_rfc822_parse_headers(
                 imap_fetchheader($this->stream, imap_msgno($this->stream, $this->messageNumber))
             );
+
+            // check errors.
+            $lastError = imap_last_error();
+            if ($lastError !== false) {
+                if (1 === preg_match('/Unexpected characters at end of address: <(.*)>/', $lastError, $matches)) {
+                    /**
+                     * Message parsing from, to, cc headers exception occurs.
+                     * It's not critical, because problem can be located just in single address from many.
+                     * So we can proceed this letter, just drop the notice.
+                     */
+                    imap_errors();
+                }
+            }
+
             $this->headers = new Message\Headers($headers);
         }
 
