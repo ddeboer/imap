@@ -22,7 +22,14 @@ class Mailbox implements \Countable, \IteratorAggregate
     {
         $this->mailbox = $name;
         $this->connection = $connection;
-        $this->name = substr($name, strpos($name, '}')+1);
+
+        $name = substr($name, strpos($name, '}')+1);
+
+        if (function_exists('mb_convert_encoding')) {
+            $this->name = mb_convert_encoding($name, "UTF-8", "UTF7-IMAP");
+        } else {
+            $this->name = imap_utf7_decode($name);
+        }
     }
 
     /**
