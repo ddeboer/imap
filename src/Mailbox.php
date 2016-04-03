@@ -2,6 +2,9 @@
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Exception\ServerDisallowCriterionException;
+
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
  *
@@ -68,6 +71,18 @@ class Mailbox implements \Countable, \IteratorAggregate
         $query = ($search ? (string) $search : 'ALL');
 
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
+
+        $lastError = imap_last_error();
+        if ($lastError !== false) {
+            if (1 === preg_match('/Unknown search criterion: ([A-Z]+)/', $lastError, $matches)) {
+                // drop php notices.
+                imap_errors();
+                throw new ServerDisallowCriterionException($matches[1]);
+            } else {
+                throw new Exception($lastError);
+            }
+        }
+
         if (false == $messageNumbers) {
             // imap_search can also return false
             $messageNumbers = array();
