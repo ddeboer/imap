@@ -218,6 +218,34 @@ class Part implements \RecursiveIterator
             $this->type = self::TYPE_UNKNOWN;
         }
 
+        if ($structure->encoding > 5) {
+            $headers = \imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
+
+            if (preg_match('/^Content-Transfer-Encoding: (.*)$/im', $headers, $matches)) {
+                $matches[1] = strtolower(preg_replace('/\s+/', '', $matches[1]));
+
+                switch ($matches[1]) {
+                    case self::ENCODING_7BIT:
+                        $structure->encoding = 0;
+                        break;
+                    case self::ENCODING_8BIT:
+                        $structure->encoding = 1;
+                        break;
+                    case self::ENCODING_BINARY:
+                        $structure->encoding = 2;
+                        break;
+                    case self::ENCODING_BASE64:
+                        $structure->encoding = 3;
+                        break;
+                    case self::ENCODING_QUOTED_PRINTABLE:
+                        $structure->encoding = 4;
+                        break;
+                    default:
+                        $structure->encoding = 5;
+                }
+            }
+        }
+
         $this->encoding = $this->encodingsMap[$structure->encoding];
         $this->subtype = $structure->subtype;
 
