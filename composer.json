@@ -1,5 +1,5 @@
 {
-    "name": "ddeboer/imap",
+    "name": "apburton84/imap",
     "description": "Object-oriented IMAP for PHP",
     "keywords": [ "email", "mail", "imap" ],
     "license": "MIT",
@@ -11,7 +11,7 @@
         {
             "name": "Community contributors",
             "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
-        }   
+        }
     ],
     "require": {
         "php": ">=5.4.0",
