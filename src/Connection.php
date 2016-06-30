@@ -58,7 +58,11 @@ class Connection
      */
     public function hasMailbox($name)
     {
-        return in_array($name, $this->getMailboxNames());
+        $mailboxes = $this->getMailboxNames();
+
+        $mailboxes = is_array($mailboxes) ? $mailboxes : [];
+
+        return in_array($name, $mailboxes);
     }
 
     /**
@@ -143,18 +147,23 @@ class Connection
 
     /**
      * Get mailbox names
-     * 
+     *
      * @return array
      */
     private function getMailboxNames()
     {
         if (null === $this->mailboxNames) {
             $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
+
+            if (! is_array($mailboxes)) {
+                return [];
+            }
+
             foreach ($mailboxes as $mailbox) {
                 $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
             }
         }
 
-        return $this->mailboxNames;
+        return  $this->mailboxNames ;
     }
 }

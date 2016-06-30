@@ -1,5 +1,5 @@
 {
-    "name": "ddeboer/imap",
+    "name": "apburton84/imap",
     "description": "Object-oriented IMAP for PHP",
     "keywords": [ "email", "mail", "imap" ],
     "license": "MIT",
@@ -11,12 +11,18 @@
         {
             "name": "Community contributors",
             "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
-        }   
+        }
+    ],
+    "repositories": [
+    	{
+            "type": "git",
+            "url": "https://github.com/apburton84/transcoder.git"
+        }	
     ],
     "require": {
         "php": ">=5.4.0",
         "ext-imap": "*",
-        "ddeboer/transcoder": "~1"
+        "apburton84/transcoder": "dev-master"
     },
     "require-dev": {
         "ext-mbstring": "*",
