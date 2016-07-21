@@ -15,7 +15,7 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @var string
      */
-    const DATE_FORMAT = 'Y-m-d';
+    protected $format = 'Y-m-d';
 
     /**
      * The date to be used for the condition.
@@ -28,11 +28,16 @@ abstract class AbstractDate extends AbstractCondition
      * Constructor.
      *
      * @param DateTime $date Optional date for the condition.
+     * @param string $format
      */
-    public function __construct(DateTime $date = null)
+    public function __construct(DateTime $date = null, $format = '')
     {
         if ($date) {
             $this->setDate($date);
+        }
+
+        if ('' !== $format) {
+            $this->format = $format;
         }
     }
 
@@ -47,12 +52,22 @@ abstract class AbstractDate extends AbstractCondition
     }
 
     /**
+     * Sets the format of the date for the condition.
+     *
+     * @param $format
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
+    }
+
+    /**
      * Converts the condition to a string that can be sent to the IMAP server.
      *
      * @return string
      */
     public function __toString()
     {
-        return $this->getKeyword() . ' "' . $this->date->format(self::DATE_FORMAT) .'"';
+        return $this->getKeyword() . ' "' . $this->date->format($this->format) . '"';
     }
 }
