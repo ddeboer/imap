@@ -7,6 +7,7 @@ use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 
+
 /**
  * An IMAP message (e-mail)
  */
@@ -146,6 +147,8 @@ class Message extends Message\Part
      */
     public function getContent()
     {
+        $this->checkStream();
+
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
         $this->headers = null;
@@ -224,6 +227,8 @@ class Message extends Message\Part
     public function getHeaders()
     {
         if (null === $this->headers) {
+            $this->checkStream();
+
             // imap_header is much faster than imap_fetchheader
             // imap_header returns only a subset of all mail headers,
             // but it does include the message flags.
@@ -245,6 +250,8 @@ class Message extends Message\Part
     {
 
         if(is_null($this->extHeaders)){
+
+            $this->checkStream();
 
             //instead of imap_fetchbody we can use
             //$headers = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
@@ -294,6 +301,8 @@ class Message extends Message\Part
      **/
     public function hasBodyType($subtype)
     {
+        $this->checkStream();
+
         $this->needLoad();
 
         if($this->getSubtype() == $subtype){
@@ -320,6 +329,8 @@ class Message extends Message\Part
 
     public function getBody($subtype)
     {
+        $this->checkStream();
+
         $this->needLoad();
 
         if ($this->getSubtype() == $subtype) {
@@ -346,6 +357,8 @@ class Message extends Message\Part
 
     public function getRaw()
     {
+        $this->checkStream();
+
         if(is_null($this->rawBody)){
              $this->rawBody = imap_fetchbody($this->stream, $this->messageNumber, "",\FT_UID| \FT_PEEK);
         }
@@ -354,6 +367,8 @@ class Message extends Message\Part
 
     public function getRawHeaders()
     {
+        $this->checkStream();
+
         if(is_null($this->rawHeaders)){
             $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID );
             //|\FT_PREFETCHTEXT
@@ -364,6 +379,8 @@ class Message extends Message\Part
 
     public function getOverview()
     {
+        $this->checkStream();
+
         $res = imap_fetch_overview($this->stream, $this->messageNumber, \FT_UID);
         if(!empty($res)){
             return (array)reset($res);
@@ -416,6 +433,8 @@ class Message extends Message\Part
      */
     public function delete()
     {
+        $this->checkStream();
+
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->headers = null;
 
@@ -433,6 +452,8 @@ class Message extends Message\Part
      */
     public function move(Mailbox $mailbox)
     {
+        $this->checkStream();
+
         if (!imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName(), \CP_UID)) {
             throw new MessageMoveException($this->messageNumber, $mailbox->getName());
         }
@@ -461,6 +482,8 @@ class Message extends Message\Part
      */
     private function loadStructure()
     {
+        $this->checkStream();
+
         set_error_handler([$this,'errorHandler']);
         $this->setLastException(null);
 
@@ -504,5 +527,14 @@ class Message extends Message\Part
             $error
         );
         return  true;
+    }
+
+    public function checkStream()
+    {
+        if(!is_resource($this->stream)){
+            throw new \Ddeboer\Imap\Exception\Exception('Trying to access closed imap connection');
+        }
+
+        return true;
     }
 }
