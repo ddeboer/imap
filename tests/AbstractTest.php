@@ -12,7 +12,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $server = new Server('imap.gmail.com');
+        $server = new Server('imap.gmail.com', 993, '/imap/ssl/novalidate-cert');
 
         if (false === \getenv('EMAIL_USERNAME')) {
             throw new \RuntimeException(
@@ -67,8 +67,12 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     protected function deleteMailbox(Mailbox $mailbox)
     {
-        // Move all messages in the mailbox to Gmail trash
-        $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
+        try {
+            // Move all messages in the mailbox to Gmail trash
+            $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
+        } catch (MailboxDoesNotExistException $e) {
+            $trash = self::getConnection()->createMailbox('[Gmail]/Bin');
+        }
 
         foreach ($mailbox->getMessages() as $message) {
             $message->move($trash);
