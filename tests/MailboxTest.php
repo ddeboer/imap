@@ -6,6 +6,7 @@ use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\Search\Email\To;
 use Ddeboer\Imap\Search\Text\Body;
 use Ddeboer\Imap\SearchExpression;
+use Ddeboer\Imap\Sort\To as SortTo;
 
 class MailboxTest extends AbstractTest
 {
@@ -76,5 +77,25 @@ class MailboxTest extends AbstractTest
         $search = new SearchExpression();
         $search->addCondition(new To('nope@nope.com'));
         $this->assertCount(0, $this->mailbox->getMessages($search));
+    }
+
+    public function testSortByTo()
+    {
+        $this->createTestMessage(
+            $this->mailbox,
+            'Correct Subject',
+            'Content',
+            'from-someone-' . rand(1000, 9999) . '@test.com',
+            'a-to@test.com');
+
+        $this->createTestMessage(
+            $this->mailbox,
+            'Incorrect subject',
+            'Content',
+            'from-someone-' . rand(1000, 9999) . '@test.com',
+            'b-to@test.com');
+
+        $messages = $this->mailbox->getMessages(null, new SortTo());
+        $this->assertEquals('Correct Subject', $messages->current()->getSubject());
     }
 }

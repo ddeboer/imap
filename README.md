@@ -108,6 +108,32 @@ $search->addCondition(new To('me@here.com'))
 $messages = $mailbox->getMessages($search);
 ```
 
+#### Sorting Messages
+
+Search and then sort the result:
+
+```php
+use Ddeboer\Imap\SearchExpression;
+use Ddeboer\Imap\Search\Email\To;
+use Ddeboer\Imap\Search\Text\Body;
+use Ddeboer\Imap\Sort\Size;
+
+$search = new SearchExpression();
+$search->addCondition(new To('me@here.com'))
+    ->addCondition(new Body('contents'))
+;
+
+$messages = $mailbox->getMessages($search, new Size('DESC')); // sort by size
+```
+
+Sort all the messages in the mailbox:
+
+```php
+use Ddeboer\Imap\Sort\Date;
+
+$messages = $mailbox->getMessages(null, new Date()); // sort by date ASC
+```
+
 #### Message Properties and Operations
 
 Get message number and unique [message id](http://en.wikipedia.org/wiki/Message-ID)
