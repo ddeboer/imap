@@ -10,7 +10,7 @@ class EmailAddress
     private $mailbox;
     private $hostname;
     private $name;
-    private $address;
+    public $address;
 
     public function __construct($mailbox, $hostname = null, $name = null)
     {
