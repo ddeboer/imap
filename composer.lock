@@ -1,23 +1,24 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a557b6e246bb8081b88f18a0eeb53979",
+    "hash": "90e8d317e42035aad02ef3bf7694397a",
+    "content-hash": "3584364f36998fb4cfeda78932e3a55c",
     "packages": [
         {
             "name": "ddeboer/transcoder",
-            "version": "1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ddeboer/transcoder.git",
-                "reference": "8781195ad1334add26dca66a4a823b7973639754"
+                "url": "https://github.com/Sawered/transcoder.git",
+                "reference": "d71bf884f80f9c0f724bbfb106af897fa59eef73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ddeboer/transcoder/zipball/8781195ad1334add26dca66a4a823b7973639754",
-                "reference": "8781195ad1334add26dca66a4a823b7973639754",
+                "url": "https://api.github.com/repos/Sawered/transcoder/zipball/d71bf884f80f9c0f724bbfb106af897fa59eef73",
+                "reference": "d71bf884f80f9c0f724bbfb106af897fa59eef73",
                 "shasum": ""
             },
             "require": {
@@ -42,11 +43,14 @@
                     "Ddeboer\\Transcoder\\Tests\\": "tests/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "Sergey Koryukin",
+                    "email": "sawered@gmail.com"
+                },
                 {
                     "name": "David de Boer",
                     "email": "david@ddeboer.nl"
@@ -63,10 +67,14 @@
                 "iconv",
                 "iso",
                 "mb",
+                "mb_convert_encoding",
                 "multibyte",
                 "utf-8"
             ],
-            "time": "2015-01-23 14:32:33"
+            "support": {
+                "source": "https://github.com/Sawered/transcoder/tree/master"
+            },
+            "time": "2015-11-27 11:51:48"
         }
     ],
     "packages-dev": [
@@ -916,7 +924,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ddeboer/transcoder": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

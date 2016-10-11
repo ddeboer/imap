@@ -218,4 +218,20 @@ TXT;
 
         return $method->invokeArgs($object, $parameters);
     }
+
+    public function testParseLastLine()
+    {
+$text=<<<TXT
+X-Test: 123
+To: Man in black <abc@example.com>
+TXT;
+
+        $h = new ExtendedHeaders($text);
+        $addresses = $h->get('to');
+        $this->assertEquals(1,count($addresses));
+        $to = reset($addresses);
+        $this->assertEquals('Man in black',$to->getName());
+        $this->assertEquals('abc@example.com',$to->getAddress());
+        $this->assertEquals(1,count($h->get('x-test')));
+    }
 }

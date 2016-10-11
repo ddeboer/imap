@@ -75,16 +75,18 @@ class ExtendedHeaders extends Parameters
         if(!preg_match_all($regexp,$headersText,$matches,PREG_OFFSET_CAPTURE)){
             return array();
         }
-
         //do not use unicode functions
 
         $headers = [];
         $end = null;
         $len = strlen($headersText);
         while($match = array_pop($matches[0])){
-            $end = is_null($end)?null:$end-$match[1];
-            $full_header = substr($headersText,$match[1],$end);
-
+            if(is_null($end)){
+                $full_header = substr($headersText,$match[1]);
+            }else{
+                $end = $end-$match[1];
+                $full_header = substr($headersText,$match[1],$end);
+            }
             //cut off line folding
             $value = substr($full_header,strlen($match[0]));
             $value = preg_replace($lineFolding,' ',$value);
