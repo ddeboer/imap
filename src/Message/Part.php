@@ -240,6 +240,14 @@ class Part implements \RecursiveIterator
             $this->parameters->add($structure->dparameters);
         }
 
+        // When the message is not multipart and the body is the attachment content
+        if (isset($structure->disposition) &&
+            strtolower($structure->disposition) == 'attachment' &&
+          ! ($this instanceof Attachment) // Prevents infinite recursion
+        ) {
+            $this->parts[] = new Attachment($this->stream, $this->messageNumber, 1, $structure);
+        }
+
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
                 if (null === $this->partNumber) {
