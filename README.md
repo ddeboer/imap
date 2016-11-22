@@ -20,7 +20,7 @@ is installed. For instance on Debian:
 The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
 
 ```bash
-$ composer require ddeboer/imap
+$ composer require pedrofornaza/imap
 ```
 
 This command requires you to have Composer installed globally, as explained
