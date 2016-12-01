@@ -111,7 +111,7 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getContent($keepUnseen = false)
+    public function getContent($keepUnseen = true)
     {
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
