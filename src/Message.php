@@ -18,7 +18,7 @@ class Message extends Message\Part
     /**
      * @var boolean
      */
-    private $keepUnseen = false;
+    private $keepUnseen = true;
 
     /**
      * Constructor

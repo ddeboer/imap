@@ -158,7 +158,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getDecodedContent($keepUnseen = false)
+    public function getDecodedContent($keepUnseen = true)
     {
         if (null === $this->decodedContent) {
             switch ($this->getEncoding()) {
@@ -316,7 +316,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    protected function doGetContent($keepUnseen = false)
+    protected function doGetContent($keepUnseen = true)
     {
         return imap_fetchbody(
             $this->stream,
