@@ -72,7 +72,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function deleteMailbox(Mailbox $mailbox)
     {
         // Move all messages in the mailbox to Gmail trash
-        $trash = self::getConnection()->getMailbox('[Gmail]/Trash');
+        // Name of trash folder depends on server and localization. "Bin" is in English (UK) for gmail (used by default)
+        $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
 
         foreach ($mailbox->getMessages() as $message) {
             $message->move($trash);
