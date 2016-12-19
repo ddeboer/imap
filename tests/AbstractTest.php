@@ -12,7 +12,11 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $server = new Server('imap.gmail.com');
+        if (false === $host = \getenv('EMAIL_SERVER')) {
+            $host = 'imap.gmail.com';
+        }
+
+        $server = new Server($host);
 
         if (false === \getenv('EMAIL_USERNAME')) {
             throw new \RuntimeException(
@@ -68,6 +72,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function deleteMailbox(Mailbox $mailbox)
     {
         // Move all messages in the mailbox to Gmail trash
+        // Name of trash folder depends on server and localization. "Bin" is in English (UK) for gmail (used by default)
         $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
 
         foreach ($mailbox->getMessages() as $message) {
