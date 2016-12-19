@@ -199,13 +199,13 @@ providing your IMAP (e.g., Gmail) credentials:
 
 ```bash
 $ composer install --dev
-$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" vendor/bin/phpunit
+$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" vendor/bin/phpunit --process-isolation
 ```
 
 You can also set an `EMAIL_SERVER` variable, which defaults to `imap.gmail.com`:
 
 ```bash
-$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" EMAIL_SERVER="imap.you.com" vendor/bin/phpunit
+$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" EMAIL_SERVER="imap.you.com" vendor/bin/phpunit --process-isolation
 
 ```
 

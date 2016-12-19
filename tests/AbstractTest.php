@@ -12,7 +12,11 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $server = new Server('imap.gmail.com');
+        if (false === $host = \getenv('EMAIL_SERVER')) {
+            $host = 'imap.gmail.com';
+        }
+
+        $server = new Server($host);
 
         if (false === \getenv('EMAIL_USERNAME')) {
             throw new \RuntimeException(
@@ -68,7 +72,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function deleteMailbox(Mailbox $mailbox)
     {
         // Move all messages in the mailbox to Gmail trash
-        $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
+        $trash = self::getConnection()->getMailbox('[Gmail]/Trash');
 
         foreach ($mailbox->getMessages() as $message) {
             $message->move($trash);

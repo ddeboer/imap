@@ -212,6 +212,12 @@ class Part implements \RecursiveIterator
 
     protected function parseStructure(\stdClass $structure)
     {
+        // sometimes message itself can be attachment (if there is no body in the message)
+        if ($this->isAttachment($structure) && !isset($structure->parts) && !$this instanceof Attachment) {
+            $this->parts[] = new Attachment($this->stream, $this->messageNumber, null, $structure);
+            return;
+        }
+
         if (isset($this->typesMap[$structure->type])) {
             $this->type = $this->typesMap[$structure->type];
         } else {

@@ -116,10 +116,10 @@ class MessageTest extends AbstractTest
     /**
      * @dataProvider getAttachmentFixture
      */
-    public function testGetAttachments()
+    public function testGetAttachments($fixture)
     {
         $this->mailbox->addMessage(
-            $this->getFixture('attachment_encoded_filename')
+            $this->getFixture($fixture)
         );
         
         $message = $this->mailbox->getMessage(1);
@@ -130,12 +130,13 @@ class MessageTest extends AbstractTest
             $attachment->getFilename()
         );
     }
-    
+
     public function getAttachmentFixture()
     {
         return [
             [ 'attachment_no_disposition' ],
-            [ 'attachment_encoded_filename' ]
+            [ 'attachment_encoded_filename' ],
+            [ 'attachment_in_body' ],
         ];
     }
 }
