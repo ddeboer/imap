@@ -15,7 +15,7 @@ class Parameters
     
     public function add(array $parameters = [])
     {
-        foreach ($parameters as $parameter) {
+        foreach ($parameters as &$parameter) {
             $key = strtolower($parameter->attribute);
             $value = $this->decode($parameter->value);
             $this->parameters[$key] = $value;
@@ -35,7 +35,7 @@ class Parameters
     {
         $decoded = '';
         $parts = imap_mime_header_decode($value);
-        foreach ($parts as $part) {
+        foreach ($parts as &$part) {
             $charset = 'default' == $part->charset ? 'auto' : $part->charset;
             // imap_utf8 doesn't seem to work properly, so use Transcoder instead
             $decoded .= Transcoder::create()->transcode($part->text, $charset);

@@ -196,7 +196,7 @@ class Message extends Message\Part
     public function getBodyHtml()
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
+        foreach ($iterator as &$part) {
             if ($part->getSubtype() == 'HTML') {
                 return $part->getDecodedContent($this->keepUnseen);
             }
@@ -211,7 +211,7 @@ class Message extends Message\Part
     public function getBodyText()
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
+        foreach ($iterator as &$part) {
             if ($part->getSubtype() == 'PLAIN') {
                 return $part->getDecodedContent($this->keepUnseen);
             }
@@ -230,12 +230,12 @@ class Message extends Message\Part
     {
         if (null === $this->attachments) {
             $this->attachments = array();
-            foreach ($this->getParts() as $part) {
+            foreach ($this->getParts() as &$part) {
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;
                 }
                 if ($part->hasChildren()) {
-                    foreach ($part->getParts() as $child_part) {
+                    foreach ($part->getParts() as &$child_part) {
                         if ($child_part instanceof Message\Attachment) {
                             $this->attachments[] = $child_part;
                         }

@@ -41,7 +41,7 @@ class Connection
     public function getMailboxes()
     {
         if (null === $this->mailboxes) {
-            foreach ($this->getMailboxNames() as $mailboxName) {
+            foreach ($this->getMailboxNames() as &$mailboxName) {
                 $this->mailboxes[] = $this->getMailbox($mailboxName);
             }
         }
@@ -149,7 +149,7 @@ class Connection
     {
         if (null === $this->mailboxNames) {
             $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
-            foreach ($mailboxes as $mailbox) {
+            foreach ($mailboxes as &$mailbox) {
                 $text                 = str_replace('&', '+',
                     str_replace($this->server, '', $mailbox->name));
                 $text                 = str_replace(',', '/', $text);

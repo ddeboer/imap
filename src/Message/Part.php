@@ -225,7 +225,7 @@ class Part implements \RecursiveIterator
             $this->bytes = $structure->bytes;
         }
 
-        foreach (array('disposition', 'bytes', 'description') as $optional) {
+        foreach (array('disposition', 'bytes', 'description') as &$optional) {
             if (isset($structure->$optional)) {
                 $this->$optional = $structure->$optional;
             }
@@ -241,7 +241,7 @@ class Part implements \RecursiveIterator
         }
 
         if (isset($structure->parts)) {
-            foreach ($structure->parts as $key => $partStructure) {
+            foreach ($structure->parts as $key => &$partStructure) {
                 if (null === $this->partNumber) {
                     $partNumber = ($key + 1);
                 } else {
@@ -340,7 +340,7 @@ class Part implements \RecursiveIterator
 
         // Attachment without Content-Disposition header
         if (isset($part->parameters)) {
-            foreach ($part->parameters as $parameter) {
+            foreach ($part->parameters as &$parameter) {
                 if ('name' === strtolower($parameter->attribute)
                     || 'filename' === strtolower($parameter->attribute)
                 ) {
