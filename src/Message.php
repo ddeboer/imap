@@ -196,7 +196,7 @@ class Message extends Message\Part
     public function getBodyHtml()
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as &$part) {
+        foreach ($iterator as $part) {
             if ($part->getSubtype() == 'HTML') {
                 return $part->getDecodedContent($this->keepUnseen);
             }
@@ -211,7 +211,7 @@ class Message extends Message\Part
     public function getBodyText()
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as &$part) {
+        foreach ($iterator as $part) {
             if ($part->getSubtype() == 'PLAIN') {
                 return $part->getDecodedContent($this->keepUnseen);
             }
