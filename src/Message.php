@@ -77,6 +77,16 @@ class Message extends Message\Part
     }
 
     /**
+     * Get Bcc recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no Bcc: recipients
+     */
+    public function getBcc()
+    {
+        return $this->getHeaders()->get('bcc') ?: [];
+    }
+
+    /**
      * Get message number (from headers)
      *
      * @return int
@@ -328,4 +338,18 @@ class Message extends Message\Part
 
         $this->parseStructure($structure);
     }
+
+    /**
+     * Save Message with MessageNumber to Disk
+     *
+     * @param $save_path
+     * @return bool
+     */
+    public function saveMessageToDisk($savePath)
+    {
+        $res = imap_savebody($this->stream, $savePath, $this->messageNumber);
+
+        return $res;
+    }
+
 }

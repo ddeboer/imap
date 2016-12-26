@@ -77,7 +77,8 @@ class Headers extends Parameters
         return new EmailAddress(
             $value->mailbox,
             isset($value->host) ? $value->host : null,
-            isset($value->personal) ? $this->decode($value->personal) : null
+            //isset($value->personal) ? $this->decode($value->personal) : null
+            isset($value->personal) ? \imap_utf8($value->personal) : null
         );
     }
 }
