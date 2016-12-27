@@ -153,7 +153,7 @@ class Connection
                 $text                 = str_replace('&', '+',
                     str_replace($this->server, '', $mailbox->name));
                 $text                 = str_replace(',', '/', $text);
-                $this->mailboxNames[] = iconv('UTF-7', 'UTF-8', $text);
+                $this->mailboxNames[] = iconv('UTF-7', 'UTF-8//IGNORE', $text);
             }
         }
         return $this->mailboxNames;
