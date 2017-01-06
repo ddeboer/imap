@@ -428,6 +428,8 @@ class Message extends Message\Part
             $this->messageNumber,
             \FT_UID
         );
+
+        restore_error_handler();
         
         if (!$structure) {
             throw new MessageDoesNotExistException(
@@ -435,8 +437,6 @@ class Message extends Message\Part
                 "imap_fetchstructure returned empty message"
             );
         }
-
-        restore_error_handler();
 
         $this->parseStructure($structure);
     }
