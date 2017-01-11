@@ -77,6 +77,16 @@ class Message extends Message\Part
     }
 
     /**
+     * Get Bcc recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no Bcc: recipients
+     */
+    public function getBcc()
+    {
+        return $this->getHeaders()->get('bcc') ?: [];
+    }
+
+    /**
      * Get message number (from headers)
      *
      * @return int
