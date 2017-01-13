@@ -304,7 +304,6 @@ class Message extends Message\Part
         return $this;
     }
     
-    
     /**
      * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
      * 
