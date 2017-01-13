@@ -14,6 +14,7 @@ class Connection
     private $resource;
     private $mailboxes;
     private $mailboxNames;
+    private $mailboxSubscrbiedNames;
 
     /**
      * Constructor
@@ -156,5 +157,22 @@ class Connection
         }
 
         return $this->mailboxNames;
+    }
+    /**
+     * Get IMAP subscribed boxes
+     *
+     * @return resource
+     */
+    public function getSubscribed($pattern = '*')
+    {
+
+        if (null === $this->mailboxSubscrbiedNames) {
+            $mailboxes = imap_getsubscribed($this->resource, $this->server, '*');
+            foreach ($mailboxes as $mailbox) {
+                $this->mailboxSubscrbiedNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
+            }
+        }
+
+        return $this->mailboxSubscrbiedNames;
     }
 }

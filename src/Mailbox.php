@@ -140,4 +140,24 @@ class Mailbox implements \Countable, \IteratorAggregate
             imap_reopen($this->connection->getResource(), $this->mailbox);
         }
     }
+
+    /**
+     * Subscribe to mailbox
+     *
+     * @return bool
+     */
+    public function subscribe()
+    {
+        return imap_subscribe ($this->connection->getResource(), $this->mailbox);
+    }
+
+    /**
+     * Subscribe to mailbox
+     *
+     * @return bool
+     */
+    public function unSubscribe()
+    {
+        return imap_unsubscribe ($this->connection->getResource(), $this->mailbox);
+    }
 }
