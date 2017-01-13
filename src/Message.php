@@ -303,6 +303,16 @@ class Message extends Message\Part
 
         return $this;
     }
+    
+    /**
+     * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
+     * 
+     * @return string The raw message.
+     */
+    public function getRaw()
+    {
+        return imap_fetchbody($this->stream, imap_msgno($this->stream, $this->messageNumber), "");
+    }
 
     /**
      * Load message structure
