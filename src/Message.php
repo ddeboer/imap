@@ -12,6 +12,7 @@ use Ddeboer\Imap\Exception\MessageMoveException;
  */
 class Message extends Message\Part
 {
+    private $headersRaw;
     private $headers;
     private $attachments;
 
@@ -196,6 +197,20 @@ class Message extends Message\Part
         }
 
         return $this->headers;
+    }
+
+    /**
+     * Get message headers Raw
+     *
+     * @return string
+     */
+    public function getHeadersRaw()
+    {
+        if (null === $this->headersRaw) {
+            $this->headersRaw = imap_fetchheader($this->stream, imap_msgno($this->stream, $this->messageNumber));
+        }
+
+        return $this->headersRaw;
     }
 
     /**
