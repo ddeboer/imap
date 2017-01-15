@@ -214,6 +214,20 @@ class Message extends Message\Part
     }
 
     /**
+     * parse Headers Raw with first headers
+     * @param  [type] $firstHeader "Delivered-To:", "Delivery-date:", "Envelope-to:"
+     * @return [type]              [description]
+     */
+    public function parseHeadersRaw($firstHeader)
+    {
+        preg_match_all("/^" . $firstHeader . " (.*)/m", $this->getHeadersRaw(), $output_array);
+        if(count($output_array) == 2){
+            return $output_array[1][0];
+        }
+        return '';
+    }
+
+    /**
      * Get body HTML
      *
      * @return string | null Null if message has no HTML message part
