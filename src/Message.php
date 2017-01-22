@@ -356,23 +356,21 @@ class Message extends Message\Part
 
     /**
      * Set Flag Message
-     * @param [type] $messageNumber [description]
      * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
      * @return bool                [description]
      */
-    public function setFlag($messageNumber, $flag)
+    public function setFlag($flag)
     {
-      return imap_setflag_full($this->stream, $messageNumber, $flag, ST_UID);
+      return imap_setflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
     }
 
     /**
      * Clear Flag Message
-     * @param  [type] $messageNumber [description]
      * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
      * @return bool                [description]
      */
-    public function clearFlag($messageNumber, $flag)
+    public function clearFlag($flag)
     {
-      return imap_clearflag_full($this->stream, $messageNumber, $flag, ST_UID);
+      return imap_clearflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
     }
 }
