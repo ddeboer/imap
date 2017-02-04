@@ -104,7 +104,12 @@ class Message extends Message\Part
      */
     public function getDate()
     {
-        return $this->getHeaders()->get('date');
+      $date = $this->getHeaders()->get('date');
+      if($date){
+        $udate = new \DateTime();
+        $date = $udate->setTimestamp($this->getHeaders()->get('udate'))
+      }
+      return $date;
     }
 
     /**
