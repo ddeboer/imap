@@ -23,8 +23,8 @@ class Message extends Message\Part
     /**
      * Constructor
      *
-     * @param resource $stream        IMAP stream
-     * @param int      $messageNumber Message number
+     * @param resource $stream IMAP stream
+     * @param int $messageNumber Message number
      */
     public function __construct($stream, $messageNumber)
     {
@@ -158,6 +158,30 @@ class Message extends Message\Part
     public function isSeen()
     {
         return 'U' != $this->getHeaders()->get('unseen');
+    }
+
+    /**
+     *
+     * Create a new connection for this feature
+     * @param integer $numMessage - imap_msgno($this->_connection->getResource(), $this->getNumber()
+     * @param string $state
+     * @param null $resource
+     */
+    public function setSeen(
+        $numMessage,
+        $state = "\\Seen",
+        $resource = null
+    )
+    {
+        if (!$resource) {
+            $resource = $this->stream;
+        }
+        $num = imap_uid($resource, (int)$numMessage);
+        @imap_fetchheader($resource, $num);
+        @imap_fetchbody($resource, $num, 1, FT_UID);
+        @imap_fetch_overview($resource, $num);
+        @imap_setflag_full($resource, join(',', [$num]), $state);
+        @imap_expunge($resource);
     }
 
     /**
@@ -299,7 +323,7 @@ class Message extends Message\Part
      */
     public function keepUnseen($bool = true)
     {
-        $this->keepUnseen = (bool) $bool;
+        $this->keepUnseen = (bool)$bool;
 
         return $this;
     }
