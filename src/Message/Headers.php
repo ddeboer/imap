@@ -19,7 +19,7 @@ class Headers extends Parameters
         // Store all headers as lowercase
         $headers = array_change_key_case((array) $headers);
 
-        foreach ($headers as $key => $value) {
+        foreach ($headers as $key => &$value) {
             $this->parameters[$key] = $this->parseHeader($key, $value);
         }
     }
@@ -60,7 +60,7 @@ class Headers extends Parameters
                 // no break
             case 'cc':
                 $emails = [];
-                foreach ($value as $address) {
+                foreach ($value as &$address) {
                     $emails[] = $this->decodeEmailAddress($address);
                 }
             

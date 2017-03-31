@@ -18,13 +18,13 @@ class Message extends Message\Part
     /**
      * @var boolean
      */
-    private $keepUnseen = false;
+    private $keepUnseen = true;
 
     /**
      * Constructor
      *
-     * @param resource $stream        IMAP stream
-     * @param int      $messageNumber Message number
+     * @param resource $stream IMAP stream
+     * @param int $messageNumber Message number
      */
     public function __construct($stream, $messageNumber)
     {
@@ -111,7 +111,7 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getContent($keepUnseen = false)
+    public function getContent($keepUnseen = true)
     {
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
@@ -158,6 +158,30 @@ class Message extends Message\Part
     public function isSeen()
     {
         return 'U' != $this->getHeaders()->get('unseen');
+    }
+
+    /**
+     *
+     * Create a new connection for this feature
+     * @param integer $numMessage - imap_msgno($this->_connection->getResource(), $this->getNumber()
+     * @param string $state
+     * @param null $resource
+     */
+    public function setSeen(
+        $numMessage,
+        $state = "\\Seen",
+        $resource = null
+    )
+    {
+        if (!$resource) {
+            $resource = $this->stream;
+        }
+        $num = imap_uid($resource, (int)$numMessage);
+        @imap_fetchheader($resource, $num);
+        @imap_fetchbody($resource, $num, 1, FT_UID);
+        @imap_fetch_overview($resource, $num);
+        @imap_setflag_full($resource, join(',', [$num]), $state);
+        @imap_expunge($resource);
     }
 
     /**
@@ -230,12 +254,12 @@ class Message extends Message\Part
     {
         if (null === $this->attachments) {
             $this->attachments = array();
-            foreach ($this->getParts() as $part) {
+            foreach ($this->getParts() as &$part) {
                 if ($part instanceof Message\Attachment) {
                     $this->attachments[] = $part;
                 }
                 if ($part->hasChildren()) {
-                    foreach ($part->getParts() as $child_part) {
+                    foreach ($part->getParts() as &$child_part) {
                         if ($child_part instanceof Message\Attachment) {
                             $this->attachments[] = $child_part;
                         }
@@ -299,7 +323,7 @@ class Message extends Message\Part
      */
     public function keepUnseen($bool = true)
     {
-        $this->keepUnseen = (bool) $bool;
+        $this->keepUnseen = (bool)$bool;
 
         return $this;
     }
