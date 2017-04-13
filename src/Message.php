@@ -189,6 +189,16 @@ class Message extends Message\Part
     }
 
     /**
+     * Get message string headers
+     *
+     * @return string
+     */
+    public function getStringHeaders()
+    {
+        return imap_fetchheader($this->stream, imap_msgno($this->stream, $this->messageNumber));
+    }
+
+    /**
      * Get body HTML
      *
      * @return string | null Null if message has no HTML message part
