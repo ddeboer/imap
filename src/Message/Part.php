@@ -3,7 +3,7 @@
 namespace openWebX\Imap\Message;
 
 use openWebX\Imap\Parameters;
-use openWebX\Transcoder\Transcoder;
+use Ddeboer\Transcoder\Transcoder;
 
 /**
  * A message part

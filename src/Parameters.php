@@ -2,7 +2,7 @@
 
 namespace openWebX\Imap;
 
-use openWebX\Transcoder\Transcoder;
+use Ddeboer\Transcoder\Transcoder;
 
 class Parameters
 {

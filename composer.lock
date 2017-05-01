@@ -7,16 +7,16 @@
     "hash": "a557b6e246bb8081b88f18a0eeb53979",
     "packages": [
         {
-            "name": "openWebX/transcoder",
+            "name": "ddeboer/transcoder",
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/openWebX/transcoder.git",
+                "url": "https://github.com/ddeboer/transcoder.git",
                 "reference": "8781195ad1334add26dca66a4a823b7973639754"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openWebX/transcoder/zipball/8781195ad1334add26dca66a4a823b7973639754",
+                "url": "https://api.github.com/repos/ddeboer/transcoder/zipball/8781195ad1334add26dca66a4a823b7973639754",
                 "reference": "8781195ad1334add26dca66a4a823b7973639754",
                 "shasum": ""
             },
@@ -53,7 +53,7 @@
                 },
                 {
                     "name": "Community contributors",
-                    "homepage": "https://github.com/openWebX/transcoder/graphs/contributors"
+                    "homepage": "https://github.com/ddeboer/transcoder/graphs/contributors"
                 }
             ],
             "description": "Better encoding conversion for PHP",
