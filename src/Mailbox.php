@@ -6,8 +6,7 @@ namespace openWebX\Imap;
  * An IMAP mailbox (commonly referred to as a ‘folder’)
  *
  */
-class Mailbox implements \Countable, \IteratorAggregate
-{
+class Mailbox implements \Countable, \IteratorAggregate {
     private $mailbox;
     private $name;
     private $connection;
@@ -18,11 +17,10 @@ class Mailbox implements \Countable, \IteratorAggregate
      * @param string     $name       Mailbox name
      * @param Connection $connection IMAP connection
      */
-    public function __construct($name, Connection $connection)
-    {
+    public function __construct($name, Connection $connection) {
         $this->mailbox = $name;
         $this->connection = $connection;
-        $this->name = substr($name, strpos($name, '}')+1);
+        $this->name = substr($name, strpos($name, '}') + 1);
     }
 
     /**
@@ -30,20 +28,25 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
+
+    /**
+     * @return object
+     */
+    public function getInfos() {
+        $this->init();
+        return imap_mailboxmsginfo($this->connection->getResource());
+    }
     /**
      * Get number of messages in this mailbox
      *
      * @return int
      */
-    public function count()
-    {
+    public function count() {
         $this->init();
-
         return imap_num_msg($this->connection->getResource());
     }
 
@@ -54,16 +57,13 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return MessageIterator|Message[]
      */
-    public function getMessages(SearchExpression $search = null)
-    {
+    public function getMessages(SearchExpression $search = NULL) {
         $this->init();
-
         $query = ($search ? (string) $search : 'ALL');
-
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
-        if (false == $messageNumbers) {
+        if (FALSE == $messageNumbers) {
             // imap_search can also return false
-            $messageNumbers = array();
+            $messageNumbers = [];
         }
 
         return new MessageIterator($this->connection->getResource(), $messageNumbers);
@@ -76,8 +76,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return Message
      */
-    public function getMessage($number)
-    {
+    public function getMessage($number) {
         $this->init();
 
         return new Message($this->connection->getResource(), $number);
@@ -88,8 +87,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return MessageIterator
      */
-    public function getIterator()
-    {
+    public function getIterator() {
         $this->init();
 
         return $this->getMessages();
@@ -99,8 +97,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      * Delete this mailbox
      *
      */
-    public function delete()
-    {
+    public function delete() {
         $this->connection->deleteMailbox($this);
     }
 
@@ -109,8 +106,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return Mailbox
      */
-    public function expunge()
-    {
+    public function expunge() {
         $this->init();
 
         imap_expunge($this->connection->getResource());
@@ -125,18 +121,16 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return boolean
      */
-    public function addMessage($message)
-    {
+    public function addMessage($message) {
         return imap_append($this->connection->getResource(), $this->mailbox, $message);
     }
 
     /**
      * If connection is not currently in this mailbox, switch it to this mailbox
      */
-    private function init()
-    {
+    private function init() {
         $check = imap_check($this->connection->getResource());
-        if ($check === false || $check->Mailbox != $this->mailbox) {
+        if ($check === FALSE || $check->Mailbox != $this->mailbox) {
             imap_reopen($this->connection->getResource(), $this->mailbox);
         }
     }

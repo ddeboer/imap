@@ -7,8 +7,7 @@ use openWebX\Imap\Exception\AuthenticationFailedException;
 /**
  * An IMAP server
  */
-class Server
-{
+class Server {
     /**
      * @var string Internet domain name or bracketed IP address of server
      */
@@ -38,21 +37,21 @@ class Server
      * Constructor
      *
      * @param string $hostname   Internet domain name or bracketed IP address
-        *                        of server
+     *                           of server
      * @param int    $port       TCP port number
      * @param string $flags      Optional flags
      * @param array  $parameters Connection parameters
      */
     public function __construct(
-        $hostname,
-        $port = 993,
-        $flags = '/imap/ssl/validate-cert',
-        $parameters = array()
+        string $hostname,
+        int $port = 993,
+        string $flags = '/imap/ssl/validate-cert',
+        array $parameters = []
     ) {
         if (!function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
         }
-        
+
         $this->hostname = $hostname;
         $this->port = $port;
         $this->flags = $flags ? '/' . ltrim($flags, '/') : '';
@@ -68,33 +67,32 @@ class Server
      * @return Connection
      * @throws AuthenticationFailedException
      */
-    public function authenticate($username, $password)
-    {
+    public function authenticate($username, $password) {
         // Wrap imap_open, which gives notices instead of exceptions
         set_error_handler(
             function ($nr, $message) use ($username) {
                 throw new AuthenticationFailedException($username, $message);
             }
         );
-        
+
         $resource = imap_open(
             $this->getServerString(),
             $username,
             $password,
-            null,
+            NULL,
             1,
             $this->parameters
         );
 
-        if (false === $resource) {
+        if (FALSE === $resource) {
             throw new AuthenticationFailedException($username);
         }
-        
+
         restore_error_handler();
 
         $check = imap_check($resource);
         $mailbox = $check->Mailbox;
-        $this->connection = substr($mailbox, 0, strpos($mailbox, '}')+1);
+        $this->connection = substr($mailbox, 0, strpos($mailbox, '}') + 1);
 
         // These are necessary to get rid of PHP throwing IMAP errors
         imap_errors();
@@ -108,8 +106,7 @@ class Server
      *
      * @return string
      */
-    private function getServerString()
-    {
+    private function getServerString() {
         return sprintf(
             '{%s:%s%s}',
             $this->hostname,
