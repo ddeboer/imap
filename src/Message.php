@@ -28,7 +28,6 @@ class Message extends Message\Part {
     public function __construct($stream, $messageNumber) {
         $this->stream = $stream;
         $this->messageNumber = $messageNumber;
-
         $this->loadStructure();
     }
 
@@ -44,15 +43,12 @@ class Message extends Message\Part {
                 );
             }
         );
-
         $structure = imap_fetchstructure(
             $this->stream,
             $this->messageNumber,
             \FT_UID
         );
-
         restore_error_handler();
-
         $this->parseStructure($structure);
     }
 

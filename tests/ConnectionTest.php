@@ -2,15 +2,12 @@
 
 namespace openWebX\Imap\Tests;
 
-class ConnectionTest extends AbstractTest
-{
-    public function testCount()
-    {
+class ConnectionTest extends AbstractTest {
+    public function testCount() {
         $this->assertInternalType('int', self::getConnection()->count());
     }
 
-    public function testGetMailboxes()
-    {
+    public function testGetMailboxes() {
         $mailboxes = self::getConnection()->getMailboxes();
         $this->assertInternalType('array', $mailboxes);
 
@@ -19,8 +16,7 @@ class ConnectionTest extends AbstractTest
         }
     }
 
-    public function testGetMailbox()
-    {
+    public function testGetMailbox() {
         $mailbox = static::getConnection()->getMailbox('INBOX');
         $this->assertInstanceOf('\openWebX\Imap\Mailbox', $mailbox);
     }
@@ -28,8 +24,7 @@ class ConnectionTest extends AbstractTest
     /**
      * @expectedException \openWebX\Imap\Exception\MailboxDoesNotExistException
      */
-    public function testCreateMailbox()
-    {
+    public function testCreateMailbox() {
         $connection = static::getConnection();
 
         $name = 'test' . uniqid();
@@ -52,8 +47,7 @@ class ConnectionTest extends AbstractTest
     /**
      * @expectedException \openWebX\Imap\Exception\MailboxDoesNotExistException
      */
-    public function testGetInvalidMailbox()
-    {
+    public function testGetInvalidMailbox() {
         static::getConnection()->getMailbox('does-not-exist');
     }
 }
