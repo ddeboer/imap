@@ -1,5 +1,5 @@
 {
-    "name": "ddeboer/imap",
+    "name": "openWebX/imap",
     "description": "Object-oriented IMAP for PHP",
     "keywords": [ "email", "mail", "imap" ],
     "license": "MIT",
