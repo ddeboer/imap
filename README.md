@@ -1,21 +1,12 @@
 IMAP library
 ============
-[![Build Status](https://travis-ci.org/openWebX/imap.svg?branch=master)](https://travis-ci.org/openWebX/imap)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/openWebX/imap/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/openWebX/imap/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/openWebX/imap/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/openWebX/imap/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/openWebX/imap/v/stable.svg)](https://packagist.org/packages/openWebX/imap) 
-
-A PHP 5.4+ library to read and process e-mails over IMAP.
+A PHP 7.0+ library to read and process e-mails over IMAP.
 
 Installation
 ------------
 
 Make sure the [PHP IMAP extension](http://php.net/manual/en/book.imap.php)
-is installed. For instance on Debian:
-
-```bash
-# apt-get install php5-imap
-```
+is installed. 
 
 The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
 
