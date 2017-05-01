@@ -42,7 +42,6 @@ class Connection {
                 $this->mailboxes[] = $this->getMailbox($mailboxName);
             }
         }
-
         return $this->mailboxes;
     }
 
@@ -51,14 +50,13 @@ class Connection {
      *
      * @return array
      */
-    private function getMailboxNames() {
+    private function getMailboxNames():array {
         if (NULL === $this->mailboxNames) {
             $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
             foreach ($mailboxes as $mailbox) {
                 $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
             }
         }
-
         return $this->mailboxNames;
     }
 
@@ -70,7 +68,7 @@ class Connection {
      * @return Mailbox
      * @throws MailboxDoesNotExistException If mailbox does not exist
      */
-    public function getMailbox($name) {
+    public function getMailbox(string $name) {
         if (!$this->hasMailbox($name)) {
             throw new MailboxDoesNotExistException($name);
         }
@@ -85,7 +83,7 @@ class Connection {
      *
      * @return bool
      */
-    public function hasMailbox($name) {
+    public function hasMailbox(string $name) {
         return in_array($name, $this->getMailboxNames());
     }
 
@@ -106,7 +104,7 @@ class Connection {
      * @return Mailbox
      * @throws Exception
      */
-    public function createMailbox($name) {
+    public function createMailbox(string $name) {
         if (imap_createmailbox($this->resource, $this->server . $name)) {
             $this->mailboxNames = $this->mailboxes = NULL;
 

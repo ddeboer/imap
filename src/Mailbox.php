@@ -26,7 +26,7 @@ class Mailbox implements \Countable, \IteratorAggregate {
      * @param string     $name       Mailbox name
      * @param Connection $connection IMAP connection
      */
-    public function __construct($name, Connection $connection) {
+    public function __construct(string $name, Connection $connection) {
         $this->mailbox = $name;
         $this->connection = $connection;
         $this->name = substr($name, strpos($name, '}') + 1);
