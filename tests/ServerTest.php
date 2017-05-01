@@ -1,13 +1,13 @@
 <?php
 
-namespace Ddeboer\Imap\Tests;
+namespace openWebX\Imap\Tests;
 
-use Ddeboer\Imap\Server;
+use openWebX\Imap\Server;
 
 class ServerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException \Ddeboer\Imap\Exception\AuthenticationFailedException
+     * @expectedException \openWebX\Imap\Exception\AuthenticationFailedException
      */
     public function testFailedAuthenticate()
     {

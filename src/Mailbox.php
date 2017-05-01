@@ -1,6 +1,6 @@
 <?php
 
-namespace Ddeboer\Imap;
+namespace openWebX\Imap;
 
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)

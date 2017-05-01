@@ -1,8 +1,8 @@
 <?php
 
-namespace Ddeboer\Imap\Search\State;
+namespace openWebX\Imap\Search\State;
 
-use Ddeboer\Imap\Search\AbstractCondition;
+use openWebX\Imap\Search\AbstractCondition;
 
 /**
  * Represents an OLD condition. Only old messages will match this condition.

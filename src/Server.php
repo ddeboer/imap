@@ -1,8 +1,8 @@
 <?php
 
-namespace Ddeboer\Imap;
+namespace openWebX\Imap;
 
-use Ddeboer\Imap\Exception\AuthenticationFailedException;
+use openWebX\Imap\Exception\AuthenticationFailedException;
 
 /**
  * An IMAP server

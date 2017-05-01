@@ -1,6 +1,6 @@
 <?php
 
-namespace Ddeboer\Imap\Search;
+namespace openWebX\Imap\Search;
 
 /**
  * Represents a condition that can be used in a search expression.

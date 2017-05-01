@@ -1,10 +1,10 @@
 <?php
-namespace Ddeboer\Imap\Tests;
+namespace openWebX\Imap\Tests;
 
-use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
-use Ddeboer\Imap\Mailbox;
-use Ddeboer\Imap\Server;
-use Ddeboer\Imap\Connection;
+use openWebX\Imap\Exception\MailboxDoesNotExistException;
+use openWebX\Imap\Mailbox;
+use openWebX\Imap\Server;
+use openWebX\Imap\Connection;
 
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {

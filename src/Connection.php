@@ -1,9 +1,9 @@
 <?php
 
-namespace Ddeboer\Imap;
+namespace openWebX\Imap;
 
-use Ddeboer\Imap\Exception\Exception;
-use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use openWebX\Imap\Exception\Exception;
+use openWebX\Imap\Exception\MailboxDoesNotExistException;
 
 /**
  * A connection to an IMAP server that is authenticated for a user

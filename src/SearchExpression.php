@@ -1,8 +1,8 @@
 <?php
 
-namespace Ddeboer\Imap;
+namespace openWebX\Imap;
 
-use Ddeboer\Imap\Search\AbstractCondition;
+use openWebX\Imap\Search\AbstractCondition;
 
 /**
  * Defines a search expression that can be used to look up email messages.

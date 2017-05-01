@@ -1,11 +1,11 @@
 <?php
 
-namespace Ddeboer\Imap;
+namespace openWebX\Imap;
 
-use Ddeboer\Imap\Exception\MessageDoesNotExistException;
-use Ddeboer\Imap\Message\EmailAddress;
-use Ddeboer\Imap\Exception\MessageDeleteException;
-use Ddeboer\Imap\Exception\MessageMoveException;
+use openWebX\Imap\Exception\MessageDoesNotExistException;
+use openWebX\Imap\Message\EmailAddress;
+use openWebX\Imap\Exception\MessageDeleteException;
+use openWebX\Imap\Exception\MessageMoveException;
 
 /**
  * An IMAP message (e-mail)

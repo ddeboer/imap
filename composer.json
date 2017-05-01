@@ -5,18 +5,15 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "David de Boer",
-            "email": "david@ddeboer.nl"
-        },
-        {
-            "name": "Community contributors",
-            "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
-        }   
+            "name": "'Jens Reinemuth",
+            "email": "jens@reinemuth.rocks"
+        }
+
     ],
     "require": {
         "php": ">=7.0.0",
         "ext-imap": "*",
-        "ddeboer/transcoder": "~1"
+        "openWebX/transcoder": "~1"
     },
     "require-dev": {
         "ext-mbstring": "*",
@@ -25,8 +22,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Ddeboer\\Imap\\": "src/",
-            "Ddeboer\\Imap\\Tests\\": "tests/"
+            "openWebX\\Imap\\": "src/",
+            "openWebX\\Imap\\Tests\\": "tests/"
         }
     }
 }

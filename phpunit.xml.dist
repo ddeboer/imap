@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="ddeboer/imap">
+        <testsuite name="openWebX/imap">
             <directory suffix="Test.php">./tests/</directory>
         </testsuite>
     </testsuites>

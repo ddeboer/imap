@@ -1,9 +1,9 @@
 <?php
 
-namespace Ddeboer\Imap\Search\Date;
+namespace openWebX\Imap\Search\Date;
 
 use DateTime;
-use Ddeboer\Imap\Search\AbstractCondition;
+use openWebX\Imap\Search\AbstractCondition;
 
 /**
  * Represents a date condition.

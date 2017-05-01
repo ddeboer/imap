@@ -1,11 +1,11 @@
 <?php
 
-namespace Ddeboer\Imap\Tests;
+namespace openWebX\Imap\Tests;
 
-use Ddeboer\Imap\Mailbox;
-use Ddeboer\Imap\Search\Email\To;
-use Ddeboer\Imap\Search\Text\Body;
-use Ddeboer\Imap\SearchExpression;
+use openWebX\Imap\Mailbox;
+use openWebX\Imap\Search\Email\To;
+use openWebX\Imap\Search\Text\Body;
+use openWebX\Imap\SearchExpression;
 
 class MailboxTest extends AbstractTest
 {
@@ -44,7 +44,7 @@ class MailboxTest extends AbstractTest
     }
 
     /**
-     * @expectedException \Ddeboer\Imap\Exception\MessageDoesNotExistException
+     * @expectedException \openWebX\Imap\Exception\MessageDoesNotExistException
      * @expectedExceptionMessageRegExp /Message 666 does not exist.*Bad message number/
      */
     public function testGetMessageThrowsException()

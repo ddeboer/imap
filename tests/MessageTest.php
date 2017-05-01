@@ -1,11 +1,11 @@
 <?php
 
-namespace Ddeboer\Imap\Tests;
+namespace openWebX\Imap\Tests;
 
 class MessageTest extends AbstractTest
 {
     /**
-     * @var \Ddeboer\Imap\Mailbox
+     * @var \openWebX\Imap\Mailbox
      */
     protected $mailbox;
 
@@ -74,16 +74,16 @@ class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
         
         $from = $message->getFrom();
-        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $from);
+        $this->assertInstanceOf('\openWebX\Imap\Message\EmailAddress', $from);
         $this->assertEquals('no_host', $from->getMailbox());
 
         $cc = $message->getCc();
         $this->assertCount(2, $cc);
-        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[0]);
+        $this->assertInstanceOf('\openWebX\Imap\Message\EmailAddress', $cc[0]);
         $this->assertEquals('This one is right', $cc[0]->getName());
         $this->assertEquals('ding@dong.com', $cc[0]->getAddress());
         
-        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[1]);
+        $this->assertInstanceOf('\openWebX\Imap\Message\EmailAddress', $cc[1]);
         $this->assertEquals('No-address', $cc[1]->getMailbox());
     }
 

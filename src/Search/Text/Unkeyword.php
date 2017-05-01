@@ -1,6 +1,6 @@
 <?php
 
-namespace Ddeboer\Imap\Search\Text;
+namespace openWebX\Imap\Search\Text;
 
 /**
  * Represents a keyword text does not contain condition. Messages must not have

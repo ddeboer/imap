@@ -1,9 +1,9 @@
 <?php
 
-namespace Ddeboer\Imap\Message;
+namespace openWebX\Imap\Message;
 
-use Ddeboer\Imap\Parameters;
-use Ddeboer\Transcoder\Transcoder;
+use openWebX\Imap\Parameters;
+use openWebX\Transcoder\Transcoder;
 
 /**
  * A message part

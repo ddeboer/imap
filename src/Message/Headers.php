@@ -1,8 +1,8 @@
 <?php
 
-namespace Ddeboer\Imap\Message;
+namespace openWebX\Imap\Message;
 
-use Ddeboer\Imap\Parameters;
+use openWebX\Imap\Parameters;
 
 /**
  * Collection of message headers

@@ -1,6 +1,6 @@
 <?php
 
-namespace Ddeboer\Imap\Message;
+namespace openWebX\Imap\Message;
 
 /**
  * An e-mail attachment

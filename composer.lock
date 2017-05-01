@@ -7,16 +7,16 @@
     "hash": "a557b6e246bb8081b88f18a0eeb53979",
     "packages": [
         {
-            "name": "ddeboer/transcoder",
+            "name": "openWebX/transcoder",
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ddeboer/transcoder.git",
+                "url": "https://github.com/openWebX/transcoder.git",
                 "reference": "8781195ad1334add26dca66a4a823b7973639754"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ddeboer/transcoder/zipball/8781195ad1334add26dca66a4a823b7973639754",
+                "url": "https://api.github.com/repos/openWebX/transcoder/zipball/8781195ad1334add26dca66a4a823b7973639754",
                 "reference": "8781195ad1334add26dca66a4a823b7973639754",
                 "shasum": ""
             },
@@ -38,8 +38,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Ddeboer\\Transcoder\\": "src/",
-                    "Ddeboer\\Transcoder\\Tests\\": "tests/"
+                    "openWebX\\Transcoder\\": "src/",
+                    "openWebX\\Transcoder\\Tests\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -49,11 +49,11 @@
             "authors": [
                 {
                     "name": "David de Boer",
-                    "email": "david@ddeboer.nl"
+                    "email": "david@openWebX.nl"
                 },
                 {
                     "name": "Community contributors",
-                    "homepage": "https://github.com/ddeboer/transcoder/graphs/contributors"
+                    "homepage": "https://github.com/openWebX/transcoder/graphs/contributors"
                 }
             ],
             "description": "Better encoding conversion for PHP",

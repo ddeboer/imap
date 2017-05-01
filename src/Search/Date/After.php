@@ -1,6 +1,6 @@
 <?php
 
-namespace Ddeboer\Imap\Search\Date;
+namespace openWebX\Imap\Search\Date;
 
 /**
  * Represents a date after condition. Messages must have a date after the

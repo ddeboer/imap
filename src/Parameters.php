@@ -1,8 +1,8 @@
 <?php
 
-namespace Ddeboer\Imap;
+namespace openWebX\Imap;
 
-use Ddeboer\Transcoder\Transcoder;
+use openWebX\Transcoder\Transcoder;
 
 class Parameters
 {
