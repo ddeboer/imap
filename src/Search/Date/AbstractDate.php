@@ -1,15 +1,14 @@
 <?php
 
-namespace Ddeboer\Imap\Search\Date;
+namespace openWebX\Imap\Search\Date;
 
 use DateTime;
-use Ddeboer\Imap\Search\AbstractCondition;
+use openWebX\Imap\Search\AbstractCondition;
 
 /**
  * Represents a date condition.
  */
-abstract class AbstractDate extends AbstractCondition
-{
+abstract class AbstractDate extends AbstractCondition {
     /**
      * Format for dates to be sent to the IMAP server.
      *
@@ -29,8 +28,7 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @param DateTime $date Optional date for the condition.
      */
-    public function __construct(DateTime $date = null)
-    {
+    public function __construct(DateTime $date = NULL) {
         if ($date) {
             $this->setDate($date);
         }
@@ -41,8 +39,7 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @param DateTime $date
      */
-    public function setDate(DateTime $date)
-    {
+    public function setDate(DateTime $date) {
         $this->date = $date;
     }
 
@@ -51,8 +48,7 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @return string
      */
-    public function __toString()
-    {
-        return $this->getKeyword() . ' "' . $this->date->format(self::DATE_FORMAT) .'"';
+    public function __toString() {
+        return $this->getKeyword() . ' "' . $this->date->format(self::DATE_FORMAT) . '"';
     }
 }

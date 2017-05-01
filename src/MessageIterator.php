@@ -1,9 +1,8 @@
 <?php
 
-namespace Ddeboer\Imap;
+namespace openWebX\Imap;
 
-class MessageIterator extends \ArrayIterator
-{
+class MessageIterator extends \ArrayIterator {
     private $stream;
 
     /**
@@ -12,8 +11,7 @@ class MessageIterator extends \ArrayIterator
      * @param \resource $stream         IMAP stream
      * @param array     $messageNumbers Array of message numbers
      */
-    public function __construct($stream, array $messageNumbers)
-    {
+    public function __construct($stream, array $messageNumbers) {
         $this->stream = $stream;
 
         parent::__construct($messageNumbers);
@@ -24,8 +22,7 @@ class MessageIterator extends \ArrayIterator
      *
      * @return Message
      */
-    public function current()
-    {
+    public function current() {
         return new Message($this->stream, parent::current());
     }
 }

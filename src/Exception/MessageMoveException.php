@@ -1,11 +1,20 @@
 <?php
 
-namespace Ddeboer\Imap\Exception;
+namespace openWebX\Imap\Exception;
 
-class MessageMoveException extends Exception
-{
-    public function __construct($messageNumber, $mailbox)
-    {
+/**
+ * Class MessageMoveException
+ *
+ * @package openWebX\Imap\Exception
+ */
+class MessageMoveException extends Exception {
+    /**
+     * MessageMoveException constructor.
+     *
+     * @param string $messageNumber
+     * @param null   $mailbox
+     */
+    public function __construct($messageNumber, $mailbox) {
         parent::__construct(
             sprintf(
                 'Message %s cannot be moved to %s',

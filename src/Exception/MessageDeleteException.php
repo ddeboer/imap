@@ -1,11 +1,19 @@
 <?php
 
-namespace Ddeboer\Imap\Exception;
+namespace openWebX\Imap\Exception;
 
-class MessageDeleteException extends Exception
-{
-    public function __construct($messageNumber)
-    {
+/**
+ * Class MessageDeleteException
+ *
+ * @package openWebX\Imap\Exception
+ */
+class MessageDeleteException extends Exception {
+    /**
+     * MessageDeleteException constructor.
+     *
+     * @param string $messageNumber
+     */
+    public function __construct($messageNumber) {
         parent::__construct(sprintf('Message %s cannot be deleted', $messageNumber));
     }
 }

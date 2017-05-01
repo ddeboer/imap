@@ -38,8 +38,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Ddeboer\\Transcoder\\": "src/",
-                    "Ddeboer\\Transcoder\\Tests\\": "tests/"
+                    "openWebX\\Transcoder\\": "src/",
+                    "openWebX\\Transcoder\\Tests\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -49,7 +49,7 @@
             "authors": [
                 {
                     "name": "David de Boer",
-                    "email": "david@ddeboer.nl"
+                    "email": "david@openWebX.nl"
                 },
                 {
                     "name": "Community contributors",

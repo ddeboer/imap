@@ -1,14 +1,13 @@
 <?php
 
-namespace Ddeboer\Imap\Search\Email;
+namespace openWebX\Imap\Search\Email;
 
-use Ddeboer\Imap\Search\AbstractCondition;
+use openWebX\Imap\Search\AbstractCondition;
 
 /**
  * Represents an email condition.
  */
-abstract class AbstractEmail extends AbstractCondition
-{
+abstract class AbstractEmail extends AbstractCondition {
     /**
      * Email address for the condition.
      *
@@ -21,8 +20,7 @@ abstract class AbstractEmail extends AbstractCondition
      *
      * @param string $email Optional email address for the condition.
      */
-    public function __construct($email = null)
-    {
+    public function __construct($email = NULL) {
         if ($email) {
             $this->setEmail($email);
         }
@@ -33,8 +31,7 @@ abstract class AbstractEmail extends AbstractCondition
      *
      * @param string $email
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
     }
 
@@ -43,8 +40,7 @@ abstract class AbstractEmail extends AbstractCondition
      *
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getKeyword() . ' "' . $this->email . '"';
     }
 }

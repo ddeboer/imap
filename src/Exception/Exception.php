@@ -1,13 +1,26 @@
 <?php
 
-namespace Ddeboer\Imap\Exception;
+namespace openWebX\Imap\Exception;
 
-class Exception extends \RuntimeException
-{
-    protected $errors = array();
+/**
+ * Class Exception
+ *
+ * @package openWebX\Imap\Exception
+ */
+class Exception extends \RuntimeException {
+    /**
+     * @var array
+     */
+    protected $errors = [];
 
-    public function __construct($message, $code = null, $previous = null)
-    {
+    /**
+     * Exception constructor.
+     *
+     * @param string $message
+     * @param null   $code
+     * @param null   $previous
+     */
+    public function __construct($message, $code = NULL, $previous = NULL) {
         parent::__construct($message, $code, $previous);
         $this->errors = imap_errors();
     }
@@ -17,8 +30,7 @@ class Exception extends \RuntimeException
      *
      * @return array
      */
-    public function getErrors()
-    {
+    public function getErrors() {
         return $this->errors;
     }
 }

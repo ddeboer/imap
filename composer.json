@@ -1,20 +1,17 @@
 {
-    "name": "ddeboer/imap",
+    "name": "openWebX/imap",
     "description": "Object-oriented IMAP for PHP",
     "keywords": [ "email", "mail", "imap" ],
     "license": "MIT",
     "authors": [
         {
-            "name": "David de Boer",
-            "email": "david@ddeboer.nl"
-        },
-        {
-            "name": "Community contributors",
-            "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
-        }   
+            "name": "'Jens Reinemuth",
+            "email": "jens@reinemuth.rocks"
+        }
+
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=7.0.0",
         "ext-imap": "*",
         "ddeboer/transcoder": "~1"
     },
@@ -25,8 +22,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Ddeboer\\Imap\\": "src/",
-            "Ddeboer\\Imap\\Tests\\": "tests/"
+            "openWebX\\Imap\\": "src/",
+            "openWebX\\Imap\\Tests\\": "tests/"
         }
     }
 }

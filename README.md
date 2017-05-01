@@ -1,26 +1,17 @@
 IMAP library
 ============
-[![Build Status](https://travis-ci.org/ddeboer/imap.svg?branch=master)](https://travis-ci.org/ddeboer/imap)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/ddeboer/imap/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/ddeboer/imap/v/stable.svg)](https://packagist.org/packages/ddeboer/imap) 
-
-A PHP 5.4+ library to read and process e-mails over IMAP.
+A PHP 7.0+ library to read and process e-mails over IMAP.
 
 Installation
 ------------
 
 Make sure the [PHP IMAP extension](http://php.net/manual/en/book.imap.php)
-is installed. For instance on Debian:
-
-```bash
-# apt-get install php5-imap
-```
+is installed. 
 
 The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
 
 ```bash
-$ composer require ddeboer/imap
+$ composer require openWebX/imap
 ```
 
 This command requires you to have Composer installed globally, as explained
@@ -33,11 +24,11 @@ Usage
 ### Connect and Authenticate
 
 ```php
-use Ddeboer\Imap\Server;
+use openWebX\Imap\Server;
 
 $server = new Server('imap.gmail.com');
 
-// $connection is instance of \Ddeboer\Imap\Connection
+// $connection is instance of \openWebX\Imap\Connection
 $connection = $server->authenticate('my_username', 'my_password');
 ```
 
@@ -64,7 +55,7 @@ over them:
 $mailboxes = $connection->getMailboxes();
 
 foreach ($mailboxes as $mailbox) {
-    // $mailbox is instance of \Ddeboer\Imap\Mailbox
+    // $mailbox is instance of \openWebX\Imap\Mailbox
     printf('Mailbox %s has %s messages', $mailbox->getName(), $mailbox->count());
 }
 ```
@@ -89,16 +80,16 @@ Retrieve messages (e-mails) from a mailbox and iterate over them:
 $messages = $mailbox->getMessages();
 
 foreach ($messages as $message) {
-    // $message is instance of \Ddeboer\Imap\Message
+    // $message is instance of \openWebX\Imap\Message
 }
 ```
 
 #### Searching for Messages
 
 ```php
-use Ddeboer\Imap\SearchExpression;
-use Ddeboer\Imap\Search\Email\To;
-use Ddeboer\Imap\Search\Text\Body;
+use openWebX\Imap\SearchExpression;
+use openWebX\Imap\Search\Email\To;
+use openWebX\Imap\Search\Text\Body;
 
 $search = new SearchExpression();
 $search->addCondition(new To('me@here.com'))
@@ -131,7 +122,7 @@ $message->isDraft();
 $message->isSeen();
 ```
 
-Get message headers as a [\Ddeboer\Imap\Message\Headers](/src/Ddeboer/Imap/Message/Headers.php) object:
+Get message headers as a [\openWebX\Imap\Message\Headers](/src/openWebX/Imap/Message/Headers.php) object:
 
 ```php
 $message->getHeaders();
@@ -174,7 +165,7 @@ Get message attachments (both inline and attached) and iterate over them:
 $attachments = $message->getAttachments();
 
 foreach ($attachments as $attachment) {
-    // $attachment is instance of \Ddeboer\Imap\Message\Attachment
+    // $attachment is instance of \openWebX\Imap\Message\Attachment
 }
 ```
 
@@ -191,7 +182,7 @@ file_put_contents(
 Running the Tests
 -----------------
 
-This library is functionally tested on [Travis CI](https://travis-ci.org/ddeboer/imap)
+This library is functionally tested on [Travis CI](https://travis-ci.org/openWebX/imap)
 against the Gmail IMAP server.
 
 If you have your own IMAP (test) account, you can run the tests locally by 

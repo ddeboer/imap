@@ -1,31 +1,45 @@
 <?php
 
-namespace Ddeboer\Imap\Message;
+namespace openWebX\Imap\Message;
 
 /**
- * An e-mail address
+ * Class EmailAddress
+ *
+ * @package openWebX\Imap\Message
  */
-class EmailAddress
-{
+class EmailAddress {
+    /**
+     * @var
+     */
     private $mailbox;
+    /**
+     * @var null
+     */
     private $hostname;
+    /**
+     * @var null
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $address;
 
-    public function __construct($mailbox, $hostname = null, $name = null)
-    {
+    /**
+     * EmailAddress constructor.
+     *
+     * @param      $mailbox
+     * @param null $hostname
+     * @param null $name
+     */
+    public function __construct($mailbox, $hostname = NULL, $name = NULL) {
         $this->mailbox = $mailbox;
         $this->hostname = $hostname;
         $this->name = $name;
-        
+
         if ($hostname) {
             $this->address = $mailbox . '@' . $hostname;
         }
-    }
-
-    public function getAddress()
-    {
-        return $this->address;
     }
 
     /**
@@ -33,34 +47,49 @@ class EmailAddress
      *
      * @return string
      */
-    public function getFullAddress()
-    {
+    public function getFullAddress() {
         if ($this->name) {
             $address = sprintf("%s <%s@%s>", $this->name, $this->mailbox, $this->hostname);
-        } else {
+        }
+        else {
             $address = sprintf("%s@%s", $this->mailbox, $this->hostname);
         }
 
         return $address;
     }
 
-    public function getMailbox()
-    {
+    /**
+     * @return mixed
+     */
+    public function getMailbox() {
         return $this->mailbox;
     }
 
-    public function getHostname()
-    {
+    /**
+     * @return null
+     */
+    public function getHostname() {
         return $this->hostname;
     }
 
-    public function getName()
-    {
+    /**
+     * @return null
+     */
+    public function getName() {
         return $this->name;
     }
 
-    public function __toString()
-    {
+    /**
+     * @return string
+     */
+    public function __toString() {
         return $this->getAddress();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress() {
+        return $this->address;
     }
 }

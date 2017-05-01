@@ -1,40 +1,31 @@
 <?php
-namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
-use Ddeboer\Imap\Mailbox;
-use Ddeboer\Imap\Server;
-use Ddeboer\Imap\Connection;
+namespace openWebX\Imap\Tests;
 
-abstract class AbstractTest extends \PHPUnit_Framework_TestCase
-{
+use openWebX\Imap\Connection;
+use openWebX\Imap\Exception\MailboxDoesNotExistException;
+use openWebX\Imap\Mailbox;
+use openWebX\Imap\Server;
+
+abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
     protected static $connection;
 
-    public static function setUpBeforeClass()
-    {
+    public static function setUpBeforeClass() {
         $server = new Server('imap.gmail.com');
 
-        if (false === \getenv('EMAIL_USERNAME')) {
+        if (FALSE === \getenv('EMAIL_USERNAME')) {
             throw new \RuntimeException(
                 'Please set environment variable EMAIL_USERNAME before running functional tests'
             );
         }
 
-        if (false === \getenv('EMAIL_PASSWORD')) {
+        if (FALSE === \getenv('EMAIL_PASSWORD')) {
             throw new \RuntimeException(
                 'Please set environment variable EMAIL_PASSWORD before running functional tests'
             );
         }
 
         static::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
-    }
-
-    /**
-     * @return Connection
-     */
-    protected static function getConnection()
-    {
-        return static::$connection;
     }
 
     /**
@@ -46,9 +37,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      *
      * @return Mailbox
      */
-    protected function createMailbox($name)
-    {
-        $uniqueName = $name . uniqid();
+    protected function createMailbox($name) {
+        $uniqueName = $name . uniqid('', true);
 
         try {
             $mailbox = static::getConnection()->getMailbox($uniqueName);
@@ -61,12 +51,18 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return Connection
+     */
+    protected static function getConnection() {
+        return static::$connection;
+    }
+
+    /**
      * Delete a mailbox and all its messages
      *
      * @param Mailbox $mailbox
      */
-    protected function deleteMailbox(Mailbox $mailbox)
-    {
+    protected function deleteMailbox(Mailbox $mailbox) {
         // Move all messages in the mailbox to Gmail trash
         $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
 
@@ -78,10 +74,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     protected function createTestMessage(
         Mailbox $mailbox,
-        $subject = 'Don\'t panic!',
-        $contents = 'Don\'t forget your towel',
-        $from = 'someone@there.com',
-        $to = 'me@here.com'
+        string $subject = 'Don\'t panic!',
+        string $contents = 'Don\'t forget your towel',
+        string $from = 'someone@there.com',
+        string $to = 'me@here.com'
     ) {
         $message = "From: $from\r\n"
             . "To: $to\r\n"
@@ -91,9 +87,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
         $mailbox->addMessage($message);
     }
-    
-    protected function getFixture($fixture)
-    {
+
+    protected function getFixture($fixture) {
         return file_get_contents(__DIR__ . '/fixtures/' . $fixture);
     }
 }

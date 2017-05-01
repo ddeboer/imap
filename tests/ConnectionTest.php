@@ -1,35 +1,30 @@
 <?php
 
-namespace Ddeboer\Imap\Tests;
+namespace openWebX\Imap\Tests;
 
-class ConnectionTest extends AbstractTest
-{
-    public function testCount()
-    {
+class ConnectionTest extends AbstractTest {
+    public function testCount() {
         $this->assertInternalType('int', self::getConnection()->count());
     }
 
-    public function testGetMailboxes()
-    {
+    public function testGetMailboxes() {
         $mailboxes = self::getConnection()->getMailboxes();
         $this->assertInternalType('array', $mailboxes);
 
         foreach ($mailboxes as $mailbox) {
-            $this->assertInstanceOf('\Ddeboer\Imap\Mailbox', $mailbox);
+            $this->assertInstanceOf('\openWebX\Imap\Mailbox', $mailbox);
         }
     }
 
-    public function testGetMailbox()
-    {
+    public function testGetMailbox() {
         $mailbox = static::getConnection()->getMailbox('INBOX');
-        $this->assertInstanceOf('\Ddeboer\Imap\Mailbox', $mailbox);
+        $this->assertInstanceOf('\openWebX\Imap\Mailbox', $mailbox);
     }
 
     /**
-     * @expectedException \Ddeboer\Imap\Exception\MailboxDoesNotExistException
+     * @expectedException \openWebX\Imap\Exception\MailboxDoesNotExistException
      */
-    public function testCreateMailbox()
-    {
+    public function testCreateMailbox() {
         $connection = static::getConnection();
 
         $name = 'test' . uniqid();
@@ -50,10 +45,9 @@ class ConnectionTest extends AbstractTest
     }
 
     /**
-     * @expectedException \Ddeboer\Imap\Exception\MailboxDoesNotExistException
+     * @expectedException \openWebX\Imap\Exception\MailboxDoesNotExistException
      */
-    public function testGetInvalidMailbox()
-    {
+    public function testGetInvalidMailbox() {
         static::getConnection()->getMailbox('does-not-exist');
     }
 }

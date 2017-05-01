@@ -1,15 +1,14 @@
 <?php
 
-namespace Ddeboer\Imap\Search\Text;
+namespace openWebX\Imap\Search\Text;
 
-use Ddeboer\Imap\Search\AbstractCondition;
+use openWebX\Imap\Search\AbstractCondition;
 
 /**
  * Represents a text based condition. Text based conditions use a contains
  * restriction.
  */
-abstract class AbstractText extends AbstractCondition
-{
+abstract class AbstractText extends AbstractCondition {
     /**
      * Text to be used for the condition.
      *
@@ -22,8 +21,7 @@ abstract class AbstractText extends AbstractCondition
      *
      * @param string $text Optional text for the condition.
      */
-    public function __construct($text = null)
-    {
+    public function __construct($text = NULL) {
         if (!is_null($text) && strlen($text) > 0) {
             $this->setText($text);
         }
@@ -34,8 +32,7 @@ abstract class AbstractText extends AbstractCondition
      *
      * @param string $text
      */
-    public function setText($text)
-    {
+    public function setText($text) {
         $this->text = $text;
     }
 
@@ -44,8 +41,7 @@ abstract class AbstractText extends AbstractCondition
      *
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getKeyword() . ' "' . str_replace('"', '\\"', $this->text) . '"';
     }
 }
