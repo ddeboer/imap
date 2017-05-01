@@ -7,8 +7,17 @@ namespace openWebX\Imap;
  *
  */
 class Mailbox implements \Countable, \IteratorAggregate {
+    /**
+     * @var string
+     */
     private $mailbox;
+    /**
+     * @var bool|string
+     */
     private $name;
+    /**
+     * @var \openWebX\Imap\Connection
+     */
     private $connection;
 
     /**
@@ -38,8 +47,18 @@ class Mailbox implements \Countable, \IteratorAggregate {
      */
     public function getInfos() {
         $this->init();
+        return imap_status($this->connection->getResource(), $this->getName(), SA_ALL);
+    }
+
+    /**
+     * @return object
+     */
+    public function getExtendedInfos() {
+        $this->init();
         return imap_mailboxmsginfo($this->connection->getResource());
     }
+
+
     /**
      * Get number of messages in this mailbox
      *
