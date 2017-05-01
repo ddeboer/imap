@@ -3,17 +3,17 @@
 namespace openWebX\Imap\Message;
 
 /**
- * An e-mail attachment
+ * Class Attachment
+ *
+ * @package openWebX\Imap\Message
  */
-class Attachment extends Part
-{
+class Attachment extends Part {
     /**
      * Get attachment filename
      *
      * @return string
      */
-    public function getFilename()
-    {
+    public function getFilename() {
         return $this->parameters->get('filename')
             ?: $this->parameters->get('name');
     }
@@ -23,8 +23,7 @@ class Attachment extends Part
      *
      * @return int Number of bytes
      */
-    public function getSize()
-    {
+    public function getSize() {
         return $this->parameters->get('size');
     }
 }

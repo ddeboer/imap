@@ -7,14 +7,13 @@ use openWebX\Imap\Search\AbstractCondition;
 /**
  * Defines a search expression that can be used to look up email messages.
  */
-class SearchExpression
-{
+class SearchExpression {
     /**
      * The conditions that together represent the expression.
      *
      * @var array
      */
-    private $conditions = array();
+    private $conditions = [];
 
     /**
      * Adds a new condition to the expression.
@@ -23,8 +22,7 @@ class SearchExpression
      *
      * @return SearchExpression
      */
-    public function addCondition(AbstractCondition $condition)
-    {
+    public function addCondition(AbstractCondition $condition) {
         $this->conditions[] = $condition;
 
         return $this;
@@ -35,8 +33,7 @@ class SearchExpression
      *
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return implode(' ', $this->conditions);
     }
 }

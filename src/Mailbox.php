@@ -47,6 +47,7 @@ class Mailbox implements \Countable, \IteratorAggregate {
      */
     public function getInfos() {
         $this->init();
+        //dbg($this);
         return imap_status($this->connection->getResource(), $this->mailbox, SA_ALL);
     }
 
