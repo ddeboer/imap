@@ -2,8 +2,8 @@
 
 namespace openWebX\Imap\Message;
 
-use openWebX\Imap\Parameters;
 use Ddeboer\Transcoder\Transcoder;
+use openWebX\Imap\Parameters;
 
 /**
  * A message part
@@ -104,101 +104,6 @@ class Part implements \RecursiveIterator {
         $this->parseStructure($structure);
     }
 
-    public function getCharset() {
-        return $this->parameters->get('charset');
-    }
-
-    public function getType() {
-        return $this->type;
-    }
-
-    public function getSubtype() {
-        return $this->subtype;
-    }
-
-    public function getEncoding() {
-        return $this->encoding;
-    }
-
-    public function getBytes() {
-        return $this->bytes;
-    }
-
-    public function getLines() {
-        return $this->lines;
-    }
-
-    public function getParameters() {
-        return $this->parameters;
-    }
-
-    /**
-     * Get raw part content
-     *
-     * @return string
-     */
-    public function getContent($keepUnseen = FALSE) {
-        if (NULL === $this->content) {
-            $this->content = $this->doGetContent($keepUnseen);
-        }
-
-        return $this->content;
-    }
-
-    /**
-     * Get decoded part content
-     *
-     * @return string
-     */
-    public function getDecodedContent($keepUnseen = FALSE) {
-        if (NULL === $this->decodedContent) {
-            switch ($this->getEncoding()) {
-                case self::ENCODING_BASE64:
-                    $this->decodedContent = base64_decode($this->getContent($keepUnseen));
-                    break;
-                case self::ENCODING_QUOTED_PRINTABLE:
-                    $this->decodedContent = quoted_printable_decode($this->getContent($keepUnseen));
-                    break;
-                case self::ENCODING_7BIT:
-                case self::ENCODING_8BIT:
-                case self::ENCODING_BINARY:
-                    $this->decodedContent = $this->getContent($keepUnseen);
-                    break;
-                default:
-                    throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
-            }
-
-            // If this part is a text part, try to convert its encoding to UTF-8.
-            // We don't want to convert an attachment's encoding.
-            if ($this->getType() === self::TYPE_TEXT
-                && strtolower($this->getCharset()) != 'utf-8'
-            ) {
-                $this->decodedContent = Transcoder::create()->transcode(
-                    $this->decodedContent,
-                    $this->getCharset()
-                );
-            }
-        }
-
-        return $this->decodedContent;
-    }
-
-    public function getStructure() {
-        return $this->structure;
-    }
-
-    protected function fetchStructure($partNumber = NULL) {
-        if (NULL === $this->structure) {
-            $this->loadStructure();
-        }
-
-        if ($partNumber) {
-            return $this->structure->parts[$partNumber];
-        }
-
-        return $this->structure;
-    }
-
     protected function parseStructure(\stdClass $structure) {
         if (isset($this->typesMap[$structure->type])) {
             $this->type = $this->typesMap[$structure->type];
@@ -248,6 +153,132 @@ class Part implements \RecursiveIterator {
         }
     }
 
+    private function isAttachment($part) {
+        // Attachment with correct Content-Disposition header
+        if (isset($part->disposition)) {
+            if (('attachment' === strtolower($part->disposition)
+                    || 'inline' === strtolower($part->disposition))
+                && strtoupper($part->subtype) != "PLAIN"
+            ) {
+                return TRUE;
+            }
+        }
+
+        // Attachment without Content-Disposition header
+        if (isset($part->parameters)) {
+            foreach ($part->parameters as $parameter) {
+                if ('name' === strtolower($parameter->attribute)
+                    || 'filename' === strtolower($parameter->attribute)
+                ) {
+                    return TRUE;
+                }
+            }
+        }
+
+        return FALSE;
+    }
+
+    public function getSubtype() {
+        return $this->subtype;
+    }
+
+    public function getBytes() {
+        return $this->bytes;
+    }
+
+    public function getLines() {
+        return $this->lines;
+    }
+
+    public function getParameters() {
+        return $this->parameters;
+    }
+
+    /**
+     * Get decoded part content
+     *
+     * @return string
+     */
+    public function getDecodedContent($keepUnseen = FALSE) {
+        if (NULL === $this->decodedContent) {
+            switch ($this->getEncoding()) {
+                case self::ENCODING_BASE64:
+                    $this->decodedContent = base64_decode($this->getContent($keepUnseen));
+                    break;
+                case self::ENCODING_QUOTED_PRINTABLE:
+                    $this->decodedContent = quoted_printable_decode($this->getContent($keepUnseen));
+                    break;
+                case self::ENCODING_7BIT:
+                case self::ENCODING_8BIT:
+                case self::ENCODING_BINARY:
+                    $this->decodedContent = $this->getContent($keepUnseen);
+                    break;
+                default:
+                    throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
+            }
+
+            // If this part is a text part, try to convert its encoding to UTF-8.
+            // We don't want to convert an attachment's encoding.
+            if ($this->getType() === self::TYPE_TEXT
+                && strtolower($this->getCharset()) != 'utf-8'
+            ) {
+                $this->decodedContent = Transcoder::create()->transcode(
+                    $this->decodedContent,
+                    $this->getCharset()
+                );
+            }
+        }
+
+        return $this->decodedContent;
+    }
+
+    public function getEncoding() {
+        return $this->encoding;
+    }
+
+    /**
+     * Get raw part content
+     *
+     * @return string
+     */
+    public function getContent($keepUnseen = FALSE) {
+        if (NULL === $this->content) {
+            $this->content = $this->doGetContent($keepUnseen);
+        }
+
+        return $this->content;
+    }
+
+    /**
+     * Get raw message content
+     *
+     * @param bool $keepUnseen Whether to keep the message unseen.
+     *                         Default behaviour is set set the seen flag when
+     *                         getting content.
+     *
+     * @return string
+     */
+    protected function doGetContent($keepUnseen = FALSE) {
+        return imap_fetchbody(
+            $this->stream,
+            $this->messageNumber,
+            $this->partNumber ?: 1,
+            \FT_UID | ($keepUnseen ? \FT_PEEK : NULL)
+        );
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function getCharset() {
+        return $this->parameters->get('charset');
+    }
+
+    public function getStructure() {
+        return $this->structure;
+    }
+
     /**
      * Get an array of all parts for this message
      *
@@ -257,12 +288,12 @@ class Part implements \RecursiveIterator {
         return $this->parts;
     }
 
-    public function current() {
-        return $this->parts[$this->key];
-    }
-
     public function getChildren() {
         return $this->current();
+    }
+
+    public function current() {
+        return $this->parts[$this->key];
     }
 
     public function hasChildren() {
@@ -289,46 +320,15 @@ class Part implements \RecursiveIterator {
         return $this->disposition;
     }
 
-    /**
-     * Get raw message content
-     *
-     * @param bool $keepUnseen Whether to keep the message unseen.
-     *                         Default behaviour is set set the seen flag when
-     *                         getting content.
-     *
-     * @return string
-     */
-    protected function doGetContent($keepUnseen = FALSE) {
-        return imap_fetchbody(
-            $this->stream,
-            $this->messageNumber,
-            $this->partNumber ?: 1,
-            \FT_UID | ($keepUnseen ? \FT_PEEK : NULL)
-        );
-    }
-
-    private function isAttachment($part) {
-        // Attachment with correct Content-Disposition header
-        if (isset($part->disposition)) {
-            if (('attachment' === strtolower($part->disposition)
-                    || 'inline' === strtolower($part->disposition))
-                && strtoupper($part->subtype) != "PLAIN"
-            ) {
-                return TRUE;
-            }
+    protected function fetchStructure(int $partNumber = NULL) {
+        if (NULL === $this->structure) {
+            $this->loadStructure();
         }
 
-        // Attachment without Content-Disposition header
-        if (isset($part->parameters)) {
-            foreach ($part->parameters as $parameter) {
-                if ('name' === strtolower($parameter->attribute)
-                    || 'filename' === strtolower($parameter->attribute)
-                ) {
-                    return TRUE;
-                }
-            }
+        if ($partNumber) {
+            return $this->structure->parts[$partNumber];
         }
 
-        return FALSE;
+        return $this->structure;
     }
 }

@@ -43,13 +43,6 @@ class EmailAddress {
     }
 
     /**
-     * @return string
-     */
-    public function getAddress() {
-        return $this->address;
-    }
-
-    /**
      * Returns address with person name
      *
      * @return string
@@ -91,5 +84,12 @@ class EmailAddress {
      */
     public function __toString() {
         return $this->getAddress();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress() {
+        return $this->address;
     }
 }

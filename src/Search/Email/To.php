@@ -7,15 +7,13 @@ namespace openWebX\Imap\Search\Email;
  * to the specified recipient (along with any others) in order to match the
  * condition.
  */
-class To extends AbstractEmail
-{
+class To extends AbstractEmail {
     /**
      * Returns the keyword that the condition represents.
      *
      * @return string
      */
-    public function getKeyword()
-    {
+    public function getKeyword() {
         return 'TO';
     }
 }

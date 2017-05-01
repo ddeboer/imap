@@ -26,17 +26,6 @@ class Headers extends Parameters {
     }
 
     /**
-     * Get header
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    public function get($key) {
-        return parent::get(strtolower($key));
-    }
-
-    /**
      * @param $key
      * @param $value
      *
@@ -88,5 +77,16 @@ class Headers extends Parameters {
             isset($value->host) ? $value->host : NULL,
             isset($value->personal) ? $this->decode($value->personal) : NULL
         );
+    }
+
+    /**
+     * Get header
+     *
+     * @param string $key
+     *
+     * @return string
+     */
+    public function get($key) {
+        return parent::get(strtolower($key));
     }
 }

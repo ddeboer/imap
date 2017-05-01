@@ -52,13 +52,22 @@ class Mailbox implements \Countable, \IteratorAggregate {
     }
 
     /**
+     * If connection is not currently in this mailbox, switch it to this mailbox
+     */
+    private function init() {
+        $check = imap_check($this->connection->getResource());
+        if ($check === FALSE || $check->Mailbox != $this->mailbox) {
+            imap_reopen($this->connection->getResource(), $this->mailbox);
+        }
+    }
+
+    /**
      * @return object
      */
     public function getExtendedInfos() {
         $this->init();
         return imap_mailboxmsginfo($this->connection->getResource());
     }
-
 
     /**
      * Get number of messages in this mailbox
@@ -68,25 +77,6 @@ class Mailbox implements \Countable, \IteratorAggregate {
     public function count() {
         $this->init();
         return imap_num_msg($this->connection->getResource());
-    }
-
-    /**
-     * Get message ids
-     *
-     * @param SearchExpression $search Search expression (optional)
-     *
-     * @return MessageIterator|Message[]
-     */
-    public function getMessages(SearchExpression $search = NULL) {
-        $this->init();
-        $query = ($search ? (string) $search : 'ALL');
-        $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
-        if (FALSE == $messageNumbers) {
-            // imap_search can also return false
-            $messageNumbers = [];
-        }
-
-        return new MessageIterator($this->connection->getResource(), $messageNumbers);
     }
 
     /**
@@ -111,6 +101,25 @@ class Mailbox implements \Countable, \IteratorAggregate {
         $this->init();
 
         return $this->getMessages();
+    }
+
+    /**
+     * Get message ids
+     *
+     * @param SearchExpression $search Search expression (optional)
+     *
+     * @return MessageIterator|Message[]
+     */
+    public function getMessages(SearchExpression $search = NULL) {
+        $this->init();
+        $query = ($search ? (string) $search : 'ALL');
+        $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
+        if (FALSE == $messageNumbers) {
+            // imap_search can also return false
+            $messageNumbers = [];
+        }
+
+        return new MessageIterator($this->connection->getResource(), $messageNumbers);
     }
 
     /**
@@ -143,15 +152,5 @@ class Mailbox implements \Countable, \IteratorAggregate {
      */
     public function addMessage($message) {
         return imap_append($this->connection->getResource(), $this->mailbox, $message);
-    }
-
-    /**
-     * If connection is not currently in this mailbox, switch it to this mailbox
-     */
-    private function init() {
-        $check = imap_check($this->connection->getResource());
-        if ($check === FALSE || $check->Mailbox != $this->mailbox) {
-            imap_reopen($this->connection->getResource(), $this->mailbox);
-        }
     }
 }
