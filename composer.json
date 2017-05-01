@@ -13,7 +13,7 @@
     "require": {
         "php": ">=7.0.0",
         "ext-imap": "*",
-        "openWebX/transcoder": "~1"
+        "ddeboer/transcoder": "~1"
     },
     "require-dev": {
         "ext-mbstring": "*",
