@@ -1,7 +1,6 @@
 <?php
 namespace Ddeboer\Imap\EmbeddedMessage;
 
-use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
 
 /**
@@ -73,7 +72,7 @@ class EmbeddedMessage
      *
      * @var EmbeddedAttachment[]
      */
-    private $attachments;
+    private $attachments = [];
 
     /**
      * Parsed structure of message
