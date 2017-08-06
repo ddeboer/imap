@@ -70,6 +70,34 @@ class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
+     * Get Mailbox status
+     *
+     * @param int $flag
+     * @return Status[]|StatusIterator*
+     */
+    public function getStatus($flag = null)
+    {
+        $this->init();
+
+        $flag = $flag ? (int) $flag : SA_ALL;
+
+        return imap_status($this->connection->getResource(), $this->getMailboxString(), $flag);
+    }
+
+    /**
+     * Get the full name of th mailbox.
+     *
+     * @return string Mailbox's name
+     */
+    public function getMailboxString()
+    {
+        return sprintf('{%s}%s',
+            $this->connection->getHostName(),
+            $this->name
+        );
+    }
+
+    /**
      * Get a message by message number
      *
      * @param int $number Message number
