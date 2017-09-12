@@ -182,9 +182,11 @@ class Part implements \RecursiveIterator
             if ($this->getType() === self::TYPE_TEXT
                 && strtolower($this->getCharset()) != 'utf-8'
             ) {
+                $charset = $this->getCharset();
+                $charset = 'ks_c_5601-1987' == $charset ? 'CP949' : $charset;
                 $this->decodedContent = Transcoder::create()->transcode(
                     $this->decodedContent,
-                    $this->getCharset()
+                    $charset
                 );
             }
         }
