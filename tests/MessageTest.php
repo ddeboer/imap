@@ -39,7 +39,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
         $this->assertEquals('lietuviškos raidės', $message->getSubject());
-        $this->assertEquals('lietuviškos raidės', $message->getBodyText());
+        $this->assertEquals('lietuviškos raidės', rtrim($message->getBodyText()));
     }
 
     public function testEncodingQuotedPrintable()
