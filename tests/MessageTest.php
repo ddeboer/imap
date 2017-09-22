@@ -102,6 +102,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(3);
         $message->delete();
+        $this->mailbox->expunge();
 
         $this->assertCount(2, $this->mailbox);
         foreach ($this->mailbox->getMessages() as $message) {
