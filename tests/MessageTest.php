@@ -39,7 +39,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
         $this->assertEquals('lietuviškos raidės', $message->getSubject());
-        $this->assertEquals('lietuviškos raidės', $message->getBodyText());
+        $this->assertEquals('lietuviškos raidės', rtrim($message->getBodyText()));
     }
 
     public function testEncodingQuotedPrintable()
@@ -48,11 +48,12 @@ class MessageTest extends AbstractTest
         $raw = "Subject: ESPAÑA\r\n"
             . "Date: =?ISO-8859-2?Q?Fri,_13_Jun_2014_17:18:44_+020?= =?ISO-8859-2?Q?0_(St=F8edn=ED_Evropa_(letn=ED_=E8as))?=\r\n"
             . "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n"
+            . "\r\n"
             . "--$boundary\r\n"
             . "Content-Transfer-Encoding: quoted-printable\r\n"
             . "Content-Type: text/html; charset=\"windows-1252\"\r\n"
             . "\r\n"
-            . "<html><body>Espa=F1a</body></html>\r\n\r\n"
+            . "<html><body>Espa=C3=B1a</body></html>\r\n\r\n"
             . "--$boundary--\r\n\r\n";
 
         $this->mailbox->addMessage($raw);
@@ -101,6 +102,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(3);
         $message->delete();
+        $this->mailbox->expunge();
 
         $this->assertCount(2, $this->mailbox);
         foreach ($this->mailbox->getMessages() as $message) {
