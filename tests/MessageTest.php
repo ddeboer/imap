@@ -11,12 +11,7 @@ class MessageTest extends AbstractTest
 
     public function setUp()
     {
-        $this->mailbox = $this->createMailbox('test-message');
-    }
-
-    public function tearDown()
-    {
-        $this->deleteMailbox($this->mailbox);
+        $this->mailbox = $this->createMailbox();
     }
 
     public function testKeepUnseen()
