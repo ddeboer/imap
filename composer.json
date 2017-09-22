@@ -21,7 +21,7 @@
     "require-dev": {
         "ext-mbstring": "*",
         "ext-iconv": "*",
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "^5.7"
     },
     "autoload": {
         "psr-4": {
