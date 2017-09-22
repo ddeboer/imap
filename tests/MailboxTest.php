@@ -16,21 +16,16 @@ class MailboxTest extends AbstractTest
 
     public function setUp()
     {
-        $this->mailbox = $this->createMailbox('test-mailbox');
+        $this->mailbox = $this->createMailbox();
 
         $this->createTestMessage($this->mailbox, 'Message 1');
         $this->createTestMessage($this->mailbox, 'Message 2');
         $this->createTestMessage($this->mailbox, 'Message 3');
     }
 
-    public function tearDown()
-    {
-        $this->deleteMailbox($this->mailbox);
-    }
-
     public function testGetName()
     {
-        $this->assertStringStartsWith('test-mailbox', $this->mailbox->getName());
+        $this->assertSame($this->mailboxName, $this->mailbox->getName());
     }
 
     public function testGetMessages()
