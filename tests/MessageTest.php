@@ -53,7 +53,7 @@ class MessageTest extends AbstractTest
             . "Content-Transfer-Encoding: quoted-printable\r\n"
             . "Content-Type: text/html; charset=\"windows-1252\"\r\n"
             . "\r\n"
-            . "<html><body>Espa=F1a</body></html>\r\n\r\n"
+            . "<html><body>Espa=C3=B1a</body></html>\r\n\r\n"
             . "--$boundary--\r\n\r\n";
 
         $this->mailbox->addMessage($raw);
