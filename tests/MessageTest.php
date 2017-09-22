@@ -48,6 +48,7 @@ class MessageTest extends AbstractTest
         $raw = "Subject: ESPAÑA\r\n"
             . "Date: =?ISO-8859-2?Q?Fri,_13_Jun_2014_17:18:44_+020?= =?ISO-8859-2?Q?0_(St=F8edn=ED_Evropa_(letn=ED_=E8as))?=\r\n"
             . "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n"
+            . "\r\n"
             . "--$boundary\r\n"
             . "Content-Transfer-Encoding: quoted-printable\r\n"
             . "Content-Type: text/html; charset=\"windows-1252\"\r\n"
