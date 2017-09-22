@@ -25,7 +25,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Ddeboer\\Imap\\": "src/",
+            "Ddeboer\\Imap\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Ddeboer\\Imap\\Tests\\": "tests/"
         }
     }
