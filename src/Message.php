@@ -157,7 +157,10 @@ class Message extends Message\Part
      */
     public function isSeen()
     {
-        return 'U' != $this->getHeaders()->get('unseen');
+        return (
+                'R' === $this->getHeaders()->get('recent')
+            ||  ('' === $this->getHeaders()->get('recent') &&  '' !== $this->getHeaders()->get('unseen'))
+        );
     }
 
     /**
