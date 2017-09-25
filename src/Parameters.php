@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap;
 
 use Ddeboer\Transcoder\Transcoder;
@@ -7,12 +9,12 @@ use Ddeboer\Transcoder\Transcoder;
 class Parameters
 {
     protected $parameters = [];
-    
+
     public function __construct(array $parameters = [])
     {
         $this->add($parameters);
     }
-    
+
     public function add(array $parameters = [])
     {
         foreach ($parameters as $parameter) {
@@ -21,16 +23,16 @@ class Parameters
             $this->parameters[$key] = $value;
         }
     }
-    
+
     public function get($key)
     {
         if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
         }
-        
-        return null;
+
+        return;
     }
-    
+
     protected function decode($value)
     {
         $decoded = '';
@@ -41,7 +43,7 @@ class Parameters
             // $decoded .= Transcoder::create()->transcode($part->text, $charset);
             $decoded .= $part->text;
         }
-        
+
         return $decoded;
     }
 }

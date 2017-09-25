@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Search\Email;
 
 use Ddeboer\Imap\Search\AbstractCondition;
@@ -19,7 +21,7 @@ abstract class AbstractEmail extends AbstractCondition
     /**
      * Constructor
      *
-     * @param string $email Optional email address for the condition.
+     * @param string $email optional email address for the condition
      */
     public function __construct($email = null)
     {

@@ -1,10 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\Server;
-use Ddeboer\Imap\Connection;
 use PHPUnit_Framework_TestCase;
 
 abstract class AbstractTest extends PHPUnit_Framework_TestCase
@@ -23,6 +24,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     protected function createMailbox()
     {
         $this->mailboxName = uniqid('mailbox_');
+
         return $this->getConnection()->createMailbox($this->mailboxName);
     }
 

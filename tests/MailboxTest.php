@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Mailbox;
@@ -32,7 +34,7 @@ class MailboxTest extends AbstractTest
     {
         $i = 0;
         foreach ($this->mailbox->getMessages() as $message) {
-            $i++;
+            ++$i;
         }
 
         $this->assertEquals(3, $i);
@@ -55,17 +57,17 @@ class MailboxTest extends AbstractTest
     public function testSearch()
     {
         $this->createTestMessage($this->mailbox, 'Result', 'Contents');
-        
+
         $search = new SearchExpression();
         $search->addCondition(new To('me@here.com'))
             ->addCondition(new Body('Contents'))
         ;
-        
+
         $messages = $this->mailbox->getMessages($search);
         $this->assertCount(1, $messages);
         $this->assertEquals('Result', $messages->current()->getSubject());
     }
-    
+
     public function testSearchNoResults()
     {
         $search = new SearchExpression();

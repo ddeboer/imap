@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Exception;
 
 class AuthenticationFailedException extends Exception
