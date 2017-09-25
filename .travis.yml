@@ -8,6 +8,7 @@ matrix:
     - php: 7.0
     - php: 7.1
     - php: 7.2
+      env: CODE_COVERAGE=1
 
 addons:
   hosts:
@@ -26,11 +27,15 @@ cache:
 
 install:
   - sh .travis/dovecot_install.sh
-  - phpenv config-rm xdebug.ini || true
+  - if [ "$CODE_COVERAGE" != 1 ]; then phpenv config-rm xdebug.ini || true; fi
   - composer install
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --coverage-clover ./clover.xml
+
+after_script:
+  - if [ "$CODE_COVERAGE" = 1 ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ "$CODE_COVERAGE" = 1 ]; then php ocular.phar code-coverage:upload --format=php-clover ./clover.xml; fi
 
 notifications:
   email: false
