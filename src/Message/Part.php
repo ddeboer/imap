@@ -330,7 +330,7 @@ class Part implements \RecursiveIterator
         return imap_fetchbody(
             $this->stream,
             $this->messageNumber,
-            $this->partNumber ?: 1,
+            (string) ($this->partNumber ?: '1'),
             \FT_UID | ($keepUnseen ? \FT_PEEK : null)
         );
     }

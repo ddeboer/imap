@@ -84,7 +84,7 @@ class Server
             $this->getServerString(),
             $username,
             $password,
-            null,
+            0,
             1,
             $this->parameters
         );
