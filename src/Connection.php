@@ -75,7 +75,10 @@ class Connection
     public function getMailbox($name)
     {
         if (!$this->hasMailbox($name)) {
-            throw new MailboxDoesNotExistException($name);
+            throw new MailboxDoesNotExistException(sprintf(
+                'Mailbox "%s" does not exist',
+                $name
+            ));
         }
 
         return new Mailbox($this->server . imap_utf7_encode($name), $this);
