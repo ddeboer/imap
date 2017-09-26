@@ -4,6 +4,7 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
 use Ddeboer\Transcoder\Transcoder;
+use Ddeboer\Imap\Exception\MessageUnsupportedEncodeException;
 
 /**
  * A message part
@@ -216,6 +217,11 @@ class Part implements \RecursiveIterator
             $this->type = $this->typesMap[$structure->type];
         } else {
             $this->type = self::TYPE_UNKNOWN;
+        }
+
+        // fix strange encoding that more than ENCOTHER = 5
+        if ($structure->encoding > ENCOTHER) {
+            throw new MessageUnsupportedEncodeException($this->messageNumber, $this->partNumber);
         }
 
         $this->encoding = $this->encodingsMap[$structure->encoding];

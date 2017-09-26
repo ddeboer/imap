@@ -75,7 +75,7 @@ class Connection
             throw new MailboxDoesNotExistException($name);
         }
 
-        return new Mailbox($this->server . imap_utf7_encode($name), $this);
+        return new Mailbox($this->server . mb_convert_encoding($name, "UTF7-IMAP", "UTF-8"), $this);
     }
 
     /**
@@ -150,8 +150,13 @@ class Connection
     {
         if (null === $this->mailboxNames) {
             $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
+
             foreach ($mailboxes as $mailbox) {
-                $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
+                if (function_exists('mb_convert_encoding')) {
+                    $this->mailboxNames[] = mb_convert_encoding(str_replace($this->server, '', $mailbox->name), "UTF-8", "UTF7-IMAP");
+                } else {
+                    $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
+                }
             }
         }
 

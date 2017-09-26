@@ -181,7 +181,29 @@ class Message extends Message\Part
             // imap_header is much faster than imap_fetchheader
             // imap_header returns only a subset of all mail headers,
             // but it does include the message flags.
-            $headers = imap_header($this->stream, imap_msgno($this->stream, $this->messageNumber));
+
+            // Yep, it's faster but works incorrect with multiply "to" and "cc" fields.
+            // imap_header() returns just recent address instead of expected list of addresses.
+            // so, it's  bad decision like "penny-wise and pound-foolish".
+            // Thus wait while php core team fix that, some guys waits about 5 year, ha-ha
+            // @see http://php.net/manual/ru/function.imap-headerinfo.php#98809
+            $headers = imap_rfc822_parse_headers(
+                imap_fetchheader($this->stream, imap_msgno($this->stream, $this->messageNumber))
+            );
+
+            // check errors.
+            $lastError = imap_last_error();
+            if ($lastError !== false) {
+                if (1 === preg_match('/Unexpected characters at end of address: <(.*)>/', $lastError, $matches)) {
+                    /**
+                     * Message parsing from, to, cc headers exception occurs.
+                     * It's not critical, because problem can be located just in single address from many.
+                     * So we can proceed this letter, just drop the notice.
+                     */
+                    imap_errors();
+                }
+            }
+
             $this->headers = new Message\Headers($headers);
         }
 

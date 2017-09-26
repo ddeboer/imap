@@ -53,7 +53,13 @@ class Headers extends Parameters
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
 
-                return new \DateTime($value);
+                try {
+                    $dateTime = new \DateTime($value);
+                } catch (\Exception $e) {
+                    // Whole letter in any case is more important than the date.
+                    $dateTime = new \DateTime('@0');
+                }
+                return $dateTime;
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':
