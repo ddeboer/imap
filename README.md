@@ -1,23 +1,32 @@
 IMAP library
 ============
+
+[![Latest Stable Version](https://poser.pugx.org/ddeboer/imap/v/stable.svg)](https://packagist.org/packages/ddeboer/imap)
+[![Total Downloads](https://poser.pugx.org/ddeboer/imap/downloads.png)](https://packagist.org/packages/ddeboer/imap)
+
+Master:
 [![Build Status](https://travis-ci.org/ddeboer/imap.svg?branch=master)](https://travis-ci.org/ddeboer/imap)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/ddeboer/imap/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/ddeboer/imap/v/stable.svg)](https://packagist.org/packages/ddeboer/imap) 
+
+Develop:
+[![Build Status](https://travis-ci.org/ddeboer/imap.svg?branch=develop)](https://travis-ci.org/ddeboer/imap)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=develop)
+[![Code Coverage](https://scrutinizer-ci.com/g/ddeboer/imap/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=develop)
 
 A PHP 5.4+ library to read and process e-mails over IMAP.
 
 Installation
 ------------
 
-Make sure the [PHP IMAP extension](http://php.net/manual/en/book.imap.php)
+Make sure the [PHP IMAP extension](https://secure.php.net/manual/en/book.imap.php)
 is installed. For instance on Debian:
 
 ```bash
 # apt-get install php5-imap
 ```
 
-The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
+The recommended way to install the IMAP library is through [Composer](https://getcomposer.org):
 
 ```bash
 $ composer require ddeboer/imap
@@ -41,10 +50,10 @@ $server = new Server('imap.gmail.com');
 $connection = $server->authenticate('my_username', 'my_password');
 ```
 
-#### Options 
+#### Options
 
-You can specify port, [flags and parameters](http://php.net/manual/en/function.imap-open.php) 
-to the server: 
+You can specify port, [flags and parameters](https://secure.php.net/manual/en/function.imap-open.php)
+to the server:
 
 ```php
 $server = new Server(
@@ -110,7 +119,7 @@ $messages = $mailbox->getMessages($search);
 
 #### Message Properties and Operations
 
-Get message number and unique [message id](http://en.wikipedia.org/wiki/Message-ID)
+Get message number and unique [message id](https://en.wikipedia.org/wiki/Message-ID)
 in the form <...>:
 
 ```php
@@ -192,20 +201,38 @@ Running the Tests
 -----------------
 
 This library is functionally tested on [Travis CI](https://travis-ci.org/ddeboer/imap)
-against the Gmail IMAP server.
+against a local Dovecot server.
 
-If you have your own IMAP (test) account, you can run the tests locally by 
-providing your IMAP (e.g., Gmail) credentials:
-
-```bash
-$ composer install --dev
-$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" vendor/bin/phpunit
-```
-
-You can also set an `EMAIL_SERVER` variable, which defaults to `imap.gmail.com`:
+If you have your own IMAP (test) account, you can run the tests locally by
+providing your IMAP credentials:
 
 ```bash
-$ EMAIL_USERNAME="your_username" EMAIL_PASSWORD="your_password" EMAIL_SERVER="imap.you.com" vendor/bin/phpunit
-
+$ composer install
+$ IMAP_SERVER_NAME="my.imap.server.com" IMAP_SERVER_PORT="60993" IMAP_USERNAME="johndoe" IMAP_PASSWORD="p4ssword" vendor/bin/phpunit
 ```
 
+You can also copy `phpunit.xml.dist` file to a custom `phpunit.xml` and put
+these environment variables in it:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    bootstrap="./vendor/autoload.php"
+    colors="true"
+    verbose="true"
+>
+    <testsuites>
+        <testsuite name="ddeboer/imap">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="IMAP_SERVER_NAME" value="my.imap.server.com" />
+        <env name="IMAP_SERVER_PORT" value="60993" />
+        <env name="IMAP_USERNAME" value="johndoe" />
+        <env name="IMAP_PASSWORD" value="p4ssword" />
+    </php>
+</phpunit>
+```
+
+**WARNING**: currently the tests create new mailboxes without removing them.
