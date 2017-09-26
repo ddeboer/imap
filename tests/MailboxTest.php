@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Exception;
 use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\Search\Email\To;
 use Ddeboer\Imap\Search\Text\Body;
@@ -40,13 +41,12 @@ class MailboxTest extends AbstractTest
         $this->assertEquals(3, $i);
     }
 
-    /**
-     * @expectedException \Ddeboer\Imap\Exception\MessageDoesNotExistException
-     * @expectedExceptionMessageRegExp /Message 666 does not exist.*Bad message number/
-     */
     public function testGetMessageThrowsException()
     {
-        $this->mailbox->getMessage(666);
+        $this->expectException(Exception\MessageDoesNotExistException::class);
+        $this->expectExceptionMessageRegExp('/E_WARNING.+Message 999 does not exist.+Bad message number/s');
+
+        $this->mailbox->getMessage(999);
     }
 
     public function testCount()

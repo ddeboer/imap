@@ -275,7 +275,10 @@ class Message extends Message\Part
         $this->headers = null;
 
         if (!imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
-            throw new MessageDeleteException($this->messageNumber);
+            throw new MessageDeleteException(sprintf(
+                'Message "%s" cannot be deleted',
+                $this->messageNumber
+            ));
         }
     }
 
@@ -291,7 +294,11 @@ class Message extends Message\Part
     public function move(Mailbox $mailbox)
     {
         if (!imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName(), \CP_UID)) {
-            throw new MessageMoveException($this->messageNumber, $mailbox->getName());
+            throw new MessageMoveException(sprintf(
+                'Message "%s" cannot be moved to "%s"',
+                $this->messageNumber,
+                $mailbox->getName()
+            ));
         }
 
         return $this;
@@ -318,14 +325,13 @@ class Message extends Message\Part
      */
     private function loadStructure()
     {
-        set_error_handler(
-            function ($nr, $error) {
-                throw new MessageDoesNotExistException(
-                    $this->messageNumber,
-                    $error
-                );
-            }
-        );
+        set_error_handler(function ($nr, $error) {
+            throw new MessageDoesNotExistException(sprintf(
+                'Message %s does not exist: %s',
+                $this->messageNumber,
+                $error
+            ), $nr);
+        });
 
         $structure = imap_fetchstructure(
             $this->stream,
