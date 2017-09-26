@@ -6,6 +6,7 @@ use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageMoveException;
+use Ddeboer\Imap\Message\Part;
 
 /**
  * An IMAP message (e-mail)
@@ -229,22 +230,28 @@ class Message extends Message\Part
     public function getAttachments()
     {
         if (null === $this->attachments) {
-            $this->attachments = array();
-            foreach ($this->getParts() as $part) {
-                if ($part instanceof Message\Attachment) {
-                    $this->attachments[] = $part;
-                }
-                if ($part->hasChildren()) {
-                    foreach ($part->getParts() as $child_part) {
-                        if ($child_part instanceof Message\Attachment) {
-                            $this->attachments[] = $child_part;
-                        }
-                    }
+            $this->attachments = $this->getAttachmentFoPart($this);
+        }
+
+        return $this->attachments;
+    }
+
+    private function getAttachmentFoPart(Part $part)
+    {
+        $attachments = [];
+
+        if ($part->hasChildren()) {
+            foreach ($part->getParts() as $childPart) {
+                if ($childPart instanceof Message\Attachment) {
+                    $attachments[] = $childPart;
+
+                } else {
+                    $attachments = array_merge($attachments, $this->getAttachmentFoPart($childPart));
                 }
             }
         }
 
-        return $this->attachments;
+        return $attachments;
     }
 
     /**
