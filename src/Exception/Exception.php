@@ -35,7 +35,7 @@ class Exception extends \RuntimeException
         $alerts = imap_alerts();
         $errors = imap_errors();
         $completeMessage = sprintf(
-            "%s%s\nAlerts (%s):%s\nErrors (%s):%s",
+            "%s%s\nimap_alerts (%s):%s\nimap_errors (%s):%s",
             $errorType,
             $message,
             $alerts ? count($alerts) : 0,
