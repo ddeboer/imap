@@ -27,11 +27,6 @@ class Server
     private $flags;
 
     /**
-     * @var string
-     */
-    private $connection;
-
-    /**
      * @var array
      */
     private $parameters;
@@ -99,13 +94,13 @@ class Server
 
         $check = imap_check($resource);
         $mailbox = $check->Mailbox;
-        $this->connection = substr($mailbox, 0, strpos($mailbox, '}') + 1);
+        $connection = substr($mailbox, 0, strpos($mailbox, '}') + 1);
 
         // These are necessary to get rid of PHP throwing IMAP errors
         imap_errors();
         imap_alerts();
 
-        return new Connection($resource, $this->connection);
+        return new Connection($resource, $connection);
     }
 
     /**

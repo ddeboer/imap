@@ -5,35 +5,66 @@ declare(strict_types=1);
 namespace Ddeboer\Imap;
 
 /**
- * An IMAP mailbox (commonly referred to as a ‘folder’)
+ * An IMAP mailbox (commonly referred to as a 'folder')
  */
 class Mailbox implements \Countable, \IteratorAggregate
 {
-    private $mailbox;
-    private $name;
     private $connection;
+    private $name;
+    private $info;
 
     /**
      * Constructor
      *
-     * @param string     $name       Mailbox name
      * @param Connection $connection IMAP connection
+     * @param string     $name       Mailbox decoded name
+     * @param stdClass   $info       Mailbox info
      */
-    public function __construct(string $name, Connection $connection)
+    public function __construct(Connection $connection, string $name, \stdClass $info)
     {
-        $this->mailbox = $name;
         $this->connection = $connection;
-        $this->name = substr($name, strpos($name, '}') + 1);
+        $this->name = $name;
+        $this->info = $info;
     }
 
     /**
-     * Get mailbox name
+     * Get mailbox decoded name
      *
      * @return string
      */
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * Get mailbox encoded full name
+     *
+     * @return string
+     */
+    public function getFullEncodedName(): string
+    {
+        return $this->info->name;
+    }
+
+    /**
+     * Get mailbox attributes
+     *
+     * @return int
+     */
+    public function getAttributes(): int
+    {
+        return $this->info->attributes;
+    }
+
+    /**
+     * Get mailbox delimiter
+     *
+     * @return int
+     */
+    public function getDelimiter(): string
+    {
+        return $this->info->delimiter;
     }
 
     /**
@@ -107,13 +138,9 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return Mailbox
      */
-    public function expunge(): self
+    public function expunge()
     {
-        $this->init();
-
-        imap_expunge($this->connection->getResource());
-
-        return $this;
+        $this->connection->expunge();
     }
 
     /**
@@ -125,7 +152,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      */
     public function addMessage($message): bool
     {
-        return imap_append($this->connection->getResource(), $this->mailbox, $message);
+        return imap_append($this->connection->getResource(), $this->getFullEncodedName(), $message);
     }
 
     /**
@@ -134,8 +161,8 @@ class Mailbox implements \Countable, \IteratorAggregate
     private function init()
     {
         $check = imap_check($this->connection->getResource());
-        if ($check === false || $check->Mailbox != $this->mailbox) {
-            imap_reopen($this->connection->getResource(), $this->mailbox);
+        if ($check === false || $check->Mailbox != $this->getFullEncodedName()) {
+            imap_reopen($this->connection->getResource(), $this->getFullEncodedName());
         }
     }
 }

@@ -4,47 +4,52 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Connection;
+use Ddeboer\Imap\Exception\Exception;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use Ddeboer\Imap\Mailbox;
 
+/**
+ * @covers \Ddeboer\Imap\Connection
+ */
 class ConnectionTest extends AbstractTest
 {
+    public function testCannotInstantiateArbitraryConnections()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Connection(uniqid(), uniqid());
+    }
+
     public function testCount()
     {
-        $this->assertInternalType('int', self::getConnection()->count());
+        $this->assertInternalType('int', $this->getConnection()->count());
     }
 
     public function testGetMailboxes()
     {
-        $mailboxes = self::getConnection()->getMailboxes();
+        $mailboxes = $this->getConnection()->getMailboxes();
         $this->assertInternalType('array', $mailboxes);
 
         foreach ($mailboxes as $mailbox) {
-            $this->assertInstanceOf('\Ddeboer\Imap\Mailbox', $mailbox);
+            $this->assertInstanceOf(Mailbox::class, $mailbox);
         }
     }
 
     public function testGetMailbox()
     {
-        $mailbox = static::getConnection()->getMailbox('INBOX');
-        $this->assertInstanceOf('\Ddeboer\Imap\Mailbox', $mailbox);
+        $mailbox = $this->getConnection()->getMailbox('INBOX');
+        $this->assertInstanceOf(Mailbox::class, $mailbox);
     }
 
     public function testCreateMailbox()
     {
-        $connection = static::getConnection();
+        $connection = $this->getConnection();
 
-        $name = 'test' . uniqid();
+        $name = uniqid('test_');
         $mailbox = $connection->createMailbox($name);
-        $this->assertEquals(
-            $name,
-            $mailbox->getName(),
-            'Correct mailbox must be returned from create'
-        );
-        $this->assertEquals(
-            $name,
-            $connection->getMailbox($name)->getName(),
-            'Correct mailbox must be returned from connection'
-        );
+        $this->assertSame($name, $mailbox->getName());
+        $this->assertSame($name, $connection->getMailbox($name)->getName());
 
         $mailbox->delete();
 
@@ -53,9 +58,30 @@ class ConnectionTest extends AbstractTest
         $connection->getMailbox($name);
     }
 
+    public function testCannotCreateMailboxesOnReadonly()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageRegExp('/ALREADYEXISTS/');
+
+        $this->getConnection()->createMailbox('INBOX');
+    }
+
+    public function testEscapesMailboxNames()
+    {
+        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid(self::NON_PRINTABLE_ASCII)));
+    }
+
+    public function testCustomExceptionOnInvalidMailboxName()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageRegExp('/Mailbox name is not valid mUTF-7/');
+
+        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid('A_€_')));
+    }
+
     public function testGetInvalidMailbox()
     {
         $this->expectException(MailboxDoesNotExistException::class);
-        static::getConnection()->getMailbox('does-not-exist');
+        $this->getConnection()->getMailbox('does-not-exist');
     }
 }

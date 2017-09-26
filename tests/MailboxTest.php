@@ -10,6 +10,9 @@ use Ddeboer\Imap\Search\Email\To;
 use Ddeboer\Imap\Search\Text\Body;
 use Ddeboer\Imap\SearchExpression;
 
+/**
+ * @covers \Ddeboer\Imap\Mailbox
+ */
 class MailboxTest extends AbstractTest
 {
     /**
@@ -29,6 +32,13 @@ class MailboxTest extends AbstractTest
     public function testGetName()
     {
         $this->assertSame($this->mailboxName, $this->mailbox->getName());
+    }
+
+    public function testGet()
+    {
+        $this->assertContains(\getenv('IMAP_SERVER_NAME'), $this->mailbox->getFullEncodedName());
+        $this->assertNotContains($this->mailboxName, $this->mailbox->getFullEncodedName());
+        $this->assertContains(imap_utf7_encode($this->mailboxName), $this->mailbox->getFullEncodedName());
     }
 
     public function testGetMessages()
