@@ -16,10 +16,10 @@
     "require": {
         "php": "^7.0",
         "ext-imap": "*",
+        "ext-mbstring": "*",
         "ddeboer/transcoder": "~1"
     },
     "require-dev": {
-        "ext-mbstring": "*",
         "ext-iconv": "*",
         "phpunit/phpunit": "^5.7",
         "friendsofphp/php-cs-fixer": "^2.6"
