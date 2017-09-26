@@ -2,6 +2,9 @@
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\EmbeddedMessage\EmbeddedMessage;
+use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
 use Ddeboer\Imap\Parameters;
 use Ddeboer\Transcoder\Transcoder;
 
@@ -139,6 +142,24 @@ class Part implements \RecursiveIterator
         return $this->parameters;
     }
 
+    public function isEmbeddedMessage()
+    {
+        return $this->type === "message";
+    }
+
+    /**
+     * Return embedded message
+     * @throws Exception when tryi
+     * @return EmbeddedMessage
+     */
+    public function getEmbeddedMessage()
+    {
+        if ($this->type !== "message") {
+            throw new NotEmbeddedMessageException;
+        }
+        return new EmbeddedMessage($this->stream, $this->messageNumber, $this->partNumber);
+    }
+
     /**
      * Get raw part content
      *
@@ -212,14 +233,18 @@ class Part implements \RecursiveIterator
 
     protected function parseStructure(\stdClass $structure)
     {
-        if (isset($this->typesMap[$structure->type])) {
+        if (isset($structure->type) && isset($this->typesMap[$structure->type])) {
             $this->type = $this->typesMap[$structure->type];
         } else {
             $this->type = self::TYPE_UNKNOWN;
         }
 
-        $this->encoding = $this->encodingsMap[$structure->encoding];
-        $this->subtype = $structure->subtype;
+        if (isset($structure->encoding)) {
+            $this->encoding = $this->encodingsMap[$structure->encoding];
+        }
+        if (isset($structure->subtype)) {
+            $this->subtype = $structure->subtype;
+        }
 
         if (isset($structure->bytes)) {
             $this->bytes = $structure->bytes;
@@ -232,7 +257,7 @@ class Part implements \RecursiveIterator
         }
 
         $this->parameters = new Parameters();
-        if (is_array($structure->parameters)) {
+        if (isset($structure->parameters) && is_array($structure->parameters)) {
             $this->parameters->add($structure->parameters);
         }
 
@@ -330,9 +355,8 @@ class Part implements \RecursiveIterator
     {
         // Attachment with correct Content-Disposition header
         if (isset($part->disposition)) {
-            if (('attachment' === strtolower($part->disposition)
-                || 'inline' === strtolower($part->disposition))
-            && strtoupper($part->subtype) != "PLAIN"
+            if (('attachment' === strtolower($part->disposition) || 'inline' === strtolower($part->disposition))
+                && strtoupper($part->subtype) != "PLAIN"
             ) {
                 return true;
             }
@@ -341,9 +365,15 @@ class Part implements \RecursiveIterator
         // Attachment without Content-Disposition header
         if (isset($part->parameters)) {
             foreach ($part->parameters as $parameter) {
-                if ('name' === strtolower($parameter->attribute)
-                    || 'filename' === strtolower($parameter->attribute)
-                ) {
+                if ('name' === strtolower($parameter->attribute) || 'filename' === strtolower($parameter->attribute)) {
+                    return true;
+                }
+            }
+        }
+
+        if(isset($part->dparameters)) {
+            foreach ($part->dparameters as $parameter) {
+                if ('name' === strtolower($parameter->attribute) || 'filename' === strtolower($parameter->attribute)) {
                     return true;
                 }
             }

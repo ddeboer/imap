@@ -197,6 +197,55 @@ file_put_contents(
 );
 ```
 
+
+### Embedded Messages
+
+Check if attachment is embedded message and get it:
+
+```php
+$attachments = $message->getAttachments();
+
+foreach ($attachments as $attachment) {
+    if ($attachment->isEmbeddedMessage()) {
+        $embeddedMessage = $attachment->getEmbeddedMessage();
+        //$embeddedMessage is instance of \Ddeboer\Imap\EmbeddedMessage\EmbeddedMessage
+    }
+}
+```
+
+Get some properties:
+
+```php
+$embeddedMessage->getFrom();
+$embeddedMessage->getTo();
+$embeddedMessage->getCc();
+$embeddedMessage->getDate();
+$embeddedMessage->getSubject();
+$embeddedMessage->getBodyHtml();
+$embeddedMessage->getBodyText();
+```
+
+Or iterate through its attachments:
+
+```php
+$attachments = $embeddedMessage->getAttachments();
+
+foreach ($attachments as $attachment) {
+    //here $attachment is instance of \Ddeboer\Imap\EmbeddedMessage\EmbeddedAttachment    
+}
+```
+
+EmbeddedAttachment has similar structure as \Ddeboer\Imap\Message\Attachment so usage is similar:
+
+```php
+$attachment->getFilename();
+$attachment->getSize();
+$attachment->getDecodedContent();
+```
+
+Recursive embedded messages is not implemented yet, so calling ```isEmbeddedMessage()``` on embedded attachment 
+will always returns false 
+
 Running the Tests
 -----------------
 
