@@ -309,22 +309,15 @@ class Message extends Message\Part
      */
     private function loadStructure()
     {
-        set_error_handler(
-            function ($nr, $error) {
-                throw new MessageDoesNotExistException(
-                    $this->messageNumber,
-                    $error
-                );
-            }
-        );
-
-        $structure = imap_fetchstructure(
+        $structure = @imap_fetchstructure(
             $this->stream,
             $this->messageNumber,
             \FT_UID
         );
 
-        restore_error_handler();
+        if (!$structure) {
+            throw new MessageDoesNotExistException($this->messageNumber);
+        }
 
         $this->parseStructure($structure);
     }
