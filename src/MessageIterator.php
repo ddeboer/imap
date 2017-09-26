@@ -26,7 +26,7 @@ class MessageIterator extends \ArrayIterator
      *
      * @return Message
      */
-    public function current()
+    public function current(): Message
     {
         return new Message($this->stream, parent::current());
     }

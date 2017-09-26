@@ -11,7 +11,7 @@ class MessageTest extends AbstractTest
      */
     protected $mailbox;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->mailbox = $this->createMailbox();
     }
@@ -115,10 +115,10 @@ class MessageTest extends AbstractTest
     /**
      * @dataProvider getAttachmentFixture
      */
-    public function testGetAttachments()
+    public function testGetAttachments(string $fixture)
     {
         $this->mailbox->addMessage(
-            $this->getFixture('attachment_encoded_filename')
+            $this->getFixture($fixture)
         );
 
         $message = $this->mailbox->getMessage(1);
@@ -130,7 +130,7 @@ class MessageTest extends AbstractTest
         );
     }
 
-    public function getAttachmentFixture()
+    public function getAttachmentFixture(): array
     {
         return [
             ['attachment_no_disposition'],

@@ -24,7 +24,7 @@ abstract class AbstractText extends AbstractCondition
      *
      * @param string $text optional text for the condition
      */
-    public function __construct($text = null)
+    public function __construct(string $text = null)
     {
         if (null !== $text && strlen($text) > 0) {
             $this->setText($text);
@@ -36,7 +36,7 @@ abstract class AbstractText extends AbstractCondition
      *
      * @param string $text
      */
-    public function setText($text)
+    public function setText(string $text)
     {
         $this->text = $text;
     }

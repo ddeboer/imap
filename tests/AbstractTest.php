@@ -10,7 +10,7 @@ use PHPUnit_Framework_TestCase;
 
 abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
-    protected function getConnection()
+    final protected function getConnection()
     {
         static $connection;
         if (null === $connection) {
@@ -21,14 +21,14 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         return $connection;
     }
 
-    protected function createMailbox()
+    final protected function createMailbox()
     {
         $this->mailboxName = uniqid('mailbox_');
 
         return $this->getConnection()->createMailbox($this->mailboxName);
     }
 
-    protected function createTestMessage(
+    final protected function createTestMessage(
         Mailbox $mailbox,
         $subject = 'Don\'t panic!',
         $contents = 'Don\'t forget your towel',
@@ -44,7 +44,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         $mailbox->addMessage($message);
     }
 
-    protected function getFixture($fixture)
+    final protected function getFixture($fixture)
     {
         return file_get_contents(__DIR__ . '/fixtures/' . $fixture);
     }

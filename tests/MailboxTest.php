@@ -17,7 +17,7 @@ class MailboxTest extends AbstractTest
      */
     protected $mailbox;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->mailbox = $this->createMailbox();
 

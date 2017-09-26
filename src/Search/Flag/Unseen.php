@@ -17,7 +17,7 @@ class Unseen extends AbstractCondition
      *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return 'UNSEEN';
     }

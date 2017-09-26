@@ -25,7 +25,7 @@ class SearchExpression
      *
      * @return SearchExpression
      */
-    public function addCondition(AbstractCondition $condition)
+    public function addCondition(AbstractCondition $condition): self
     {
         $this->conditions[] = $condition;
 
@@ -37,7 +37,7 @@ class SearchExpression
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return implode(' ', $this->conditions);
     }

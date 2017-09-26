@@ -15,7 +15,7 @@ class Keyword extends Text
      *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return 'KEYWORD';
     }

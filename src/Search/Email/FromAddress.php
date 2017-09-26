@@ -15,7 +15,7 @@ class FromAddress extends AbstractEmail
      *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return 'FROM';
     }

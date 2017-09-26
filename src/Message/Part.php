@@ -95,8 +95,8 @@ class Part implements \RecursiveIterator
      */
     public function __construct(
         $stream,
-        $messageNumber,
-        $partNumber = null,
+        int $messageNumber,
+        string $partNumber = null,
         \stdClass $structure = null
     ) {
         $this->stream = $stream;
@@ -148,7 +148,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getContent($keepUnseen = false)
+    public function getContent(bool $keepUnseen = false): string
     {
         if (null === $this->content) {
             $this->content = $this->doGetContent($keepUnseen);
@@ -164,7 +164,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getDecodedContent($keepUnseen = false)
+    public function getDecodedContent(bool $keepUnseen = false): string
     {
         if (null === $this->decodedContent) {
             switch ($this->getEncoding()) {
@@ -206,7 +206,7 @@ class Part implements \RecursiveIterator
         return $this->structure;
     }
 
-    protected function fetchStructure($partNumber = null)
+    protected function fetchStructure(int $partNumber = null)
     {
         if (null === $this->structure) {
             $this->loadStructure();
@@ -252,7 +252,7 @@ class Part implements \RecursiveIterator
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
                 if (null === $this->partNumber) {
-                    $partNumber = ($key + 1);
+                    $partNumber = (string) ($key + 1);
                 } else {
                     $partNumber = (string) ($this->partNumber . '.' . ($key + 1));
                 }
@@ -271,7 +271,7 @@ class Part implements \RecursiveIterator
      *
      * @return self[]
      */
-    public function getParts()
+    public function getParts(): array
     {
         return $this->parts;
     }
@@ -325,7 +325,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    protected function doGetContent($keepUnseen = false)
+    protected function doGetContent(bool $keepUnseen = false)
     {
         return imap_fetchbody(
             $this->stream,
@@ -335,7 +335,7 @@ class Part implements \RecursiveIterator
         );
     }
 
-    private function isAttachment($part)
+    private function isAttachment(\stdClass $part)
     {
         // Attachment with correct Content-Disposition header
         if (isset($part->disposition)) {

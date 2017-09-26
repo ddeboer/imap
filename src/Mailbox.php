@@ -19,7 +19,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      * @param string     $name       Mailbox name
      * @param Connection $connection IMAP connection
      */
-    public function __construct($name, Connection $connection)
+    public function __construct(string $name, Connection $connection)
     {
         $this->mailbox = $name;
         $this->connection = $connection;
@@ -31,7 +31,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -55,7 +55,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return Message[]|MessageIterator
      */
-    public function getMessages(SearchExpression $search = null)
+    public function getMessages(SearchExpression $search = null): MessageIterator
     {
         $this->init();
 
@@ -77,7 +77,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return Message
      */
-    public function getMessage($number)
+    public function getMessage(int $number): Message
     {
         $this->init();
 
@@ -89,10 +89,8 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return MessageIterator
      */
-    public function getIterator()
+    public function getIterator(): MessageIterator
     {
-        $this->init();
-
         return $this->getMessages();
     }
 
@@ -109,7 +107,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return Mailbox
      */
-    public function expunge()
+    public function expunge(): self
     {
         $this->init();
 
@@ -125,7 +123,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return bool
      */
-    public function addMessage($message)
+    public function addMessage($message): bool
     {
         return imap_append($this->connection->getResource(), $this->mailbox, $message);
     }
