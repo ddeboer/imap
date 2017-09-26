@@ -43,12 +43,12 @@ class MailboxTest extends AbstractTest
 
     public function testGetAttributes()
     {
-        $this->assertGreaterThan(0, $this->mailbox->getAttributes() & LATT_HASNOCHILDREN);
+        $this->assertInternalType('integer', $this->mailbox->getAttributes());
     }
 
     public function testGetDelimiter()
     {
-        $this->assertSame('.', $this->mailbox->getDelimiter());
+        $this->assertInternalType('string', $this->mailbox->getDelimiter());
     }
 
     public function testGetMessages()
