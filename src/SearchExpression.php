@@ -9,7 +9,7 @@ use Ddeboer\Imap\Search\ConditionInterface;
 /**
  * Defines a search expression that can be used to look up email messages.
  */
-final class SearchExpression
+final class SearchExpression implements ConditionInterface
 {
     /**
      * The conditions that together represent the expression.
@@ -23,7 +23,7 @@ final class SearchExpression
      *
      * @param AbstractCondition $condition the condition to be added
      *
-     * @return SearchExpression
+     * @return self
      */
     public function addCondition(ConditionInterface $condition): self
     {

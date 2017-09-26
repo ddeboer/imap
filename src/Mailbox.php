@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Search\ConditionInterface;
 
 /**
  * An IMAP mailbox (commonly referred to as a 'folder')
@@ -84,11 +85,11 @@ class Mailbox implements \Countable, \IteratorAggregate
     /**
      * Get message ids
      *
-     * @param SearchExpression $search Search expression (optional)
+     * @param ConditionInterface $search Search expression (optional)
      *
      * @return Message[]|MessageIterator
      */
-    public function getMessages(SearchExpression $search = null): MessageIterator
+    public function getMessages(ConditionInterface $search = null): MessageIterator
     {
         $this->init();
 
