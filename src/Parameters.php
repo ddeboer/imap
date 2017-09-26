@@ -37,6 +37,7 @@ class Parameters
         $parts = imap_mime_header_decode($value);
         foreach ($parts as $part) {
             $charset = 'default' == $part->charset ? 'auto' : $part->charset;
+            $charset = 'ks_c_5601-1987' == $charset ? 'CP949' : $charset;
             // imap_utf8 doesn't seem to work properly, so use Transcoder instead
             $decoded .= Transcoder::create()->transcode($part->text, $charset);
         }
