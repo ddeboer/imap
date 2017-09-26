@@ -83,6 +83,20 @@ class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
+     * Get Mailbox status
+     *
+     * @param int $flag
+     *
+     * @return \stdClass
+     */
+    public function getStatus(int $flags = null)
+    {
+        $this->init();
+
+        return imap_status($this->connection->getResource(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
+    }
+
+    /**
      * Get message ids
      *
      * @param ConditionInterface $search Search expression (optional)

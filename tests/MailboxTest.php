@@ -107,4 +107,22 @@ class MailboxTest extends AbstractTest
 
         $this->mailbox->count();
     }
+
+    public function testDefaultStatus()
+    {
+        $status = $this->mailbox->getStatus();
+
+        $this->assertSame(\SA_ALL, $status->flags);
+        $this->assertSame(3, $status->messages);
+        $this->assertSame(4, $status->uidnext);
+    }
+
+    public function testCustomStatusFlag()
+    {
+        $status = $this->mailbox->getStatus(\SA_MESSAGES);
+
+        $this->assertSame(\SA_MESSAGES, $status->flags);
+        $this->assertSame(3, $status->messages);
+        $this->assertFalse(isset($status->uidnext), 'uidnext shouldn\'t be set');
+    }
 }
