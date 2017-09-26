@@ -11,7 +11,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
 {
     public function testFailedAuthenticate()
     {
-        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'));
+        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), '/imap/ssl/novalidate-cert');
 
         $this->expectException(Exception\AuthenticationFailedException::class);
         $this->expectExceptionMessageRegExp('/E_WARNING.+AUTHENTICATIONFAILED/s');
