@@ -145,7 +145,7 @@ class Connection implements \Countable
      */
     public function createMailbox(string $name): Mailbox
     {
-        if (false === imap_createmailbox($this->getResource(), $this->server . imap_utf7_encode($name))) {
+        if (false === imap_createmailbox($this->getResource(), $this->server . mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
             throw new Exception(sprintf(
                 'Can not create "%s" mailbox at "%s"',
                 $name,
@@ -184,7 +184,7 @@ class Connection implements \Countable
         $this->mailboxNames = [];
         $mailboxesInfo = imap_getmailboxes($this->getResource(), $this->server, '*');
         foreach ($mailboxesInfo as $mailboxInfo) {
-            $name = imap_utf7_decode(str_replace($this->server, '', $mailboxInfo->name));
+            $name = mb_convert_encoding(str_replace($this->server, '', $mailboxInfo->name), 'UTF-8', 'UTF7-IMAP');
             $this->mailboxNames[$name] = $mailboxInfo;
         }
     }
