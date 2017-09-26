@@ -10,6 +10,9 @@ use Ddeboer\Imap\Search\Email\To;
 use Ddeboer\Imap\Search\Text\Body;
 use Ddeboer\Imap\SearchExpression;
 
+/**
+ * @covers \Ddeboer\Imap\Mailbox
+ */
 class MailboxTest extends AbstractTest
 {
     /**
@@ -31,14 +34,38 @@ class MailboxTest extends AbstractTest
         $this->assertSame($this->mailboxName, $this->mailbox->getName());
     }
 
+    public function testGetFullEncodedName()
+    {
+        $this->assertContains(\getenv('IMAP_SERVER_PORT'), $this->mailbox->getFullEncodedName());
+        $this->assertNotContains($this->mailboxName, $this->mailbox->getFullEncodedName());
+        $this->assertContains(imap_utf7_encode($this->mailboxName), $this->mailbox->getFullEncodedName());
+    }
+
+    public function testGetAttributes()
+    {
+        $this->assertInternalType('integer', $this->mailbox->getAttributes());
+    }
+
+    public function testGetDelimiter()
+    {
+        $this->assertInternalType('string', $this->mailbox->getDelimiter());
+    }
+
     public function testGetMessages()
     {
-        $i = 0;
+        $directMethodInc = 0;
         foreach ($this->mailbox->getMessages() as $message) {
-            ++$i;
+            ++$directMethodInc;
         }
 
-        $this->assertEquals(3, $i);
+        $this->assertSame(3, $directMethodInc);
+
+        $aggregateIteratorMethodInc = 0;
+        foreach ($this->mailbox as $message) {
+            ++$aggregateIteratorMethodInc;
+        }
+
+        $this->assertSame(3, $aggregateIteratorMethodInc);
     }
 
     public function testGetMessageThrowsException()
@@ -73,5 +100,14 @@ class MailboxTest extends AbstractTest
         $search = new SearchExpression();
         $search->addCondition(new To('nope@nope.com'));
         $this->assertCount(0, $this->mailbox->getMessages($search));
+    }
+
+    public function testDelete()
+    {
+        $this->mailbox->delete();
+
+        $this->expectException(Exception\Exception::class);
+
+        $this->mailbox->count();
     }
 }

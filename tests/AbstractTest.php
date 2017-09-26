@@ -10,20 +10,30 @@ use PHPUnit_Framework_TestCase;
 
 abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
+    const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
+
+    const NON_PRINTABLE_ASCII = 'A_è_π_Z_';
+
     final protected function getConnection()
     {
         static $connection;
         if (null === $connection) {
-            $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), '/imap/ssl/novalidate-cert');
-            $connection = $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
+            $connection = $this->createConnection();
         }
 
         return $connection;
     }
 
+    final protected function createConnection()
+    {
+        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
+
+        return $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
+    }
+
     final protected function createMailbox()
     {
-        $this->mailboxName = uniqid('mailbox_');
+        $this->mailboxName = uniqid('mailbox_' . self::NON_PRINTABLE_ASCII);
 
         return $this->getConnection()->createMailbox($this->mailboxName);
     }
