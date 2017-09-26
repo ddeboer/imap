@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\Exception;
@@ -66,8 +68,9 @@ class Connection
      *
      * @param string $name Mailbox name
      *
-     * @return Mailbox
      * @throws MailboxDoesNotExistException If mailbox does not exist
+     *
+     * @return Mailbox
      */
     public function getMailbox($name)
     {
@@ -93,8 +96,9 @@ class Connection
      *
      * @param $name
      *
-     * @return Mailbox
      * @throws Exception
+     *
+     * @return Mailbox
      */
     public function createMailbox($name)
     {
@@ -143,7 +147,7 @@ class Connection
 
     /**
      * Get mailbox names
-     * 
+     *
      * @return array
      */
     private function getMailboxNames()

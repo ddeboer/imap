@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Server;

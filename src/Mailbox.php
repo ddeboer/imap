@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap;
 
 /**
  * An IMAP mailbox (commonly referred to as a ‘folder’)
- *
  */
 class Mailbox implements \Countable, \IteratorAggregate
 {
@@ -22,7 +23,7 @@ class Mailbox implements \Countable, \IteratorAggregate
     {
         $this->mailbox = $name;
         $this->connection = $connection;
-        $this->name = substr($name, strpos($name, '}')+1);
+        $this->name = substr($name, strpos($name, '}') + 1);
     }
 
     /**
@@ -52,7 +53,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @param SearchExpression $search Search expression (optional)
      *
-     * @return MessageIterator|Message[]
+     * @return Message[]|MessageIterator
      */
     public function getMessages(SearchExpression $search = null)
     {
@@ -63,7 +64,7 @@ class Mailbox implements \Countable, \IteratorAggregate
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
             // imap_search can also return false
-            $messageNumbers = array();
+            $messageNumbers = [];
         }
 
         return new MessageIterator($this->connection->getResource(), $messageNumbers);
@@ -97,7 +98,6 @@ class Mailbox implements \Countable, \IteratorAggregate
 
     /**
      * Delete this mailbox
-     *
      */
     public function delete()
     {
@@ -123,7 +123,7 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @param string $message
      *
-     * @return boolean
+     * @return bool
      */
     public function addMessage($message)
     {
