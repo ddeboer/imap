@@ -24,7 +24,7 @@ class Parameters
         }
     }
 
-    public function get($key)
+    public function get(string $key)
     {
         if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
@@ -33,7 +33,7 @@ class Parameters
         return;
     }
 
-    protected function decode($value)
+    protected function decode(string $value): string
     {
         $decoded = '';
         $parts = imap_mime_header_decode($value);

@@ -24,5 +24,5 @@ abstract class AbstractCondition
      *
      * @return string
      */
-    abstract protected function getKeyword();
+    abstract protected function getKeyword(): string;
 }

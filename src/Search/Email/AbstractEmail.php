@@ -23,7 +23,7 @@ abstract class AbstractEmail extends AbstractCondition
      *
      * @param string $email optional email address for the condition
      */
-    public function __construct($email = null)
+    public function __construct(string $email = null)
     {
         if ($email) {
             $this->setEmail($email);
@@ -35,7 +35,7 @@ abstract class AbstractEmail extends AbstractCondition
      *
      * @param string $email
      */
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
     }

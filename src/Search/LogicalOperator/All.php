@@ -17,7 +17,7 @@ class All extends AbstractCondition
      *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return 'ALL';
     }

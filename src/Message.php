@@ -28,7 +28,7 @@ class Message extends Message\Part
      * @param resource $stream        IMAP stream
      * @param int      $messageNumber Message number
      */
-    public function __construct($stream, $messageNumber)
+    public function __construct($stream, int $messageNumber)
     {
         $this->stream = $stream;
         $this->messageNumber = $messageNumber;
@@ -43,7 +43,7 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->getHeaders()->get('message_id');
     }
@@ -83,7 +83,7 @@ class Message extends Message\Part
      *
      * @return int
      */
-    public function getNumber()
+    public function getNumber(): int
     {
         return $this->messageNumber;
     }
@@ -115,7 +115,7 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getContent($keepUnseen = false)
+    public function getContent(bool $keepUnseen = false): string
     {
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
@@ -159,7 +159,7 @@ class Message extends Message\Part
      *
      * @return bool
      */
-    public function isSeen()
+    public function isSeen(): bool
     {
         return
                 'R' === $this->getHeaders()->get('recent')
@@ -182,7 +182,7 @@ class Message extends Message\Part
      *
      * @return Message\Headers
      */
-    public function getHeaders()
+    public function getHeaders(): Message\Headers
     {
         if (null === $this->headers) {
             // imap_header is much faster than imap_fetchheader
@@ -215,7 +215,7 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getBodyText()
+    public function getBodyText(): string
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
@@ -233,7 +233,7 @@ class Message extends Message\Part
      *
      * @return Message\Attachment[]
      */
-    public function getAttachments()
+    public function getAttachments(): array
     {
         if (null === $this->attachments) {
             $this->attachments = [];
@@ -259,7 +259,7 @@ class Message extends Message\Part
      *
      * @return bool
      */
-    public function hasAttachments()
+    public function hasAttachments(): bool
     {
         return count($this->getAttachments()) > 0;
     }
@@ -291,7 +291,7 @@ class Message extends Message\Part
      *
      * @return Message
      */
-    public function move(Mailbox $mailbox)
+    public function move(Mailbox $mailbox): self
     {
         if (!imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName(), \CP_UID)) {
             throw new MessageMoveException(sprintf(
@@ -313,9 +313,9 @@ class Message extends Message\Part
      *
      * @return Message
      */
-    public function keepUnseen($bool = true)
+    public function keepUnseen(bool $bool = true): self
     {
-        $this->keepUnseen = (bool) $bool;
+        $this->keepUnseen = $bool;
 
         return $this;
     }

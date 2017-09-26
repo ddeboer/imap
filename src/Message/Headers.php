@@ -33,21 +33,16 @@ class Headers extends Parameters
      *
      * @return string
      */
-    public function get($key)
+    public function get(string $key)
     {
         return parent::get(strtolower($key));
     }
 
-    private function parseHeader($key, $value)
+    private function parseHeader(string $key, $value)
     {
         switch ($key) {
             case 'msgno':
                 return (int) $value;
-            case 'answered':
-            case 'deleted':
-            case 'draft':
-            case 'unseen':
-                return $value;
             case 'date':
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
@@ -70,7 +65,7 @@ class Headers extends Parameters
         }
     }
 
-    private function decodeEmailAddress($value)
+    private function decodeEmailAddress(\stdClass $value): EmailAddress
     {
         return new EmailAddress(
             $value->mailbox,

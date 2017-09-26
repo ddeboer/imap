@@ -17,7 +17,7 @@ class Unanswered extends AbstractCondition
      *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return 'UNANSWERED';
     }

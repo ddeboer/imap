@@ -15,7 +15,7 @@ class After extends AbstractDate
      *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return 'SINCE';
     }

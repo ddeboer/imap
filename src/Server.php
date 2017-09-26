@@ -46,10 +46,10 @@ class Server
      * @param array  $parameters Connection parameters
      */
     public function __construct(
-        $hostname,
-        $port = 993,
-        $flags = '/imap/ssl/validate-cert',
-        $parameters = []
+        string $hostname,
+        string $port = '993',
+        string $flags = '/imap/ssl/validate-cert',
+        array $parameters = []
     ) {
         if (!function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
@@ -71,7 +71,7 @@ class Server
      *
      * @return Connection
      */
-    public function authenticate($username, $password)
+    public function authenticate(string $username, string $password): Connection
     {
         // Wrap imap_open, which gives notices instead of exceptions
         set_error_handler(function ($nr, $message) use ($username) {
@@ -113,7 +113,7 @@ class Server
      *
      * @return string
      */
-    private function getServerString()
+    private function getServerString(): string
     {
         return sprintf(
             '{%s:%s%s}',

@@ -24,7 +24,7 @@ class Exception extends \RuntimeException
         E_USER_DEPRECATED => 'E_USER_DEPRECATED',
     ];
 
-    final public function __construct($message, $code = 0, $previous = null)
+    final public function __construct(string $message, int $code = 0, \Throwable $previous = null)
     {
         $errorType = '';
         if (is_int($code) && isset(self::$errorLabels[$code])) {

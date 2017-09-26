@@ -16,7 +16,7 @@ class To extends AbstractEmail
      *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return 'TO';
     }

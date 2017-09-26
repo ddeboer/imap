@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+
 class ConnectionTest extends AbstractTest
 {
     public function testCount()
@@ -27,9 +29,6 @@ class ConnectionTest extends AbstractTest
         $this->assertInstanceOf('\Ddeboer\Imap\Mailbox', $mailbox);
     }
 
-    /**
-     * @expectedException \Ddeboer\Imap\Exception\MailboxDoesNotExistException
-     */
     public function testCreateMailbox()
     {
         $connection = static::getConnection();
@@ -48,14 +47,15 @@ class ConnectionTest extends AbstractTest
         );
 
         $mailbox->delete();
+
+        $this->expectException(MailboxDoesNotExistException::class);
+
         $connection->getMailbox($name);
     }
 
-    /**
-     * @expectedException \Ddeboer\Imap\Exception\MailboxDoesNotExistException
-     */
     public function testGetInvalidMailbox()
     {
+        $this->expectException(MailboxDoesNotExistException::class);
         static::getConnection()->getMailbox('does-not-exist');
     }
 }

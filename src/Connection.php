@@ -25,7 +25,7 @@ class Connection
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($resource, $server)
+    public function __construct($resource, string $server)
     {
         if (!is_resource($resource)) {
             throw new \InvalidArgumentException('$resource must be a resource');
@@ -40,9 +40,10 @@ class Connection
      *
      * @return Mailbox[]
      */
-    public function getMailboxes()
+    public function getMailboxes(): array
     {
         if (null === $this->mailboxes) {
+            $this->mailboxes = [];
             foreach ($this->getMailboxNames() as $mailboxName) {
                 $this->mailboxes[] = $this->getMailbox($mailboxName);
             }
@@ -58,7 +59,7 @@ class Connection
      *
      * @return bool
      */
-    public function hasMailbox($name)
+    public function hasMailbox(string $name): bool
     {
         return in_array($name, $this->getMailboxNames());
     }
@@ -72,7 +73,7 @@ class Connection
      *
      * @return Mailbox
      */
-    public function getMailbox($name)
+    public function getMailbox(string $name): Mailbox
     {
         if (!$this->hasMailbox($name)) {
             throw new MailboxDoesNotExistException(sprintf(
@@ -103,15 +104,15 @@ class Connection
      *
      * @return Mailbox
      */
-    public function createMailbox($name)
+    public function createMailbox(string $name): Mailbox
     {
-        if (imap_createmailbox($this->resource, $this->server . $name)) {
-            $this->mailboxNames = $this->mailboxes = null;
-
-            return $this->getMailbox($name);
+        if (false === imap_createmailbox($this->resource, $this->server . $name)) {
+            throw new Exception("Can not create '{$name}' mailbox at '{$this->server}'");
         }
 
-        throw new Exception("Can not create '{$name}' mailbox at '{$this->server}'");
+        $this->mailboxNames = $this->mailboxes = null;
+
+        return $this->getMailbox($name);
     }
 
     /**
@@ -121,17 +122,14 @@ class Connection
      *
      * @return bool
      */
-    public function close($flag = 0)
+    public function close(int $flag = 0): bool
     {
         return imap_close($this->resource, $flag);
     }
 
     public function deleteMailbox(Mailbox $mailbox)
     {
-        if (false === imap_deletemailbox(
-            $this->resource,
-            $this->server . $mailbox->getName()
-        )) {
+        if (false === imap_deletemailbox($this->resource, $this->server . $mailbox->getName())) {
             throw new Exception('Mailbox ' . $mailbox->getName() . ' could not be deleted');
         }
 
@@ -153,9 +151,10 @@ class Connection
      *
      * @return array
      */
-    private function getMailboxNames()
+    private function getMailboxNames(): array
     {
         if (null === $this->mailboxNames) {
+            $this->mailboxNames = [];
             $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
             foreach ($mailboxes as $mailbox) {
                 $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));

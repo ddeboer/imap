@@ -14,7 +14,7 @@ class EmailAddress
     private $name;
     private $address;
 
-    public function __construct($mailbox, $hostname = null, $name = null)
+    public function __construct(string $mailbox, string $hostname = null, string $name = null)
     {
         $this->mailbox = $mailbox;
         $this->hostname = $hostname;
@@ -35,7 +35,7 @@ class EmailAddress
      *
      * @return string
      */
-    public function getFullAddress()
+    public function getFullAddress(): string
     {
         if ($this->name) {
             $address = sprintf('%s <%s@%s>', $this->name, $this->mailbox, $this->hostname);
@@ -46,7 +46,7 @@ class EmailAddress
         return $address;
     }
 
-    public function getMailbox()
+    public function getMailbox(): string
     {
         return $this->mailbox;
     }
