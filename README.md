@@ -1,23 +1,32 @@
 IMAP library
 ============
+
+[![Latest Stable Version](https://poser.pugx.org/ddeboer/imap/v/stable.svg)](https://packagist.org/packages/ddeboer/imap)
+[![Total Downloads](https://poser.pugx.org/ddeboer/imap/downloads.png)](https://packagist.org/packages/ddeboer/imap)
+
+Master:
 [![Build Status](https://travis-ci.org/ddeboer/imap.svg?branch=master)](https://travis-ci.org/ddeboer/imap)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/ddeboer/imap/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/ddeboer/imap/v/stable.svg)](https://packagist.org/packages/ddeboer/imap) 
+
+Develop:
+[![Build Status](https://travis-ci.org/ddeboer/imap.svg?branch=develop)](https://travis-ci.org/ddeboer/imap)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=develop)
+[![Code Coverage](https://scrutinizer-ci.com/g/ddeboer/imap/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=develop)
 
 A PHP 5.4+ library to read and process e-mails over IMAP.
 
 Installation
 ------------
 
-Make sure the [PHP IMAP extension](http://php.net/manual/en/book.imap.php)
+Make sure the [PHP IMAP extension](https://secure.php.net/manual/en/book.imap.php)
 is installed. For instance on Debian:
 
 ```bash
 # apt-get install php5-imap
 ```
 
-The recommended way to install the IMAP library is through [Composer](http://getcomposer.org):
+The recommended way to install the IMAP library is through [Composer](https://getcomposer.org):
 
 ```bash
 $ composer require ddeboer/imap
@@ -41,10 +50,10 @@ $server = new Server('imap.gmail.com');
 $connection = $server->authenticate('my_username', 'my_password');
 ```
 
-#### Options 
+#### Options
 
-You can specify port, [flags and parameters](http://php.net/manual/en/function.imap-open.php) 
-to the server: 
+You can specify port, [flags and parameters](https://secure.php.net/manual/en/function.imap-open.php)
+to the server:
 
 ```php
 $server = new Server(
@@ -110,7 +119,7 @@ $messages = $mailbox->getMessages($search);
 
 #### Message Properties and Operations
 
-Get message number and unique [message id](http://en.wikipedia.org/wiki/Message-ID)
+Get message number and unique [message id](https://en.wikipedia.org/wiki/Message-ID)
 in the form <...>:
 
 ```php
@@ -194,7 +203,7 @@ Running the Tests
 This library is functionally tested on [Travis CI](https://travis-ci.org/ddeboer/imap)
 against a local Dovecot server.
 
-If you have your own IMAP (test) account, you can run the tests locally by 
+If you have your own IMAP (test) account, you can run the tests locally by
 providing your IMAP credentials:
 
 ```bash
