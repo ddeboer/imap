@@ -86,9 +86,8 @@ class MailboxTest extends AbstractTest
         $this->createTestMessage($this->mailbox, 'Result', 'Contents');
 
         $search = new SearchExpression();
-        $search->addCondition(new To('me@here.com'))
-            ->addCondition(new Body('Contents'))
-        ;
+        $search->addCondition(new To('me@here.com'));
+        $search->addCondition(new Body('Contents'));
 
         $messages = $this->mailbox->getMessages($search);
         $this->assertCount(1, $messages);
@@ -97,9 +96,7 @@ class MailboxTest extends AbstractTest
 
     public function testSearchNoResults()
     {
-        $search = new SearchExpression();
-        $search->addCondition(new To('nope@nope.com'));
-        $this->assertCount(0, $this->mailbox->getMessages($search));
+        $this->assertCount(0, $this->mailbox->getMessages(new To('nope@nope.com')));
     }
 
     public function testDelete()
