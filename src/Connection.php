@@ -11,6 +11,7 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 class Connection
 {
     private $server;
+    private $hostname;
     private $resource;
     private $mailboxes;
     private $mailboxNames;
@@ -20,10 +21,11 @@ class Connection
      *
      * @param resource $resource
      * @param string   $server
+     * @param string $hostname
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($resource, $server)
+    public function __construct($resource, $server, $hostname)
     {
         if (!is_resource($resource)) {
             throw new \InvalidArgumentException('$resource must be a resource');
@@ -31,6 +33,7 @@ class Connection
 
         $this->resource = $resource;
         $this->server = $server;
+        $this->hostname = $hostname;
     }
 
     /**
@@ -139,6 +142,16 @@ class Connection
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * Get IMAP hostName
+     *
+     * @return string
+     */
+    public function getHostName()
+    {
+        return $this->hostname;
     }
 
     /**

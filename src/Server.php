@@ -100,7 +100,7 @@ class Server
         imap_errors();
         imap_alerts();
 
-        return new Connection($resource, $this->connection);
+        return new Connection($resource, $this->connection, $this->hostname);
     }
 
     /**
