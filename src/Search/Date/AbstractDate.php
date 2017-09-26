@@ -17,7 +17,7 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @var string
      */
-    const DATE_FORMAT = 'Y-m-d';
+    private $dateFormat;
 
     /**
      * The date to be used for the condition.
@@ -31,9 +31,10 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @param DateTimeInterface $date optional date for the condition
      */
-    public function __construct(DateTimeInterface $date)
+    public function __construct(DateTimeInterface $date, string $dateFormat = 'd-m-Y')
     {
         $this->date = $date;
+        $this->dateFormat = $dateFormat;
     }
 
     /**
@@ -43,6 +44,6 @@ abstract class AbstractDate extends AbstractCondition
      */
     final public function toString(): string
     {
-        return sprintf('%s "%s"', $this->getKeyword(), $this->date->format(self::DATE_FORMAT));
+        return sprintf('%s "%s"', $this->getKeyword(), $this->date->format($this->dateFormat));
     }
 }
