@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Search\Date;
 
-use DateTime;
+use DateTimeInterface;
 use Ddeboer\Imap\Search\AbstractCondition;
 
 /**
@@ -22,28 +22,16 @@ abstract class AbstractDate extends AbstractCondition
     /**
      * The date to be used for the condition.
      *
-     * @var DateTime
+     * @var DateTimeInterface
      */
-    protected $date;
+    private $date;
 
     /**
      * Constructor.
      *
-     * @param DateTime $date optional date for the condition
+     * @param DateTimeInterface $date optional date for the condition
      */
-    public function __construct(DateTime $date = null)
-    {
-        if ($date) {
-            $this->setDate($date);
-        }
-    }
-
-    /**
-     * Sets the date for the condition.
-     *
-     * @param DateTime $date
-     */
-    public function setDate(DateTime $date)
+    public function __construct(DateTimeInterface $date)
     {
         $this->date = $date;
     }
@@ -53,8 +41,8 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @return string
      */
-    public function __toString()
+    final public function toString(): string
     {
-        return $this->getKeyword() . ' "' . $this->date->format(self::DATE_FORMAT) . '"';
+        return sprintf('%s "%s"', $this->getKeyword(), $this->date->format(self::DATE_FORMAT));
     }
 }

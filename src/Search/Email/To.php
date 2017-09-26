@@ -9,14 +9,14 @@ namespace Ddeboer\Imap\Search\Email;
  * to the specified recipient (along with any others) in order to match the
  * condition.
  */
-class To extends AbstractEmail
+final class To extends AbstractEmail
 {
     /**
      * Returns the keyword that the condition represents.
      *
      * @return string
      */
-    public function getKeyword(): string
+    protected function getKeyword(): string
     {
         return 'TO';
     }
