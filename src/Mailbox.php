@@ -92,7 +92,7 @@ class Mailbox implements \Countable, \IteratorAggregate
     {
         $this->init();
 
-        $query = ($search ? (string) $search : 'ALL');
+        $query = ($search ? $search->toString() : 'ALL');
 
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
