@@ -16,9 +16,19 @@ class ConnectionTest extends AbstractTest
 {
     public function testCannotInstantiateArbitraryConnections()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(Exception::class);
 
         new Connection(uniqid(), uniqid());
+    }
+
+    public function testCloseConnection()
+    {
+        $connection = $this->createConnection();
+        $connection->close();
+
+        $this->expectException(Exception::class);
+
+        $connection->close();
     }
 
     public function testCount()
@@ -58,10 +68,22 @@ class ConnectionTest extends AbstractTest
         $connection->getMailbox($name);
     }
 
+    public function testCannotDeleteInvalidMailbox()
+    {
+        $mailbox = $this->createMailbox();
+
+        $mailbox->delete();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageRegExp('/NONEXISTENT/');
+
+        $mailbox->delete();
+    }
+
     public function testCannotCreateMailboxesOnReadonly()
     {
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageRegExp('/ALREADYEXISTS/');
+        $this->expectExceptionMessageRegExp('/(SERVERBUG|ALREADYEXISTS)/');
 
         $this->getConnection()->createMailbox('INBOX');
     }

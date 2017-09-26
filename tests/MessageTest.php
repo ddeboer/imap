@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+/**
+ * @covers \Ddeboer\Imap\Message
+ * @covers \Ddeboer\Imap\Mailbox::expunge
+ * @covers \Ddeboer\Imap\Connection::expunge
+ */
 class MessageTest extends AbstractTest
 {
     /**

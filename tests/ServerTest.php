@@ -7,11 +7,23 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Exception;
 use Ddeboer\Imap\Server;
 
-class ServerTest extends \PHPUnit_Framework_TestCase
+/**
+ * @covers \Ddeboer\Imap\Server
+ */
+class ServerTest extends AbstractTest
 {
+    public function testValidConnection()
+    {
+        $connection = $this->getConnection();
+
+        $check = imap_check($connection->getResource());
+
+        $this->assertInstanceOf(\stdClass::class, $check);
+    }
+
     public function testFailedAuthenticate()
     {
-        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), '/imap/ssl/novalidate-cert');
+        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
 
         $this->expectException(Exception\AuthenticationFailedException::class);
         $this->expectExceptionMessageRegExp('/E_WARNING.+AUTHENTICATIONFAILED/s');

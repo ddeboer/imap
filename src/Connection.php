@@ -27,12 +27,11 @@ class Connection implements \Countable
      */
     public function __construct($resource, string $server)
     {
-        if (false === is_resource($resource)) {
-            throw new \InvalidArgumentException('$resource must be a resource');
-        }
-
         $this->resource = $resource;
         $this->server = $server;
+
+        // Performs resource check
+        $this->getResource();
     }
 
     /**
@@ -42,6 +41,10 @@ class Connection implements \Countable
      */
     public function getResource()
     {
+        if (false === is_resource($this->resource) || 'imap' !== get_resource_type($this->resource)) {
+            throw new Exception('Supplied resource is not a valid imap resource');
+        }
+
         return $this->resource;
     }
 

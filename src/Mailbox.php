@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\Exception;
+
 /**
  * An IMAP mailbox (commonly referred to as a 'folder')
  */
@@ -160,9 +162,23 @@ class Mailbox implements \Countable, \IteratorAggregate
      */
     private function init()
     {
-        $check = imap_check($this->connection->getResource());
-        if ($check === false || $check->Mailbox != $this->getFullEncodedName()) {
-            imap_reopen($this->connection->getResource(), $this->getFullEncodedName());
+        if ($this->isMailboxOpen()) {
+            return;
         }
+
+        imap_reopen($this->connection->getResource(), $this->getFullEncodedName());
+
+        if ($this->isMailboxOpen()) {
+            return;
+        }
+
+        throw new Exception(sprintf('Cannot reopen mailbox "%s"', $this->getName()));
+    }
+
+    private function isMailboxOpen(): bool
+    {
+        $check = imap_check($this->connection->getResource());
+
+        return false !== $check && $check->Mailbox === $this->getFullEncodedName();
     }
 }

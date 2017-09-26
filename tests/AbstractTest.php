@@ -18,11 +18,17 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     {
         static $connection;
         if (null === $connection) {
-            $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
-            $connection = $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
+            $connection = $this->createConnection();
         }
 
         return $connection;
+    }
+
+    final protected function createConnection()
+    {
+        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
+
+        return $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
     }
 
     final protected function createMailbox()
