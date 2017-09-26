@@ -90,15 +90,15 @@ class ConnectionTest extends AbstractTest
 
     public function testEscapesMailboxNames()
     {
-        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid(self::NON_PRINTABLE_ASCII)));
+        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid(self::SPECIAL_CHARS)));
     }
 
     public function testCustomExceptionOnInvalidMailboxName()
     {
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageRegExp('/Mailbox name is not valid mUTF-7/');
+        $this->expectExceptionMessageRegExp('/CANNOT/');
 
-        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid('A_€_')));
+        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid("\t")));
     }
 
     public function testGetInvalidMailbox()

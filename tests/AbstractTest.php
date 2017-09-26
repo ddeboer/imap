@@ -12,7 +12,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
     const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
 
-    const NON_PRINTABLE_ASCII = 'A_è_π_Z_';
+    const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]{}_ß_б_π_€_✔_你_يد_Z_';
 
     final protected function getConnection()
     {
@@ -33,7 +33,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
 
     final protected function createMailbox()
     {
-        $this->mailboxName = uniqid('mailbox_' . self::NON_PRINTABLE_ASCII);
+        $this->mailboxName = uniqid('mailbox_' . self::SPECIAL_CHARS);
 
         return $this->getConnection()->createMailbox($this->mailboxName);
     }
