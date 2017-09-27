@@ -147,7 +147,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi!', $message->getBodyText());
+        $this->assertSame('Hi!', rtrim($message->getBodyText()));
     }
 
     public function testSpecialCharsetOnHeaders()
