@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
+use Ddeboer\Imap\Message\EmailAddress;
 use Zend\Mime\Mime;
 
 /**
@@ -168,16 +169,16 @@ class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $from = $message->getFrom();
-        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $from);
+        $this->assertInstanceOf(EmailAddress::class, $from);
         $this->assertEquals('no_host', $from->getMailbox());
 
         $cc = $message->getCc();
         $this->assertCount(2, $cc);
-        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[0]);
+        $this->assertInstanceOf(EmailAddress::class, $cc[0]);
         $this->assertEquals('This one is right', $cc[0]->getName());
         $this->assertEquals('ding@dong.com', $cc[0]->getAddress());
 
-        $this->assertInstanceOf('\Ddeboer\Imap\Message\EmailAddress', $cc[1]);
+        $this->assertInstanceOf(EmailAddress::class, $cc[1]);
         $this->assertEquals('No-address', $cc[1]->getMailbox());
     }
 

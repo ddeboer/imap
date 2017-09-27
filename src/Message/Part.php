@@ -18,6 +18,7 @@ class Part implements \RecursiveIterator
     const TYPE_AUDIO = 'audio';
     const TYPE_IMAGE = 'image';
     const TYPE_VIDEO = 'video';
+    const TYPE_MODEL = 'model';
     const TYPE_OTHER = 'other';
     const TYPE_UNKNOWN = 'unknown';
 
@@ -26,29 +27,28 @@ class Part implements \RecursiveIterator
     const ENCODING_BINARY = 'binary';
     const ENCODING_BASE64 = 'base64';
     const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
-    const ENCODING_UNKNOWN = 'unknown';
 
     const SUBTYPE_TEXT = 'TEXT';
     const SUBTYPE_HTML = 'HTML';
 
     protected $typesMap = [
-        0 => self::TYPE_TEXT,
-        1 => self::TYPE_MULTIPART,
-        2 => self::TYPE_MESSAGE,
-        3 => self::TYPE_APPLICATION,
-        4 => self::TYPE_AUDIO,
-        5 => self::TYPE_IMAGE,
-        6 => self::TYPE_VIDEO,
-        7 => self::TYPE_OTHER,
+        \TYPETEXT => self::TYPE_TEXT,
+        \TYPEMULTIPART => self::TYPE_MULTIPART,
+        \TYPEMESSAGE => self::TYPE_MESSAGE,
+        \TYPEAPPLICATION => self::TYPE_APPLICATION,
+        \TYPEAUDIO => self::TYPE_AUDIO,
+        \TYPEIMAGE => self::TYPE_IMAGE,
+        \TYPEVIDEO => self::TYPE_VIDEO,
+        \TYPEMODEL => self::TYPE_MODEL,
+        \TYPEOTHER => self::TYPE_OTHER,
     ];
 
     protected $encodingsMap = [
-        0 => self::ENCODING_7BIT,
-        1 => self::ENCODING_8BIT,
-        2 => self::ENCODING_BINARY,
-        3 => self::ENCODING_BASE64,
-        4 => self::ENCODING_QUOTED_PRINTABLE,
-        5 => self::ENCODING_UNKNOWN,
+        \ENC7BIT => self::ENCODING_7BIT,
+        \ENC8BIT => self::ENCODING_8BIT,
+        \ENCBINARY => self::ENCODING_BINARY,
+        \ENCBASE64 => self::ENCODING_BASE64,
+        \ENCQUOTEDPRINTABLE => self::ENCODING_QUOTED_PRINTABLE,
     ];
 
     protected $type;
@@ -166,30 +166,20 @@ class Part implements \RecursiveIterator
     public function getDecodedContent(bool $keepUnseen = false): string
     {
         if (null === $this->decodedContent) {
-            switch ($this->getEncoding()) {
-                case self::ENCODING_BASE64:
-                    $this->decodedContent = base64_decode($this->getContent($keepUnseen));
-
-                    break;
-                case self::ENCODING_QUOTED_PRINTABLE:
-                    $this->decodedContent = quoted_printable_decode($this->getContent($keepUnseen));
-
-                    break;
-                case self::ENCODING_7BIT:
-                case self::ENCODING_8BIT:
-                case self::ENCODING_BINARY:
-                    $this->decodedContent = $this->getContent($keepUnseen);
-
-                    break;
-                default:
-                    throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
+            $content = $this->getContent($keepUnseen);
+            if (self::ENCODING_BASE64 === $this->getEncoding()) {
+                $content = base64_decode($content);
+            } elseif (self::ENCODING_QUOTED_PRINTABLE === $this->getEncoding()) {
+                $content = quoted_printable_decode($content);
             }
 
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
             if (self::TYPE_TEXT === $this->getType()) {
-                $this->decodedContent = Transcoder::decode($this->decodedContent, $this->getCharset());
+                $content = Transcoder::decode($content, $this->getCharset());
             }
+
+            $this->decodedContent = $content;
         }
 
         return $this->decodedContent;
@@ -213,24 +203,20 @@ class Part implements \RecursiveIterator
         return $this->structure;
     }
 
-    protected function parseStructure(\stdClass $structure)
+    final protected function parseStructure(\stdClass $structure)
     {
-        if (isset($this->typesMap[$structure->type])) {
-            $this->type = $this->typesMap[$structure->type];
-        } else {
-            $this->type = self::TYPE_UNKNOWN;
+        $this->type = $this->typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
+
+        if (!isset($this->encodingsMap[$structure->encoding])) {
+            throw new \UnexpectedValueException(sprintf('Cannot decode "%s"', $structure->encoding));
         }
 
         $this->encoding = $this->encodingsMap[$structure->encoding];
         $this->subtype = $structure->subtype;
 
-        if (isset($structure->bytes)) {
-            $this->bytes = $structure->bytes;
-        }
-
         foreach (['disposition', 'bytes', 'description'] as $optional) {
-            if (isset($structure->$optional)) {
-                $this->$optional = $structure->$optional;
+            if (isset($structure->{$optional})) {
+                $this->{$optional} = $structure->{$optional};
             }
         }
 
