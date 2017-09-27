@@ -16,11 +16,9 @@
     "require": {
         "php": "^7.0",
         "ext-imap": "*",
-        "ext-mbstring": "*",
-        "ddeboer/transcoder": "~1"
+        "ext-mbstring": "*"
     },
     "require-dev": {
-        "ext-iconv": "*",
         "phpunit/phpunit": "^5.7",
         "friendsofphp/php-cs-fixer": "^2.6",
         "zendframework/zend-mail": "^2.8"

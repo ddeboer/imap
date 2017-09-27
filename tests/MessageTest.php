@@ -141,6 +141,18 @@ class MessageTest extends AbstractTest
         $message->getBodyText();
     }
 
+    public function testSpecialCharsetOnHeaders()
+    {
+        $this->mailbox->addMessage($this->getFixture('ks_c_5601-1987_headers'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertEquals('RE: 회원님께 Ersi님이 메시지를 보냈습니다.', $message->getSubject());
+
+        $from = $message->getFrom();
+        $this->assertEquals('김 현진', $from->getName());
+    }
+
     public function testEmailAddress()
     {
         $this->mailbox->addMessage($this->getFixture('email_address'));

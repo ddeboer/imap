@@ -80,6 +80,6 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
 
     final protected function getFixture($fixture)
     {
-        return file_get_contents(__DIR__ . '/fixtures/' . $fixture);
+        return file_get_contents(sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
     }
 }
