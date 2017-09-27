@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\Exception\UnsupportedEncodingException;
 use Ddeboer\Imap\Parameters;
-use Ddeboer\Transcoder\Transcoder;
 
 /**
  * A message part
@@ -188,14 +188,23 @@ class Part implements \RecursiveIterator
 
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
-            // if ($this->getType() === self::TYPE_TEXT
-                // && strtolower($this->getCharset()) != 'utf-8'
-            // ) {
-                // $this->decodedContent = Transcoder::create()->transcode(
-                    // $this->decodedContent,
-                    // $this->getCharset()
-                // );
-            // }
+            if ($this->getType() === self::TYPE_TEXT
+                && strtolower($this->getCharset()) != 'utf-8'
+            ) {
+                set_error_handler(function ($nr, $message) {
+                    throw new UnsupportedEncodingException(sprintf(
+                        'Unsupported charset "%s" for message nr "%s" part nr "%s": %s',
+                        $this->getCharset(),
+                        $this->messageNumber,
+                        $this->partNumber,
+                        $message
+                    ), $nr);
+                });
+
+                $this->decodedContent = mb_convert_encoding($this->decodedContent, 'UTF-8', $this->getCharset());
+
+                restore_error_handler();
+            }
         }
 
         return $this->decodedContent;

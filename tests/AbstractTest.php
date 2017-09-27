@@ -7,6 +7,8 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\Server;
 use PHPUnit_Framework_TestCase;
+use Zend\Mail;
+use Zend\Mime;
 
 abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
@@ -40,18 +42,30 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
 
     final protected function createTestMessage(
         Mailbox $mailbox,
-        $subject = 'Don\'t panic!',
-        $contents = 'Don\'t forget your towel',
-        $from = 'someone@there.com',
-        $to = 'me@here.com'
+        string $subject,
+        string $contents = null,
+        string $encoding = null,
+        string $charset = null
     ) {
-        $message = "From: $from\r\n"
-            . "To: $to\r\n"
-            . "Subject: $subject\r\n"
-            . "\r\n"
-            . "$contents";
+        $bodyPart = new Mime\Part($contents ?? uniqid($subject));
+        $bodyPart->setType(Mime\Mime::TYPE_TEXT);
+        if ($encoding) {
+            $bodyPart->setEncoding($encoding);
+        }
+        if ($charset) {
+            $bodyPart->setCharset($charset);
+        }
 
-        $mailbox->addMessage($message);
+        $bodyMessage = new Mime\Message();
+        $bodyMessage->addPart($bodyPart);
+
+        $message = new Mail\Message();
+        $message->addFrom('from@here.com');
+        $message->addTo('to@there.com');
+        $message->setSubject($subject);
+        $message->setBody($bodyMessage);
+
+        $mailbox->addMessage($message->toString());
     }
 
     final protected function getFixture($fixture)
