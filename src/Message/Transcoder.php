@@ -219,31 +219,7 @@ final class Transcoder
         'zh_tw-euc' => 'x-euc-tw',
     ];
 
-    public static function decode(string $text, string $toCharset)
-    {
-        $originalToCharset = $toCharset;
-        $lowercaseToCharset = strtolower($toCharset);
-        if (isset(self::$charsetAliases[$lowercaseToCharset])) {
-            $toCharset = self::$charsetAliases[$lowercaseToCharset];
-        }
-
-        set_error_handler(function ($nr, $message) use ($originalToCharset, $toCharset) {
-            throw new UnsupportedEncodingException(sprintf(
-                'Unsupported charset "%s"%s: %s',
-                $originalToCharset,
-                ($toCharset !== $originalToCharset) ? sprintf(' (alias found: "%s")', $toCharset) : '',
-                $message
-            ), $nr);
-        });
-
-        $decodedText = mb_convert_encoding($text, 'UTF-8', $toCharset);
-
-        restore_error_handler();
-
-        return $decodedText;
-    }
-
-    public static function isUtf8Alias(string $alias)
+    public static function decode(string $text, string $fromCharset): string
     {
         static $utf8Aliases = [
             'utf8' => true,
@@ -252,6 +228,29 @@ final class Transcoder
             'UTF-8' => true,
         ];
 
-        return isset($utf8Aliases[$alias]);
+        if (isset($utf8Aliases[$fromCharset])) {
+            return $text;
+        }
+
+        $originalFromCharset = $fromCharset;
+        $lowercaseFromCharset = strtolower($fromCharset);
+        if (isset(self::$charsetAliases[$lowercaseFromCharset])) {
+            $fromCharset = self::$charsetAliases[$lowercaseFromCharset];
+        }
+
+        set_error_handler(function ($nr, $message) use ($originalFromCharset, $fromCharset) {
+            throw new UnsupportedEncodingException(sprintf(
+                'Unsupported charset "%s"%s: %s',
+                $originalFromCharset,
+                ($fromCharset !== $originalFromCharset) ? sprintf(' (alias found: "%s")', $fromCharset) : '',
+                $message
+            ), $nr);
+        });
+
+        $decodedText = mb_convert_encoding($text, 'UTF-8', $fromCharset);
+
+        restore_error_handler();
+
+        return $decodedText;
     }
 }

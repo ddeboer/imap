@@ -141,6 +141,15 @@ class MessageTest extends AbstractTest
         $message->getBodyText();
     }
 
+    public function testUndefinedContentCharset()
+    {
+        $this->mailbox->addMessage($this->getFixture('null_content_charset'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('Hi!', $message->getBodyText());
+    }
+
     public function testSpecialCharsetOnHeaders()
     {
         $this->mailbox->addMessage($this->getFixture('ks_c_5601-1987_headers'));

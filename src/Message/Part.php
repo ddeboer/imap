@@ -105,7 +105,7 @@ class Part implements \RecursiveIterator
         $this->parseStructure($structure);
     }
 
-    public function getCharset()
+    public function getCharset(): string
     {
         return $this->parameters->get('charset');
     }
@@ -187,7 +187,7 @@ class Part implements \RecursiveIterator
 
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
-            if (self::TYPE_TEXT === $this->getType() && false === Transcoder::isUtf8Alias($this->getCharset())) {
+            if (self::TYPE_TEXT === $this->getType()) {
                 $this->decodedContent = Transcoder::decode($this->decodedContent, $this->getCharset());
             }
         }
