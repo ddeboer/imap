@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
-use Ddeboer\Imap\Exception\UnsupportedEncodingException;
+use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 
 final class Transcoder
 {
@@ -239,7 +239,7 @@ final class Transcoder
         }
 
         set_error_handler(function ($nr, $message) use ($originalFromCharset, $fromCharset) {
-            throw new UnsupportedEncodingException(sprintf(
+            throw new UnsupportedCharsetException(sprintf(
                 'Unsupported charset "%s"%s: %s',
                 $originalFromCharset,
                 ($fromCharset !== $originalFromCharset) ? sprintf(' (alias found: "%s")', $fromCharset) : '',

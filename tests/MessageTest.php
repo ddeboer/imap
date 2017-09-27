@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Exception\UnsupportedEncodingException;
+use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Zend\Mime\Mime;
 
 /**
@@ -135,7 +135,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->expectException(UnsupportedEncodingException::class);
+        $this->expectException(UnsupportedCharsetException::class);
         $this->expectExceptionMessageRegexp(sprintf('/%s/', preg_quote($charset)));
 
         $message->getBodyText();
