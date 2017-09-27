@@ -86,7 +86,7 @@ class MailboxTest extends AbstractTest
         $this->createTestMessage($this->mailbox, 'Result', 'Contents');
 
         $search = new SearchExpression();
-        $search->addCondition(new To('me@here.com'));
+        $search->addCondition(new To('to@there.com'));
         $search->addCondition(new Body('Contents'));
 
         $messages = $this->mailbox->getMessages($search);

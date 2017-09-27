@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
-use Ddeboer\Transcoder\Transcoder;
 
 /**
  * A message part
@@ -106,7 +105,7 @@ class Part implements \RecursiveIterator
         $this->parseStructure($structure);
     }
 
-    public function getCharset()
+    public function getCharset(): string
     {
         return $this->parameters->get('charset');
     }
@@ -188,14 +187,9 @@ class Part implements \RecursiveIterator
 
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
-            // if ($this->getType() === self::TYPE_TEXT
-                // && strtolower($this->getCharset()) != 'utf-8'
-            // ) {
-                // $this->decodedContent = Transcoder::create()->transcode(
-                    // $this->decodedContent,
-                    // $this->getCharset()
-                // );
-            // }
+            if (self::TYPE_TEXT === $this->getType()) {
+                $this->decodedContent = Transcoder::decode($this->decodedContent, $this->getCharset());
+            }
         }
 
         return $this->decodedContent;

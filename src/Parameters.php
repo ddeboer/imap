@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-use Ddeboer\Transcoder\Transcoder;
-
 class Parameters
 {
     protected $parameters = [];
@@ -38,10 +36,12 @@ class Parameters
         $decoded = '';
         $parts = imap_mime_header_decode($value);
         foreach ($parts as $part) {
-            // $charset = 'default' == $part->charset ? 'auto' : $part->charset;
-            // imap_utf8 doesn't seem to work properly, so use Transcoder instead
-            // $decoded .= Transcoder::create()->transcode($part->text, $charset);
-            $decoded .= $part->text;
+            $text = $part->text;
+            if ('default' !== $part->charset) {
+                $text = Message\Transcoder::decode($text, $part->charset);
+            }
+
+            $decoded .= $text;
         }
 
         return $decoded;

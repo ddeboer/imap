@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Exception\UnsupportedCharsetException;
+use Zend\Mime\Mime;
+
 /**
- * @covers \Ddeboer\Imap\Message
- * @covers \Ddeboer\Imap\Mailbox::expunge
  * @covers \Ddeboer\Imap\Connection::expunge
+ * @covers \Ddeboer\Imap\Mailbox::expunge
+ * @covers \Ddeboer\Imap\Message
+ * @covers \Ddeboer\Imap\Message\Transcoder
+ * @covers \Ddeboer\Imap\Message\Attachment
+ * @covers \Ddeboer\Imap\Message\EmailAddress
+ * @covers \Ddeboer\Imap\Message\Headers
+ * @covers \Ddeboer\Imap\Message\Part
  */
 class MessageTest extends AbstractTest
 {
@@ -40,35 +48,118 @@ class MessageTest extends AbstractTest
         $this->assertFalse($message->isSeen());
     }
 
-    public function testEncoding7Bit()
+    /**
+     * @dataProvider provideCharsets
+     */
+    public function testBodyCharsets(string $charset = null, string $charList, string $encoding = null)
     {
-        $this->createTestMessage($this->mailbox, 'lietuviškos raidės', 'lietuviškos raidės');
+        $subject = sprintf('[%s:%s]', $charset, $encoding);
+        $this->createTestMessage(
+            $this->mailbox,
+            $subject,
+            mb_convert_encoding($charList, $charset ?? 'ASCII', 'UTF-8'),
+            $encoding,
+            $charset
+        );
 
         $message = $this->mailbox->getMessage(1);
-        $this->assertEquals('lietuviškos raidės', $message->getSubject());
-        $this->assertEquals('lietuviškos raidės', rtrim($message->getBodyText()));
+
+        $this->assertSame($subject, $message->getSubject());
+        $this->assertSame($charList, rtrim($message->getBodyText()));
     }
 
-    public function testEncodingQuotedPrintable()
+    public function provideCharsets(): array
     {
-        $boundary = 'Mailer=123';
-        $raw = "Subject: ESPAÑA\r\n"
-            . "Date: =?ISO-8859-2?Q?Fri,_13_Jun_2014_17:18:44_+020?= =?ISO-8859-2?Q?0_(St=F8edn=ED_Evropa_(letn=ED_=E8as))?=\r\n"
-            . "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n"
-            . "\r\n"
-            . "--$boundary\r\n"
-            . "Content-Transfer-Encoding: quoted-printable\r\n"
-            . "Content-Type: text/html; charset=\"windows-1252\"\r\n"
-            . "\r\n"
-            . "<html><body>Espa=C3=B1a</body></html>\r\n\r\n"
-            . "--$boundary--\r\n\r\n";
+        $charsets = [
+            'ASCII' => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+            'GB18030' => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
+            'ISO-8859-6' => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
+            'ISO-8859-7' => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
+            'SJIS' => '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯBｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿCﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏDﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ',
+            'UTF-8' => '€✔',
+            'Windows-1251' => 'ЂЃѓЉЊЌЋЏђљњќћџЎўЈҐЁЄЇІіґёєјЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя',
+            'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
+        ];
 
-        $this->mailbox->addMessage($raw);
+        $provider = [];
+
+        // This first data set mimics "us-ascii" imap server default settings
+        $provider[] = [null, $charsets['ASCII'], null];
+
+        $encodings = [
+            Mime::ENCODING_7BIT,
+            Mime::ENCODING_8BIT,
+            Mime::ENCODING_QUOTEDPRINTABLE,
+            Mime::ENCODING_BASE64,
+        ];
+
+        foreach ($charsets as $charset => $charList) {
+            foreach ($encodings as $encoding) {
+                $provider[] = [$charset, $charList, $encoding];
+            }
+        }
+
+        return $provider;
+    }
+
+    public function testCharsetAlias()
+    {
+        $charset = 'ks_c_5601-1987';
+        $charsetAlias = 'EUC-KR';
+        $text = '사진';
+
+        $this->createTestMessage(
+            $this->mailbox,
+            $charset,
+            mb_convert_encoding($text, $charsetAlias, 'UTF-8'),
+            null,
+            $charsetAlias,
+            $charset
+        );
 
         $message = $this->mailbox->getMessage(1);
-        $this->assertEquals('ESPAÑA', $message->getSubject());
-        $this->assertEquals("<html><body>España</body></html>\r\n", $message->getBodyHtml());
-        $this->assertEquals(new \DateTime('2014-06-13 17:18:44+0200'), $message->getDate());
+
+        $this->assertSame($text, rtrim($message->getBodyText()));
+    }
+
+    public function testUnsupportedCharset()
+    {
+        $charset = uniqid('NAN_CHARSET_');
+        $this->createTestMessage(
+            $this->mailbox,
+            'Unsupported',
+            null,
+            null,
+            $charset
+        );
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->expectException(UnsupportedCharsetException::class);
+        $this->expectExceptionMessageRegexp(sprintf('/%s/', preg_quote($charset)));
+
+        $message->getBodyText();
+    }
+
+    public function testUndefinedContentCharset()
+    {
+        $this->mailbox->addMessage($this->getFixture('null_content_charset'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('Hi!', rtrim($message->getBodyText()));
+    }
+
+    public function testSpecialCharsetOnHeaders()
+    {
+        $this->mailbox->addMessage($this->getFixture('ks_c_5601-1987_headers'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertEquals('RE: 회원님께 Ersi님이 메시지를 보냈습니다.', $message->getSubject());
+
+        $from = $message->getFrom();
+        $this->assertEquals('김 현진', $from->getName());
     }
 
     public function testEmailAddress()
