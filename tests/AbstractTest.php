@@ -45,7 +45,8 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         string $subject,
         string $contents = null,
         string $encoding = null,
-        string $charset = null
+        string $charset = null,
+        string $overwriteCharset = null
     ) {
         $bodyPart = new Mime\Part($contents ?? uniqid($subject));
         $bodyPart->setType(Mime\Mime::TYPE_TEXT);
@@ -65,7 +66,16 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         $message->setSubject($subject);
         $message->setBody($bodyMessage);
 
-        $mailbox->addMessage($message->toString());
+        $messageString = $message->toString();
+        if ($overwriteCharset) {
+            $messageString = preg_replace(
+                sprintf('/charset="%s"/', preg_quote($charset)),
+                sprintf('charset="%s"', $overwriteCharset),
+                $messageString
+            );
+        }
+
+        $mailbox->addMessage($messageString);
     }
 
     final protected function getFixture($fixture)

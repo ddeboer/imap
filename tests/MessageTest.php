@@ -11,6 +11,7 @@ use Zend\Mime\Mime;
  * @covers \Ddeboer\Imap\Connection::expunge
  * @covers \Ddeboer\Imap\Mailbox::expunge
  * @covers \Ddeboer\Imap\Message
+ * @covers \Ddeboer\Imap\Message\Transcoder
  * @covers \Ddeboer\Imap\Message\Attachment
  * @covers \Ddeboer\Imap\Message\EmailAddress
  * @covers \Ddeboer\Imap\Message\Headers
@@ -99,6 +100,26 @@ class MessageTest extends AbstractTest
         }
 
         return $provider;
+    }
+
+    public function testCharsetAlias()
+    {
+        $charset = 'ks_c_5601-1987';
+        $charsetAlias = 'EUC-KR';
+        $text = '사진';
+
+        $this->createTestMessage(
+            $this->mailbox,
+            $charset,
+            mb_convert_encoding($text, $charsetAlias, 'UTF-8'),
+            null,
+            $charsetAlias,
+            $charset
+        );
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame($text, rtrim($message->getBodyText()));
     }
 
     public function testUnsupportedCharset()
