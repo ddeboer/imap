@@ -45,9 +45,9 @@ class Headers extends Parameters
                 return (int) $value;
             case 'date':
                 $value = $this->decode($value);
-                $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
+                $value = preg_replace('/\(.*\)/', '', $value);
 
-                return new \DateTime($value);
+                return new \DateTimeImmutable($value);
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':

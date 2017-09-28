@@ -268,4 +268,26 @@ class MessageTest extends AbstractTest
 
         $this->assertSame('bcc@here.com', $email->getAddress());
     }
+
+    /**
+     * @dataProvider provideDateCases
+     */
+    public function testDates(string $fixture, string $output)
+    {
+        $this->mailbox->addMessage($this->getFixture($fixture));
+
+        $message = $this->mailbox->getMessage(1);
+        $date = $message->getDate();
+
+        $this->assertInstanceOf(\DateTimeImmutable::class, $date);
+        $this->assertSame($output, $date->format(\DATE_ISO8601));
+    }
+
+    public function provideDateCases(): array
+    {
+        return [
+            ['dates/utc', '2017-09-28T09:24:01+0000'],
+            ['dates/local', '2014-06-13T17:18:44+0200'],
+        ];
+    }
 }
