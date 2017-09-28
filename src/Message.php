@@ -89,6 +89,36 @@ class Message extends Message\Part
     }
 
     /**
+     * Get Reply-To recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no Reply-To: recipients
+     */
+    public function getReplyTo(): array
+    {
+        return $this->getHeaders()->get('reply_to') ?: [];
+    }
+
+    /**
+     * Get Sender
+     *
+     * @return EmailAddress[] Empty array in case message has no Sender: recipients
+     */
+    public function getSender(): array
+    {
+        return $this->getHeaders()->get('sender') ?: [];
+    }
+
+    /**
+     * Get Return-Path
+     *
+     * @return EmailAddress[] Empty array in case message has no Return-Path: recipients
+     */
+    public function getReturnPath(): array
+    {
+        return $this->getHeaders()->get('return_path') ?: [];
+    }
+
+    /**
      * Get message number (from headers)
      *
      * @return int
@@ -101,9 +131,9 @@ class Message extends Message\Part
     /**
      * Get date (from headers)
      *
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
-    public function getDate()
+    public function getDate(): \DateTimeImmutable
     {
         return $this->getHeaders()->get('date');
     }

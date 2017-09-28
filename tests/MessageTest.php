@@ -255,18 +255,28 @@ class MessageTest extends AbstractTest
         ];
     }
 
-    public function testBccHeader()
+    public function testAdditionalAddresses()
     {
         $this->mailbox->addMessage($this->getFixture('bcc'));
 
         $message = $this->mailbox->getMessage(1);
-        $bcc = $message->getBcc();
 
-        $this->assertCount(1, $bcc);
+        $types = [
+            'Bcc',
+            'Reply-To',
+            'Sender',
+            // 'Return-Path', // Can't get Dovecot return the Return-Path
+        ];
+        foreach ($types as $type) {
+            $method = 'get' . str_replace('-', '', $type);
+            $emails = $message->{$method}();
 
-        $email = current($bcc);
+            $this->assertCount(1, $emails, $type);
 
-        $this->assertSame('bcc@here.com', $email->getAddress());
+            $email = current($emails);
+
+            $this->assertSame(sprintf('%s@here.com', strtolower($type)), $email->getAddress(), $type);
+        }
     }
 
     /**

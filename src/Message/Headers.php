@@ -57,6 +57,9 @@ class Headers extends Parameters
             case 'to':
             case 'cc':
             case 'bcc':
+            case 'reply_to':
+            case 'sender':
+            case 'return_path':
                 $emails = [];
                 foreach ($value as $address) {
                     if (isset($address->mailbox)) {
@@ -67,9 +70,9 @@ class Headers extends Parameters
                 return $emails;
             case 'subject':
                 return $this->decode($value);
-            default:
-                return $value;
         }
+
+        return $value;
     }
 
     private function decodeEmailAddress(\stdClass $value): EmailAddress
