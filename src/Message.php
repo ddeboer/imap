@@ -14,7 +14,6 @@ use Ddeboer\Imap\Message\EmailAddress;
  */
 class Message extends Message\Part
 {
-    private $headersRaw;
     private $headers;
     private $rawHeaders;
     private $attachments;
@@ -137,12 +136,7 @@ class Message extends Message\Part
      */
     public function getDate(): \DateTimeImmutable
     {
-      $date = $this->getHeaders()->get('date');
-      if(!$date){
-        $udate = new \DateTime();
-        $date = $udate->setTimestamp($this->getHeaders()->get('udate'));
-      }
-      return $date;
+        return $this->getHeaders()->get('date');
     }
 
     /**
@@ -407,21 +401,25 @@ class Message extends Message\Part
 
     /**
      * Set Flag Message
-     * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @return bool                [description]
+     *
+     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     *
+     * @return bool
      */
     public function setFlag($flag)
     {
-      return imap_setflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
+        return imap_setflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
     }
 
     /**
      * Clear Flag Message
-     * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @return bool                [description]
+     *
+     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     *
+     * @return bool
      */
     public function clearFlag($flag)
     {
-      return imap_clearflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
+        return imap_clearflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
     }
 }
