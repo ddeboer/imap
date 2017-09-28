@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
-use Ddeboer\Transcoder\Transcoder;
 
 /**
  * A message part
@@ -17,6 +18,7 @@ class Part implements \RecursiveIterator
     const TYPE_AUDIO = 'audio';
     const TYPE_IMAGE = 'image';
     const TYPE_VIDEO = 'video';
+    const TYPE_MODEL = 'model';
     const TYPE_OTHER = 'other';
     const TYPE_UNKNOWN = 'unknown';
 
@@ -25,30 +27,29 @@ class Part implements \RecursiveIterator
     const ENCODING_BINARY = 'binary';
     const ENCODING_BASE64 = 'base64';
     const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
-    const ENCODING_UNKNOWN = 'unknown';
 
     const SUBTYPE_TEXT = 'TEXT';
     const SUBTYPE_HTML = 'HTML';
 
-    protected $typesMap = array(
-        0 => self::TYPE_TEXT,
-        1 => self::TYPE_MULTIPART,
-        2 => self::TYPE_MESSAGE,
-        3 => self::TYPE_APPLICATION,
-        4 => self::TYPE_AUDIO,
-        5 => self::TYPE_IMAGE,
-        6 => self::TYPE_VIDEO,
-        7 => self::TYPE_OTHER
-    );
+    protected $typesMap = [
+        \TYPETEXT => self::TYPE_TEXT,
+        \TYPEMULTIPART => self::TYPE_MULTIPART,
+        \TYPEMESSAGE => self::TYPE_MESSAGE,
+        \TYPEAPPLICATION => self::TYPE_APPLICATION,
+        \TYPEAUDIO => self::TYPE_AUDIO,
+        \TYPEIMAGE => self::TYPE_IMAGE,
+        \TYPEVIDEO => self::TYPE_VIDEO,
+        \TYPEMODEL => self::TYPE_MODEL,
+        \TYPEOTHER => self::TYPE_OTHER,
+    ];
 
-    protected $encodingsMap = array(
-        0 => self::ENCODING_7BIT,
-        1 => self::ENCODING_8BIT,
-        2 => self::ENCODING_BINARY,
-        3 => self::ENCODING_BASE64,
-        4 => self::ENCODING_QUOTED_PRINTABLE,
-        5 => self::ENCODING_UNKNOWN
-    );
+    protected $encodingsMap = [
+        \ENC7BIT => self::ENCODING_7BIT,
+        \ENC8BIT => self::ENCODING_8BIT,
+        \ENCBINARY => self::ENCODING_BINARY,
+        \ENCBASE64 => self::ENCODING_BASE64,
+        \ENCQUOTEDPRINTABLE => self::ENCODING_QUOTED_PRINTABLE,
+    ];
 
     protected $type;
 
@@ -77,7 +78,7 @@ class Part implements \RecursiveIterator
 
     protected $decodedContent;
 
-    protected $parts = array();
+    protected $parts = [];
 
     protected $key = 0;
 
@@ -93,8 +94,8 @@ class Part implements \RecursiveIterator
      */
     public function __construct(
         $stream,
-        $messageNumber,
-        $partNumber = null,
+        int $messageNumber,
+        string $partNumber = null,
         \stdClass $structure = null
     ) {
         $this->stream = $stream;
@@ -104,7 +105,7 @@ class Part implements \RecursiveIterator
         $this->parseStructure($structure);
     }
 
-    public function getCharset()
+    public function getCharset(): string
     {
         return $this->parameters->get('charset');
     }
@@ -142,9 +143,11 @@ class Part implements \RecursiveIterator
     /**
      * Get raw part content
      *
+     * @param mixed $keepUnseen
+     *
      * @return string
      */
-    public function getContent($keepUnseen = false)
+    public function getContent(bool $keepUnseen = false): string
     {
         if (null === $this->content) {
             $this->content = $this->doGetContent($keepUnseen);
@@ -156,37 +159,27 @@ class Part implements \RecursiveIterator
     /**
      * Get decoded part content
      *
+     * @param mixed $keepUnseen
+     *
      * @return string
      */
-    public function getDecodedContent($keepUnseen = false)
+    public function getDecodedContent(bool $keepUnseen = false): string
     {
         if (null === $this->decodedContent) {
-            switch ($this->getEncoding()) {
-                case self::ENCODING_BASE64:
-                    $this->decodedContent = base64_decode($this->getContent($keepUnseen));
-                    break;
-                case self::ENCODING_QUOTED_PRINTABLE:
-                    $this->decodedContent =  quoted_printable_decode($this->getContent($keepUnseen));
-                    break;
-                case self::ENCODING_7BIT:
-                case self::ENCODING_8BIT:
-                case self::ENCODING_BINARY:
-                    $this->decodedContent = $this->getContent($keepUnseen);
-                    break;
-                default:
-                    throw new \UnexpectedValueException('Cannot decode ' . $this->getEncoding());
+            $content = $this->getContent($keepUnseen);
+            if (self::ENCODING_BASE64 === $this->getEncoding()) {
+                $content = base64_decode($content);
+            } elseif (self::ENCODING_QUOTED_PRINTABLE === $this->getEncoding()) {
+                $content = quoted_printable_decode($content);
             }
 
             // If this part is a text part, try to convert its encoding to UTF-8.
             // We don't want to convert an attachment's encoding.
-            if ($this->getType() === self::TYPE_TEXT
-                && strtolower($this->getCharset()) != 'utf-8'
-            ) {
-                $this->decodedContent = Transcoder::create()->transcode(
-                    $this->decodedContent,
-                    $this->getCharset()
-                );
+            if (self::TYPE_TEXT === $this->getType()) {
+                $content = Transcoder::decode($content, $this->getCharset());
             }
+
+            $this->decodedContent = $content;
         }
 
         return $this->decodedContent;
@@ -197,7 +190,7 @@ class Part implements \RecursiveIterator
         return $this->structure;
     }
 
-    protected function fetchStructure($partNumber = null)
+    protected function fetchStructure(int $partNumber = null)
     {
         if (null === $this->structure) {
             $this->loadStructure();
@@ -210,24 +203,20 @@ class Part implements \RecursiveIterator
         return $this->structure;
     }
 
-    protected function parseStructure(\stdClass $structure)
+    final protected function parseStructure(\stdClass $structure)
     {
-        if (isset($this->typesMap[$structure->type])) {
-            $this->type = $this->typesMap[$structure->type];
-        } else {
-            $this->type = self::TYPE_UNKNOWN;
+        $this->type = $this->typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
+
+        if (!isset($this->encodingsMap[$structure->encoding])) {
+            throw new \UnexpectedValueException(sprintf('Cannot decode "%s"', $structure->encoding));
         }
 
         $this->encoding = $this->encodingsMap[$structure->encoding];
         $this->subtype = $structure->subtype;
 
-        if (isset($structure->bytes)) {
-            $this->bytes = $structure->bytes;
-        }
-
-        foreach (array('disposition', 'bytes', 'description') as $optional) {
-            if (isset($structure->$optional)) {
-                $this->$optional = $structure->$optional;
+        foreach (['disposition', 'bytes', 'description'] as $optional) {
+            if (isset($structure->{$optional})) {
+                $this->{$optional} = $structure->{$optional};
             }
         }
 
@@ -243,15 +232,15 @@ class Part implements \RecursiveIterator
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
                 if (null === $this->partNumber) {
-                    $partNumber = ($key + 1);
+                    $partNumber = (string) ($key + 1);
                 } else {
-                    $partNumber = (string) ($this->partNumber . '.' . ($key+1));
+                    $partNumber = (string) ($this->partNumber . '.' . ($key + 1));
                 }
 
                 if ($this->isAttachment($partStructure)) {
                     $this->parts[] = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
                 } else {
-                    $this->parts[] = new Part($this->stream, $this->messageNumber, $partNumber, $partStructure);
+                    $this->parts[] = new self($this->stream, $this->messageNumber, $partNumber, $partStructure);
                 }
             }
         }
@@ -262,7 +251,7 @@ class Part implements \RecursiveIterator
      *
      * @return self[]
      */
-    public function getParts()
+    public function getParts(): array
     {
         return $this->parts;
     }
@@ -316,23 +305,23 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    protected function doGetContent($keepUnseen = false)
+    protected function doGetContent(bool $keepUnseen = false)
     {
         return imap_fetchbody(
             $this->stream,
             $this->messageNumber,
-            $this->partNumber ?: 1,
+            (string) ($this->partNumber ?: '1'),
             \FT_UID | ($keepUnseen ? \FT_PEEK : null)
         );
     }
 
-    private function isAttachment($part)
+    private function isAttachment(\stdClass $part)
     {
         // Attachment with correct Content-Disposition header
         if (isset($part->disposition)) {
             if (('attachment' === strtolower($part->disposition)
                 || 'inline' === strtolower($part->disposition))
-            && strtoupper($part->subtype) != "PLAIN"
+            && strtoupper($part->subtype) != 'PLAIN'
             ) {
                 return true;
             }
