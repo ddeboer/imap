@@ -460,7 +460,7 @@ class Message extends Message\Part
      *
      * @return bool
      */
-    public function clearFlag($flag)
+    public function clearFlag(string $flag)
     {
         $result = imap_clearflag_full($this->stream, (string) $this->messageNumber, $flag, \ST_UID);
 
