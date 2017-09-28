@@ -330,4 +330,21 @@ class MessageTest extends AbstractTest
 
         $this->assertSame($expectedHeaders, $message->getRawHeaders());
     }
+
+    public function testSetFlags()
+    {
+        $this->createTestMessage($this->mailbox, 'Message A');
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertFalse($message->isFlagged());
+
+        $message->setFlag('\Flagged');
+
+        $this->assertTrue($message->isFlagged());
+
+        $message->clearFlag('\Flagged');
+
+        $this->assertFalse($message->isFlagged());
+    }
 }
