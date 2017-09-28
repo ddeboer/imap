@@ -45,7 +45,11 @@ class Headers extends Parameters
                 return (int) $value;
             case 'date':
                 $value = $this->decode($value);
-                $value = preg_replace('/\(.*\)/', '', $value);
+                $value = str_replace(',', '', $value);
+                $value = preg_replace('/ +\(.*\)/', '', $value);
+                if (0 === preg_match('/\d\d:\d\d:\d\d.* [\+\-]?\d\d:?\d\d/', $value)) {
+                    $value .= ' +0000';
+                }
 
                 return new \DateTimeImmutable($value);
             case 'from':
