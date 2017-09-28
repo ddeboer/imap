@@ -313,4 +313,21 @@ class MessageTest extends AbstractTest
             ['2006-01-04T21:47:28+0000', 'WED 04, JAN 2006 21:47:28'],
         ];
     }
+
+    public function testRawHeaders()
+    {
+        $headers = 'From: from@there.com' . "\r\n"
+            . 'To: to@here.com' . "\n"
+             . "\r\n"
+        ;
+        $originalMessage = $headers . 'Content' . "\n";
+
+        $this->mailbox->addMessage($originalMessage);
+        $message = $this->mailbox->getMessage(1);
+
+        $expectedHeaders = preg_split('/\R/u', $headers);
+        $expectedHeaders = implode("\r\n", $expectedHeaders);
+
+        $this->assertSame($expectedHeaders, $message->getRawHeaders());
+    }
 }
