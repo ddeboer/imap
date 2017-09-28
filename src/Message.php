@@ -14,6 +14,7 @@ use Ddeboer\Imap\Message\EmailAddress;
  */
 class Message extends Message\Part
 {
+    private $headersRaw;
     private $headers;
     private $rawHeaders;
     private $attachments;
@@ -136,7 +137,12 @@ class Message extends Message\Part
      */
     public function getDate(): \DateTimeImmutable
     {
-        return $this->getHeaders()->get('date');
+      $date = $this->getHeaders()->get('date');
+      if(!$date){
+        $udate = new \DateTime();
+        $date = $udate->setTimestamp($this->getHeaders()->get('udate'));
+      }
+      return $date;
     }
 
     /**
@@ -397,5 +403,25 @@ class Message extends Message\Part
         restore_error_handler();
 
         $this->parseStructure($structure);
+    }
+
+    /**
+     * Set Flag Message
+     * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @return bool                [description]
+     */
+    public function setFlag($flag)
+    {
+      return imap_setflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
+    }
+
+    /**
+     * Clear Flag Message
+     * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @return bool                [description]
+     */
+    public function clearFlag($flag)
+    {
+      return imap_clearflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
     }
 }
