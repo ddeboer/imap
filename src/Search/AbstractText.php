@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Ddeboer\Imap\Search\Text;
-
-use Ddeboer\Imap\Search\AbstractCondition;
+namespace Ddeboer\Imap\Search;
 
 /**
  * Represents a text based condition. Text based conditions use a contains
  * restriction.
  */
-abstract class AbstractText extends AbstractCondition
+abstract class AbstractText implements ConditionInterface
 {
     /**
      * Text to be used for the condition.
@@ -36,6 +34,13 @@ abstract class AbstractText extends AbstractCondition
      */
     final public function toString(): string
     {
-        return sprintf('%s "%s"', $this->getKeyword(), str_replace('"', '\\"', $this->text));
+        return sprintf('%s "%s"', $this->getKeyword(), $this->text);
     }
+
+    /**
+     * Returns the keyword that the condition represents.
+     *
+     * @return string
+     */
+    abstract protected function getKeyword(): string;
 }

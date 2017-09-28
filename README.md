@@ -117,6 +117,13 @@ $search->addCondition(new To('me@here.com'))
 $messages = $mailbox->getMessages($search);
 ```
 
+**WARNING** We are currently unable to have both spaces _and_ double-quotes
+escaped together. Only spaces are currently escaped correctly.
+You can use `Ddeboer\Imap\Search\RawExpression` to write the complete search
+condition by yourself.
+
+**WARNING** `OR` condition has never been reported as correctly functioning.
+
 #### Message Properties and Operations
 
 Get message number and unique [message id](https://en.wikipedia.org/wiki/Message-ID)

@@ -109,8 +109,16 @@ class Mailbox implements \Countable, \IteratorAggregate
 
         $query = ($search ? $search->toString() : 'ALL');
 
+        // We need to clear the stack to know whether imap_last_error()
+        // is related to this imap_search
+        imap_errors();
+
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
+            if (false !== imap_last_error()) {
+                throw new Exception(sprintf('Invalid search criteria [%s]', $query));
+            }
+
             // imap_search can also return false
             $messageNumbers = [];
         }

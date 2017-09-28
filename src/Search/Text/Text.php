@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Search\Text;
 
+use Ddeboer\Imap\Search\AbstractText;
+
 /**
  * Represents a message text contains condition. Messages must contain the
  * specified text in order to match the condition.

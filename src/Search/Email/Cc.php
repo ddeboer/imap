@@ -7,11 +7,11 @@ namespace Ddeboer\Imap\Search\Email;
 use Ddeboer\Imap\Search\AbstractText;
 
 /**
- * Represents a "To" email address condition. Messages must have been addressed
+ * Represents a "Cc" email address condition. Messages must have been addressed
  * to the specified recipient (along with any others) in order to match the
  * condition.
  */
-final class To extends AbstractText
+final class Cc extends AbstractText
 {
     /**
      * Returns the keyword that the condition represents.
@@ -20,6 +20,6 @@ final class To extends AbstractText
      */
     protected function getKeyword(): string
     {
-        return 'TO';
+        return 'CC';
     }
 }
