@@ -54,7 +54,9 @@ class Headers extends Parameters
             case 'cc':
                 $emails = [];
                 foreach ($value as $address) {
-                    $emails[] = $this->decodeEmailAddress($address);
+                    if (isset($address->mailbox)) {
+                        $emails[] = $this->decodeEmailAddress($address);
+                    }
                 }
 
                 return $emails;
@@ -67,13 +69,8 @@ class Headers extends Parameters
 
     private function decodeEmailAddress(\stdClass $value): EmailAddress
     {
-        if(!isset($value->mailbox)){
-            $mailbox = 'undisclosed';
-        } else {
-            $mailbox = $value->mailbox;
-        }
         return new EmailAddress(
-            $mailbox,
+            $value->mailbox,
             isset($value->host) ? $value->host : null,
             isset($value->personal) ? $this->decode($value->personal) : null
         );

@@ -234,4 +234,24 @@ class MessageTest extends AbstractTest
             ['attachment_encoded_filename'],
         ];
     }
+
+    /**
+     * @dataProvider provideUndisclosedRecipientsCases
+     */
+    public function testUndiscloredRecipients(string $fixture)
+    {
+        $this->mailbox->addMessage($this->getFixture($fixture));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(1, $message->getTo());
+    }
+
+    public function provideUndisclosedRecipientsCases(): array
+    {
+        return [
+            ['undisclosed-recipients/minus'],
+            ['undisclosed-recipients/space'],
+        ];
+    }
 }
