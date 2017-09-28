@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use Ddeboer\Imap\Tests\AbstractTest;
 
 /**
- * @covers \Ddeboer\Imap\Search\Date\AbstractDate
+ * @covers \Ddeboer\Imap\Search\AbstractDate
  */
 class AbstractDateTest extends AbstractTest
 {
@@ -21,7 +21,7 @@ class AbstractDateTest extends AbstractTest
     {
         $condition = new TestAsset\FooDate($this->date);
 
-        $this->assertSame('BAR "02-03-2017"', $condition->toString());
+        $this->assertSame('BAR "2-Mar-2017"', $condition->toString());
     }
 
     public function testCustomFormat()

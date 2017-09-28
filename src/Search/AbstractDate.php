@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Ddeboer\Imap\Search\Date;
+namespace Ddeboer\Imap\Search;
 
 use DateTimeInterface;
-use Ddeboer\Imap\Search\AbstractCondition;
 
 /**
  * Represents a date condition.
  */
-abstract class AbstractDate extends AbstractCondition
+abstract class AbstractDate implements ConditionInterface
 {
     /**
      * Format for dates to be sent to the IMAP server.
@@ -31,7 +30,7 @@ abstract class AbstractDate extends AbstractCondition
      *
      * @param DateTimeInterface $date optional date for the condition
      */
-    public function __construct(DateTimeInterface $date, string $dateFormat = 'd-m-Y')
+    public function __construct(DateTimeInterface $date, string $dateFormat = 'j-M-Y')
     {
         $this->date = $date;
         $this->dateFormat = $dateFormat;
@@ -46,4 +45,11 @@ abstract class AbstractDate extends AbstractCondition
     {
         return sprintf('%s "%s"', $this->getKeyword(), $this->date->format($this->dateFormat));
     }
+
+    /**
+     * Returns the keyword that the condition represents.
+     *
+     * @return string
+     */
+    abstract protected function getKeyword(): string;
 }
