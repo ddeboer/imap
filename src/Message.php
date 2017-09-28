@@ -53,7 +53,7 @@ class Message extends Message\Part
      *
      * @return EmailAddress
      */
-    public function getFrom()
+    public function getFrom(): EmailAddress
     {
         return $this->getHeaders()->get('from');
     }
@@ -63,7 +63,7 @@ class Message extends Message\Part
      *
      * @return EmailAddress[] Empty array in case message has no To: recipients
      */
-    public function getTo()
+    public function getTo(): array
     {
         return $this->getHeaders()->get('to') ?: [];
     }
@@ -73,9 +73,19 @@ class Message extends Message\Part
      *
      * @return EmailAddress[] Empty array in case message has no CC: recipients
      */
-    public function getCc()
+    public function getCc(): array
     {
         return $this->getHeaders()->get('cc') ?: [];
+    }
+
+    /**
+     * Get Bcc recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no BCC: recipients
+     */
+    public function getBcc(): array
+    {
+        return $this->getHeaders()->get('bcc') ?: [];
     }
 
     /**

@@ -254,4 +254,18 @@ class MessageTest extends AbstractTest
             ['undisclosed-recipients/space'],
         ];
     }
+
+    public function testBccHeader()
+    {
+        $this->mailbox->addMessage($this->getFixture('bcc'));
+
+        $message = $this->mailbox->getMessage(1);
+        $bcc = $message->getBcc();
+
+        $this->assertCount(1, $bcc);
+
+        $email = current($bcc);
+
+        $this->assertSame('bcc@here.com', $email->getAddress());
+    }
 }
