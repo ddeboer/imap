@@ -15,6 +15,7 @@ use Ddeboer\Imap\Message\EmailAddress;
 class Message extends Message\Part
 {
     private $headers;
+    private $rawHeaders;
     private $attachments;
 
     /**
@@ -233,6 +234,20 @@ class Message extends Message\Part
         }
 
         return $this->headers;
+    }
+
+    /**
+     * Get raw message headers
+     *
+     * @return string
+     */
+    public function getRawHeaders(): string
+    {
+        if (null === $this->rawHeaders) {
+            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
+        }
+
+        return $this->rawHeaders;
     }
 
     /**
