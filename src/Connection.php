@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\Exception;
@@ -8,7 +10,7 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 /**
  * A connection to an IMAP server that is authenticated for a user
  */
-class Connection
+class Connection implements \Countable
 {
     private $server;
     private $resource;
@@ -23,14 +25,49 @@ class Connection
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($resource, $server)
+    public function __construct($resource, string $server)
     {
-        if (!is_resource($resource)) {
-            throw new \InvalidArgumentException('$resource must be a resource');
-        }
-
         $this->resource = $resource;
         $this->server = $server;
+
+        // Performs resource check
+        $this->getResource();
+    }
+
+    /**
+     * Get IMAP resource
+     *
+     * @return resource
+     */
+    public function getResource()
+    {
+        if (false === is_resource($this->resource) || 'imap' !== get_resource_type($this->resource)) {
+            throw new Exception('Supplied resource is not a valid imap resource');
+        }
+
+        return $this->resource;
+    }
+
+    /**
+     * Delete all messages marked for deletion
+     *
+     * @return Mailbox
+     */
+    public function expunge()
+    {
+        imap_expunge($this->getResource());
+    }
+
+    /**
+     * Close connection
+     *
+     * @param int $flag
+     *
+     * @return bool
+     */
+    public function close(int $flag = 0): bool
+    {
+        return imap_close($this->getResource(), $flag);
     }
 
     /**
@@ -38,11 +75,14 @@ class Connection
      *
      * @return Mailbox[]
      */
-    public function getMailboxes()
+    public function getMailboxes(): array
     {
+        $this->initMailboxNames();
+
         if (null === $this->mailboxes) {
-            foreach ($this->getMailboxNames() as $mailboxName) {
-                $this->mailboxes[] = $this->getMailbox($mailboxName);
+            $this->mailboxes = [];
+            foreach ($this->mailboxNames as $mailboxName => $mailboxInfo) {
+                $this->mailboxes[$mailboxName] = $this->getMailbox($mailboxName);
             }
         }
 
@@ -56,9 +96,11 @@ class Connection
      *
      * @return bool
      */
-    public function hasMailbox($name)
+    public function hasMailbox(string $name): bool
     {
-        return in_array($name, $this->getMailboxNames());
+        $this->initMailboxNames();
+
+        return isset($this->mailboxNames[$name]);
     }
 
     /**
@@ -66,16 +108,20 @@ class Connection
      *
      * @param string $name Mailbox name
      *
-     * @return Mailbox
      * @throws MailboxDoesNotExistException If mailbox does not exist
+     *
+     * @return Mailbox
      */
-    public function getMailbox($name)
+    public function getMailbox(string $name): Mailbox
     {
-        if (!$this->hasMailbox($name)) {
-            throw new MailboxDoesNotExistException($name);
+        if (false === $this->hasMailbox($name)) {
+            throw new MailboxDoesNotExistException(sprintf(
+                'Mailbox name "%s" does not exist',
+                $name
+            ));
         }
 
-        return new Mailbox($this->server . imap_utf7_encode($name), $this);
+        return new Mailbox($this, $name, $this->mailboxNames[$name]);
     }
 
     /**
@@ -85,7 +131,7 @@ class Connection
      */
     public function count()
     {
-        return imap_num_msg($this->resource);
+        return imap_num_msg($this->getResource());
     }
 
     /**
@@ -93,68 +139,53 @@ class Connection
      *
      * @param $name
      *
-     * @return Mailbox
      * @throws Exception
+     *
+     * @return Mailbox
      */
-    public function createMailbox($name)
+    public function createMailbox(string $name): Mailbox
     {
-        if (imap_createmailbox($this->resource, $this->server . $name)) {
-            $this->mailboxNames = $this->mailboxes = null;
-
-            return $this->getMailbox($name);
+        if (false === imap_createmailbox($this->getResource(), $this->server . mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
+            throw new Exception(sprintf(
+                'Can not create "%s" mailbox at "%s"',
+                $name,
+                $this->server
+            ));
         }
 
-        throw new Exception("Can not create '{$name}' mailbox at '{$this->server}'");
-    }
+        $this->mailboxNames = $this->mailboxes = null;
 
-    /**
-     * Close connection
-     *
-     * @param int $flag
-     *
-     * @return bool
-     */
-    public function close($flag = 0)
-    {
-        return imap_close($this->resource, $flag);
+        return $this->getMailbox($name);
     }
 
     public function deleteMailbox(Mailbox $mailbox)
     {
-        if (false === imap_deletemailbox(
-            $this->resource,
-            $this->server . $mailbox->getName()
-        )) {
-            throw new Exception('Mailbox ' . $mailbox->getName() . ' could not be deleted');
+        if (false === imap_deletemailbox($this->getResource(), $mailbox->getFullEncodedName())) {
+            throw new Exception(sprintf(
+                'Mailbox "%s" could not be deleted',
+                $mailbox->getName()
+            ));
         }
 
         $this->mailboxes = $this->mailboxNames = null;
     }
 
     /**
-     * Get IMAP resource
-     *
-     * @return resource
-     */
-    public function getResource()
-    {
-        return $this->resource;
-    }
-
-    /**
      * Get mailbox names
-     * 
+     *
      * @return array
      */
-    private function getMailboxNames()
+    private function initMailboxNames()
     {
-        if (null === $this->mailboxNames) {
-            $mailboxes = imap_getmailboxes($this->resource, $this->server, '*');
-            foreach ($mailboxes as $mailbox) {
-                $this->mailboxNames[] = imap_utf7_decode(str_replace($this->server, '', $mailbox->name));
-            }
+        if (null !== $this->mailboxNames) {
+            return;
         }
 
-        return $this->mailboxNames;
+        $this->mailboxNames = [];
+        $mailboxesInfo = imap_getmailboxes($this->getResource(), $this->server, '*');
+        foreach ($mailboxesInfo as $mailboxInfo) {
+            $name = mb_convert_encoding(str_replace($this->server, '', $mailboxInfo->name), 'UTF-8', 'UTF7-IMAP');
+            $this->mailboxNames[$name] = $mailboxInfo;
+        }
     }
 }

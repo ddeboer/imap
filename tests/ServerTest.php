@@ -1,17 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Exception;
 use Ddeboer\Imap\Server;
 
-class ServerTest extends \PHPUnit_Framework_TestCase
+/**
+ * @covers \Ddeboer\Imap\Server
+ */
+class ServerTest extends AbstractTest
 {
-    /**
-     * @expectedException \Ddeboer\Imap\Exception\AuthenticationFailedException
-     */
+    public function testValidConnection()
+    {
+        $connection = $this->getConnection();
+
+        $check = imap_check($connection->getResource());
+
+        $this->assertInstanceOf(\stdClass::class, $check);
+    }
+
     public function testFailedAuthenticate()
     {
-        $server = new Server('imap.gmail.com');
-        $server->authenticate('fake_username', 'fake_password');
+        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
+
+        $this->expectException(Exception\AuthenticationFailedException::class);
+        $this->expectExceptionMessageRegExp('/E_WARNING.+AUTHENTICATIONFAILED/s');
+
+        $server->authenticate(uniqid('fake_username_'), uniqid('fake_password_'));
     }
 }

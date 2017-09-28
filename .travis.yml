@@ -1,20 +1,44 @@
 language: php
 
-php:
-  - 5.4
-  - 5.5
-  - 5.6
+sudo: required
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.0
+      env: CS_CHECK=1
+    - php: 7.1
+    - php: 7.2
+      env: CODE_COVERAGE=1
+
+addons:
+  hosts:
+    - dovecot.travis.dev
 
 env:
   global:
-  - secure: dT+Srfm2l/hI7eXv+Fxy2QsOTTuunCQEhHq9SdX1W8MUafGszbtJhew4NY7ZT5UJzgJ3XN69tkfnEoiZb3vU0jzGVyJOahNkUFo2yRADz8ZWQWwPrfCmZGWCbh7J+cxb9cA0wUh9E3qsmwMoLVpBwnPlolAiGCm1SKxBYw/QrxM=
-  - secure: "V9m0u6xxjtsHapzm9Yj4jTm+bP5/I9yuElfzZyCP29D4lq9FCra/ygldx9xUfkCkCgroPWfeeDKfoozpoJcrzdH82KCQ9N908y9xM0FeCWLP/KJBCEvPPTVFpv2z+7NouSSOllBEaMXECUCZxOIxhrmhy4/ua42CrUaUtU9rMjU="
+    - IMAP_SERVER_NAME=dovecot.travis.dev
+    - IMAP_SERVER_PORT=993
+    - IMAP_USERNAME=dovecot_travis_testuser
+    - IMAP_PASSWORD=dovecot_travis_testpwd
 
-before_script:
-  - composer install --dev
+cache:
+  directories:
+    - $HOME/.composer/cache
 
-script: phpunit --coverage-clover=coverage.clover
+install:
+  - sh .travis/dovecot_install.sh
+  - if [ "$CODE_COVERAGE" != 1 ]; then phpenv config-rm xdebug.ini || true; fi
+  - if [ "$CS_CHECK" != 1 ]; then composer remove --no-update --no-scripts --dev friendsofphp/php-cs-fixer; fi
+  - composer install
+
+script:
+  - vendor/bin/phpunit --coverage-clover ./clover.xml
+  - if [ "$CS_CHECK" = 1 ]; then vendor/bin/php-cs-fixer fix --diff --dry-run --verbose; fi
 
 after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - if [ "$CODE_COVERAGE" = 1 ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ "$CODE_COVERAGE" = 1 ]; then php ocular.phar code-coverage:upload --format=php-clover ./clover.xml; fi
+
+notifications:
+  email: false

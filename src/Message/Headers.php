@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
@@ -26,53 +28,54 @@ class Headers extends Parameters
 
     /**
      * Get header
-     * 
+     *
      * @param string $key
      *
      * @return string
      */
-    public function get($key)
+    public function get(string $key)
     {
         return parent::get(strtolower($key));
     }
-    
-    private function parseHeader($key, $value)
+
+    private function parseHeader(string $key, $value)
     {
         switch ($key) {
             case 'msgno':
-                return (int)$value;
-            case 'answered':
-                // no break
-            case 'deleted':
-                // no break
-            case 'draft':
-                // no break
-            case 'unseen':
-                return (bool)trim($value);
+                return (int) $value;
             case 'date':
                 $value = $this->decode($value);
-                $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
+                $value = str_replace(',', '', $value);
+                $value = preg_replace('/ +\(.*\)/', '', $value);
+                if (0 === preg_match('/\d\d:\d\d:\d\d.* [\+\-]?\d\d:?\d\d/', $value)) {
+                    $value .= ' +0000';
+                }
 
-                return new \DateTime($value);
+                return new \DateTimeImmutable($value);
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':
-                // no break
             case 'cc':
+            case 'bcc':
+            case 'reply_to':
+            case 'sender':
+            case 'return_path':
                 $emails = [];
                 foreach ($value as $address) {
-                    $emails[] = $this->decodeEmailAddress($address);
+                    if (isset($address->mailbox)) {
+                        $emails[] = $this->decodeEmailAddress($address);
+                    }
                 }
-            
+
                 return $emails;
             case 'subject':
                 return $this->decode($value);
-            default:
-                return $value;
         }
+
+        return $value;
     }
 
-    private function decodeEmailAddress($value)
+    private function decodeEmailAddress(\stdClass $value): EmailAddress
     {
         return new EmailAddress(
             $value->mailbox,
