@@ -14,7 +14,6 @@ use Ddeboer\Imap\Message\EmailAddress;
  */
 class Message extends Message\Part
 {
-    private $headersRaw;
     private $headers;
     private $rawHeaders;
     private $attachments;
@@ -137,12 +136,7 @@ class Message extends Message\Part
      */
     public function getDate(): \DateTimeImmutable
     {
-      $date = $this->getHeaders()->get('date');
-      if(!$date){
-        $udate = new \DateTime();
-        $date = $udate->setTimestamp($this->getHeaders()->get('udate'));
-      }
-      return $date;
+        return $this->getHeaders()->get('date');
     }
 
     /**
@@ -172,13 +166,43 @@ class Message extends Message\Part
     }
 
     /**
+     * Get message unseen flag value (from headers)
+     *
+     * @return string
+     */
+    public function isRecent(): string
+    {
+        return $this->getHeaders()->get('recent');
+    }
+
+    /**
+     * Get message unseen flag value (from headers)
+     *
+     * @return bool
+     */
+    public function isUnseen(): bool
+    {
+        return 'U' === $this->getHeaders()->get('unseen');
+    }
+
+    /**
+     * Get message flagged flag value (from headers)
+     *
+     * @return bool
+     */
+    public function isFlagged(): bool
+    {
+        return 'F' === $this->getHeaders()->get('flagged');
+    }
+
+    /**
      * Get message answered flag value (from headers)
      *
      * @return bool
      */
-    public function isAnswered()
+    public function isAnswered(): bool
     {
-        return $this->getHeaders()->get('answered');
+        return 'A' === $this->getHeaders()->get('answered');
     }
 
     /**
@@ -186,9 +210,9 @@ class Message extends Message\Part
      *
      * @return bool
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
-        return $this->getHeaders()->get('deleted');
+        return 'D' === $this->getHeaders()->get('deleted');
     }
 
     /**
@@ -196,9 +220,9 @@ class Message extends Message\Part
      *
      * @return bool
      */
-    public function isDraft()
+    public function isDraft(): bool
     {
-        return $this->getHeaders()->get('draft');
+        return 'X' === $this->getHeaders()->get('draft');
     }
 
     /**
@@ -210,7 +234,7 @@ class Message extends Message\Part
     {
         return
                 'R' === $this->getHeaders()->get('recent')
-            || ('' === $this->getHeaders()->get('recent') && '' !== $this->getHeaders()->get('unseen'))
+            || ('N' !== $this->getHeaders()->get('recent') && 'U' === $this->getHeaders()->get('unseen'))
         ;
     }
 
@@ -240,6 +264,14 @@ class Message extends Message\Part
         }
 
         return $this->headers;
+    }
+
+    /**
+     * Clearmessage headers
+     */
+    private function clearHeaders()
+    {
+        $this->headers = null;
     }
 
     /**
@@ -407,21 +439,33 @@ class Message extends Message\Part
 
     /**
      * Set Flag Message
-     * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @return bool                [description]
+     *
+     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     *
+     * @return bool
      */
-    public function setFlag($flag)
+    public function setFlag(string $flag)
     {
-      return imap_setflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
+        $result = imap_setflag_full($this->stream, (string) $this->messageNumber, $flag, \ST_UID);
+
+        $this->clearHeaders();
+
+        return $result;
     }
 
     /**
      * Clear Flag Message
-     * @param [type] $flag         \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @return bool                [description]
+     *
+     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     *
+     * @return bool
      */
-    public function clearFlag($flag)
+    public function clearFlag(string $flag)
     {
-      return imap_clearflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
+        $result = imap_clearflag_full($this->stream, (string) $this->messageNumber, $flag, \ST_UID);
+
+        $this->clearHeaders();
+
+        return $result;
     }
 }
