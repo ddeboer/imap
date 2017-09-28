@@ -408,7 +408,7 @@ class Message extends Message\Part
      */
     public function setFlag($flag)
     {
-        return imap_setflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
+        return imap_setflag_full($this->stream, $this->messageNumber, $flag, \ST_UID);
     }
 
     /**
@@ -420,6 +420,6 @@ class Message extends Message\Part
      */
     public function clearFlag($flag)
     {
-        return imap_clearflag_full($this->stream, $this->messageNumber, $flag, ST_UID);
+        return imap_clearflag_full($this->stream, $this->messageNumber, $flag, \ST_UID);
     }
 }
