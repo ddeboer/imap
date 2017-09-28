@@ -8,6 +8,7 @@ use Ddeboer\Imap\Exception;
 use Ddeboer\Imap\Mailbox;
 
 /**
+ * @covers \Ddeboer\Imap\Exception\Exception
  * @covers \Ddeboer\Imap\Mailbox
  */
 class MailboxTest extends AbstractTest

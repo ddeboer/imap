@@ -12,11 +12,13 @@ use Zend\Mime\Mime;
  * @covers \Ddeboer\Imap\Connection::expunge
  * @covers \Ddeboer\Imap\Mailbox::expunge
  * @covers \Ddeboer\Imap\Message
- * @covers \Ddeboer\Imap\Message\Transcoder
+ * @covers \Ddeboer\Imap\MessageIterator
  * @covers \Ddeboer\Imap\Message\Attachment
  * @covers \Ddeboer\Imap\Message\EmailAddress
  * @covers \Ddeboer\Imap\Message\Headers
  * @covers \Ddeboer\Imap\Message\Part
+ * @covers \Ddeboer\Imap\Message\Transcoder
+ * @covers \Ddeboer\Imap\Parameters
  */
 class MessageTest extends AbstractTest
 {
@@ -176,7 +178,9 @@ class MessageTest extends AbstractTest
         $this->assertCount(2, $cc);
         $this->assertInstanceOf(EmailAddress::class, $cc[0]);
         $this->assertEquals('This one is right', $cc[0]->getName());
+        $this->assertEquals('dong.com', $cc[0]->getHostname());
         $this->assertEquals('ding@dong.com', $cc[0]->getAddress());
+        $this->assertEquals('This one is right <ding@dong.com>', $cc[0]->getFullAddress());
 
         $this->assertInstanceOf(EmailAddress::class, $cc[1]);
         $this->assertEquals('No-address', $cc[1]->getMailbox());
