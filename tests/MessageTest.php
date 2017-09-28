@@ -177,10 +177,10 @@ class MessageTest extends AbstractTest
         $cc = $message->getCc();
         $this->assertCount(2, $cc);
         $this->assertInstanceOf(EmailAddress::class, $cc[0]);
-        $this->assertEquals('This one is right', $cc[0]->getName());
+        $this->assertEquals('This one: is "right"', $cc[0]->getName());
         $this->assertEquals('dong.com', $cc[0]->getHostname());
         $this->assertEquals('ding@dong.com', $cc[0]->getAddress());
-        $this->assertEquals('This one is right <ding@dong.com>', $cc[0]->getFullAddress());
+        $this->assertEquals('"This one: is \"right\"" <ding@dong.com>', $cc[0]->getFullAddress());
 
         $this->assertInstanceOf(EmailAddress::class, $cc[1]);
         $this->assertEquals('No-address', $cc[1]->getMailbox());

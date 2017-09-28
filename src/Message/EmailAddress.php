@@ -39,7 +39,7 @@ final class EmailAddress
     {
         $address = sprintf('%s@%s', $this->mailbox, $this->hostname);
         if ($this->name) {
-            $address = sprintf('%s <%s>', $this->name, $address);
+            $address = sprintf('"%s" <%s>', addcslashes($this->name, '"'), $address);
         }
 
         return $address;
