@@ -45,35 +45,40 @@ class Headers extends Parameters
                 return (int) $value;
             case 'date':
                 $value = $this->decode($value);
-                $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
+                $value = str_replace(',', '', $value);
+                $value = preg_replace('/ +\(.*\)/', '', $value);
+                if (0 === preg_match('/\d\d:\d\d:\d\d.* [\+\-]?\d\d:?\d\d/', $value)) {
+                    $value .= ' +0000';
+                }
 
-                return new \DateTime($value);
+                return new \DateTimeImmutable($value);
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':
             case 'cc':
+            case 'bcc':
+            case 'reply_to':
+            case 'sender':
+            case 'return_path':
                 $emails = [];
                 foreach ($value as $address) {
-                    $emails[] = $this->decodeEmailAddress($address);
+                    if (isset($address->mailbox)) {
+                        $emails[] = $this->decodeEmailAddress($address);
+                    }
                 }
 
                 return $emails;
             case 'subject':
                 return $this->decode($value);
-            default:
-                return $value;
         }
+
+        return $value;
     }
 
     private function decodeEmailAddress(\stdClass $value): EmailAddress
     {
-        if(!isset($value->mailbox)){
-            $mailbox = 'undisclosed';
-        } else {
-            $mailbox = $value->mailbox;
-        }
         return new EmailAddress(
-            $mailbox,
+            $value->mailbox,
             isset($value->host) ? $value->host : null,
             isset($value->personal) ? $this->decode($value->personal) : null
         );

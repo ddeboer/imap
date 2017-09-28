@@ -53,7 +53,7 @@ class Message extends Message\Part
      *
      * @return EmailAddress
      */
-    public function getFrom()
+    public function getFrom(): EmailAddress
     {
         return $this->getHeaders()->get('from');
     }
@@ -63,7 +63,7 @@ class Message extends Message\Part
      *
      * @return EmailAddress[] Empty array in case message has no To: recipients
      */
-    public function getTo()
+    public function getTo(): array
     {
         return $this->getHeaders()->get('to') ?: [];
     }
@@ -73,9 +73,49 @@ class Message extends Message\Part
      *
      * @return EmailAddress[] Empty array in case message has no CC: recipients
      */
-    public function getCc()
+    public function getCc(): array
     {
         return $this->getHeaders()->get('cc') ?: [];
+    }
+
+    /**
+     * Get Bcc recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no BCC: recipients
+     */
+    public function getBcc(): array
+    {
+        return $this->getHeaders()->get('bcc') ?: [];
+    }
+
+    /**
+     * Get Reply-To recipients
+     *
+     * @return EmailAddress[] Empty array in case message has no Reply-To: recipients
+     */
+    public function getReplyTo(): array
+    {
+        return $this->getHeaders()->get('reply_to') ?: [];
+    }
+
+    /**
+     * Get Sender
+     *
+     * @return EmailAddress[] Empty array in case message has no Sender: recipients
+     */
+    public function getSender(): array
+    {
+        return $this->getHeaders()->get('sender') ?: [];
+    }
+
+    /**
+     * Get Return-Path
+     *
+     * @return EmailAddress[] Empty array in case message has no Return-Path: recipients
+     */
+    public function getReturnPath(): array
+    {
+        return $this->getHeaders()->get('return_path') ?: [];
     }
 
     /**
@@ -91,9 +131,9 @@ class Message extends Message\Part
     /**
      * Get date (from headers)
      *
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
-    public function getDate()
+    public function getDate(): \DateTimeImmutable
     {
         return $this->getHeaders()->get('date');
     }

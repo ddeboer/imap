@@ -12,11 +12,13 @@ use Zend\Mime\Mime;
  * @covers \Ddeboer\Imap\Connection::expunge
  * @covers \Ddeboer\Imap\Mailbox::expunge
  * @covers \Ddeboer\Imap\Message
- * @covers \Ddeboer\Imap\Message\Transcoder
+ * @covers \Ddeboer\Imap\MessageIterator
  * @covers \Ddeboer\Imap\Message\Attachment
  * @covers \Ddeboer\Imap\Message\EmailAddress
  * @covers \Ddeboer\Imap\Message\Headers
  * @covers \Ddeboer\Imap\Message\Part
+ * @covers \Ddeboer\Imap\Message\Transcoder
+ * @covers \Ddeboer\Imap\Parameters
  */
 class MessageTest extends AbstractTest
 {
@@ -175,8 +177,10 @@ class MessageTest extends AbstractTest
         $cc = $message->getCc();
         $this->assertCount(2, $cc);
         $this->assertInstanceOf(EmailAddress::class, $cc[0]);
-        $this->assertEquals('This one is right', $cc[0]->getName());
+        $this->assertEquals('This one: is "right"', $cc[0]->getName());
+        $this->assertEquals('dong.com', $cc[0]->getHostname());
         $this->assertEquals('ding@dong.com', $cc[0]->getAddress());
+        $this->assertEquals('"This one: is \\"right\\"" <ding@dong.com>', $cc[0]->getFullAddress());
 
         $this->assertInstanceOf(EmailAddress::class, $cc[1]);
         $this->assertEquals('No-address', $cc[1]->getMailbox());
@@ -232,6 +236,81 @@ class MessageTest extends AbstractTest
         return [
             ['attachment_no_disposition'],
             ['attachment_encoded_filename'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideUndisclosedRecipientsCases
+     */
+    public function testUndiscloredRecipients(string $fixture)
+    {
+        $this->mailbox->addMessage($this->getFixture($fixture));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(1, $message->getTo());
+    }
+
+    public function provideUndisclosedRecipientsCases(): array
+    {
+        return [
+            ['undisclosed-recipients/minus'],
+            ['undisclosed-recipients/space'],
+        ];
+    }
+
+    public function testAdditionalAddresses()
+    {
+        $this->mailbox->addMessage($this->getFixture('bcc'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $types = [
+            'Bcc',
+            'Reply-To',
+            'Sender',
+            // 'Return-Path', // Can't get Dovecot return the Return-Path
+        ];
+        foreach ($types as $type) {
+            $method = 'get' . str_replace('-', '', $type);
+            $emails = $message->{$method}();
+
+            $this->assertCount(1, $emails, $type);
+
+            $email = current($emails);
+
+            $this->assertSame(sprintf('%s@here.com', strtolower($type)), $email->getAddress(), $type);
+        }
+    }
+
+    /**
+     * @dataProvider provideDateCases
+     */
+    public function testDates(string $output, string $dateRawHeader)
+    {
+        $template = $this->getFixture('date-template');
+        $message = str_replace('%date_raw_header%', $dateRawHeader, $template);
+        $this->mailbox->addMessage($message);
+
+        $message = $this->mailbox->getMessage(1);
+        $date = $message->getDate();
+
+        $this->assertInstanceOf(\DateTimeImmutable::class, $date);
+        $this->assertSame($output, $date->format(\DATE_ISO8601), sprintf('RAW: %s', $dateRawHeader));
+    }
+
+    /**
+     * @see https://gist.github.com/mikesart/b33762363153e2b8c7c7
+     */
+    public function provideDateCases(): array
+    {
+        return [
+            ['2017-09-28T09:24:01+0000', 'Thu, 28 Sep 2017 09:24:01 +0000 (UTC)'],
+            ['2014-06-13T17:18:44+0200', '=?ISO-8859-2?Q?Fri,_13_Jun_2014_17:18:44_+020?=' . "\r\n" . ' =?ISO-8859-2?Q?0_(St=F8edn=ED_Evropa_(letn=ED_=E8as))?='],
+            ['2008-02-13T02:15:46+0000', '13 Feb 08 02:15:46'],
+            ['2008-04-03T12:36:15-0700', '03 Apr 2008 12:36:15 PDT'],
+            ['2004-08-12T23:38:38-0700', 'Thu, 12 Aug 2004 11:38:38 PM -0700 (PDT)'],
+            ['2006-01-04T21:47:28+0000', 'WED 04, JAN 2006 21:47:28'],
         ];
     }
 }
