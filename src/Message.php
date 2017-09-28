@@ -166,6 +166,26 @@ class Message extends Message\Part
     }
 
     /**
+     * Get message unseen flag value (from headers)
+     *
+     * @return string
+     */
+    public function isRecent(): string
+    {
+        return $this->getHeaders()->get('recent');
+    }
+
+    /**
+     * Get message unseen flag value (from headers)
+     *
+     * @return bool
+     */
+    public function isUnseen(): bool
+    {
+        return 'U' === $this->getHeaders()->get('unseen');
+    }
+
+    /**
      * Get message flagged flag value (from headers)
      *
      * @return bool
@@ -214,7 +234,7 @@ class Message extends Message\Part
     {
         return
                 'R' === $this->getHeaders()->get('recent')
-            || ('' === $this->getHeaders()->get('recent') && '' !== $this->getHeaders()->get('unseen'))
+            || ('N' !== $this->getHeaders()->get('recent') && 'U' === $this->getHeaders()->get('unseen'))
         ;
     }
 

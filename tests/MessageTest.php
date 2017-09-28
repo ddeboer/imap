@@ -51,6 +51,21 @@ class MessageTest extends AbstractTest
         $this->assertFalse($message->isSeen());
     }
 
+    public function testFlags()
+    {
+        $this->createTestMessage($this->mailbox, 'Message A');
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('N', $message->isRecent());
+        $this->assertFalse($message->isUnseen());
+        $this->assertFalse($message->isFlagged());
+        $this->assertFalse($message->isAnswered());
+        $this->assertFalse($message->isDeleted());
+        $this->assertFalse($message->isDraft());
+        $this->assertFalse($message->isSeen());
+    }
+
     /**
      * @dataProvider provideCharsets
      */
@@ -339,12 +354,16 @@ class MessageTest extends AbstractTest
 
         $this->assertFalse($message->isFlagged());
 
-        $message->setFlag('\Flagged');
+        $message->setFlag('\\Flagged');
 
         $this->assertTrue($message->isFlagged());
 
-        $message->clearFlag('\Flagged');
+        $message->clearFlag('\\Flagged');
 
         $this->assertFalse($message->isFlagged());
+
+        $message->setFlag('\\Seen');
+        $this->assertSame('R', $message->isRecent());
+        $this->assertTrue($message->isSeen());
     }
 }
