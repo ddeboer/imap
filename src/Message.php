@@ -295,10 +295,17 @@ class Message extends Message\Part
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
-            if ($part->getSubtype() == 'HTML') {
+            if (self::SUBTYPE_HTML === $part->getSubtype()) {
                 return $part->getDecodedContent($this->keepUnseen);
             }
         }
+
+        // If message has no parts and is HTML, return content of message itself.
+        if (self::SUBTYPE_HTML === $this->getSubtype()) {
+            return $this->getDecodedContent($this->keepUnseen);
+        }
+
+        return;
     }
 
     /**
@@ -306,17 +313,21 @@ class Message extends Message\Part
      *
      * @return string
      */
-    public function getBodyText(): string
+    public function getBodyText()
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
-            if ($part->getSubtype() == 'PLAIN') {
+            if (self::SUBTYPE_PLAIN === $part->getSubtype()) {
                 return $part->getDecodedContent($this->keepUnseen);
             }
         }
 
         // If message has no parts, return content of message itself.
-        return $this->getDecodedContent($this->keepUnseen);
+        if (self::SUBTYPE_PLAIN === $this->getSubtype()) {
+            return $this->getDecodedContent($this->keepUnseen);
+        }
+
+        return;
     }
 
     /**
