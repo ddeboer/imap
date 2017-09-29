@@ -11,7 +11,6 @@ use Zend\Mime\Mime;
 
 /**
  * @covers \Ddeboer\Imap\Connection::expunge
- * @covers \Ddeboer\Imap\Mailbox::expunge
  * @covers \Ddeboer\Imap\Message
  * @covers \Ddeboer\Imap\MessageIterator
  * @covers \Ddeboer\Imap\Message\Attachment
@@ -221,7 +220,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(3);
         $message->delete();
-        $this->mailbox->expunge();
+        $this->getConnection()->expunge();
 
         $this->assertCount(2, $this->mailbox);
         foreach ($this->mailbox->getMessages() as $message) {
