@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Connection;
-use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Exception\CreateMailboxException;
+use Ddeboer\Imap\Exception\DeleteMailboxException;
+use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 use Ddeboer\Imap\Mailbox;
 
@@ -16,7 +18,7 @@ class ConnectionTest extends AbstractTest
 {
     public function testCannotInstantiateArbitraryConnections()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidResourceException::class);
 
         new Connection(uniqid(), uniqid());
     }
@@ -26,7 +28,7 @@ class ConnectionTest extends AbstractTest
         $connection = $this->createConnection();
         $connection->close();
 
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidResourceException::class);
 
         $connection->close();
     }
@@ -74,7 +76,7 @@ class ConnectionTest extends AbstractTest
 
         $mailbox->delete();
 
-        $this->expectException(Exception::class);
+        $this->expectException(DeleteMailboxException::class);
         $this->expectExceptionMessageRegExp('/NONEXISTENT/');
 
         $mailbox->delete();
@@ -82,7 +84,7 @@ class ConnectionTest extends AbstractTest
 
     public function testCannotCreateMailboxesOnReadonly()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CreateMailboxException::class);
         $this->expectExceptionMessageRegExp('/(SERVERBUG|ALREADYEXISTS)/');
 
         $this->getConnection()->createMailbox('INBOX');
@@ -95,7 +97,7 @@ class ConnectionTest extends AbstractTest
 
     public function testCustomExceptionOnInvalidMailboxName()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CreateMailboxException::class);
         $this->expectExceptionMessageRegExp('/CANNOT/');
 
         $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid("\t")));

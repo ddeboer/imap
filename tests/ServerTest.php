@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Exception;
+use Ddeboer\Imap\Exception\AuthenticationFailedException;
 use Ddeboer\Imap\Server;
 
 /**
@@ -25,7 +25,7 @@ class ServerTest extends AbstractTest
     {
         $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
 
-        $this->expectException(Exception\AuthenticationFailedException::class);
+        $this->expectException(AuthenticationFailedException::class);
         $this->expectExceptionMessageRegExp('/E_WARNING.+AUTHENTICATIONFAILED/s');
 
         $server->authenticate(uniqid('fake_username_'), uniqid('fake_password_'));

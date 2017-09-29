@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
+use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\Search\ConditionInterface;
 
 /**
@@ -126,7 +127,7 @@ class Mailbox implements \Countable, \IteratorAggregate
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
             if (false !== imap_last_error()) {
-                throw new Exception(sprintf('Invalid search criteria [%s]', $query));
+                throw new InvalidSearchCriteriaException(sprintf('Invalid search criteria [%s]', $query));
             }
 
             // imap_search can also return false
@@ -195,7 +196,7 @@ class Mailbox implements \Countable, \IteratorAggregate
             return;
         }
 
-        throw new Exception(sprintf('Cannot reopen mailbox "%s"', $this->getName()));
+        throw new ReopenMailboxException(sprintf('Cannot reopen mailbox "%s"', $this->getName()));
     }
 
     private function isMailboxOpen(): bool

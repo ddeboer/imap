@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-use Ddeboer\Imap\Exception\Exception;
+use Ddeboer\Imap\Exception\CreateMailboxException;
+use Ddeboer\Imap\Exception\DeleteMailboxException;
+use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 
 /**
@@ -42,7 +44,7 @@ class Connection implements \Countable
     public function getResource()
     {
         if (false === is_resource($this->resource) || 'imap' !== get_resource_type($this->resource)) {
-            throw new Exception('Supplied resource is not a valid imap resource');
+            throw new InvalidResourceException('Supplied resource is not a valid imap resource');
         }
 
         return $this->resource;
@@ -139,14 +141,14 @@ class Connection implements \Countable
      *
      * @param $name
      *
-     * @throws Exception
+     * @throws CreateMailboxException
      *
      * @return Mailbox
      */
     public function createMailbox(string $name): Mailbox
     {
         if (false === imap_createmailbox($this->getResource(), $this->server . mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
-            throw new Exception(sprintf(
+            throw new CreateMailboxException(sprintf(
                 'Can not create "%s" mailbox at "%s"',
                 $name,
                 $this->server
@@ -158,10 +160,17 @@ class Connection implements \Countable
         return $this->getMailbox($name);
     }
 
+    /**
+     * Create mailbox
+     *
+     * @param Mailbox
+     *
+     * @throws DeleteMailboxException
+     */
     public function deleteMailbox(Mailbox $mailbox)
     {
         if (false === imap_deletemailbox($this->getResource(), $mailbox->getFullEncodedName())) {
-            throw new Exception(sprintf(
+            throw new DeleteMailboxException(sprintf(
                 'Mailbox "%s" could not be deleted',
                 $mailbox->getName()
             ));
