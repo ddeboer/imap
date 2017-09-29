@@ -172,6 +172,7 @@ Move a message to another mailbox:
 ```php
 $mailbox = $connection->getMailbox('another-mailbox');
 $message->move($mailbox);
+$connection->expunge();
 ```
 
 Deleting messages:
@@ -179,7 +180,7 @@ Deleting messages:
 ```php
 $mailbox->getMessage(1)->delete();
 $mailbox->getMessage(2)->delete();
-$mailbox->expunge();
+$connection->expunge();
 ```
 
 ### Message Attachments
