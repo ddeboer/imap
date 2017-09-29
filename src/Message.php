@@ -7,6 +7,7 @@ namespace Ddeboer\Imap;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
+use Ddeboer\Imap\Exception\MessageStructureException;
 use Ddeboer\Imap\Message\EmailAddress;
 
 /**
@@ -430,12 +431,9 @@ class Message extends Message\Part
         );
 
         restore_error_handler();
-        
-        if (!$structure) {
-            throw new MessageDoesNotExistException(
-                $this->messageNumber,
-                "imap_fetchstructure returned empty message"
-            );
+
+        if (!$structure instanceof \stdClass) {
+            throw new MessageStructureException('imap_fetchstructure() returned empty message');
         }
 
         $this->parseStructure($structure);
