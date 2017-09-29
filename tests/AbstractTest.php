@@ -7,11 +7,11 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Connection;
 use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\Server;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Mail;
 use Zend\Mime;
 
-abstract class AbstractTest extends PHPUnit_Framework_TestCase
+abstract class AbstractTest extends TestCase
 {
     const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
 
