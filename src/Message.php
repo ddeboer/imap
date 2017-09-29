@@ -299,6 +299,13 @@ class Message extends Message\Part
                 return $part->getDecodedContent($this->keepUnseen);
             }
         }
+
+        // If message has no parts and is HTML, return content of message itself.
+        if ($this->getSubtype() == 'HTML') {
+            return $this->getDecodedContent($this->keepUnseen);
+        }
+
+        return null;
     }
 
     /**
@@ -316,7 +323,11 @@ class Message extends Message\Part
         }
 
         // If message has no parts, return content of message itself.
-        return $this->getDecodedContent($this->keepUnseen);
+        if ($this->getSubtype() != 'HTML') {
+            return $this->getDecodedContent($this->keepUnseen);
+        }
+
+        return null;
     }
 
     /**
