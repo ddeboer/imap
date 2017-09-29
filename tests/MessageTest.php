@@ -381,7 +381,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi', $message->getBodyText());
+        $this->assertSame('Hi', rtrim($message->getBodyText()));
         $this->assertNull($message->getBodyHtml());
     }
 
@@ -391,7 +391,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
+        $this->assertSame('<html><body>Hi</body></html>', rtrim($message->getBodyHtml()));
         $this->assertNull($message->getBodyText());
     }
 
