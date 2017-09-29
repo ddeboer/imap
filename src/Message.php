@@ -161,7 +161,7 @@ class Message extends Message\Part
     {
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
-        $this->headers = null;
+        $this->clearHeaders();
 
         return $this->doGetContent($this->keepUnseen ? $this->keepUnseen : $keepUnseen);
     }
@@ -374,7 +374,7 @@ class Message extends Message\Part
     public function delete()
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
-        $this->headers = null;
+        $this->clearHeaders();
 
         if (!imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
             throw new MessageDeleteException(sprintf(
@@ -421,15 +421,17 @@ class Message extends Message\Part
 
         return $this;
     }
-    
+
     /**
      * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
-     * 
-     * @return string The raw message.
+     *
+     * @return string the raw message
      */
-    public function getRaw()
+    public function getRawMessage(bool $keepUnseen = false): string
     {
-        return imap_fetchbody($this->stream, imap_msgno($this->stream, $this->messageNumber), "");
+        $this->clearHeaders();
+
+        return imap_fetchbody($this->stream, $this->messageNumber, '', \FT_UID | ($keepUnseen ? \FT_PEEK : null));
     }
 
     /**
