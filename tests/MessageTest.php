@@ -394,4 +394,17 @@ class MessageTest extends AbstractTest
         $this->assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
         $this->assertNull($message->getBodyText());
     }
+
+    public function testGetRawMessage()
+    {
+        $fixture = $this->getFixture('structured_with_attachment');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame($fixture, $message->getRawMessage(true));
+        $this->assertFalse($message->isSeen());
+        $this->assertSame($fixture, $message->getRawMessage());
+        $this->assertTrue($message->isSeen());
+    }
 }
