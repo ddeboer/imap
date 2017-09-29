@@ -441,7 +441,7 @@ class Message extends Message\Part
      *
      * @return bool
      */
-    public function setFlag(string $flag)
+    public function setFlag(string $flag): bool
     {
         $result = imap_setflag_full($this->stream, (string) $this->messageNumber, $flag, \ST_UID);
 
@@ -457,7 +457,7 @@ class Message extends Message\Part
      *
      * @return bool
      */
-    public function clearFlag(string $flag)
+    public function clearFlag(string $flag): bool
     {
         $result = imap_clearflag_full($this->stream, (string) $this->messageNumber, $flag, \ST_UID);
 
