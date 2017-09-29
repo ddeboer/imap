@@ -159,16 +159,6 @@ class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Delete all messages marked for deletion
-     *
-     * @return Mailbox
-     */
-    public function expunge()
-    {
-        $this->connection->expunge();
-    }
-
-    /**
      * Add a message to the mailbox
      *
      * @param string $message
