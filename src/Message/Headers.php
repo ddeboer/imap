@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Parameters;
 
 /**
@@ -45,13 +46,19 @@ class Headers extends Parameters
                 return (int) $value;
             case 'date':
                 $value = $this->decode($value);
-                $value = str_replace(',', '', $value);
-                $value = preg_replace('/ +\(.*\)/', '', $value);
-                if (0 === preg_match('/\d\d:\d\d:\d\d.* [\+\-]?\d\d:?\d\d/', $value)) {
-                    $value .= ' +0000';
+                $alteredValue = str_replace(',', '', $value);
+                $alteredValue = preg_replace('/ +\(.*\)/', '', $alteredValue);
+                if (0 === preg_match('/\d\d:\d\d:\d\d.* [\+\-]?\d\d:?\d\d/', $alteredValue)) {
+                    $alteredValue .= ' +0000';
                 }
 
-                return new \DateTimeImmutable($value);
+                try {
+                    $date = new \DateTimeImmutable($alteredValue);
+                } catch (\Exception $ex) {
+                    throw new InvalidDateHeaderException(sprintf('Invalid Date header found: "%s"', $value), 0, $ex);
+                }
+
+                return $date;
             case 'from':
                 return $this->decodeEmailAddress(current($value));
             case 'to':

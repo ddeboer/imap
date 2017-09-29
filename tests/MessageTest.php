@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message\EmailAddress;
 use Zend\Mime\Mime;
@@ -327,6 +328,18 @@ class MessageTest extends AbstractTest
             ['2004-08-12T23:38:38-0700', 'Thu, 12 Aug 2004 11:38:38 PM -0700 (PDT)'],
             ['2006-01-04T21:47:28+0000', 'WED 04, JAN 2006 21:47:28'],
         ];
+    }
+
+    public function testInvalidDate()
+    {
+        $template = $this->getFixture('date-template');
+        $message = str_replace('%date_raw_header%', 'Fri!', $template);
+        $this->mailbox->addMessage($message);
+
+        $message = $this->mailbox->getMessage(1);
+        $this->expectException(InvalidDateHeaderException::class);
+
+        $message->getDate();
     }
 
     public function testRawHeaders()
