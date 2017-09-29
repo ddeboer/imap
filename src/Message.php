@@ -232,10 +232,7 @@ class Message extends Message\Part
      */
     public function isSeen(): bool
     {
-        return
-                'R' === $this->getHeaders()->get('recent')
-            || ('N' !== $this->getHeaders()->get('recent') && 'U' === $this->getHeaders()->get('unseen'))
-        ;
+        return 'N' !== $this->getHeaders()->get('recent') && 'U' !== $this->getHeaders()->get('unseen');
     }
 
     /**
