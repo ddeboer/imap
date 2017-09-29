@@ -366,4 +366,12 @@ class MessageTest extends AbstractTest
         $this->assertSame('R', $message->isRecent());
         $this->assertTrue($message->isSeen());
     }
+
+    /**
+     * @see https://github.com/ddeboer/imap/pull/143
+     */
+    public function testUnstructuredMessage()
+    {
+        $this->markTestIncomplete('Missing test case that gets imap_fetchstructure() to return false;');
+    }
 }
