@@ -390,20 +390,16 @@ class Message extends Message\Part
      * @param Mailbox $mailbox
      *
      * @throws MessageMoveException
-     *
-     * @return Message
      */
-    public function move(Mailbox $mailbox): self
+    public function move(Mailbox $mailbox)
     {
-        if (!imap_mail_move($this->stream, $this->messageNumber, $mailbox->getName(), \CP_UID)) {
+        if (!imap_mail_move($this->stream, (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
             throw new MessageMoveException(sprintf(
                 'Message "%s" cannot be moved to "%s"',
                 $this->messageNumber,
                 $mailbox->getName()
             ));
         }
-
-        return $this;
     }
 
     /**
