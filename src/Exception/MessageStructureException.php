@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Exception;
 
-final class MessageStructureException extends Exception
+final class MessageStructureException extends AbstractException
 {
 }

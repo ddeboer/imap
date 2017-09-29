@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Exception;
 
-class Exception extends \RuntimeException
+abstract class AbstractException extends \RuntimeException
 {
     private static $errorLabels = [
         E_ERROR => 'E_ERROR',

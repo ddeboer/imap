@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Exception;
+use Ddeboer\Imap\Exception\MessageDoesNotExistException;
+use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\Mailbox;
 
 /**
- * @covers \Ddeboer\Imap\Exception\Exception
+ * @covers \Ddeboer\Imap\Exception\AbstractException
  * @covers \Ddeboer\Imap\Mailbox
  */
 class MailboxTest extends AbstractTest
@@ -69,7 +70,7 @@ class MailboxTest extends AbstractTest
 
     public function testGetMessageThrowsException()
     {
-        $this->expectException(Exception\MessageDoesNotExistException::class);
+        $this->expectException(MessageDoesNotExistException::class);
         $this->expectExceptionMessageRegExp('/E_WARNING.+Message 999 does not exist.+Bad message number/s');
 
         $this->mailbox->getMessage(999);
@@ -84,7 +85,7 @@ class MailboxTest extends AbstractTest
     {
         $this->mailbox->delete();
 
-        $this->expectException(Exception\Exception::class);
+        $this->expectException(ReopenMailboxException::class);
 
         $this->mailbox->count();
     }

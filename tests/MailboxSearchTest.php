@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use DateTimeImmutable;
-use Ddeboer\Imap\Exception;
+use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Search;
 use Ddeboer\Imap\SearchExpression;
 
@@ -66,7 +66,7 @@ final class MailboxSearchTest extends AbstractTest
 
     public function testUnknownCriterion()
     {
-        $this->expectException(Exception\Exception::class);
+        $this->expectException(InvalidSearchCriteriaException::class);
 
         $this->mailbox->getMessages(new TestAsset\UnknownCriterion());
     }
