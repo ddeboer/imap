@@ -28,7 +28,7 @@ class Part implements \RecursiveIterator
     const ENCODING_BASE64 = 'base64';
     const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
 
-    const SUBTYPE_TEXT = 'TEXT';
+    const SUBTYPE_PLAIN = 'PLAIN';
     const SUBTYPE_HTML = 'HTML';
 
     protected $typesMap = [

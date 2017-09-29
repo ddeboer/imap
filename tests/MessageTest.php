@@ -374,4 +374,24 @@ class MessageTest extends AbstractTest
     {
         $this->markTestIncomplete('Missing test case that gets imap_fetchstructure() to return false;');
     }
+
+    public function testPlainOnlyMessage()
+    {
+        $this->mailbox->addMessage($this->getFixture('plain_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('Hi', $message->getBodyText());
+        $this->assertNull($message->getBodyHtml());
+    }
+
+    public function testHtmlOnlyMessage()
+    {
+        $this->mailbox->addMessage($this->getFixture('html_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
+        $this->assertNull($message->getBodyText());
+    }
 }
