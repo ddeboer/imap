@@ -436,4 +436,14 @@ class MessageTest extends AbstractTest
         $this->assertSame($fixture, $message->getRawMessage());
         $this->assertTrue($message->isSeen());
     }
+
+    public function testAttachmentOnlyEmail()
+    {
+        $fixture = $this->getFixture('mail_that_is_attachment');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(1, $message->getAttachments());
+    }
 }
