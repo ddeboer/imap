@@ -230,11 +230,9 @@ class Part implements \RecursiveIterator
         }
 
         // When the message is not multipart and the body is the attachment content
-        if (isset($structure->disposition) &&
-            strtolower($structure->disposition) == 'attachment' &&
-          ! ($this instanceof Attachment) // Prevents infinite recursion
-        ) {
-            $this->parts[] = new Attachment($this->stream, $this->messageNumber, 1, $structure);
+        // Prevents infinite recursion
+        if ($this->isAttachment($structure) && !$this instanceof Attachment) {
+            $this->parts[] = new Attachment($this->stream, $this->messageNumber, '1', $structure);
         }
 
         if (isset($structure->parts)) {
