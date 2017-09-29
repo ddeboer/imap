@@ -431,6 +431,13 @@ class Message extends Message\Part
         );
 
         restore_error_handler();
+        
+        if (!$structure) {
+            throw new MessageDoesNotExistException(
+                $this->messageNumber,
+                "imap_fetchstructure returned empty message"
+            );
+        }
 
         if (!$structure instanceof \stdClass) {
             throw new MessageStructureException('imap_fetchstructure() returned empty message');
