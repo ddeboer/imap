@@ -228,6 +228,23 @@ class MessageTest extends AbstractTest
         }
     }
 
+    public function testMove()
+    {
+        $mailboxOne = $this->createMailbox();
+        $mailboxTwo = $this->createMailbox();
+        $this->createTestMessage($mailboxOne, 'Message A');
+
+        $this->assertCount(1, $mailboxOne);
+        $this->assertCount(0, $mailboxTwo);
+
+        $message = $mailboxOne->getMessage(1);
+        $message->move($mailboxTwo);
+        $this->getConnection()->expunge();
+
+        $this->assertCount(0, $mailboxOne);
+        $this->assertCount(1, $mailboxTwo);
+    }
+
     /**
      * @dataProvider getAttachmentFixture
      */

@@ -41,6 +41,16 @@ class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
+     * Get mailbox encoded path
+     *
+     * @return string
+     */
+    public function getEncodedName(): string
+    {
+        return preg_replace('/^{.+}/', '', $this->info->name);
+    }
+
+    /**
      * Get mailbox encoded full name
      *
      * @return string
