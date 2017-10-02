@@ -218,11 +218,11 @@ class Part implements \RecursiveIterator
         }
 
         $this->parameters = new Parameters();
-        if (is_array($structure->parameters)) {
+        if ($structure->ifparameters) {
             $this->parameters->add($structure->parameters);
         }
 
-        if (is_array($structure->dparameters)) {
+        if ($structure->ifdparameters) {
             $this->parameters->add($structure->dparameters);
         }
 
