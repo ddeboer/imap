@@ -11,11 +11,6 @@ abstract class AbstractMessage extends Part
     private $attachments;
 
     /**
-     * @var bool
-     */
-    private $keepUnseen = false;
-
-    /**
      * Get raw message headers
      *
      * @return string
@@ -158,13 +153,13 @@ abstract class AbstractMessage extends Part
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
             if (self::SUBTYPE_HTML === $part->getSubtype()) {
-                return $part->getDecodedContent($this->keepUnseen);
+                return $part->getDecodedContent();
             }
         }
 
         // If message has no parts and is HTML, return content of message itself.
         if (self::SUBTYPE_HTML === $this->getSubtype()) {
-            return $this->getDecodedContent($this->keepUnseen);
+            return $this->getDecodedContent();
         }
 
         return;
@@ -180,13 +175,13 @@ abstract class AbstractMessage extends Part
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
             if (self::SUBTYPE_PLAIN === $part->getSubtype()) {
-                return $part->getDecodedContent($this->keepUnseen);
+                return $part->getDecodedContent();
             }
         }
 
         // If message has no parts, return content of message itself.
         if (self::SUBTYPE_PLAIN === $this->getSubtype()) {
-            return $this->getDecodedContent($this->keepUnseen);
+            return $this->getDecodedContent();
         }
 
         return;

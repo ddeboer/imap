@@ -19,11 +19,6 @@ class Message extends Message\AbstractMessage
     private $attachments;
 
     /**
-     * @var bool
-     */
-    private $keepUnseen = false;
-
-    /**
      * Constructor
      *
      * @param resource $stream        IMAP stream
@@ -84,11 +79,11 @@ class Message extends Message\AbstractMessage
      *
      * @return string the raw message
      */
-    public function getRawMessage(bool $keepUnseen = false): string
+    public function getRawMessage(): string
     {
         $this->clearHeaders();
 
-        return imap_fetchbody($this->stream, $this->messageNumber, '', \FT_UID | ($keepUnseen ? \FT_PEEK : null));
+        return imap_fetchbody($this->stream, $this->messageNumber, '', \FT_UID | \FT_PEEK);
     }
 
     /**
@@ -118,39 +113,21 @@ class Message extends Message\AbstractMessage
     }
 
     /**
-     * Prevent the message from being marked as seen
-     *
-     * Defaults to true, so messages that are read will be still marked as unseen.
-     *
-     * @param bool $bool
-     *
-     * @return Message
-     */
-    public function keepUnseen(bool $bool = true): self
-    {
-        $this->keepUnseen = $bool;
-
-        return $this;
-    }
-
-    /**
      * Get raw part content
-     *
-     * @param mixed $keepUnseen
      *
      * @return string
      */
-    public function getContent(bool $keepUnseen = false): string
+    public function getContent(): string
     {
         // Null headers, so subsequent calls to getHeaders() will return
         // updated seen flag
         $this->clearHeaders();
 
-        return $this->doGetContent($this->keepUnseen ? $this->keepUnseen : $keepUnseen);
+        return $this->doGetContent();
     }
 
     /**
-     * Get message unseen flag value (from headers)
+     * Get message recent flag value (from headers)
      *
      * @return string
      */
@@ -217,6 +194,16 @@ class Message extends Message\AbstractMessage
     public function isSeen(): bool
     {
         return 'N' !== $this->getHeaders()->get('recent') && 'U' !== $this->getHeaders()->get('unseen');
+    }
+
+    /**
+     * Mark message as seen
+     *
+     * @return bool
+     */
+    public function maskAsSeen(): bool
+    {
+        return $this->setFlag('\\Seen');
     }
 
     /**
