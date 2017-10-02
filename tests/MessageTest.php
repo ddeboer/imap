@@ -408,6 +408,23 @@ class MessageTest extends AbstractTest
         $this->assertSame($expectedHeaders, $message->getRawHeaders());
     }
 
+    /**
+     * @see https://github.com/ddeboer/imap/issues/200
+     */
+    public function testGetAllHeaders()
+    {
+        $this->mailbox->addMessage($this->getFixture('bcc'));
+
+        $message = $this->mailbox->getMessage(1);
+        $headers = $message->getHeaders();
+
+        $this->assertGreaterThan(9, count($headers));
+
+        $this->assertArrayHasKey('from', $headers);
+        $this->assertArrayHasKey('date', $headers);
+        $this->assertArrayHasKey('recent', $headers);
+    }
+
     public function testSetFlags()
     {
         $this->createTestMessage($this->mailbox, 'Message A');
