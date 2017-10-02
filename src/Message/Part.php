@@ -208,12 +208,8 @@ class Part implements \RecursiveIterator
             throw new \UnexpectedValueException(sprintf('Cannot decode "%s"', $structure->encoding));
         }
 
-        if (isset($structure->encoding)) {
-            $this->encoding = $this->encodingsMap[$structure->encoding];
-        }
-        if (isset($structure->subtype)) {
-            $this->subtype = $structure->subtype;
-        }
+        $this->encoding = $this->encodingsMap[$structure->encoding];
+        $this->subtype = $structure->subtype;
 
         foreach (['disposition', 'bytes', 'description'] as $optional) {
             if (isset($structure->{$optional})) {
@@ -222,11 +218,11 @@ class Part implements \RecursiveIterator
         }
 
         $this->parameters = new Parameters();
-        if (isset($structure->parameters) && is_array($structure->parameters)) {
+        if (is_array($structure->parameters)) {
             $this->parameters->add($structure->parameters);
         }
 
-        if (isset($structure->dparameters)) {
+        if (is_array($structure->dparameters)) {
             $this->parameters->add($structure->dparameters);
         }
 
