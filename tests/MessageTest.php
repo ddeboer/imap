@@ -16,6 +16,7 @@ use Zend\Mime\Mime;
  * @covers \Ddeboer\Imap\Connection::expunge
  * @covers \Ddeboer\Imap\Message
  * @covers \Ddeboer\Imap\MessageIterator
+ * @covers \Ddeboer\Imap\Message\AbstractMessage
  * @covers \Ddeboer\Imap\Message\Attachment
  * @covers \Ddeboer\Imap\Message\EmailAddress
  * @covers \Ddeboer\Imap\Message\Headers

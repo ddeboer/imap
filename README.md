@@ -205,6 +205,25 @@ file_put_contents(
 );
 ```
 
+
+### Embedded Messages
+
+Check if attachment is embedded message and get it:
+
+```php
+$attachments = $message->getAttachments();
+
+foreach ($attachments as $attachment) {
+    if ($attachment->isEmbeddedMessage()) {
+        $embeddedMessage = $attachment->getEmbeddedMessage();
+        // $embeddedMessage is instance of \Ddeboer\Imap\Message\EmbeddedMessage
+    }
+}
+```
+
+An EmbeddedMessage has the same API as a normal Message, apart from flags
+and operations like copy, move or delete.
+
 Running the Tests
 -----------------
 

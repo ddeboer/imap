@@ -105,6 +105,16 @@ class Part implements \RecursiveIterator
         $this->parseStructure($structure);
     }
 
+    /**
+     * Get message number (from headers)
+     *
+     * @return int
+     */
+    public function getNumber(): int
+    {
+        return $this->messageNumber;
+    }
+
     public function getCharset(): string
     {
         return $this->parameters->get('charset');
@@ -208,11 +218,11 @@ class Part implements \RecursiveIterator
         }
 
         $this->parameters = new Parameters();
-        if (is_array($structure->parameters)) {
+        if ($structure->ifparameters) {
             $this->parameters->add($structure->parameters);
         }
 
-        if (isset($structure->dparameters)) {
+        if ($structure->ifdparameters) {
             $this->parameters->add($structure->dparameters);
         }
 
@@ -329,6 +339,16 @@ class Part implements \RecursiveIterator
                 }
             }
         }
+
+        /*
+        if (isset($part->dparameters)) {
+            foreach ($part->dparameters as $parameter) {
+                if ('name' === strtolower($parameter->attribute) || 'filename' === strtolower($parameter->attribute)) {
+                    return true;
+                }
+            }
+        }
+        */
 
         return false;
     }
