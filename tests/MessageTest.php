@@ -259,6 +259,22 @@ class MessageTest extends AbstractTest
         $this->assertCount(1, $mailboxTwo);
     }
 
+    public function testCopy()
+    {
+        $mailboxOne = $this->createMailbox();
+        $mailboxTwo = $this->createMailbox();
+        $this->createTestMessage($mailboxOne, 'Message A');
+
+        $this->assertCount(1, $mailboxOne);
+        $this->assertCount(0, $mailboxTwo);
+
+        $message = $mailboxOne->getMessage(1);
+        $message->copy($mailboxTwo);
+
+        $this->assertCount(1, $mailboxOne);
+        $this->assertCount(1, $mailboxTwo);
+    }
+
     /**
      * @dataProvider getAttachmentFixture
      */

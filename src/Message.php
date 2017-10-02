@@ -365,19 +365,22 @@ class Message extends Message\Part
     }
 
     /**
-     * Delete message
+     * Move message to another mailbox
      *
-     * @throws MessageDeleteException
+     * @param Mailbox $mailbox
+     *
+     * @throws MessageCopyException
      */
-    public function delete()
+    public function copy(Mailbox $mailbox)
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
-            throw new MessageDeleteException(sprintf(
-                'Message "%s" cannot be deleted',
-                $this->messageNumber
+        if (!imap_mail_copy($this->stream, (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
+            throw new MessageCopyException(sprintf(
+                'Message "%s" cannot be copied to "%s"',
+                $this->messageNumber,
+                $mailbox->getName()
             ));
         }
     }
@@ -391,11 +394,32 @@ class Message extends Message\Part
      */
     public function move(Mailbox $mailbox)
     {
+        // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
+        $this->clearHeaders();
+
         if (!imap_mail_move($this->stream, (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
             throw new MessageMoveException(sprintf(
                 'Message "%s" cannot be moved to "%s"',
                 $this->messageNumber,
                 $mailbox->getName()
+            ));
+        }
+    }
+
+    /**
+     * Delete message
+     *
+     * @throws MessageDeleteException
+     */
+    public function delete()
+    {
+        // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
+        $this->clearHeaders();
+
+        if (!imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
+            throw new MessageDeleteException(sprintf(
+                'Message "%s" cannot be deleted',
+                $this->messageNumber
             ));
         }
     }
