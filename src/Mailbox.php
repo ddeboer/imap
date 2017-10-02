@@ -7,6 +7,7 @@ namespace Ddeboer\Imap;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\Search\ConditionInterface;
+use Ddeboer\Imap\Search\LogicalOperator\All;
 
 /**
  * An IMAP mailbox (commonly referred to as a 'folder')
@@ -114,17 +115,24 @@ class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return Message[]|MessageIterator
      */
-    public function getMessages(ConditionInterface $search = null): MessageIterator
+    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIterator
     {
         $this->init();
 
-        $query = ($search ? $search->toString() : 'ALL');
+        if (null === $search) {
+            $search = new All();
+        }
+        $query = $search->toString();
 
         // We need to clear the stack to know whether imap_last_error()
         // is related to this imap_search
         imap_errors();
 
-        $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
+        if (null !== $sortCriteria) {
+            $messageNumbers = imap_sort($this->connection->getResource(), $sortCriteria, $descending ? 1 : 0, \SE_UID, $query);
+        } else {
+            $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
+        }
         if (false == $messageNumbers) {
             if (false !== imap_last_error()) {
                 throw new InvalidSearchCriteriaException(sprintf('Invalid search criteria [%s]', $query));
