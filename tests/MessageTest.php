@@ -7,6 +7,8 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message\EmailAddress;
+use Ddeboer\Imap\MessageIterator;
+use Ddeboer\Imap\Search;
 use Ddeboer\Imap\Parameters;
 use Zend\Mime\Mime;
 
@@ -490,5 +492,26 @@ class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->assertCount(1, $message->getAttachments());
+    }
+
+    public function testSort()
+    {
+        $this->createTestMessage($this->mailbox, 'B');
+        $this->createTestMessage($this->mailbox, 'A');
+        $this->createTestMessage($this->mailbox, 'C');
+
+        $concatSubjects = function(MessageIterator $it) {
+            $subject = '';
+            foreach ($it as $message) {
+                $subject .= $message->getSubject();
+            }
+
+            return $subject;
+        };
+
+        $this->assertSame('BAC', $concatSubjects($this->mailbox->getMessages()));
+        $this->assertSame('ABC', $concatSubjects($this->mailbox->getMessages(null, \SORTSUBJECT)));
+        $this->assertSame('CBA', $concatSubjects($this->mailbox->getMessages(null, \SORTSUBJECT, true)));
+        $this->assertSame('B', $concatSubjects($this->mailbox->getMessages(new Search\Text\Subject('B'), \SORTSUBJECT, true)));
     }
 }
