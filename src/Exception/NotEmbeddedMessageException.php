@@ -1,11 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Exception;
 
-class NotEmbeddedMessageException extends Exception
+final class NotEmbeddedMessageException extends AbstractException
 {
-    public function __construct()
-    {
-        parent::__construct("Attachment %s in message %s is not embedded message");
-    }
 }

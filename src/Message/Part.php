@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
-use Ddeboer\Imap\EmbeddedMessage\EmbeddedMessage;
-use Ddeboer\Imap\Exception\Exception;
-use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
 use Ddeboer\Imap\Parameters;
 
 /**
@@ -108,6 +105,16 @@ class Part implements \RecursiveIterator
         $this->parseStructure($structure);
     }
 
+    /**
+     * Get message number (from headers)
+     *
+     * @return int
+     */
+    public function getNumber(): int
+    {
+        return $this->messageNumber;
+    }
+
     public function getCharset(): string
     {
         return $this->parameters->get('charset');
@@ -141,24 +148,6 @@ class Part implements \RecursiveIterator
     public function getParameters(): Parameters
     {
         return $this->parameters;
-    }
-
-    public function isEmbeddedMessage()
-    {
-        return $this->type === "message";
-    }
-
-    /**
-     * Return embedded message
-     * @throws Exception when tryi
-     * @return EmbeddedMessage
-     */
-    public function getEmbeddedMessage()
-    {
-        if ($this->type !== "message") {
-            throw new NotEmbeddedMessageException;
-        }
-        return new EmbeddedMessage($this->stream, $this->messageNumber, $this->partNumber);
     }
 
     /**
@@ -355,13 +344,15 @@ class Part implements \RecursiveIterator
             }
         }
 
-        if(isset($part->dparameters)) {
+        /*
+        if (isset($part->dparameters)) {
             foreach ($part->dparameters as $parameter) {
                 if ('name' === strtolower($parameter->attribute) || 'filename' === strtolower($parameter->attribute)) {
                     return true;
                 }
             }
         }
+        */
 
         return false;
     }

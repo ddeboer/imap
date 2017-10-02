@@ -35,8 +35,8 @@ MIME-Version: 1.0
 Content-Type: multipart/mixed;
  boundary="=_995890bdbf8bd158f2cbae0e8d966000"
 Date: Fri, 29 Jan 2016 14:22:13 +0100
-From: demo@cerstor.cz
-To: demo@cerstor.cz
+From: demo-from@cerstor.cz
+To: demo-to@cerstor.cz
 Subject: demo
 Message-ID: <4cbaf57cb00891c53b32e1d63367740c@cerstor.cz>
 X-Sender: demo@cerstor.cz

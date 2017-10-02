@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-use Ddeboer\Imap\Message\Attachment;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\MessageStructureException;
-use Ddeboer\Imap\Message\EmailAddress;
 
 /**
  * An IMAP message (e-mail)
  */
-class Message extends Message\Part
+class Message extends Message\AbstractMessage
 {
     private $headers;
     private $rawHeaders;
@@ -33,120 +31,106 @@ class Message extends Message\Part
      */
     public function __construct($stream, int $messageNumber)
     {
-        $structure = self::loadStructure($stream, $messageNumber);
+        $structure = $this->loadStructure($stream, $messageNumber);
         parent::__construct($stream, $messageNumber, null, $structure);
     }
 
     /**
-     * Get message id
+     * Load message structure
      *
-     * A unique message id in the form <...>
+     * @param mixed $stream
+     */
+    private function loadStructure($stream, int $messageNumber): \stdClass
+    {
+        set_error_handler(function ($nr, $error) use ($messageNumber) {
+            throw new MessageDoesNotExistException(sprintf(
+                'Message %s does not exist: %s',
+                $messageNumber,
+                $error
+            ), $nr);
+        });
+
+        $structure = imap_fetchstructure(
+            $stream,
+            $messageNumber,
+            \FT_UID
+        );
+
+        restore_error_handler();
+
+        if (!$structure instanceof \stdClass) {
+            throw new MessageStructureException('imap_fetchstructure() returned empty message');
+        }
+
+        return $structure;
+    }
+
+    /**
+     * Get raw message headers
      *
      * @return string
      */
-    public function getId(): string
+    public function getRawHeaders(): string
     {
-        return $this->getHeaders()->get('message_id');
+        if (null === $this->rawHeaders) {
+            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
+        }
+
+        return $this->rawHeaders;
     }
 
     /**
-     * Get message sender (from headers)
+     * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
      *
-     * @return EmailAddress
+     * @return string the raw message
      */
-    public function getFrom(): EmailAddress
+    public function getRawMessage(bool $keepUnseen = false): string
     {
-        return $this->getHeaders()->get('from');
+        $this->clearHeaders();
+
+        return imap_fetchbody($this->stream, $this->messageNumber, '', \FT_UID | ($keepUnseen ? \FT_PEEK : null));
     }
 
     /**
-     * Get To recipients
+     * Get message headers
      *
-     * @return EmailAddress[] Empty array in case message has no To: recipients
+     * @return Message\Headers
      */
-    public function getTo(): array
+    public function getHeaders(): Message\Headers
     {
-        return $this->getHeaders()->get('to') ?: [];
+        if (null === $this->headers) {
+            // imap_headerinfo is much faster than imap_fetchheader
+            // imap_headerinfo returns only a subset of all mail headers,
+            // but it does include the message flags.
+            $headers = imap_headerinfo($this->stream, imap_msgno($this->stream, $this->messageNumber));
+            $this->headers = new Message\Headers($headers);
+        }
+
+        return $this->headers;
     }
 
     /**
-     * Get Cc recipients
-     *
-     * @return EmailAddress[] Empty array in case message has no CC: recipients
+     * Clearmessage headers
      */
-    public function getCc(): array
+    private function clearHeaders()
     {
-        return $this->getHeaders()->get('cc') ?: [];
+        $this->headers = null;
     }
 
     /**
-     * Get Bcc recipients
+     * Prevent the message from being marked as seen
      *
-     * @return EmailAddress[] Empty array in case message has no BCC: recipients
+     * Defaults to true, so messages that are read will be still marked as unseen.
+     *
+     * @param bool $bool
+     *
+     * @return Message
      */
-    public function getBcc(): array
+    public function keepUnseen(bool $bool = true): self
     {
-        return $this->getHeaders()->get('bcc') ?: [];
-    }
+        $this->keepUnseen = $bool;
 
-    /**
-     * Get Reply-To recipients
-     *
-     * @return EmailAddress[] Empty array in case message has no Reply-To: recipients
-     */
-    public function getReplyTo(): array
-    {
-        return $this->getHeaders()->get('reply_to') ?: [];
-    }
-
-    /**
-     * Get Sender
-     *
-     * @return EmailAddress[] Empty array in case message has no Sender: recipients
-     */
-    public function getSender(): array
-    {
-        return $this->getHeaders()->get('sender') ?: [];
-    }
-
-    /**
-     * Get Return-Path
-     *
-     * @return EmailAddress[] Empty array in case message has no Return-Path: recipients
-     */
-    public function getReturnPath(): array
-    {
-        return $this->getHeaders()->get('return_path') ?: [];
-    }
-
-    /**
-     * Get message number (from headers)
-     *
-     * @return int
-     */
-    public function getNumber(): int
-    {
-        return $this->messageNumber;
-    }
-
-    /**
-     * Get date (from headers)
-     *
-     * @return \DateTimeImmutable
-     */
-    public function getDate(): \DateTimeImmutable
-    {
-        return $this->getHeaders()->get('date');
-    }
-
-    /**
-     * Get message size (from headers)
-     *
-     * @return int
-     */
-    public function getSize()
-    {
-        return $this->getHeaders()->get('size');
+        return $this;
     }
 
     /**
@@ -236,149 +220,6 @@ class Message extends Message\Part
     }
 
     /**
-     * Get message subject (from headers)
-     *
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->getHeaders()->get('subject');
-    }
-
-    /**
-     * Get message headers
-     *
-     * @return Message\Headers
-     */
-    public function getHeaders(): Message\Headers
-    {
-        if (null === $this->headers) {
-            // imap_headerinfo is much faster than imap_fetchheader
-            // imap_headerinfo returns only a subset of all mail headers,
-            // but it does include the message flags.
-            $headers = imap_headerinfo($this->stream, imap_msgno($this->stream, $this->messageNumber));
-            $this->headers = new Message\Headers($headers);
-        }
-
-        return $this->headers;
-    }
-
-    /**
-     * Clearmessage headers
-     */
-    private function clearHeaders()
-    {
-        $this->headers = null;
-    }
-
-    /**
-     * Get raw message headers
-     *
-     * @return string
-     */
-    public function getRawHeaders(): string
-    {
-        if (null === $this->rawHeaders) {
-            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
-        }
-
-        return $this->rawHeaders;
-    }
-
-    /**
-     * Get body HTML
-     *
-     * @return string | null Null if message has no HTML message part
-     */
-    public function getBodyHtml()
-    {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if (self::SUBTYPE_HTML === $part->getSubtype()) {
-                return $part->getDecodedContent($this->keepUnseen);
-            }
-        }
-
-        // If message has no parts and is HTML, return content of message itself.
-        if (self::SUBTYPE_HTML === $this->getSubtype()) {
-            return $this->getDecodedContent($this->keepUnseen);
-        }
-
-        return;
-    }
-
-    /**
-     * Get body text
-     *
-     * @return string
-     */
-    public function getBodyText()
-    {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if (self::SUBTYPE_PLAIN === $part->getSubtype()) {
-                return $part->getDecodedContent($this->keepUnseen);
-            }
-        }
-
-        // If whole message has disposition attachment, return empty string
-        if (strtolower($this->disposition) === 'attachment') {
-            return "";
-        }
-
-        // If message has no parts, return content of message itself.
-        if (self::SUBTYPE_PLAIN === $this->getSubtype()) {
-            return $this->getDecodedContent($this->keepUnseen);
-        }
-
-        return;
-    }
-
-    /**
-     * Get attachments (if any) linked to this e-mail
-     *
-     * @return Message\Attachment[]
-     */
-    public function getAttachments(): array
-    {
-        // If whole email is attachment
-        if (strtolower($this->getDisposition()) === 'attachment' && $this->attachments === null) {
-            $messageStructure = imap_fetchstructure(
-                $this->stream,
-                $this->messageNumber,
-                \FT_UID
-            );
-            $this->attachments = [new Attachment($this->stream, $this->messageNumber, null, $messageStructure)];
-        } elseif (null === $this->attachments) {
-            $this->attachments = [];
-            foreach ($this->getParts() as $part) {
-                if ($part instanceof Message\Attachment) {
-                    $this->attachments[] = $part;
-                }
-                if ($part->hasChildren()) {
-                    foreach ($part->getParts() as $child_part) {
-                        if ($child_part instanceof Message\Attachment) {
-                            $this->attachments[] = $child_part;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $this->attachments;
-    }
-
-    /**
-     * Does this message have attachments?
-     *
-     * @return bool
-     */
-    public function hasAttachments(): bool
-    {
-        return count($this->getAttachments()) > 0;
-    }
-
-    /**
      * Move message to another mailbox
      *
      * @param Mailbox $mailbox
@@ -436,64 +277,6 @@ class Message extends Message\Part
                 $this->messageNumber
             ));
         }
-    }
-
-    /**
-     * Prevent the message from being marked as seen
-     *
-     * Defaults to true, so messages that are read will be still marked as unseen.
-     *
-     * @param bool $bool
-     *
-     * @return Message
-     */
-    public function keepUnseen(bool $bool = true): self
-    {
-        $this->keepUnseen = $bool;
-
-        return $this;
-    }
-
-    /**
-     * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
-     *
-     * @return string the raw message
-     */
-    public function getRawMessage(bool $keepUnseen = false): string
-    {
-        $this->clearHeaders();
-
-        return imap_fetchbody($this->stream, $this->messageNumber, '', \FT_UID | ($keepUnseen ? \FT_PEEK : null));
-    }
-
-    /**
-     * Load message structure
-     *
-     * @param mixed $stream
-     */
-    private static function loadStructure($stream, int $messageNumber): \stdClass
-    {
-        set_error_handler(function ($nr, $error) use ($messageNumber) {
-            throw new MessageDoesNotExistException(sprintf(
-                'Message %s does not exist: %s',
-                $messageNumber,
-                $error
-            ), $nr);
-        });
-
-        $structure = imap_fetchstructure(
-            $stream,
-            $messageNumber,
-            \FT_UID
-        );
-
-        restore_error_handler();
-
-        if (!$structure instanceof \stdClass) {
-            throw new MessageStructureException('imap_fetchstructure() returned empty message');
-        }
-
-        return $structure;
     }
 
     /**
