@@ -33,6 +33,8 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertEquals('demo', $embeddedMessage->getSubject());
         $this->assertEquals('demo-from@cerstor.cz', $embeddedMessage->getFrom()->getFullAddress());
         $this->assertEquals('demo-to@cerstor.cz', $embeddedMessage->getTo()[0]->getFullAddress());
+
+        $this->assertFalse($message->isSeen());
     }
 
     public function testEmbeddedAttachment()

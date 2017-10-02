@@ -153,14 +153,12 @@ class Part implements \RecursiveIterator
     /**
      * Get raw part content
      *
-     * @param mixed $keepUnseen
-     *
      * @return string
      */
-    public function getContent(bool $keepUnseen = false): string
+    public function getContent(): string
     {
         if (null === $this->content) {
-            $this->content = $this->doGetContent($keepUnseen);
+            $this->content = $this->doGetContent();
         }
 
         return $this->content;
@@ -169,14 +167,12 @@ class Part implements \RecursiveIterator
     /**
      * Get decoded part content
      *
-     * @param mixed $keepUnseen
-     *
      * @return string
      */
-    public function getDecodedContent(bool $keepUnseen = false): string
+    public function getDecodedContent(): string
     {
         if (null === $this->decodedContent) {
-            $content = $this->getContent($keepUnseen);
+            $content = $this->getContent();
             if (self::ENCODING_BASE64 === $this->getEncoding()) {
                 $content = base64_decode($content);
             } elseif (self::ENCODING_QUOTED_PRINTABLE === $this->getEncoding()) {
@@ -302,19 +298,15 @@ class Part implements \RecursiveIterator
     /**
      * Get raw message content
      *
-     * @param bool $keepUnseen Whether to keep the message unseen.
-     *                         Default behaviour is set set the seen flag when
-     *                         getting content.
-     *
      * @return string
      */
-    protected function doGetContent(bool $keepUnseen = false)
+    protected function doGetContent()
     {
         return imap_fetchbody(
             $this->stream,
             $this->messageNumber,
             (string) ($this->partNumber ?: '1'),
-            \FT_UID | ($keepUnseen ? \FT_PEEK : null)
+            \FT_UID | \FT_PEEK
         );
     }
 

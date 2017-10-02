@@ -36,23 +36,18 @@ class MessageTest extends AbstractTest
         $this->mailbox = $this->createMailbox();
     }
 
-    public function testKeepUnseen()
+    public function testAlwaysKeepUnseen()
     {
         $this->createTestMessage($this->mailbox, 'Message A');
-        $this->createTestMessage($this->mailbox, 'Message B');
-        $this->createTestMessage($this->mailbox, 'Message C');
 
         $message = $this->mailbox->getMessage(1);
         $this->assertFalse($message->isSeen());
 
         $message->getBodyText();
+        $this->assertFalse($message->isSeen());
+
+        $message->maskAsSeen();
         $this->assertTrue($message->isSeen());
-
-        $message = $this->mailbox->getMessage(2);
-        $this->assertFalse($message->isSeen());
-
-        $message->keepUnseen()->getBodyText();
-        $this->assertFalse($message->isSeen());
     }
 
     public function testFlags()
@@ -214,6 +209,8 @@ class MessageTest extends AbstractTest
         $this->assertEquals('No-address', $cc[1]->getMailbox());
 
         $this->assertCount(0, $message->getReturnPath());
+
+        $this->assertFalse($message->isSeen());
     }
 
     public function testBcc()
@@ -274,6 +271,8 @@ class MessageTest extends AbstractTest
 
         $this->assertCount(1, $mailboxOne);
         $this->assertCount(1, $mailboxTwo);
+
+        $this->assertFalse($message->isSeen());
     }
 
     /**
@@ -295,6 +294,8 @@ class MessageTest extends AbstractTest
             $attachment->getFilename()
         );
         $this->assertNull($attachment->getSize());
+
+        $this->assertFalse($message->isSeen());
     }
 
     public function getAttachmentFixture(): array
@@ -407,6 +408,8 @@ class MessageTest extends AbstractTest
         $expectedHeaders = implode("\r\n", $expectedHeaders);
 
         $this->assertSame($expectedHeaders, $message->getRawHeaders());
+
+        $this->assertFalse($message->isSeen());
     }
 
     /**
@@ -424,6 +427,8 @@ class MessageTest extends AbstractTest
         $this->assertArrayHasKey('from', $headers);
         $this->assertArrayHasKey('date', $headers);
         $this->assertArrayHasKey('recent', $headers);
+
+        $this->assertFalse($message->isSeen());
     }
 
     public function testSetFlags()
@@ -490,6 +495,8 @@ class MessageTest extends AbstractTest
         }
 
         $this->assertCount(2, $parts);
+
+        $this->assertFalse($message->isSeen());
     }
 
     public function testGetRawMessage()
@@ -499,10 +506,7 @@ class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($fixture, $message->getRawMessage(true));
-        $this->assertFalse($message->isSeen());
         $this->assertSame($fixture, $message->getRawMessage());
-        $this->assertTrue($message->isSeen());
     }
 
     public function testAttachmentOnlyEmail()
