@@ -1,0 +1,23 @@
+From: mytaxi Payment <somesender@sending.net>
+To: anonym@anonym.com
+Message-ID: <00000144c8445931-be533ff5-c8b9-4257-a4cd-3c280b2f3854-000000@email.amazonses.com>
+Subject: Ihre mytaxi Quittung (49M6J)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_27875_991041197.1394929323292"
+Date: Sun, 16 Mar 2014 00:22:06 +0000
+
+------=_Part_27875_991041197.1394929323292
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+<body>Hi</body>
+
+------=_Part_27875_991041197.1394929323292
+Content-Type: application/pdf
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=2014-03-49M6J.pdf
+
+XS9JbmZvIDE3IDAgUi9TaXplIDE4Pj4Kc3RhcnR4cmVmCjE0MDIxMQolJUVPRgo=
+------=_Part_27875_991041197.1394929323292--
