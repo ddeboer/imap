@@ -27,21 +27,21 @@ abstract class AbstractException extends \RuntimeException
     final public function __construct(string $message, int $code = 0, \Throwable $previous = null)
     {
         $errorType = '';
-        if (is_int($code) && isset(self::$errorLabels[$code])) {
-            $errorType = sprintf('[%s] ', self::$errorLabels[$code]);
+        if (\is_int($code) && isset(self::$errorLabels[$code])) {
+            $errorType = \sprintf('[%s] ', self::$errorLabels[$code]);
         }
 
         $joinString = "\n- ";
-        $alerts = imap_alerts();
-        $errors = imap_errors();
-        $completeMessage = sprintf(
+        $alerts = \imap_alerts();
+        $errors = \imap_errors();
+        $completeMessage = \sprintf(
             "%s%s\nimap_alerts (%s):%s\nimap_errors (%s):%s",
             $errorType,
             $message,
-            $alerts ? count($alerts) : 0,
-            $alerts ? $joinString . implode($joinString, $alerts) : '',
-            $errors ? count($errors) : 0,
-            $errors ? $joinString . implode($joinString, $errors) : ''
+            $alerts ? \count($alerts) : 0,
+            $alerts ? $joinString . \implode($joinString, $alerts) : '',
+            $errors ? \count($errors) : 0,
+            $errors ? $joinString . \implode($joinString, $errors) : ''
         );
 
         parent::__construct($completeMessage, $code, $previous);

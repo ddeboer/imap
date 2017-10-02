@@ -7,7 +7,7 @@ namespace Ddeboer\Imap;
 use Ddeboer\Imap\Exception\AuthenticationFailedException;
 
 /**
- * An IMAP server
+ * An IMAP server.
  */
 final class Server
 {
@@ -32,7 +32,7 @@ final class Server
     private $parameters;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $hostname   Internet domain name or bracketed IP address
      *                           of server
@@ -46,18 +46,18 @@ final class Server
         string $flags = '/imap/ssl/validate-cert',
         array $parameters = []
     ) {
-        if (!function_exists('imap_open')) {
+        if (!\function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
         }
 
         $this->hostname = $hostname;
         $this->port = $port;
-        $this->flags = $flags ? '/' . ltrim($flags, '/') : '';
+        $this->flags = $flags ? '/' . \ltrim($flags, '/') : '';
         $this->parameters = $parameters;
     }
 
     /**
-     * Authenticate connection
+     * Authenticate connection.
      *
      * @param string $username Username
      * @param string $password Password
@@ -69,11 +69,11 @@ final class Server
     public function authenticate(string $username, string $password): Connection
     {
         // Wrap imap_open, which gives notices instead of exceptions
-        set_error_handler(function ($nr, $message) use ($username) {
-            throw new AuthenticationFailedException(sprintf('Authentication failed for user "%s": %s', $username, $message), $nr);
+        \set_error_handler(function ($nr, $message) use ($username) {
+            throw new AuthenticationFailedException(\sprintf('Authentication failed for user "%s": %s', $username, $message), $nr);
         });
 
-        $resource = imap_open(
+        $resource = \imap_open(
             $this->getServerString(),
             $username,
             $password,
@@ -82,31 +82,31 @@ final class Server
             $this->parameters
         );
 
-        restore_error_handler();
+        \restore_error_handler();
 
         if (false === $resource) {
-            throw new AuthenticationFailedException(sprintf('Authentication failed for user "%s"', $username));
+            throw new AuthenticationFailedException(\sprintf('Authentication failed for user "%s"', $username));
         }
 
-        $check = imap_check($resource);
+        $check = \imap_check($resource);
         $mailbox = $check->Mailbox;
-        $connection = substr($mailbox, 0, strpos($mailbox, '}') + 1);
+        $connection = \substr($mailbox, 0, \strpos($mailbox, '}') + 1);
 
         // These are necessary to get rid of PHP throwing IMAP errors
-        imap_errors();
-        imap_alerts();
+        \imap_errors();
+        \imap_alerts();
 
         return new Connection($resource, $connection);
     }
 
     /**
-     * Glues hostname, port and flags and returns result
+     * Glues hostname, port and flags and returns result.
      *
      * @return string
      */
     private function getServerString(): string
     {
-        return sprintf(
+        return \sprintf(
             '{%s:%s%s}',
             $this->hostname,
             $this->port,

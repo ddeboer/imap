@@ -233,23 +233,23 @@ final class Transcoder
         }
 
         $originalFromCharset = $fromCharset;
-        $lowercaseFromCharset = strtolower($fromCharset);
+        $lowercaseFromCharset = \strtolower($fromCharset);
         if (isset(self::$charsetAliases[$lowercaseFromCharset])) {
             $fromCharset = self::$charsetAliases[$lowercaseFromCharset];
         }
 
-        set_error_handler(function ($nr, $message) use ($originalFromCharset, $fromCharset) {
-            throw new UnsupportedCharsetException(sprintf(
+        \set_error_handler(function ($nr, $message) use ($originalFromCharset, $fromCharset) {
+            throw new UnsupportedCharsetException(\sprintf(
                 'Unsupported charset "%s"%s: %s',
                 $originalFromCharset,
-                ($fromCharset !== $originalFromCharset) ? sprintf(' (alias found: "%s")', $fromCharset) : '',
+                ($fromCharset !== $originalFromCharset) ? \sprintf(' (alias found: "%s")', $fromCharset) : '',
                 $message
             ), $nr);
         });
 
-        $decodedText = mb_convert_encoding($text, 'UTF-8', $fromCharset);
+        $decodedText = \mb_convert_encoding($text, 'UTF-8', $fromCharset);
 
-        restore_error_handler();
+        \restore_error_handler();
 
         return $decodedText;
     }

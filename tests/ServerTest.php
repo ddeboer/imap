@@ -16,7 +16,7 @@ class ServerTest extends AbstractTest
     {
         $connection = $this->getConnection();
 
-        $check = imap_check($connection->getResource());
+        $check = \imap_check($connection->getResource());
 
         $this->assertInstanceOf(\stdClass::class, $check);
     }
@@ -28,6 +28,6 @@ class ServerTest extends AbstractTest
         $this->expectException(AuthenticationFailedException::class);
         $this->expectExceptionMessageRegExp('/E_WARNING.+AUTHENTICATIONFAILED/s');
 
-        $server->authenticate(uniqid('fake_username_'), uniqid('fake_password_'));
+        $server->authenticate(\uniqid('fake_username_'), \uniqid('fake_password_'));
     }
 }

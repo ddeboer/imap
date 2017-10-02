@@ -10,6 +10,6 @@ final class UnknownCriterion implements ConditionInterface
 {
     public function toString(): string
     {
-        return uniqid('NON_EXISTENT_CRITERION_');
+        return \uniqid('NON_EXISTENT_CRITERION_');
     }
 }

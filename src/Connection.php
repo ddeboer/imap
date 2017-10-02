@@ -10,7 +10,7 @@ use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 
 /**
- * A connection to an IMAP server that is authenticated for a user
+ * A connection to an IMAP server that is authenticated for a user.
  */
 final class Connection implements \Countable
 {
@@ -20,7 +20,7 @@ final class Connection implements \Countable
     private $mailboxNames;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param resource $resource
      * @param string   $server
@@ -37,13 +37,13 @@ final class Connection implements \Countable
     }
 
     /**
-     * Get IMAP resource
+     * Get IMAP resource.
      *
      * @return resource
      */
     public function getResource()
     {
-        if (false === is_resource($this->resource) || 'imap' !== get_resource_type($this->resource)) {
+        if (false === \is_resource($this->resource) || 'imap' !== \get_resource_type($this->resource)) {
             throw new InvalidResourceException('Supplied resource is not a valid imap resource');
         }
 
@@ -51,17 +51,17 @@ final class Connection implements \Countable
     }
 
     /**
-     * Delete all messages marked for deletion
+     * Delete all messages marked for deletion.
      *
      * @return Mailbox
      */
     public function expunge()
     {
-        imap_expunge($this->getResource());
+        \imap_expunge($this->getResource());
     }
 
     /**
-     * Close connection
+     * Close connection.
      *
      * @param int $flag
      *
@@ -69,11 +69,11 @@ final class Connection implements \Countable
      */
     public function close(int $flag = 0): bool
     {
-        return imap_close($this->getResource(), $flag);
+        return \imap_close($this->getResource(), $flag);
     }
 
     /**
-     * Get a list of mailboxes (also known as folders)
+     * Get a list of mailboxes (also known as folders).
      *
      * @return Mailbox[]
      */
@@ -92,7 +92,7 @@ final class Connection implements \Countable
     }
 
     /**
-     * Check that a mailbox with the given name exists
+     * Check that a mailbox with the given name exists.
      *
      * @param string $name Mailbox name
      *
@@ -106,7 +106,7 @@ final class Connection implements \Countable
     }
 
     /**
-     * Get a mailbox by its name
+     * Get a mailbox by its name.
      *
      * @param string $name Mailbox name
      *
@@ -117,24 +117,24 @@ final class Connection implements \Countable
     public function getMailbox(string $name): Mailbox
     {
         if (false === $this->hasMailbox($name)) {
-            throw new MailboxDoesNotExistException(sprintf('Mailbox name "%s" does not exist', $name));
+            throw new MailboxDoesNotExistException(\sprintf('Mailbox name "%s" does not exist', $name));
         }
 
         return new Mailbox($this, $name, $this->mailboxNames[$name]);
     }
 
     /**
-     * Count number of messages not in any mailbox
+     * Count number of messages not in any mailbox.
      *
      * @return int
      */
     public function count()
     {
-        return imap_num_msg($this->getResource());
+        return \imap_num_msg($this->getResource());
     }
 
     /**
-     * Create mailbox
+     * Create mailbox.
      *
      * @param $name
      *
@@ -144,8 +144,8 @@ final class Connection implements \Countable
      */
     public function createMailbox(string $name): Mailbox
     {
-        if (false === imap_createmailbox($this->getResource(), $this->server . mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
-            throw new CreateMailboxException(sprintf('Can not create "%s" mailbox at "%s"', $name, $this->server));
+        if (false === \imap_createmailbox($this->getResource(), $this->server . \mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
+            throw new CreateMailboxException(\sprintf('Can not create "%s" mailbox at "%s"', $name, $this->server));
         }
 
         $this->mailboxNames = $this->mailboxes = null;
@@ -154,7 +154,7 @@ final class Connection implements \Countable
     }
 
     /**
-     * Create mailbox
+     * Create mailbox.
      *
      * @param Mailbox
      *
@@ -162,15 +162,15 @@ final class Connection implements \Countable
      */
     public function deleteMailbox(Mailbox $mailbox)
     {
-        if (false === imap_deletemailbox($this->getResource(), $mailbox->getFullEncodedName())) {
-            throw new DeleteMailboxException(sprintf('Mailbox "%s" could not be deleted', $mailbox->getName()));
+        if (false === \imap_deletemailbox($this->getResource(), $mailbox->getFullEncodedName())) {
+            throw new DeleteMailboxException(\sprintf('Mailbox "%s" could not be deleted', $mailbox->getName()));
         }
 
         $this->mailboxes = $this->mailboxNames = null;
     }
 
     /**
-     * Get mailbox names
+     * Get mailbox names.
      *
      * @return array
      */
@@ -181,9 +181,9 @@ final class Connection implements \Countable
         }
 
         $this->mailboxNames = [];
-        $mailboxesInfo = imap_getmailboxes($this->getResource(), $this->server, '*');
+        $mailboxesInfo = \imap_getmailboxes($this->getResource(), $this->server, '*');
         foreach ($mailboxesInfo as $mailboxInfo) {
-            $name = mb_convert_encoding(str_replace($this->server, '', $mailboxInfo->name), 'UTF-8', 'UTF7-IMAP');
+            $name = \mb_convert_encoding(\str_replace($this->server, '', $mailboxInfo->name), 'UTF-8', 'UTF7-IMAP');
             $this->mailboxNames[$name] = $mailboxInfo;
         }
     }

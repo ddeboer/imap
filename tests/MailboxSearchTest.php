@@ -50,16 +50,16 @@ final class MailboxSearchTest extends AbstractTest
 
     public function testSearchCapabilities()
     {
-        $firstSubject = uniqid('first_');
+        $firstSubject = \uniqid('first_');
         $this->createTestMessage($this->mailbox, $firstSubject);
-        $this->createTestMessage($this->mailbox, uniqid('second_'));
+        $this->createTestMessage($this->mailbox, \uniqid('second_'));
 
         $messages = $this->mailbox->getMessages(new Search\Text\Subject($firstSubject));
 
         $this->assertCount(1, $messages);
-        $this->assertEquals($firstSubject, $messages->current()->getSubject());
+        $this->assertSame($firstSubject, $messages->current()->getSubject());
 
-        $messages = $this->mailbox->getMessages(new Search\Text\Subject(uniqid('none_')));
+        $messages = $this->mailbox->getMessages(new Search\Text\Subject(\uniqid('none_')));
 
         $this->assertCount(0, $messages);
     }
@@ -136,8 +136,8 @@ final class MailboxSearchTest extends AbstractTest
     public function testOrConditionFunctionality()
     {
         $orCondition = new Search\LogicalOperator\OrConditions([
-            new Search\Text\Body(uniqid()),
-            new Search\Text\Subject(uniqid()),
+            new Search\Text\Body(\uniqid()),
+            new Search\Text\Subject(\uniqid()),
         ]);
 
         $this->assertContains('(', $orCondition->toString());

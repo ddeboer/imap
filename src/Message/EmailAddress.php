@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Message;
 
 /**
- * An e-mail address
+ * An e-mail address.
  */
 final class EmailAddress
 {
@@ -31,15 +31,15 @@ final class EmailAddress
     }
 
     /**
-     * Returns address with person name
+     * Returns address with person name.
      *
      * @return string
      */
     public function getFullAddress(): string
     {
-        $address = sprintf('%s@%s', $this->mailbox, $this->hostname);
+        $address = \sprintf('%s@%s', $this->mailbox, $this->hostname);
         if ($this->name) {
-            $address = sprintf('"%s" <%s>', addcslashes($this->name, '"'), $address);
+            $address = \sprintf('"%s" <%s>', \addcslashes($this->name, '"'), $address);
         }
 
         return $address;

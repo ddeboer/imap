@@ -20,7 +20,7 @@ class ConnectionTest extends AbstractTest
     {
         $this->expectException(InvalidResourceException::class);
 
-        new Connection(uniqid(), uniqid());
+        new Connection(\uniqid(), \uniqid());
     }
 
     public function testCloseConnection()
@@ -58,7 +58,7 @@ class ConnectionTest extends AbstractTest
     {
         $connection = $this->getConnection();
 
-        $name = uniqid('test_');
+        $name = \uniqid('test_');
         $mailbox = $connection->createMailbox($name);
         $this->assertSame($name, $mailbox->getName());
         $this->assertSame($name, $connection->getMailbox($name)->getName());
@@ -92,7 +92,7 @@ class ConnectionTest extends AbstractTest
 
     public function testEscapesMailboxNames()
     {
-        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid(self::SPECIAL_CHARS)));
+        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid(self::SPECIAL_CHARS)));
     }
 
     public function testCustomExceptionOnInvalidMailboxName()
@@ -100,7 +100,7 @@ class ConnectionTest extends AbstractTest
         $this->expectException(CreateMailboxException::class);
         $this->expectExceptionMessageRegExp('/CANNOT/');
 
-        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(uniqid("\t")));
+        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid("\t")));
     }
 
     public function testGetInvalidMailbox()

@@ -14,7 +14,7 @@ class Parameters extends \ArrayIterator
     public function add(array $parameters = [])
     {
         foreach ($parameters as $parameter) {
-            $key = strtolower($parameter->attribute);
+            $key = \strtolower($parameter->attribute);
             $value = $this->decode($parameter->value);
             $this[$key] = $value;
         }
@@ -28,7 +28,7 @@ class Parameters extends \ArrayIterator
     final protected function decode(string $value): string
     {
         $decoded = '';
-        $parts = imap_mime_header_decode($value);
+        $parts = \imap_mime_header_decode($value);
         foreach ($parts as $part) {
             $text = $part->text;
             if ('default' !== $part->charset) {

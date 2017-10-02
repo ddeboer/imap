@@ -9,7 +9,7 @@ final class MessageIterator extends \ArrayIterator
     private $stream;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param \resource $stream         IMAP stream
      * @param array     $messageNumbers Array of message numbers
@@ -22,7 +22,7 @@ final class MessageIterator extends \ArrayIterator
     }
 
     /**
-     * Get current message
+     * Get current message.
      *
      * @return Message
      */
