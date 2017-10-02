@@ -312,9 +312,10 @@ class Part implements \RecursiveIterator
     {
         // Attachment with correct Content-Disposition header
         if (isset($part->disposition)) {
-            if (('attachment' === strtolower($part->disposition)
-                || 'inline' === strtolower($part->disposition))
-            && strtoupper($part->subtype) != 'PLAIN'
+            if (
+                    ('attachment' === strtolower($part->disposition) || 'inline' === strtolower($part->disposition))
+                && strtoupper($part->subtype) !== self::SUBTYPE_PLAIN
+                && strtoupper($part->subtype) !== self::SUBTYPE_HTML
             ) {
                 return true;
             }
@@ -323,9 +324,7 @@ class Part implements \RecursiveIterator
         // Attachment without Content-Disposition header
         if (isset($part->parameters)) {
             foreach ($part->parameters as $parameter) {
-                if ('name' === strtolower($parameter->attribute)
-                    || 'filename' === strtolower($parameter->attribute)
-                ) {
+                if ('name' === strtolower($parameter->attribute) || 'filename' === strtolower($parameter->attribute)) {
                     return true;
                 }
             }

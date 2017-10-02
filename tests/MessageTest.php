@@ -478,4 +478,17 @@ class MessageTest extends AbstractTest
 
         $this->assertCount(1, $message->getAttachments());
     }
+
+    /**
+     * @see https://github.com/ddeboer/imap/issues/142
+     */
+    public function testIssue142()
+    {
+        $fixture = $this->getFixture('issue_142');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(1, $message->getAttachments());
+    }
 }
