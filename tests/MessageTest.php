@@ -8,8 +8,8 @@ use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\MessageIterator;
-use Ddeboer\Imap\Search;
 use Ddeboer\Imap\Parameters;
+use Ddeboer\Imap\Search;
 use Zend\Mime\Mime;
 
 /**
@@ -500,7 +500,7 @@ class MessageTest extends AbstractTest
         $this->createTestMessage($this->mailbox, 'A');
         $this->createTestMessage($this->mailbox, 'C');
 
-        $concatSubjects = function(MessageIterator $it) {
+        $concatSubjects = function (MessageIterator $it) {
             $subject = '';
             foreach ($it as $message) {
                 $subject .= $message->getSubject();
