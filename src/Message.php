@@ -12,7 +12,7 @@ use Ddeboer\Imap\Exception\MessageStructureException;
 /**
  * An IMAP message (e-mail)
  */
-class Message extends Message\AbstractMessage
+final class Message extends Message\AbstractMessage
 {
     private $headers;
     private $rawHeaders;

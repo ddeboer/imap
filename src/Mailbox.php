@@ -12,7 +12,7 @@ use Ddeboer\Imap\Search\LogicalOperator\All;
 /**
  * An IMAP mailbox (commonly referred to as a 'folder')
  */
-class Mailbox implements \Countable, \IteratorAggregate
+final class Mailbox implements \Countable, \IteratorAggregate
 {
     private $connection;
     private $name;

@@ -25,7 +25,7 @@ class Parameters extends \ArrayIterator
         return $this[$key] ?? null;
     }
 
-    protected function decode(string $value): string
+    final protected function decode(string $value): string
     {
         $decoded = '';
         $parts = imap_mime_header_decode($value);

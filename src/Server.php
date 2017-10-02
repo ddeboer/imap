@@ -9,7 +9,7 @@ use Ddeboer\Imap\Exception\AuthenticationFailedException;
 /**
  * An IMAP server
  */
-class Server
+final class Server
 {
     /**
      * @var string Internet domain name or bracketed IP address of server

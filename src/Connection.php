@@ -12,7 +12,7 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 /**
  * A connection to an IMAP server that is authenticated for a user
  */
-class Connection implements \Countable
+final class Connection implements \Countable
 {
     private $server;
     private $resource;
@@ -117,10 +117,7 @@ class Connection implements \Countable
     public function getMailbox(string $name): Mailbox
     {
         if (false === $this->hasMailbox($name)) {
-            throw new MailboxDoesNotExistException(sprintf(
-                'Mailbox name "%s" does not exist',
-                $name
-            ));
+            throw new MailboxDoesNotExistException(sprintf('Mailbox name "%s" does not exist', $name));
         }
 
         return new Mailbox($this, $name, $this->mailboxNames[$name]);
@@ -148,11 +145,7 @@ class Connection implements \Countable
     public function createMailbox(string $name): Mailbox
     {
         if (false === imap_createmailbox($this->getResource(), $this->server . mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
-            throw new CreateMailboxException(sprintf(
-                'Can not create "%s" mailbox at "%s"',
-                $name,
-                $this->server
-            ));
+            throw new CreateMailboxException(sprintf('Can not create "%s" mailbox at "%s"', $name, $this->server));
         }
 
         $this->mailboxNames = $this->mailboxes = null;
@@ -170,10 +163,7 @@ class Connection implements \Countable
     public function deleteMailbox(Mailbox $mailbox)
     {
         if (false === imap_deletemailbox($this->getResource(), $mailbox->getFullEncodedName())) {
-            throw new DeleteMailboxException(sprintf(
-                'Mailbox "%s" could not be deleted',
-                $mailbox->getName()
-            ));
+            throw new DeleteMailboxException(sprintf('Mailbox "%s" could not be deleted', $mailbox->getName()));
         }
 
         $this->mailboxes = $this->mailboxNames = null;

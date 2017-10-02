@@ -32,7 +32,7 @@ class Part implements \RecursiveIterator
     const SUBTYPE_PLAIN = 'PLAIN';
     const SUBTYPE_HTML = 'HTML';
 
-    protected $typesMap = [
+    private $typesMap = [
         \TYPETEXT => self::TYPE_TEXT,
         \TYPEMULTIPART => self::TYPE_MULTIPART,
         \TYPEMESSAGE => self::TYPE_MESSAGE,
@@ -44,7 +44,7 @@ class Part implements \RecursiveIterator
         \TYPEOTHER => self::TYPE_OTHER,
     ];
 
-    protected $encodingsMap = [
+    private $encodingsMap = [
         \ENC7BIT => self::ENCODING_7BIT,
         \ENC8BIT => self::ENCODING_8BIT,
         \ENCBINARY => self::ENCODING_BINARY,
@@ -299,7 +299,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    protected function doGetContent()
+    final protected function doGetContent(): string
     {
         return imap_fetchbody(
             $this->stream,
