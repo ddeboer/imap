@@ -70,11 +70,7 @@ class Server
     {
         // Wrap imap_open, which gives notices instead of exceptions
         set_error_handler(function ($nr, $message) use ($username) {
-            throw new AuthenticationFailedException(sprintf(
-                'Authentication failed for user "%s": %s',
-                $username,
-                $message
-            ), $nr);
+            throw new AuthenticationFailedException(sprintf('Authentication failed for user "%s": %s', $username, $message), $nr);
         });
 
         $resource = imap_open(
@@ -89,7 +85,7 @@ class Server
         restore_error_handler();
 
         if (false === $resource) {
-            throw new AuthenticationFailedException($username);
+            throw new AuthenticationFailedException(sprintf('Authentication failed for user "%s"', $username));
         }
 
         $check = imap_check($resource);

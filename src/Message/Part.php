@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\Parameters;
 
 /**
@@ -201,7 +202,7 @@ class Part implements \RecursiveIterator
         $this->type = $this->typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
 
         if (!isset($this->encodingsMap[$structure->encoding])) {
-            throw new \UnexpectedValueException(sprintf('Cannot decode "%s"', $structure->encoding));
+            throw new UnexpectedEncodingException(sprintf('Cannot decode "%s"', $structure->encoding));
         }
 
         $this->encoding = $this->encodingsMap[$structure->encoding];
@@ -230,17 +231,15 @@ class Part implements \RecursiveIterator
 
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
-                if (null === $this->partNumber) {
-                    $partNumber = (string) ($key + 1);
-                } else {
-                    $partNumber = (string) ($this->partNumber . '.' . ($key + 1));
-                }
+                $partNumber = isset($this->partNumber) ? $this->partNumber . '.' : '';
+                $partNumber .= (string) ($key + 1);
 
-                if ($this->isAttachment($partStructure)) {
-                    $this->parts[] = new Attachment($this->stream, $this->messageNumber, $partNumber, $partStructure);
-                } else {
-                    $this->parts[] = new self($this->stream, $this->messageNumber, $partNumber, $partStructure);
-                }
+                $newPartClass = $this->isAttachment($partStructure)
+                    ? Attachment::class
+                    : self::class
+                ;
+
+                $this->parts[] = new $newPartClass($this->stream, $this->messageNumber, $partNumber, $partStructure);
             }
         }
     }

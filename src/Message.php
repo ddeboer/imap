@@ -38,11 +38,7 @@ class Message extends Message\AbstractMessage
     private function loadStructure($stream, int $messageNumber): \stdClass
     {
         set_error_handler(function ($nr, $error) use ($messageNumber) {
-            throw new MessageDoesNotExistException(sprintf(
-                'Message %s does not exist: %s',
-                $messageNumber,
-                $error
-            ), $nr);
+            throw new MessageDoesNotExistException(sprintf('Message "%s" does not exist: %s', $messageNumber, $error), $nr);
         });
 
         $structure = imap_fetchstructure(
@@ -54,7 +50,7 @@ class Message extends Message\AbstractMessage
         restore_error_handler();
 
         if (!$structure instanceof \stdClass) {
-            throw new MessageStructureException('imap_fetchstructure() returned empty message');
+            throw new MessageStructureException(sprintf('Message "%s" structure is empty', $messageNumber));
         }
 
         return $structure;
@@ -219,11 +215,7 @@ class Message extends Message\AbstractMessage
         $this->clearHeaders();
 
         if (!imap_mail_copy($this->stream, (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
-            throw new MessageCopyException(sprintf(
-                'Message "%s" cannot be copied to "%s"',
-                $this->messageNumber,
-                $mailbox->getName()
-            ));
+            throw new MessageCopyException(sprintf('Message "%s" cannot be copied to "%s"', $this->messageNumber, $mailbox->getName()));
         }
     }
 
@@ -240,11 +232,7 @@ class Message extends Message\AbstractMessage
         $this->clearHeaders();
 
         if (!imap_mail_move($this->stream, (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
-            throw new MessageMoveException(sprintf(
-                'Message "%s" cannot be moved to "%s"',
-                $this->messageNumber,
-                $mailbox->getName()
-            ));
+            throw new MessageMoveException(sprintf('Message "%s" cannot be moved to "%s"', $this->messageNumber, $mailbox->getName()));
         }
     }
 
@@ -259,10 +247,7 @@ class Message extends Message\AbstractMessage
         $this->clearHeaders();
 
         if (!imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
-            throw new MessageDeleteException(sprintf(
-                'Message "%s" cannot be deleted',
-                $this->messageNumber
-            ));
+            throw new MessageDeleteException(sprintf('Message "%s" cannot be deleted', $this->messageNumber));
         }
     }
 
