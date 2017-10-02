@@ -16,8 +16,9 @@ class Attachment extends Part
      */
     public function getFilename()
     {
-        return $this->parameters->get('filename')
-            ?: $this->parameters->get('name');
+        if (isset($this->parameters)) {
+            return $this->parameters->get('filename') ?: $this->parameters->get('name');
+        }
     }
 
     /**

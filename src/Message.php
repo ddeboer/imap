@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Message\Attachment;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
@@ -320,6 +321,11 @@ class Message extends Message\Part
             }
         }
 
+        // If whole message has disposition attachment, return empty string
+        if (strtolower($this->disposition) === 'attachment') {
+            return "";
+        }
+
         // If message has no parts, return content of message itself.
         if (self::SUBTYPE_PLAIN === $this->getSubtype()) {
             return $this->getDecodedContent($this->keepUnseen);
@@ -335,7 +341,15 @@ class Message extends Message\Part
      */
     public function getAttachments(): array
     {
-        if (null === $this->attachments) {
+        // If whole email is attachment
+        if (strtolower($this->getDisposition()) === 'attachment' && $this->attachments === null) {
+            $messageStructure = imap_fetchstructure(
+                $this->stream,
+                $this->messageNumber,
+                \FT_UID
+            );
+            $this->attachments = [new Attachment($this->stream, $this->messageNumber, null, $messageStructure)];
+        } elseif (null === $this->attachments) {
             $this->attachments = [];
             foreach ($this->getParts() as $part) {
                 if ($part instanceof Message\Attachment) {
