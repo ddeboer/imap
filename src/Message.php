@@ -32,10 +32,8 @@ class Message extends Message\Part
      */
     public function __construct($stream, int $messageNumber)
     {
-        $this->stream = $stream;
-        $this->messageNumber = $messageNumber;
-
-        $this->loadStructure();
+        $structure = self::loadStructure($stream, $messageNumber);
+        parent::__construct($stream, $messageNumber, null, $structure);
     }
 
     /**
@@ -432,20 +430,22 @@ class Message extends Message\Part
 
     /**
      * Load message structure
+     *
+     * @param mixed $stream
      */
-    private function loadStructure()
+    private static function loadStructure($stream, int $messageNumber): \stdClass
     {
-        set_error_handler(function ($nr, $error) {
+        set_error_handler(function ($nr, $error) use ($messageNumber) {
             throw new MessageDoesNotExistException(sprintf(
                 'Message %s does not exist: %s',
-                $this->messageNumber,
+                $messageNumber,
                 $error
             ), $nr);
         });
 
         $structure = imap_fetchstructure(
-            $this->stream,
-            $this->messageNumber,
+            $stream,
+            $messageNumber,
             \FT_UID
         );
 
@@ -455,7 +455,7 @@ class Message extends Message\Part
             throw new MessageStructureException('imap_fetchstructure() returned empty message');
         }
 
-        $this->parseStructure($structure);
+        return $structure;
     }
 
     /**

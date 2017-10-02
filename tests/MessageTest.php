@@ -7,6 +7,7 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message\EmailAddress;
+use Ddeboer\Imap\Parameters;
 use Zend\Mime\Mime;
 
 /**
@@ -185,6 +186,15 @@ class MessageTest extends AbstractTest
         $this->mailbox->addMessage($this->getFixture('email_address'));
         $message = $this->mailbox->getMessage(1);
 
+        $this->assertSame('<123@example.com>', $message->getId());
+        $this->assertGreaterThan(0, $message->getNumber());
+        $this->assertGreaterThan(0, $message->getSize());
+        $this->assertGreaterThan(0, $message->getBytes());
+        $this->assertInstanceOf(Parameters::class, $message->getParameters());
+        $this->assertNull($message->getLines());
+        $this->assertNull($message->getDisposition());
+        $this->assertNotEmpty($message->getStructure());
+
         $from = $message->getFrom();
         $this->assertInstanceOf(EmailAddress::class, $from);
         $this->assertEquals('no_host', $from->getMailbox());
@@ -199,6 +209,8 @@ class MessageTest extends AbstractTest
 
         $this->assertInstanceOf(EmailAddress::class, $cc[1]);
         $this->assertEquals('No-address', $cc[1]->getMailbox());
+
+        $this->assertCount(0, $message->getReturnPath());
     }
 
     public function testBcc()
@@ -255,12 +267,15 @@ class MessageTest extends AbstractTest
         );
 
         $message = $this->mailbox->getMessage(1);
+        $this->assertTrue($message->hasAttachments());
         $this->assertCount(1, $message->getAttachments());
         $attachment = $message->getAttachments()[0];
+
         $this->assertEquals(
             'Prostřeno_2014_poslední volné termíny.xls',
             $attachment->getFilename()
         );
+        $this->assertNull($attachment->getSize());
     }
 
     public function getAttachmentFixture(): array
@@ -422,6 +437,23 @@ class MessageTest extends AbstractTest
 
         $this->assertSame('<html><body>Hi</body></html>', rtrim($message->getBodyHtml()));
         $this->assertNull($message->getBodyText());
+    }
+
+    public function testSimpleMultipart()
+    {
+        $this->mailbox->addMessage($this->getFixture('simple_multipart'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('MyPlain', rtrim($message->getBodyText()));
+        $this->assertSame('MyHtml', rtrim($message->getBodyHtml()));
+
+        $parts = [];
+        foreach ($message as $key => $part) {
+            $parts[$key] = $part;
+        }
+
+        $this->assertCount(2, $parts);
     }
 
     public function testGetRawMessage()

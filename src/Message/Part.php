@@ -135,7 +135,7 @@ class Part implements \RecursiveIterator
         return $this->lines;
     }
 
-    public function getParameters()
+    public function getParameters(): Parameters
     {
         return $this->parameters;
     }
@@ -185,21 +185,8 @@ class Part implements \RecursiveIterator
         return $this->decodedContent;
     }
 
-    public function getStructure()
+    public function getStructure(): \stdClass
     {
-        return $this->structure;
-    }
-
-    protected function fetchStructure(int $partNumber = null)
-    {
-        if (null === $this->structure) {
-            $this->loadStructure();
-        }
-
-        if ($partNumber) {
-            return $this->structure->parts[$partNumber];
-        }
-
         return $this->structure;
     }
 
