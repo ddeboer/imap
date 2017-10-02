@@ -133,13 +133,23 @@ final class MailboxSearchTest extends AbstractTest
         $this->assertCount(0, $messages);
     }
 
-    public function testOrCondition()
+    public function testOrConditionFunctionality()
     {
         $orCondition = new Search\LogicalOperator\OrConditions([
             new Search\Text\Body(uniqid()),
             new Search\Text\Subject(uniqid()),
         ]);
 
+        $this->assertContains('(', $orCondition->toString());
+
+        return $orCondition;
+    }
+
+    /**
+     * @depends testOrConditionFunctionality
+     */
+    public function testOrConditionUsage()
+    {
         $this->markTestIncomplete('Unable to get a server working with OR condition');
 
         $messages = $this->mailbox->getMessages($orCondition);
