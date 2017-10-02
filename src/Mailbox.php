@@ -10,7 +10,7 @@ use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\LogicalOperator\All;
 
 /**
- * An IMAP mailbox (commonly referred to as a 'folder')
+ * An IMAP mailbox (commonly referred to as a 'folder').
  */
 final class Mailbox implements \Countable, \IteratorAggregate
 {
@@ -19,7 +19,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     private $info;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param Connection $connection IMAP connection
      * @param string     $name       Mailbox decoded name
@@ -33,7 +33,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Get mailbox decoded name
+     * Get mailbox decoded name.
      *
      * @return string
      */
@@ -43,17 +43,17 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Get mailbox encoded path
+     * Get mailbox encoded path.
      *
      * @return string
      */
     public function getEncodedName(): string
     {
-        return preg_replace('/^{.+}/', '', $this->info->name);
+        return \preg_replace('/^{.+}/', '', $this->info->name);
     }
 
     /**
-     * Get mailbox encoded full name
+     * Get mailbox encoded full name.
      *
      * @return string
      */
@@ -63,7 +63,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Get mailbox attributes
+     * Get mailbox attributes.
      *
      * @return int
      */
@@ -73,7 +73,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Get mailbox delimiter
+     * Get mailbox delimiter.
      *
      * @return int
      */
@@ -83,7 +83,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Get number of messages in this mailbox
+     * Get number of messages in this mailbox.
      *
      * @return int
      */
@@ -91,11 +91,11 @@ final class Mailbox implements \Countable, \IteratorAggregate
     {
         $this->init();
 
-        return imap_num_msg($this->connection->getResource());
+        return \imap_num_msg($this->connection->getResource());
     }
 
     /**
-     * Get Mailbox status
+     * Get Mailbox status.
      *
      * @param int $flag
      *
@@ -105,11 +105,11 @@ final class Mailbox implements \Countable, \IteratorAggregate
     {
         $this->init();
 
-        return imap_status($this->connection->getResource(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
+        return \imap_status($this->connection->getResource(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
     }
 
     /**
-     * Get message ids
+     * Get message ids.
      *
      * @param ConditionInterface $search Search expression (optional)
      *
@@ -126,16 +126,16 @@ final class Mailbox implements \Countable, \IteratorAggregate
 
         // We need to clear the stack to know whether imap_last_error()
         // is related to this imap_search
-        imap_errors();
+        \imap_errors();
 
         if (null !== $sortCriteria) {
-            $messageNumbers = imap_sort($this->connection->getResource(), $sortCriteria, $descending ? 1 : 0, \SE_UID, $query);
+            $messageNumbers = \imap_sort($this->connection->getResource(), $sortCriteria, $descending ? 1 : 0, \SE_UID, $query);
         } else {
-            $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
+            $messageNumbers = \imap_search($this->connection->getResource(), $query, \SE_UID);
         }
         if (false == $messageNumbers) {
-            if (false !== imap_last_error()) {
-                throw new InvalidSearchCriteriaException(sprintf('Invalid search criteria [%s]', $query));
+            if (false !== \imap_last_error()) {
+                throw new InvalidSearchCriteriaException(\sprintf('Invalid search criteria [%s]', $query));
             }
 
             // imap_search can also return false
@@ -146,7 +146,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Get a message by message number
+     * Get a message by message number.
      *
      * @param int $number Message number
      *
@@ -160,7 +160,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Get messages in this mailbox
+     * Get messages in this mailbox.
      *
      * @return MessageIterator
      */
@@ -170,7 +170,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Delete this mailbox
+     * Delete this mailbox.
      */
     public function delete()
     {
@@ -178,7 +178,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Add a message to the mailbox
+     * Add a message to the mailbox.
      *
      * @param string $message
      *
@@ -186,11 +186,11 @@ final class Mailbox implements \Countable, \IteratorAggregate
      */
     public function addMessage($message): bool
     {
-        return imap_append($this->connection->getResource(), $this->getFullEncodedName(), $message);
+        return \imap_append($this->connection->getResource(), $this->getFullEncodedName(), $message);
     }
 
     /**
-     * If connection is not currently in this mailbox, switch it to this mailbox
+     * If connection is not currently in this mailbox, switch it to this mailbox.
      */
     private function init()
     {
@@ -198,18 +198,18 @@ final class Mailbox implements \Countable, \IteratorAggregate
             return;
         }
 
-        imap_reopen($this->connection->getResource(), $this->getFullEncodedName());
+        \imap_reopen($this->connection->getResource(), $this->getFullEncodedName());
 
         if ($this->isMailboxOpen()) {
             return;
         }
 
-        throw new ReopenMailboxException(sprintf('Cannot reopen mailbox "%s"', $this->getName()));
+        throw new ReopenMailboxException(\sprintf('Cannot reopen mailbox "%s"', $this->getName()));
     }
 
     private function isMailboxOpen(): bool
     {
-        $check = imap_check($this->connection->getResource());
+        $check = \imap_check($this->connection->getResource());
 
         return false !== $check && $check->Mailbox === $this->getFullEncodedName();
     }

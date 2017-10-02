@@ -8,7 +8,7 @@ use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\Parameters;
 
 /**
- * A message part
+ * A message part.
  */
 class Part implements \RecursiveIterator
 {
@@ -86,7 +86,7 @@ class Part implements \RecursiveIterator
     protected $disposition;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param resource  $stream        IMAP stream
      * @param int       $messageNumber Message number
@@ -107,7 +107,7 @@ class Part implements \RecursiveIterator
     }
 
     /**
-     * Get message number (from headers)
+     * Get message number (from headers).
      *
      * @return int
      */
@@ -152,7 +152,7 @@ class Part implements \RecursiveIterator
     }
 
     /**
-     * Get raw part content
+     * Get raw part content.
      *
      * @return string
      */
@@ -166,7 +166,7 @@ class Part implements \RecursiveIterator
     }
 
     /**
-     * Get decoded part content
+     * Get decoded part content.
      *
      * @return string
      */
@@ -175,9 +175,9 @@ class Part implements \RecursiveIterator
         if (null === $this->decodedContent) {
             $content = $this->getContent();
             if (self::ENCODING_BASE64 === $this->getEncoding()) {
-                $content = base64_decode($content);
+                $content = \base64_decode($content);
             } elseif (self::ENCODING_QUOTED_PRINTABLE === $this->getEncoding()) {
-                $content = quoted_printable_decode($content);
+                $content = \quoted_printable_decode($content);
             }
 
             // If this part is a text part, try to convert its encoding to UTF-8.
@@ -202,7 +202,7 @@ class Part implements \RecursiveIterator
         $this->type = $this->typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
 
         if (!isset($this->encodingsMap[$structure->encoding])) {
-            throw new UnexpectedEncodingException(sprintf('Cannot decode "%s"', $structure->encoding));
+            throw new UnexpectedEncodingException(\sprintf('Cannot decode "%s"', $structure->encoding));
         }
 
         $this->encoding = $this->encodingsMap[$structure->encoding];
@@ -245,7 +245,7 @@ class Part implements \RecursiveIterator
     }
 
     /**
-     * Get an array of all parts for this message
+     * Get an array of all parts for this message.
      *
      * @return self[]
      */
@@ -266,7 +266,7 @@ class Part implements \RecursiveIterator
 
     public function hasChildren()
     {
-        return count($this->parts) > 0;
+        return \count($this->parts) > 0;
     }
 
     public function key()
@@ -295,13 +295,13 @@ class Part implements \RecursiveIterator
     }
 
     /**
-     * Get raw message content
+     * Get raw message content.
      *
      * @return string
      */
     final protected function doGetContent(): string
     {
-        return imap_fetchbody(
+        return \imap_fetchbody(
             $this->stream,
             $this->messageNumber,
             (string) ($this->partNumber ?: '1'),
@@ -314,9 +314,9 @@ class Part implements \RecursiveIterator
         // Attachment with correct Content-Disposition header
         if (isset($part->disposition)) {
             if (
-                    ('attachment' === strtolower($part->disposition) || 'inline' === strtolower($part->disposition))
-                && strtoupper($part->subtype) !== self::SUBTYPE_PLAIN
-                && strtoupper($part->subtype) !== self::SUBTYPE_HTML
+                    ('attachment' === \strtolower($part->disposition) || 'inline' === \strtolower($part->disposition))
+                && self::SUBTYPE_PLAIN !== \strtoupper($part->subtype)
+                && self::SUBTYPE_HTML !== \strtoupper($part->subtype)
             ) {
                 return true;
             }
@@ -325,7 +325,7 @@ class Part implements \RecursiveIterator
         // Attachment without Content-Disposition header
         if (isset($part->parameters)) {
             foreach ($part->parameters as $parameter) {
-                if ('name' === strtolower($parameter->attribute) || 'filename' === strtolower($parameter->attribute)) {
+                if ('name' === \strtolower($parameter->attribute) || 'filename' === \strtolower($parameter->attribute)) {
                     return true;
                 }
             }

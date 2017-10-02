@@ -7,12 +7,12 @@ namespace Ddeboer\Imap\Message;
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
 
 /**
- * An e-mail attachment
+ * An e-mail attachment.
  */
 final class Attachment extends Part
 {
     /**
-     * Get attachment filename
+     * Get attachment filename.
      *
      * @return string
      */
@@ -23,7 +23,7 @@ final class Attachment extends Part
     }
 
     /**
-     * Get attachment file size
+     * Get attachment file size.
      *
      * @return int Number of bytes
      */
@@ -38,7 +38,7 @@ final class Attachment extends Part
     }
 
     /**
-     * Return embedded message
+     * Return embedded message.
      *
      * @throws NotEmbeddedMessageException
      *
@@ -47,7 +47,7 @@ final class Attachment extends Part
     public function getEmbeddedMessage(): EmbeddedMessage
     {
         if (!$this->isEmbeddedMessage()) {
-            throw new NotEmbeddedMessageException(sprintf(
+            throw new NotEmbeddedMessageException(\sprintf(
                 'Attachment "%s" in message "%s" is not embedded message',
                 $this->partNumber,
                 $this->messageNumber

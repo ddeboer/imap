@@ -11,7 +11,7 @@ abstract class AbstractMessage extends Part
     private $attachments;
 
     /**
-     * Get raw message headers
+     * Get raw message headers.
      *
      * @return string
      */
@@ -25,14 +25,14 @@ abstract class AbstractMessage extends Part
     abstract public function getRawMessage(): string;
 
     /**
-     * Get message headers
+     * Get message headers.
      *
      * @return Headers
      */
     abstract public function getHeaders(): Headers;
 
     /**
-     * Get message id
+     * Get message id.
      *
      * A unique message id in the form <...>
      *
@@ -44,7 +44,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get message sender (from headers)
+     * Get message sender (from headers).
      *
      * @return EmailAddress
      */
@@ -54,7 +54,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get To recipients
+     * Get To recipients.
      *
      * @return EmailAddress[] Empty array in case message has no To: recipients
      */
@@ -64,7 +64,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get Cc recipients
+     * Get Cc recipients.
      *
      * @return EmailAddress[] Empty array in case message has no CC: recipients
      */
@@ -74,7 +74,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get Bcc recipients
+     * Get Bcc recipients.
      *
      * @return EmailAddress[] Empty array in case message has no BCC: recipients
      */
@@ -84,7 +84,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get Reply-To recipients
+     * Get Reply-To recipients.
      *
      * @return EmailAddress[] Empty array in case message has no Reply-To: recipients
      */
@@ -94,7 +94,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get Sender
+     * Get Sender.
      *
      * @return EmailAddress[] Empty array in case message has no Sender: recipients
      */
@@ -104,7 +104,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get Return-Path
+     * Get Return-Path.
      *
      * @return EmailAddress[] Empty array in case message has no Return-Path: recipients
      */
@@ -114,7 +114,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get date (from headers)
+     * Get date (from headers).
      *
      * @return \DateTimeImmutable
      */
@@ -124,7 +124,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get message size (from headers)
+     * Get message size (from headers).
      *
      * @return int
      */
@@ -134,7 +134,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get message subject (from headers)
+     * Get message subject (from headers).
      *
      * @return string
      */
@@ -144,7 +144,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get body HTML
+     * Get body HTML.
      *
      * @return string | null Null if message has no HTML message part
      */
@@ -166,7 +166,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get body text
+     * Get body text.
      *
      * @return string
      */
@@ -188,7 +188,7 @@ abstract class AbstractMessage extends Part
     }
 
     /**
-     * Get attachments (if any) linked to this e-mail
+     * Get attachments (if any) linked to this e-mail.
      *
      * @return Attachment[]
      */
@@ -220,6 +220,6 @@ abstract class AbstractMessage extends Part
      */
     public function hasAttachments(): bool
     {
-        return count($this->getAttachments()) > 0;
+        return \count($this->getAttachments()) > 0;
     }
 }

@@ -43,7 +43,7 @@ abstract class AbstractDate implements ConditionInterface
      */
     final public function toString(): string
     {
-        return sprintf('%s "%s"', $this->getKeyword(), $this->date->format($this->dateFormat));
+        return \sprintf('%s "%s"', $this->getKeyword(), $this->date->format($this->dateFormat));
     }
 
     /**

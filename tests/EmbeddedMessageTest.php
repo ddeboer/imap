@@ -27,12 +27,12 @@ final class EmbeddedMessageTest extends AbstractTest
         $emailDate = new \DateTimeImmutable('29 Jan 2016 14:22:13 +0100');
         $embeddedMessage = $attachment->getEmbeddedMessage();
         $this->assertNull($embeddedMessage->getBodyHtml());
-        $this->assertEquals('demo text', $embeddedMessage->getBodyText());
-        $this->assertEquals([], $embeddedMessage->getCc());
-        $this->assertEquals($emailDate->format(\DATE_ISO8601), $embeddedMessage->getDate()->format(\DATE_ISO8601));
-        $this->assertEquals('demo', $embeddedMessage->getSubject());
-        $this->assertEquals('demo-from@cerstor.cz', $embeddedMessage->getFrom()->getFullAddress());
-        $this->assertEquals('demo-to@cerstor.cz', $embeddedMessage->getTo()[0]->getFullAddress());
+        $this->assertSame('demo text', $embeddedMessage->getBodyText());
+        $this->assertSame([], $embeddedMessage->getCc());
+        $this->assertSame($emailDate->format(\DATE_ISO8601), $embeddedMessage->getDate()->format(\DATE_ISO8601));
+        $this->assertSame('demo', $embeddedMessage->getSubject());
+        $this->assertSame('demo-from@cerstor.cz', $embeddedMessage->getFrom()->getFullAddress());
+        $this->assertSame('demo-to@cerstor.cz', $embeddedMessage->getTo()[0]->getFullAddress());
 
         $this->assertFalse($message->isSeen());
     }
@@ -46,15 +46,15 @@ final class EmbeddedMessageTest extends AbstractTest
         $embeddedMessage = $mailbox->getMessage(1)->getAttachments()[0]->getEmbeddedMessage();
 
         $embeddedAttachment = $embeddedMessage->getAttachments()[0];
-        $this->assertEquals('testfile.txt', $embeddedAttachment->getFilename());
-        $this->assertEquals('29', $embeddedAttachment->getSize());
-        $this->assertEquals('attachment', $embeddedAttachment->getDisposition());
-        $this->assertEquals('IHRoaXMgaXMgY29udGVudCBvZiB0ZXN0IGZpbGU=', $embeddedAttachment->getContent());
-        $this->assertEquals('base64', $embeddedAttachment->getEncoding());
-        $this->assertEquals(Part::TYPE_TEXT, $embeddedAttachment->getType());
-        $this->assertEquals(Part::SUBTYPE_PLAIN, $embeddedAttachment->getSubtype());
-        $this->assertEquals(' this is content of test file', $embeddedAttachment->getDecodedContent());
-        $this->assertEquals('testfile.txt', $embeddedAttachment->getFilename());
+        $this->assertSame('testfile.txt', $embeddedAttachment->getFilename());
+        $this->assertSame('29', $embeddedAttachment->getSize());
+        $this->assertSame('attachment', $embeddedAttachment->getDisposition());
+        $this->assertSame('IHRoaXMgaXMgY29udGVudCBvZiB0ZXN0IGZpbGU=', $embeddedAttachment->getContent());
+        $this->assertSame('base64', $embeddedAttachment->getEncoding());
+        $this->assertSame(Part::TYPE_TEXT, $embeddedAttachment->getType());
+        $this->assertSame(Part::SUBTYPE_PLAIN, $embeddedAttachment->getSubtype());
+        $this->assertSame(' this is content of test file', $embeddedAttachment->getDecodedContent());
+        $this->assertSame('testfile.txt', $embeddedAttachment->getFilename());
 
         $this->assertFalse($embeddedAttachment->isEmbeddedMessage());
 

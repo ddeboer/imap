@@ -37,7 +37,7 @@ abstract class AbstractTest extends TestCase
     final protected function createMailbox(Connection $connection = null): Mailbox
     {
         $connection = $connection ?? $this->getConnection();
-        $this->mailboxName = uniqid('mailbox_' . self::SPECIAL_CHARS);
+        $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
 
         return $connection->createMailbox($this->mailboxName);
     }
@@ -50,7 +50,7 @@ abstract class AbstractTest extends TestCase
         string $charset = null,
         string $overwriteCharset = null
     ) {
-        $bodyPart = new Mime\Part($contents ?? uniqid($subject));
+        $bodyPart = new Mime\Part($contents ?? \uniqid($subject));
         $bodyPart->setType(Mime\Mime::TYPE_TEXT);
         if ($encoding) {
             $bodyPart->setEncoding($encoding);
@@ -70,9 +70,9 @@ abstract class AbstractTest extends TestCase
 
         $messageString = $message->toString();
         if ($overwriteCharset) {
-            $messageString = preg_replace(
-                sprintf('/charset="%s"/', preg_quote($charset)),
-                sprintf('charset="%s"', $overwriteCharset),
+            $messageString = \preg_replace(
+                \sprintf('/charset="%s"/', \preg_quote($charset)),
+                \sprintf('charset="%s"', $overwriteCharset),
                 $messageString
             );
         }
@@ -82,6 +82,6 @@ abstract class AbstractTest extends TestCase
 
     final protected function getFixture($fixture): string
     {
-        return file_get_contents(sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
+        return \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
     }
 }

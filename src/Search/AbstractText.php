@@ -34,7 +34,7 @@ abstract class AbstractText implements ConditionInterface
      */
     final public function toString(): string
     {
-        return sprintf('%s "%s"', $this->getKeyword(), $this->text);
+        return \sprintf('%s "%s"', $this->getKeyword(), $this->text);
     }
 
     /**

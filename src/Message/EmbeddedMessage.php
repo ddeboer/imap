@@ -11,29 +11,29 @@ final class EmbeddedMessage extends AbstractMessage
     private $rawMessage;
 
     /**
-     * Get message headers
+     * Get message headers.
      *
      * @return Headers
      */
     public function getHeaders(): Headers
     {
         if (null === $this->headers) {
-            $this->headers = new Headers(imap_rfc822_parse_headers($this->getRawHeaders()));
+            $this->headers = new Headers(\imap_rfc822_parse_headers($this->getRawHeaders()));
         }
 
         return $this->headers;
     }
 
     /**
-     * Get raw message headers
+     * Get raw message headers.
      *
      * @return string
      */
     public function getRawHeaders(): string
     {
         if (null === $this->rawHeaders) {
-            $rawHeaders = explode("\r\n\r\n", $this->getRawMessage(), 2);
-            $this->rawHeaders = current($rawHeaders);
+            $rawHeaders = \explode("\r\n\r\n", $this->getRawMessage(), 2);
+            $this->rawHeaders = \current($rawHeaders);
         }
 
         return $this->rawHeaders;
@@ -47,7 +47,7 @@ final class EmbeddedMessage extends AbstractMessage
     public function getRawMessage(): string
     {
         if (null === $this->rawMessage) {
-            $this->rawMessage = imap_fetchbody($this->stream, $this->messageNumber, $this->partNumber, \FT_UID | \FT_PEEK);
+            $this->rawMessage = \imap_fetchbody($this->stream, $this->messageNumber, $this->partNumber, \FT_UID | \FT_PEEK);
         }
 
         return $this->rawMessage;
