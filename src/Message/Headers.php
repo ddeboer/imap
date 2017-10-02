@@ -10,7 +10,7 @@ use Ddeboer\Imap\Parameters;
 /**
  * Collection of message headers
  */
-class Headers extends Parameters
+final class Headers extends Parameters
 {
     /**
      * Constructor
@@ -23,7 +23,7 @@ class Headers extends Parameters
         $headers = array_change_key_case((array) $headers);
 
         foreach ($headers as $key => $value) {
-            $this->parameters[$key] = $this->parseHeader($key, $value);
+            $this[$key] = $this->parseHeader($key, $value);
         }
     }
 

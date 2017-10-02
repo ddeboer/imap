@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-class Parameters
+class Parameters extends \ArrayIterator
 {
-    protected $parameters = [];
-
     public function __construct(array $parameters = [])
     {
         $this->add($parameters);
@@ -18,17 +16,13 @@ class Parameters
         foreach ($parameters as $parameter) {
             $key = strtolower($parameter->attribute);
             $value = $this->decode($parameter->value);
-            $this->parameters[$key] = $value;
+            $this[$key] = $value;
         }
     }
 
     public function get(string $key)
     {
-        if (isset($this->parameters[$key])) {
-            return $this->parameters[$key];
-        }
-
-        return;
+        return $this[$key] ?? null;
     }
 
     protected function decode(string $value): string
