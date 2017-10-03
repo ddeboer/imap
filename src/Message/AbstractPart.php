@@ -118,13 +118,13 @@ abstract class AbstractPart implements PartInterface
      *
      * @param ImapResourceInterface $resource      IMAP resource
      * @param int                   $messageNumber Message number
-     * @param null|string           $partNumber    Part number (optional)
+     * @param string                $partNumber    Part number
      * @param \stdClass             $structure     Part structure
      */
     public function __construct(
         ImapResourceInterface $resource,
         int $messageNumber,
-        string $partNumber = null,
+        string $partNumber,
         \stdClass $structure
     ) {
         $this->resource = $resource;
@@ -232,7 +232,7 @@ abstract class AbstractPart implements PartInterface
     public function getContent(): string
     {
         if (null === $this->content) {
-            $this->content = $this->doGetContent();
+            $this->content = $this->doGetContent($this->partNumber);
         }
 
         return $this->content;
@@ -314,7 +314,7 @@ abstract class AbstractPart implements PartInterface
 
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
-                $partNumber = isset($this->partNumber) ? $this->partNumber . '.' : '';
+                $partNumber = '1' !== $this->partNumber ? $this->partNumber . '.' : '';
                 $partNumber .= (string) ($key + 1);
 
                 $newPartClass = $this->isAttachment($partStructure)
@@ -410,14 +410,16 @@ abstract class AbstractPart implements PartInterface
     /**
      * Get raw message content.
      *
+     * @param string $partNumber
+     *
      * @return string
      */
-    final protected function doGetContent(): string
+    final protected function doGetContent(string $partNumber): string
     {
         return \imap_fetchbody(
             $this->resource->getStream(),
             $this->messageNumber,
-            (string) ($this->partNumber ?: '1'),
+            $partNumber,
             \FT_UID | \FT_PEEK
         );
     }

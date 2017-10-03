@@ -33,7 +33,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     public function __construct(ImapResourceInterface $resource, int $messageNumber)
     {
         $structure = $this->loadStructure($resource, $messageNumber);
-        parent::__construct($resource, $messageNumber, null, $structure);
+        parent::__construct($resource, $messageNumber, '1', $structure);
     }
 
     /**
@@ -84,9 +84,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     public function getRawMessage(): string
     {
-        $this->clearHeaders();
-
-        return \imap_fetchbody($this->resource->getStream(), $this->messageNumber, '', \FT_UID | \FT_PEEK);
+        return $this->doGetContent('');
     }
 
     /**
@@ -113,20 +111,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     private function clearHeaders()
     {
         $this->headers = null;
-    }
-
-    /**
-     * Get raw part content.
-     *
-     * @return string
-     */
-    public function getContent(): string
-    {
-        // Null headers, so subsequent calls to getHeaders() will return
-        // updated seen flag
-        $this->clearHeaders();
-
-        return $this->doGetContent();
     }
 
     /**
