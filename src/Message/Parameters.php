@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ddeboer\Imap;
+namespace Ddeboer\Imap\Message;
 
 class Parameters extends \ArrayIterator
 {
@@ -32,7 +32,7 @@ class Parameters extends \ArrayIterator
         foreach ($parts as $part) {
             $text = $part->text;
             if ('default' !== $part->charset) {
-                $text = Message\Transcoder::decode($text, $part->charset);
+                $text = Transcoder::decode($text, $part->charset);
             }
 
             $decoded .= $text;

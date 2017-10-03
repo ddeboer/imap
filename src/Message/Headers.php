@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
-use Ddeboer\Imap\Parameters;
 
 /**
  * Collection of message headers.

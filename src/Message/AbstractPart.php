@@ -6,33 +6,12 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\ImapResourceInterface;
-use Ddeboer\Imap\Parameters;
 
 /**
  * A message part.
  */
-class Part implements \RecursiveIterator
+abstract class AbstractPart implements PartInterface
 {
-    const TYPE_TEXT = 'text';
-    const TYPE_MULTIPART = 'multipart';
-    const TYPE_MESSAGE = 'message';
-    const TYPE_APPLICATION = 'application';
-    const TYPE_AUDIO = 'audio';
-    const TYPE_IMAGE = 'image';
-    const TYPE_VIDEO = 'video';
-    const TYPE_MODEL = 'model';
-    const TYPE_OTHER = 'other';
-    const TYPE_UNKNOWN = 'unknown';
-
-    const ENCODING_7BIT = '7bit';
-    const ENCODING_8BIT = '8bit';
-    const ENCODING_BINARY = 'binary';
-    const ENCODING_BASE64 = 'base64';
-    const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
-
-    const SUBTYPE_PLAIN = 'PLAIN';
-    const SUBTYPE_HTML = 'HTML';
-
     private $typesMap = [
         \TYPETEXT => self::TYPE_TEXT,
         \TYPEMULTIPART => self::TYPE_MULTIPART,
@@ -240,7 +219,7 @@ class Part implements \RecursiveIterator
 
                 $newPartClass = $this->isAttachment($partStructure)
                     ? Attachment::class
-                    : self::class
+                    : SimplePart::class
                 ;
 
                 $this->parts[] = new $newPartClass($this->resource, $this->messageNumber, $partNumber, $partStructure);
@@ -251,7 +230,7 @@ class Part implements \RecursiveIterator
     /**
      * Get an array of all parts for this message.
      *
-     * @return self[]
+     * @return PartInterface[]
      */
     public function getParts(): array
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-final class MessageIterator extends \ArrayIterator
+final class MessageIterator extends \ArrayIterator implements MessageIteratorInterface
 {
     private $resource;
 
@@ -24,9 +24,9 @@ final class MessageIterator extends \ArrayIterator
     /**
      * Get current message.
      *
-     * @return Message
+     * @return MessageInterface
      */
-    public function current(): Message
+    public function current(): MessageInterface
     {
         return new Message($this->resource, parent::current());
     }

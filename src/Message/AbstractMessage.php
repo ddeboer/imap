@@ -4,32 +4,11 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
-abstract class AbstractMessage extends Part
+abstract class AbstractMessage extends AbstractPart
 {
     private $headers;
     private $rawHeaders;
     private $attachments;
-
-    /**
-     * Get raw message headers.
-     *
-     * @return string
-     */
-    abstract public function getRawHeaders(): string;
-
-    /**
-     * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
-     *
-     * @return string the raw message
-     */
-    abstract public function getRawMessage(): string;
-
-    /**
-     * Get message headers.
-     *
-     * @return Headers
-     */
-    abstract public function getHeaders(): Headers;
 
     /**
      * Get message id.
@@ -190,7 +169,7 @@ abstract class AbstractMessage extends Part
     /**
      * Get attachments (if any) linked to this e-mail.
      *
-     * @return Attachment[]
+     * @return AttachmentInterface[]
      */
     public function getAttachments(): array
     {

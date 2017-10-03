@@ -12,7 +12,7 @@ use Ddeboer\Imap\Search\LogicalOperator\All;
 /**
  * An IMAP mailbox (commonly referred to as a 'folder').
  */
-final class Mailbox implements \Countable, \IteratorAggregate
+final class Mailbox implements MailboxInterface
 {
     private $resource;
     private $name;
@@ -75,7 +75,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
     /**
      * Get mailbox delimiter.
      *
-     * @return int
+     * @return string
      */
     public function getDelimiter(): string
     {
@@ -101,7 +101,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return \stdClass
      */
-    public function getStatus(int $flags = null)
+    public function getStatus(int $flags = null): \stdClass
     {
         $this->init();
 
@@ -113,9 +113,9 @@ final class Mailbox implements \Countable, \IteratorAggregate
      *
      * @param ConditionInterface $search Search expression (optional)
      *
-     * @return Message[]|MessageIterator
+     * @return MessageIteratorInterface
      */
-    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIterator
+    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIteratorInterface
     {
         $this->init();
 
@@ -150,9 +150,9 @@ final class Mailbox implements \Countable, \IteratorAggregate
      *
      * @param int $number Message number
      *
-     * @return Message
+     * @return MessageInterface
      */
-    public function getMessage(int $number): Message
+    public function getMessage(int $number): MessageInterface
     {
         $this->init();
 
@@ -162,9 +162,9 @@ final class Mailbox implements \Countable, \IteratorAggregate
     /**
      * Get messages in this mailbox.
      *
-     * @return MessageIterator
+     * @return MessageIteratorInterface
      */
-    public function getIterator(): MessageIterator
+    public function getIterator(): MessageIteratorInterface
     {
         return $this->getMessages();
     }
@@ -176,7 +176,7 @@ final class Mailbox implements \Countable, \IteratorAggregate
      *
      * @return bool
      */
-    public function addMessage($message): bool
+    public function addMessage(string $message): bool
     {
         return \imap_append($this->resource->getStream(), $this->getFullEncodedName(), $message);
     }
