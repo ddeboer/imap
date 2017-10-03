@@ -12,7 +12,7 @@ use Ddeboer\Imap\Exception\MessageStructureException;
 /**
  * An IMAP message (e-mail).
  */
-final class Message extends Message\AbstractMessage
+final class Message extends Message\AbstractMessage implements MessageInterface
 {
     private $headers;
     private $rawHeaders;
@@ -206,11 +206,11 @@ final class Message extends Message\AbstractMessage
     /**
      * Move message to another mailbox.
      *
-     * @param Mailbox $mailbox
+     * @param MailboxInterface $mailbox
      *
      * @throws MessageCopyException
      */
-    public function copy(Mailbox $mailbox)
+    public function copy(MailboxInterface $mailbox)
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
@@ -223,11 +223,11 @@ final class Message extends Message\AbstractMessage
     /**
      * Move message to another mailbox.
      *
-     * @param Mailbox $mailbox
+     * @param MailboxInterface $mailbox
      *
      * @throws MessageMoveException
      */
-    public function move(Mailbox $mailbox)
+    public function move(MailboxInterface $mailbox)
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();

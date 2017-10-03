@@ -12,7 +12,7 @@ use Ddeboer\Imap\Mailbox;
  * @covers \Ddeboer\Imap\Exception\AbstractException
  * @covers \Ddeboer\Imap\Mailbox
  */
-class MailboxTest extends AbstractTest
+final class MailboxTest extends AbstractTest
 {
     /**
      * @var Mailbox

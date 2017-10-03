@@ -11,7 +11,7 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 /**
  * A connection to an IMAP server that is authenticated for a user.
  */
-final class Connection implements \Countable
+final class Connection implements ConnectionInterface
 {
     private $resource;
     private $server;
@@ -67,7 +67,7 @@ final class Connection implements \Countable
     /**
      * Get a list of mailboxes (also known as folders).
      *
-     * @return Mailbox[]
+     * @return MailboxInterface[]
      */
     public function getMailboxes(): array
     {
@@ -104,9 +104,9 @@ final class Connection implements \Countable
      *
      * @throws MailboxDoesNotExistException If mailbox does not exist
      *
-     * @return Mailbox
+     * @return MailboxInterface
      */
-    public function getMailbox(string $name): Mailbox
+    public function getMailbox(string $name): MailboxInterface
     {
         if (false === $this->hasMailbox($name)) {
             throw new MailboxDoesNotExistException(\sprintf('Mailbox name "%s" does not exist', $name));
@@ -132,9 +132,9 @@ final class Connection implements \Countable
      *
      * @throws CreateMailboxException
      *
-     * @return Mailbox
+     * @return MailboxInterface
      */
-    public function createMailbox(string $name): Mailbox
+    public function createMailbox(string $name): MailboxInterface
     {
         if (false === \imap_createmailbox($this->resource->getStream(), $this->server . \mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
             throw new CreateMailboxException(\sprintf('Can not create "%s" mailbox at "%s"', $name, $this->server));
@@ -148,11 +148,11 @@ final class Connection implements \Countable
     /**
      * Create mailbox.
      *
-     * @param Mailbox
+     * @param MailboxInterface
      *
      * @throws DeleteMailboxException
      */
-    public function deleteMailbox(Mailbox $mailbox)
+    public function deleteMailbox(MailboxInterface $mailbox)
     {
         if (false === \imap_deletemailbox($this->resource->getStream(), $mailbox->getFullEncodedName())) {
             throw new DeleteMailboxException(\sprintf('Mailbox "%s" could not be deleted', $mailbox->getName()));

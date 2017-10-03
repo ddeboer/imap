@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
-final class EmbeddedMessage extends AbstractMessage
+final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageInterface
 {
     private $headers;
     private $rawHeaders;

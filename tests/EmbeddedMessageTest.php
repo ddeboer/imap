@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
-use Ddeboer\Imap\Message\Part;
+use Ddeboer\Imap\Message\PartInterface;
 
 /**
  * @covers \Ddeboer\Imap\Message\AbstractMessage
@@ -51,8 +51,8 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertSame('attachment', $embeddedAttachment->getDisposition());
         $this->assertSame('IHRoaXMgaXMgY29udGVudCBvZiB0ZXN0IGZpbGU=', $embeddedAttachment->getContent());
         $this->assertSame('base64', $embeddedAttachment->getEncoding());
-        $this->assertSame(Part::TYPE_TEXT, $embeddedAttachment->getType());
-        $this->assertSame(Part::SUBTYPE_PLAIN, $embeddedAttachment->getSubtype());
+        $this->assertSame(PartInterface::TYPE_TEXT, $embeddedAttachment->getType());
+        $this->assertSame(PartInterface::SUBTYPE_PLAIN, $embeddedAttachment->getSubtype());
         $this->assertSame(' this is content of test file', $embeddedAttachment->getDecodedContent());
         $this->assertSame('testfile.txt', $embeddedAttachment->getFilename());
 

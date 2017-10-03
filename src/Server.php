@@ -9,7 +9,7 @@ use Ddeboer\Imap\Exception\AuthenticationFailedException;
 /**
  * An IMAP server.
  */
-final class Server
+final class Server implements ServerInterface
 {
     /**
      * @var string Internet domain name or bracketed IP address of server
@@ -64,9 +64,9 @@ final class Server
      *
      * @throws AuthenticationFailedException
      *
-     * @return Connection
+     * @return ConnectionInterface
      */
-    public function authenticate(string $username, string $password): Connection
+    public function authenticate(string $username, string $password): ConnectionInterface
     {
         // Wrap imap_open, which gives notices instead of exceptions
         \set_error_handler(function ($nr, $message) use ($username) {

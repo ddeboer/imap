@@ -7,8 +7,8 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message\EmailAddress;
+use Ddeboer\Imap\Message\Parameters;
 use Ddeboer\Imap\MessageIterator;
-use Ddeboer\Imap\Parameters;
 use Ddeboer\Imap\Search;
 use Zend\Mime\Mime;
 
@@ -17,14 +17,15 @@ use Zend\Mime\Mime;
  * @covers \Ddeboer\Imap\Message
  * @covers \Ddeboer\Imap\MessageIterator
  * @covers \Ddeboer\Imap\Message\AbstractMessage
+ * @covers \Ddeboer\Imap\Message\AbstractPart
  * @covers \Ddeboer\Imap\Message\Attachment
  * @covers \Ddeboer\Imap\Message\EmailAddress
  * @covers \Ddeboer\Imap\Message\Headers
- * @covers \Ddeboer\Imap\Message\Part
+ * @covers \Ddeboer\Imap\Message\Parameters
+ * @covers \Ddeboer\Imap\Message\SimplePart
  * @covers \Ddeboer\Imap\Message\Transcoder
- * @covers \Ddeboer\Imap\Parameters
  */
-class MessageTest extends AbstractTest
+final class MessageTest extends AbstractTest
 {
     /**
      * @var \Ddeboer\Imap\Mailbox

@@ -9,7 +9,7 @@ use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
 /**
  * An e-mail attachment.
  */
-final class Attachment extends Part
+final class Attachment extends AbstractPart implements AttachmentInterface
 {
     /**
      * Get attachment filename.
@@ -32,7 +32,7 @@ final class Attachment extends Part
         return $this->parameters->get('size');
     }
 
-    public function isEmbeddedMessage()
+    public function isEmbeddedMessage(): bool
     {
         return self::TYPE_MESSAGE === $this->type;
     }
@@ -42,9 +42,9 @@ final class Attachment extends Part
      *
      * @throws NotEmbeddedMessageException
      *
-     * @return EmbeddedMessage
+     * @return EmbeddedMessageInterface
      */
-    public function getEmbeddedMessage(): EmbeddedMessage
+    public function getEmbeddedMessage(): EmbeddedMessageInterface
     {
         if (!$this->isEmbeddedMessage()) {
             throw new NotEmbeddedMessageException(\sprintf(

@@ -6,33 +6,12 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\ImapResourceInterface;
-use Ddeboer\Imap\Parameters;
 
 /**
  * A message part.
  */
-class Part implements \RecursiveIterator
+abstract class AbstractPart implements PartInterface
 {
-    const TYPE_TEXT = 'text';
-    const TYPE_MULTIPART = 'multipart';
-    const TYPE_MESSAGE = 'message';
-    const TYPE_APPLICATION = 'application';
-    const TYPE_AUDIO = 'audio';
-    const TYPE_IMAGE = 'image';
-    const TYPE_VIDEO = 'video';
-    const TYPE_MODEL = 'model';
-    const TYPE_OTHER = 'other';
-    const TYPE_UNKNOWN = 'unknown';
-
-    const ENCODING_7BIT = '7bit';
-    const ENCODING_8BIT = '8bit';
-    const ENCODING_BINARY = 'binary';
-    const ENCODING_BASE64 = 'base64';
-    const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
-
-    const SUBTYPE_PLAIN = 'PLAIN';
-    const SUBTYPE_HTML = 'HTML';
-
     private $typesMap = [
         \TYPETEXT => self::TYPE_TEXT,
         \TYPEMULTIPART => self::TYPE_MULTIPART,
@@ -115,42 +94,42 @@ class Part implements \RecursiveIterator
      *
      * @return int
      */
-    public function getNumber(): int
+    final public function getNumber(): int
     {
         return $this->messageNumber;
     }
 
-    public function getCharset(): string
+    final public function getCharset(): string
     {
         return $this->parameters->get('charset');
     }
 
-    public function getType()
+    final public function getType()
     {
         return $this->type;
     }
 
-    public function getSubtype()
+    final public function getSubtype()
     {
         return $this->subtype;
     }
 
-    public function getEncoding()
+    final public function getEncoding()
     {
         return $this->encoding;
     }
 
-    public function getBytes()
+    final public function getBytes()
     {
         return $this->bytes;
     }
 
-    public function getLines()
+    final public function getLines()
     {
         return $this->lines;
     }
 
-    public function getParameters(): Parameters
+    final public function getParameters(): Parameters
     {
         return $this->parameters;
     }
@@ -174,7 +153,7 @@ class Part implements \RecursiveIterator
      *
      * @return string
      */
-    public function getDecodedContent(): string
+    final public function getDecodedContent(): string
     {
         if (null === $this->decodedContent) {
             $content = $this->getContent();
@@ -196,7 +175,7 @@ class Part implements \RecursiveIterator
         return $this->decodedContent;
     }
 
-    public function getStructure(): \stdClass
+    final public function getStructure(): \stdClass
     {
         return $this->structure;
     }
@@ -240,7 +219,7 @@ class Part implements \RecursiveIterator
 
                 $newPartClass = $this->isAttachment($partStructure)
                     ? Attachment::class
-                    : self::class
+                    : SimplePart::class
                 ;
 
                 $this->parts[] = new $newPartClass($this->resource, $this->messageNumber, $partNumber, $partStructure);
@@ -251,49 +230,49 @@ class Part implements \RecursiveIterator
     /**
      * Get an array of all parts for this message.
      *
-     * @return self[]
+     * @return PartInterface[]
      */
-    public function getParts(): array
+    final public function getParts(): array
     {
         return $this->parts;
     }
 
-    public function current()
+    final public function current()
     {
         return $this->parts[$this->key];
     }
 
-    public function getChildren()
+    final public function getChildren()
     {
         return $this->current();
     }
 
-    public function hasChildren()
+    final public function hasChildren()
     {
         return \count($this->parts) > 0;
     }
 
-    public function key()
+    final public function key()
     {
         return $this->key;
     }
 
-    public function next()
+    final public function next()
     {
         ++$this->key;
     }
 
-    public function rewind()
+    final public function rewind()
     {
         $this->key = 0;
     }
 
-    public function valid()
+    final public function valid()
     {
         return isset($this->parts[$this->key]);
     }
 
-    public function getDisposition()
+    final public function getDisposition()
     {
         return $this->disposition;
     }
