@@ -16,7 +16,7 @@ class ServerTest extends AbstractTest
     {
         $connection = $this->getConnection();
 
-        $check = \imap_check($connection->getResource());
+        $check = \imap_check($connection->getResource()->getStream());
 
         $this->assertInstanceOf(\stdClass::class, $check);
     }

@@ -4,23 +4,35 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Connection;
 use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
 use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use Ddeboer\Imap\ImapResource;
 use Ddeboer\Imap\Mailbox;
 
 /**
  * @covers \Ddeboer\Imap\Connection
+ * @covers \Ddeboer\Imap\ImapResource
  */
 class ConnectionTest extends AbstractTest
 {
+    public function testValidResourceStream()
+    {
+        $connection = $this->getConnection();
+
+        $check = \imap_check($connection->getResource()->getStream());
+
+        $this->assertInstanceOf(\stdClass::class, $check);
+    }
+
     public function testCannotInstantiateArbitraryConnections()
     {
+        $resource = new ImapResource(\uniqid());
+
         $this->expectException(InvalidResourceException::class);
 
-        new Connection(\uniqid(), \uniqid());
+        $resource->getStream();
     }
 
     public function testCloseConnection()
@@ -63,7 +75,7 @@ class ConnectionTest extends AbstractTest
         $this->assertSame($name, $mailbox->getName());
         $this->assertSame($name, $connection->getMailbox($name)->getName());
 
-        $mailbox->delete();
+        $connection->deleteMailbox($mailbox);
 
         $this->expectException(MailboxDoesNotExistException::class);
 
@@ -72,14 +84,15 @@ class ConnectionTest extends AbstractTest
 
     public function testCannotDeleteInvalidMailbox()
     {
+        $connection = $this->getConnection();
         $mailbox = $this->createMailbox();
 
-        $mailbox->delete();
+        $connection->deleteMailbox($mailbox);
 
         $this->expectException(DeleteMailboxException::class);
         $this->expectExceptionMessageRegExp('/NONEXISTENT/');
 
-        $mailbox->delete();
+        $connection->deleteMailbox($mailbox);
     }
 
     public function testCannotCreateMailboxesOnReadonly()

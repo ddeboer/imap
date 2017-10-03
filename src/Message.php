@@ -21,28 +21,29 @@ final class Message extends Message\AbstractMessage
     /**
      * Constructor.
      *
-     * @param resource $stream        IMAP stream
-     * @param int      $messageNumber Message number
+     * @param ImapResourceInterface $resource      IMAP resource
+     * @param int                   $messageNumber Message number
      */
-    public function __construct($stream, int $messageNumber)
+    public function __construct(ImapResourceInterface $resource, int $messageNumber)
     {
-        $structure = $this->loadStructure($stream, $messageNumber);
-        parent::__construct($stream, $messageNumber, null, $structure);
+        $structure = $this->loadStructure($resource, $messageNumber);
+        parent::__construct($resource, $messageNumber, null, $structure);
     }
 
     /**
      * Load message structure.
      *
-     * @param mixed $stream
+     * @param ImapResourceInterface $resource
+     * @param int                   $messageNumber
      */
-    private function loadStructure($stream, int $messageNumber): \stdClass
+    private function loadStructure(ImapResourceInterface $resource, int $messageNumber): \stdClass
     {
         \set_error_handler(function ($nr, $error) use ($messageNumber) {
             throw new MessageDoesNotExistException(\sprintf('Message "%s" does not exist: %s', $messageNumber, $error), $nr);
         });
 
         $structure = \imap_fetchstructure(
-            $stream,
+            $resource->getStream(),
             $messageNumber,
             \FT_UID
         );
@@ -64,7 +65,7 @@ final class Message extends Message\AbstractMessage
     public function getRawHeaders(): string
     {
         if (null === $this->rawHeaders) {
-            $this->rawHeaders = \imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
+            $this->rawHeaders = \imap_fetchheader($this->resource->getStream(), $this->messageNumber, \FT_UID);
         }
 
         return $this->rawHeaders;
@@ -79,7 +80,7 @@ final class Message extends Message\AbstractMessage
     {
         $this->clearHeaders();
 
-        return \imap_fetchbody($this->stream, $this->messageNumber, '', \FT_UID | \FT_PEEK);
+        return \imap_fetchbody($this->resource->getStream(), $this->messageNumber, '', \FT_UID | \FT_PEEK);
     }
 
     /**
@@ -93,7 +94,7 @@ final class Message extends Message\AbstractMessage
             // imap_headerinfo is much faster than imap_fetchheader
             // imap_headerinfo returns only a subset of all mail headers,
             // but it does include the message flags.
-            $headers = \imap_headerinfo($this->stream, \imap_msgno($this->stream, $this->messageNumber));
+            $headers = \imap_headerinfo($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->messageNumber));
             $this->headers = new Message\Headers($headers);
         }
 
@@ -214,7 +215,7 @@ final class Message extends Message\AbstractMessage
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!\imap_mail_copy($this->stream, (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
+        if (!\imap_mail_copy($this->resource->getStream(), (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
             throw new MessageCopyException(\sprintf('Message "%s" cannot be copied to "%s"', $this->messageNumber, $mailbox->getName()));
         }
     }
@@ -231,7 +232,7 @@ final class Message extends Message\AbstractMessage
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!\imap_mail_move($this->stream, (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
+        if (!\imap_mail_move($this->resource->getStream(), (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
             throw new MessageMoveException(\sprintf('Message "%s" cannot be moved to "%s"', $this->messageNumber, $mailbox->getName()));
         }
     }
@@ -246,7 +247,7 @@ final class Message extends Message\AbstractMessage
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!\imap_delete($this->stream, $this->messageNumber, \FT_UID)) {
+        if (!\imap_delete($this->resource->getStream(), $this->messageNumber, \FT_UID)) {
             throw new MessageDeleteException(\sprintf('Message "%s" cannot be deleted', $this->messageNumber));
         }
     }
@@ -260,7 +261,7 @@ final class Message extends Message\AbstractMessage
      */
     public function setFlag(string $flag): bool
     {
-        $result = \imap_setflag_full($this->stream, (string) $this->messageNumber, $flag, \ST_UID);
+        $result = \imap_setflag_full($this->resource->getStream(), (string) $this->messageNumber, $flag, \ST_UID);
 
         $this->clearHeaders();
 
@@ -276,7 +277,7 @@ final class Message extends Message\AbstractMessage
      */
     public function clearFlag(string $flag): bool
     {
-        $result = \imap_clearflag_full($this->stream, (string) $this->messageNumber, $flag, \ST_UID);
+        $result = \imap_clearflag_full($this->resource->getStream(), (string) $this->messageNumber, $flag, \ST_UID);
 
         $this->clearHeaders();
 

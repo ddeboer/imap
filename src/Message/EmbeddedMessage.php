@@ -47,7 +47,7 @@ final class EmbeddedMessage extends AbstractMessage
     public function getRawMessage(): string
     {
         if (null === $this->rawMessage) {
-            $this->rawMessage = \imap_fetchbody($this->stream, $this->messageNumber, $this->partNumber, \FT_UID | \FT_PEEK);
+            $this->rawMessage = \imap_fetchbody($this->resource->getStream(), $this->messageNumber, $this->partNumber, \FT_UID | \FT_PEEK);
         }
 
         return $this->rawMessage;
