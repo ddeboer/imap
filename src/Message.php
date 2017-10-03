@@ -25,6 +25,11 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     private $rawHeaders;
 
     /**
+     * @var null|string
+     */
+    private $rawMessage;
+
+    /**
      * Constructor.
      *
      * @param ImapResourceInterface $resource      IMAP resource
@@ -84,7 +89,11 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     public function getRawMessage(): string
     {
-        return $this->doGetContent('');
+        if (null === $this->rawMessage) {
+            $this->rawMessage = $this->doGetContent('');
+        }
+
+        return $this->rawMessage;
     }
 
     /**

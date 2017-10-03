@@ -70,6 +70,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $mailbox->addMessage($raw);
 
         $message = $mailbox->getMessage(1);
+        $this->assertSame('3-third-subject', $message->getSubject());
         $this->assertSame('3-third-content', \rtrim($message->getBodyText()));
 
         $attachments = $message->getAttachments();
@@ -79,7 +80,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertTrue($attachment->isEmbeddedMessage());
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
-
+        $this->assertSame('2-second-subject', $embeddedMessage->getSubject());
         $this->assertSame('2-second-content', \rtrim($embeddedMessage->getBodyText()));
 
         $embeddedAttachments = $embeddedMessage->getAttachments();
@@ -89,7 +90,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertTrue($embeddedAttachment->isEmbeddedMessage());
 
         $secondEmbeddedMessage = $embeddedAttachment->getEmbeddedMessage();
-
+        $this->assertSame('1-first-subject', $secondEmbeddedMessage->getSubject());
         $this->assertSame('1-first-content', \rtrim($secondEmbeddedMessage->getBodyText()));
 
         $secondEmbeddedAttachments = $secondEmbeddedMessage->getAttachments();
@@ -99,7 +100,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertTrue($secondEmbeddedAttachment->isEmbeddedMessage());
 
         $thirdEmbeddedMessage = $secondEmbeddedAttachment->getEmbeddedMessage();
-
+        $this->assertSame('0-zero-subject', $thirdEmbeddedMessage->getSubject());
         $this->assertSame('0-zero-content', \rtrim($thirdEmbeddedMessage->getBodyText()));
 
         $this->assertCount(0, $thirdEmbeddedMessage->getAttachments());

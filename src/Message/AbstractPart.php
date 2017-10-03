@@ -229,13 +229,23 @@ abstract class AbstractPart implements PartInterface
      *
      * @return string
      */
-    public function getContent(): string
+    final public function getContent(): string
     {
         if (null === $this->content) {
-            $this->content = $this->doGetContent($this->partNumber);
+            $this->content = $this->doGetContent($this->getContentPartNumber());
         }
 
         return $this->content;
+    }
+
+    /**
+     * Get content part number.
+     *
+     * @return string
+     */
+    protected function getContentPartNumber(): string
+    {
+        return $this->partNumber;
     }
 
     /**
@@ -263,6 +273,23 @@ abstract class AbstractPart implements PartInterface
         }
 
         return $this->decodedContent;
+    }
+
+    /**
+     * Get raw message content.
+     *
+     * @param string $partNumber
+     *
+     * @return string
+     */
+    final protected function doGetContent(string $partNumber): string
+    {
+        return \imap_fetchbody(
+            $this->resource->getStream(),
+            $this->messageNumber,
+            $partNumber,
+            \FT_UID | \FT_PEEK
+        );
     }
 
     /**
@@ -405,23 +432,6 @@ abstract class AbstractPart implements PartInterface
     final public function valid()
     {
         return isset($this->parts[$this->key]);
-    }
-
-    /**
-     * Get raw message content.
-     *
-     * @param string $partNumber
-     *
-     * @return string
-     */
-    final protected function doGetContent(string $partNumber): string
-    {
-        return \imap_fetchbody(
-            $this->resource->getStream(),
-            $this->messageNumber,
-            $partNumber,
-            \FT_UID | \FT_PEEK
-        );
     }
 
     /**
