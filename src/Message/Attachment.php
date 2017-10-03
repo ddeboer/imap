@@ -18,8 +18,8 @@ final class Attachment extends AbstractPart implements AttachmentInterface
      */
     public function getFilename(): string
     {
-        return $this->parameters->get('filename')
-            ?: $this->parameters->get('name');
+        return $this->getParameters()->get('filename')
+            ?: $this->getParameters()->get('name');
     }
 
     /**
@@ -29,7 +29,7 @@ final class Attachment extends AbstractPart implements AttachmentInterface
      */
     public function getSize()
     {
-        return $this->parameters->get('size');
+        return $this->getParameters()->get('size');
     }
 
     /**
@@ -39,7 +39,7 @@ final class Attachment extends AbstractPart implements AttachmentInterface
      */
     public function isEmbeddedMessage(): bool
     {
-        return self::TYPE_MESSAGE === $this->type;
+        return self::TYPE_MESSAGE === $this->getType();
     }
 
     /**
@@ -55,10 +55,10 @@ final class Attachment extends AbstractPart implements AttachmentInterface
             throw new NotEmbeddedMessageException(\sprintf(
                 'Attachment "%s" in message "%s" is not embedded message',
                 $this->partNumber,
-                $this->messageNumber
+                $this->getNumber()
             ));
         }
 
-        return new EmbeddedMessage($this->resource, $this->messageNumber, $this->partNumber, $this->structure->parts[0]);
+        return new EmbeddedMessage($this->resource, $this->getNumber(), $this->partNumber, $this->getStructure()->parts[0]);
     }
 }

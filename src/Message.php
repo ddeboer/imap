@@ -76,7 +76,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     public function getRawHeaders(): string
     {
         if (null === $this->rawHeaders) {
-            $this->rawHeaders = \imap_fetchheader($this->resource->getStream(), $this->messageNumber, \FT_UID);
+            $this->rawHeaders = \imap_fetchheader($this->resource->getStream(), $this->getNumber(), \FT_UID);
         }
 
         return $this->rawHeaders;
@@ -107,7 +107,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
             // imap_headerinfo is much faster than imap_fetchheader
             // imap_headerinfo returns only a subset of all mail headers,
             // but it does include the message flags.
-            $headers = \imap_headerinfo($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->messageNumber));
+            $headers = \imap_headerinfo($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->getNumber()));
             $this->headers = new Message\Headers($headers);
         }
 
@@ -214,8 +214,8 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!\imap_mail_copy($this->resource->getStream(), (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
-            throw new MessageCopyException(\sprintf('Message "%s" cannot be copied to "%s"', $this->messageNumber, $mailbox->getName()));
+        if (!\imap_mail_copy($this->resource->getStream(), (string) $this->getNumber(), $mailbox->getEncodedName(), \CP_UID)) {
+            throw new MessageCopyException(\sprintf('Message "%s" cannot be copied to "%s"', $this->getNumber(), $mailbox->getName()));
         }
     }
 
@@ -231,8 +231,8 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!\imap_mail_move($this->resource->getStream(), (string) $this->messageNumber, $mailbox->getEncodedName(), \CP_UID)) {
-            throw new MessageMoveException(\sprintf('Message "%s" cannot be moved to "%s"', $this->messageNumber, $mailbox->getName()));
+        if (!\imap_mail_move($this->resource->getStream(), (string) $this->getNumber(), $mailbox->getEncodedName(), \CP_UID)) {
+            throw new MessageMoveException(\sprintf('Message "%s" cannot be moved to "%s"', $this->getNumber(), $mailbox->getName()));
         }
     }
 
@@ -246,8 +246,8 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!\imap_delete($this->resource->getStream(), $this->messageNumber, \FT_UID)) {
-            throw new MessageDeleteException(\sprintf('Message "%s" cannot be deleted', $this->messageNumber));
+        if (!\imap_delete($this->resource->getStream(), $this->getNumber(), \FT_UID)) {
+            throw new MessageDeleteException(\sprintf('Message "%s" cannot be deleted', $this->getNumber()));
         }
     }
 
@@ -260,7 +260,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     public function setFlag(string $flag): bool
     {
-        $result = \imap_setflag_full($this->resource->getStream(), (string) $this->messageNumber, $flag, \ST_UID);
+        $result = \imap_setflag_full($this->resource->getStream(), (string) $this->getNumber(), $flag, \ST_UID);
 
         $this->clearHeaders();
 
@@ -276,7 +276,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     public function clearFlag(string $flag): bool
     {
-        $result = \imap_clearflag_full($this->resource->getStream(), (string) $this->messageNumber, $flag, \ST_UID);
+        $result = \imap_clearflag_full($this->resource->getStream(), (string) $this->getNumber(), $flag, \ST_UID);
 
         $this->clearHeaders();
 

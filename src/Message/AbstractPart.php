@@ -18,64 +18,9 @@ abstract class AbstractPart implements PartInterface
     protected $resource;
 
     /**
-     * @var int
-     */
-    protected $messageNumber;
-
-    /**
      * @var null|string
      */
     protected $partNumber;
-
-    /**
-     * @var \stdClass
-     */
-    protected $structure;
-
-    /**
-     * @var Parameters
-     */
-    protected $parameters;
-
-    /**
-     * @var null|string
-     */
-    protected $type;
-
-    /**
-     * @var null|string
-     */
-    protected $subtype;
-
-    /**
-     * @var null|string
-     */
-    protected $encoding;
-
-    /**
-     * @var null|string
-     */
-    protected $disposition;
-
-    /**
-     * @var null|string
-     */
-    protected $bytes;
-
-    /**
-     * @var null|string
-     */
-    protected $lines;
-
-    /**
-     * @var null|string
-     */
-    protected $content;
-
-    /**
-     * @var null|string
-     */
-    protected $decodedContent;
 
     /**
      * @var array
@@ -85,7 +30,62 @@ abstract class AbstractPart implements PartInterface
     /**
      * @var int
      */
-    protected $key = 0;
+    private $messageNumber;
+
+    /**
+     * @var \stdClass
+     */
+    private $structure;
+
+    /**
+     * @var Parameters
+     */
+    private $parameters;
+
+    /**
+     * @var null|string
+     */
+    private $type;
+
+    /**
+     * @var null|string
+     */
+    private $subtype;
+
+    /**
+     * @var null|string
+     */
+    private $encoding;
+
+    /**
+     * @var null|string
+     */
+    private $disposition;
+
+    /**
+     * @var null|string
+     */
+    private $bytes;
+
+    /**
+     * @var null|string
+     */
+    private $lines;
+
+    /**
+     * @var null|string
+     */
+    private $content;
+
+    /**
+     * @var null|string
+     */
+    private $decodedContent;
+
+    /**
+     * @var int
+     */
+    private $key = 0;
 
     /**
      * @var array
@@ -142,6 +142,26 @@ abstract class AbstractPart implements PartInterface
     final public function getNumber(): int
     {
         return $this->messageNumber;
+    }
+
+    /**
+     * Part structure.
+     *
+     * @return \stdClass
+     */
+    final public function getStructure(): \stdClass
+    {
+        return $this->structure;
+    }
+
+    /**
+     * Part parameters.
+     *
+     * @return Parameters
+     */
+    final public function getParameters(): Parameters
+    {
+        return $this->parameters;
     }
 
     /**
@@ -215,16 +235,6 @@ abstract class AbstractPart implements PartInterface
     }
 
     /**
-     * Part parameters.
-     *
-     * @return Parameters
-     */
-    final public function getParameters(): Parameters
-    {
-        return $this->parameters;
-    }
-
-    /**
      * Get raw part content.
      *
      * @return string
@@ -290,16 +300,6 @@ abstract class AbstractPart implements PartInterface
             $partNumber,
             \FT_UID | \FT_PEEK
         );
-    }
-
-    /**
-     * Part structure.
-     *
-     * @return \stdClass
-     */
-    final public function getStructure(): \stdClass
-    {
-        return $this->structure;
     }
 
     /**
