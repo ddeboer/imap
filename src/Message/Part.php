@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
+use Ddeboer\Imap\ImapResourceInterface;
 use Ddeboer\Imap\Parameters;
 
 /**
@@ -67,7 +68,10 @@ class Part implements \RecursiveIterator
      */
     protected $parameters;
 
-    protected $stream;
+    /**
+     * @var ImapResourceInterface
+     */
+    protected $resource;
 
     protected $messageNumber;
 
@@ -88,18 +92,18 @@ class Part implements \RecursiveIterator
     /**
      * Constructor.
      *
-     * @param resource  $stream        IMAP stream
-     * @param int       $messageNumber Message number
-     * @param int       $partNumber    Part number (optional)
-     * @param \stdClass $structure     Part structure
+     * @param ImapResourceInterface $resource      IMAP resource
+     * @param int                   $messageNumber Message number
+     * @param int                   $partNumber    Part number (optional)
+     * @param \stdClass             $structure     Part structure
      */
     public function __construct(
-        $stream,
+        ImapResourceInterface $resource,
         int $messageNumber,
         string $partNumber = null,
         \stdClass $structure = null
     ) {
-        $this->stream = $stream;
+        $this->resource = $resource;
         $this->messageNumber = $messageNumber;
         $this->partNumber = $partNumber;
         $this->structure = $structure;
@@ -226,7 +230,7 @@ class Part implements \RecursiveIterator
         // When the message is not multipart and the body is the attachment content
         // Prevents infinite recursion
         if ($this->isAttachment($structure) && !$this instanceof Attachment) {
-            $this->parts[] = new Attachment($this->stream, $this->messageNumber, '1', $structure);
+            $this->parts[] = new Attachment($this->resource, $this->messageNumber, '1', $structure);
         }
 
         if (isset($structure->parts)) {
@@ -239,7 +243,7 @@ class Part implements \RecursiveIterator
                     : self::class
                 ;
 
-                $this->parts[] = new $newPartClass($this->stream, $this->messageNumber, $partNumber, $partStructure);
+                $this->parts[] = new $newPartClass($this->resource, $this->messageNumber, $partNumber, $partStructure);
             }
         }
     }
@@ -302,7 +306,7 @@ class Part implements \RecursiveIterator
     final protected function doGetContent(): string
     {
         return \imap_fetchbody(
-            $this->stream,
+            $this->resource->getStream(),
             $this->messageNumber,
             (string) ($this->partNumber ?: '1'),
             \FT_UID | \FT_PEEK

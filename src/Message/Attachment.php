@@ -54,6 +54,6 @@ final class Attachment extends Part
             ));
         }
 
-        return new EmbeddedMessage($this->stream, $this->messageNumber, $this->partNumber, $this->structure->parts[0]);
+        return new EmbeddedMessage($this->resource, $this->messageNumber, $this->partNumber, $this->structure->parts[0]);
     }
 }

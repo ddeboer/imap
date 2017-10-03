@@ -6,17 +6,17 @@ namespace Ddeboer\Imap;
 
 final class MessageIterator extends \ArrayIterator
 {
-    private $stream;
+    private $resource;
 
     /**
      * Constructor.
      *
-     * @param \resource $stream         IMAP stream
-     * @param array     $messageNumbers Array of message numbers
+     * @param ImapResourceInterface $resource       IMAP resource
+     * @param array                 $messageNumbers Array of message numbers
      */
-    public function __construct($stream, array $messageNumbers)
+    public function __construct(ImapResourceInterface $resource, array $messageNumbers)
     {
-        $this->stream = $stream;
+        $this->resource = $resource;
 
         parent::__construct($messageNumbers);
     }
@@ -28,6 +28,6 @@ final class MessageIterator extends \ArrayIterator
      */
     public function current(): Message
     {
-        return new Message($this->stream, parent::current());
+        return new Message($this->resource, parent::current());
     }
 }

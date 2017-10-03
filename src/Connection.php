@@ -6,7 +6,6 @@ namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
-use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 
 /**
@@ -14,50 +13,43 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
  */
 final class Connection implements \Countable
 {
-    private $server;
     private $resource;
+    private $server;
     private $mailboxes;
     private $mailboxNames;
 
     /**
      * Constructor.
      *
-     * @param resource $resource
-     * @param string   $server
+     * @param ImapResourceInterface $resource
+     * @param string                $server
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($resource, string $server)
+    public function __construct(ImapResourceInterface $resource, string $server)
     {
         $this->resource = $resource;
         $this->server = $server;
-
-        // Performs resource check
-        $this->getResource();
     }
 
     /**
      * Get IMAP resource.
      *
-     * @return resource
+     * @return ImapResourceInterface
      */
-    public function getResource()
+    public function getResource(): ImapResourceInterface
     {
-        if (false === \is_resource($this->resource) || 'imap' !== \get_resource_type($this->resource)) {
-            throw new InvalidResourceException('Supplied resource is not a valid imap resource');
-        }
-
         return $this->resource;
     }
 
     /**
      * Delete all messages marked for deletion.
      *
-     * @return Mailbox
+     * @return bool
      */
-    public function expunge()
+    public function expunge(): bool
     {
-        \imap_expunge($this->getResource());
+        return \imap_expunge($this->resource->getStream());
     }
 
     /**
@@ -69,7 +61,7 @@ final class Connection implements \Countable
      */
     public function close(int $flag = 0): bool
     {
-        return \imap_close($this->getResource(), $flag);
+        return \imap_close($this->resource->getStream(), $flag);
     }
 
     /**
@@ -120,7 +112,7 @@ final class Connection implements \Countable
             throw new MailboxDoesNotExistException(\sprintf('Mailbox name "%s" does not exist', $name));
         }
 
-        return new Mailbox($this, $name, $this->mailboxNames[$name]);
+        return new Mailbox($this->resource, $name, $this->mailboxNames[$name]);
     }
 
     /**
@@ -130,7 +122,7 @@ final class Connection implements \Countable
      */
     public function count()
     {
-        return \imap_num_msg($this->getResource());
+        return \imap_num_msg($this->resource->getStream());
     }
 
     /**
@@ -144,7 +136,7 @@ final class Connection implements \Countable
      */
     public function createMailbox(string $name): Mailbox
     {
-        if (false === \imap_createmailbox($this->getResource(), $this->server . \mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
+        if (false === \imap_createmailbox($this->resource->getStream(), $this->server . \mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
             throw new CreateMailboxException(\sprintf('Can not create "%s" mailbox at "%s"', $name, $this->server));
         }
 
@@ -162,7 +154,7 @@ final class Connection implements \Countable
      */
     public function deleteMailbox(Mailbox $mailbox)
     {
-        if (false === \imap_deletemailbox($this->getResource(), $mailbox->getFullEncodedName())) {
+        if (false === \imap_deletemailbox($this->resource->getStream(), $mailbox->getFullEncodedName())) {
             throw new DeleteMailboxException(\sprintf('Mailbox "%s" could not be deleted', $mailbox->getName()));
         }
 
@@ -181,7 +173,7 @@ final class Connection implements \Countable
         }
 
         $this->mailboxNames = [];
-        $mailboxesInfo = \imap_getmailboxes($this->getResource(), $this->server, '*');
+        $mailboxesInfo = \imap_getmailboxes($this->resource->getStream(), $this->server, '*');
         foreach ($mailboxesInfo as $mailboxInfo) {
             $name = \mb_convert_encoding(\str_replace($this->server, '', $mailboxInfo->name), 'UTF-8', 'UTF7-IMAP');
             $this->mailboxNames[$name] = $mailboxInfo;

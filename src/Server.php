@@ -96,7 +96,7 @@ final class Server
         \imap_errors();
         \imap_alerts();
 
-        return new Connection($resource, $connection);
+        return new Connection(new ImapResource($resource), $connection);
     }
 
     /**

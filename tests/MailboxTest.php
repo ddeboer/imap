@@ -83,7 +83,8 @@ class MailboxTest extends AbstractTest
 
     public function testDelete()
     {
-        $this->mailbox->delete();
+        $connection = $this->getConnection();
+        $connection->deleteMailbox($this->mailbox);
 
         $this->expectException(ReopenMailboxException::class);
 
