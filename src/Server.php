@@ -17,7 +17,7 @@ final class Server implements ServerInterface
     private $hostname;
 
     /**
-     * @var int TCP port number
+     * @var string TCP port number
      */
     private $port;
 

@@ -6,6 +6,9 @@ namespace Ddeboer\Imap;
 
 final class MessageIterator extends \ArrayIterator implements MessageIteratorInterface
 {
+    /**
+     * @var ImapResourceInterface
+     */
     private $resource;
 
     /**

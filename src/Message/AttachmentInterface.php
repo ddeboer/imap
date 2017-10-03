@@ -23,6 +23,11 @@ interface AttachmentInterface extends PartInterface
      */
     public function getSize();
 
+    /**
+     * Is this attachment also an Embedded Message?
+     *
+     * @return bool
+     */
     public function isEmbeddedMessage(): bool;
 
     /**

@@ -11,6 +11,9 @@ use Ddeboer\Imap\Exception\InvalidResourceException;
  */
 final class ImapResource implements ImapResourceInterface
 {
+    /**
+     * @var resource
+     */
     private $resource;
 
     /**

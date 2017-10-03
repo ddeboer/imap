@@ -17,7 +17,7 @@ final class RawExpression implements ConditionInterface
     private $expression;
 
     /**
-     * @param string $text text for the condition
+     * @param string $expression text for the condition
      */
     public function __construct(string $expression)
     {

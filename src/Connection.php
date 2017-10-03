@@ -13,9 +13,24 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
  */
 final class Connection implements ConnectionInterface
 {
+    /**
+     * @var ImapResourceInterface
+     */
     private $resource;
+
+    /**
+     * @var string
+     */
     private $server;
+
+    /**
+     * @var null|array
+     */
     private $mailboxes;
+
+    /**
+     * @var null|array
+     */
     private $mailboxNames;
 
     /**

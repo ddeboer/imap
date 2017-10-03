@@ -9,6 +9,8 @@ use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 final class Transcoder
 {
     /**
+     * @var array
+     *
      * @see https://dxr.mozilla.org/mozilla1.9.1/source/intl/uconv/src/charsetalias.properties
      */
     private static $charsetAliases = [
@@ -194,7 +196,6 @@ final class Transcoder
         'unicode-1-1-utf-7' => 'UTF-7',
         'unicode-1-1-utf-8' => 'UTF-8',
         'unicode-2-0-utf-7' => 'UTF-7',
-        'utf8' => 'UTF-8',
         'visual' => 'ISO-8859-8',
         'windows-31j' => 'Shift_JIS',
         'x-cp1250' => 'windows-1250',
@@ -219,6 +220,14 @@ final class Transcoder
         'zh_tw-euc' => 'x-euc-tw',
     ];
 
+    /**
+     * Decode text to UTF-8.
+     *
+     * @param string $text        Text to decode
+     * @param string $fromCharset Original charset
+     *
+     * @return string
+     */
     public static function decode(string $text, string $fromCharset): string
     {
         static $utf8Aliases = [

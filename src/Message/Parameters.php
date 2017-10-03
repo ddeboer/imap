@@ -6,11 +6,17 @@ namespace Ddeboer\Imap\Message;
 
 class Parameters extends \ArrayIterator
 {
+    /**
+     * @param array $parameters
+     */
     public function __construct(array $parameters = [])
     {
         $this->add($parameters);
     }
 
+    /**
+     * @param array $parameters
+     */
     public function add(array $parameters = [])
     {
         foreach ($parameters as $parameter) {
@@ -20,11 +26,23 @@ class Parameters extends \ArrayIterator
         }
     }
 
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function get(string $key)
     {
         return $this[$key] ?? null;
     }
 
+    /**
+     * Decode value.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
     final protected function decode(string $value): string
     {
         $decoded = '';

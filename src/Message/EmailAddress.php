@@ -9,22 +9,45 @@ namespace Ddeboer\Imap\Message;
  */
 final class EmailAddress
 {
+    /**
+     * @var string
+     */
     private $mailbox;
+
+    /**
+     * @var null|string
+     */
     private $hostname;
+
+    /**
+     * @var null|string
+     */
     private $name;
+
+    /**
+     * @var null|string
+     */
     private $address;
 
+    /**
+     * @param string      $mailbox
+     * @param null|string $hostname
+     * @param null|string $name
+     */
     public function __construct(string $mailbox, string $hostname = null, string $name = null)
     {
         $this->mailbox = $mailbox;
         $this->hostname = $hostname;
         $this->name = $name;
 
-        if ($hostname) {
+        if (null !== $hostname) {
             $this->address = $mailbox . '@' . $hostname;
         }
     }
 
+    /**
+     * @return null|string
+     */
     public function getAddress()
     {
         return $this->address;
@@ -38,23 +61,32 @@ final class EmailAddress
     public function getFullAddress(): string
     {
         $address = \sprintf('%s@%s', $this->mailbox, $this->hostname);
-        if ($this->name) {
+        if (null !== $this->name) {
             $address = \sprintf('"%s" <%s>', \addcslashes($this->name, '"'), $address);
         }
 
         return $address;
     }
 
+    /**
+     * @return string
+     */
     public function getMailbox(): string
     {
         return $this->mailbox;
     }
 
+    /**
+     * @return null|string
+     */
     public function getHostname()
     {
         return $this->hostname;
     }
 
+    /**
+     * @return null|string
+     */
     public function getName()
     {
         return $this->name;

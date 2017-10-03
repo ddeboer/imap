@@ -49,7 +49,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Get Mailbox status.
      *
-     * @param int $flag
+     * @param null|int $flags
      *
      * @return \stdClass
      */

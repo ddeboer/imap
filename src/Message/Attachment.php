@@ -32,6 +32,11 @@ final class Attachment extends AbstractPart implements AttachmentInterface
         return $this->parameters->get('size');
     }
 
+    /**
+     * Is this attachment also an Embedded Message?
+     *
+     * @return bool
+     */
     public function isEmbeddedMessage(): bool
     {
         return self::TYPE_MESSAGE === $this->type;

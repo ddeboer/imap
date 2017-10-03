@@ -38,6 +38,14 @@ final class Headers extends Parameters
         return parent::get(\strtolower($key));
     }
 
+    /**
+     * Parse header.
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return mixed
+     */
     private function parseHeader(string $key, $value)
     {
         switch ($key) {
@@ -53,7 +61,7 @@ final class Headers extends Parameters
 
                 try {
                     $date = new \DateTimeImmutable($alteredValue);
-                } catch (\Exception $ex) {
+                } catch (\Throwable $ex) {
                     throw new InvalidDateHeaderException(\sprintf('Invalid Date header found: "%s"', $value), 0, $ex);
                 }
 
@@ -81,6 +89,11 @@ final class Headers extends Parameters
         return $value;
     }
 
+    /**
+     * @param \stdClass $value
+     *
+     * @return EmailAddress
+     */
     private function decodeEmailAddress(\stdClass $value): EmailAddress
     {
         return new EmailAddress(

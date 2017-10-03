@@ -75,14 +75,14 @@ interface MessageInterface extends Message\BasicMessageInterface
     /**
      * Move message to another mailbox.
      *
-     * @param Mailbox $mailbox
+     * @param MailboxInterface $mailbox
      */
     public function copy(MailboxInterface $mailbox);
 
     /**
      * Move message to another mailbox.
      *
-     * @param Mailbox $mailbox
+     * @param MailboxInterface $mailbox
      */
     public function move(MailboxInterface $mailbox);
 

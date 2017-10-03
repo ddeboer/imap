@@ -14,8 +14,19 @@ use Ddeboer\Imap\Search\LogicalOperator\All;
  */
 final class Mailbox implements MailboxInterface
 {
+    /**
+     * @var ImapResourceInterface
+     */
     private $resource;
+
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var \stdClass
+     */
     private $info;
 
     /**
@@ -97,7 +108,7 @@ final class Mailbox implements MailboxInterface
     /**
      * Get Mailbox status.
      *
-     * @param int $flag
+     * @param null|int $flags
      *
      * @return \stdClass
      */
@@ -199,6 +210,11 @@ final class Mailbox implements MailboxInterface
         throw new ReopenMailboxException(\sprintf('Cannot reopen mailbox "%s"', $this->getName()));
     }
 
+    /**
+     * Check whether the current mailbox is open.
+     *
+     * @return bool
+     */
     private function isMailboxOpen(): bool
     {
         $check = \imap_check($this->resource->getStream());

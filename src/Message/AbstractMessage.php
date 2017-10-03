@@ -6,8 +6,9 @@ namespace Ddeboer\Imap\Message;
 
 abstract class AbstractMessage extends AbstractPart
 {
-    private $headers;
-    private $rawHeaders;
+    /**
+     * @var null|array
+     */
     private $attachments;
 
     /**

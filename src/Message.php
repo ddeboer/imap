@@ -14,9 +14,15 @@ use Ddeboer\Imap\Exception\MessageStructureException;
  */
 final class Message extends Message\AbstractMessage implements MessageInterface
 {
+    /**
+     * @var null|Message\Headers
+     */
     private $headers;
+
+    /**
+     * @var null|string
+     */
     private $rawHeaders;
-    private $attachments;
 
     /**
      * Constructor.
