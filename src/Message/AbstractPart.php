@@ -18,7 +18,7 @@ abstract class AbstractPart implements PartInterface
     protected $resource;
 
     /**
-     * @var null|string
+     * @var int
      */
     protected $messageNumber;
 
@@ -28,7 +28,7 @@ abstract class AbstractPart implements PartInterface
     protected $partNumber;
 
     /**
-     * @var null|string
+     * @var \stdClass
      */
     protected $structure;
 
