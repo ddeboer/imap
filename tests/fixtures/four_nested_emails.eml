@@ -3,7 +3,6 @@ From: test@example.com
 Subject: 3-third-subject
 Content-Type: multipart/mixed;
  boundary="------------2E5D78A17C812FEFF825F7D5"
-Content-Language: it-IT
 
 This is a multi-part message in MIME format.
 --------------2E5D78A17C812FEFF825F7D5
@@ -24,7 +23,6 @@ From: test@example.com
 Subject: 2-second-subject
 Content-Type: multipart/mixed;
  boundary="------------9919377E37A03209B057D47F"
-Content-Language: it-IT
 
 This is a multi-part message in MIME format.
 --------------9919377E37A03209B057D47F
@@ -45,7 +43,6 @@ From: test@example.com
 Subject: 1-first-subject
 Content-Type: multipart/mixed;
  boundary="------------0919377E37A03209B057D47A"
-Content-Language: it-IT
 
 This is a multi-part message in MIME format.
 --------------0919377E37A03209B057D47A
@@ -65,7 +62,6 @@ To: test@example.com
 From: test@example.com
 Subject: 0-zero-subject
 Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: it-IT
 Content-Transfer-Encoding: 7bit
 
 0-zero-content
