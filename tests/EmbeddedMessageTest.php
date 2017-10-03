@@ -62,4 +62,47 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $embeddedAttachment->getEmbeddedMessage();
     }
+
+    public function testRecursiveEmbeddedAttachment()
+    {
+        $mailbox = $this->createMailbox();
+        $raw = $this->getFixture('four_nested_emails');
+        $mailbox->addMessage($raw);
+
+        $message = $mailbox->getMessage(1);
+        $this->assertSame('3-third-subject', $message->getSubject());
+        $this->assertSame('3-third-content', \rtrim($message->getBodyText()));
+
+        $attachments = $message->getAttachments();
+        $this->assertCount(1, $attachments);
+
+        $attachment = \current($attachments);
+        $this->assertTrue($attachment->isEmbeddedMessage());
+
+        $embeddedMessage = $attachment->getEmbeddedMessage();
+        $this->assertSame('2-second-subject', $embeddedMessage->getSubject());
+        $this->assertSame('2-second-content', \rtrim($embeddedMessage->getBodyText()));
+
+        $embeddedAttachments = $embeddedMessage->getAttachments();
+        $this->assertCount(1, $embeddedAttachments);
+
+        $embeddedAttachment = \current($embeddedAttachments);
+        $this->assertTrue($embeddedAttachment->isEmbeddedMessage());
+
+        $secondEmbeddedMessage = $embeddedAttachment->getEmbeddedMessage();
+        $this->assertSame('1-first-subject', $secondEmbeddedMessage->getSubject());
+        $this->assertSame('1-first-content', \rtrim($secondEmbeddedMessage->getBodyText()));
+
+        $secondEmbeddedAttachments = $secondEmbeddedMessage->getAttachments();
+        $this->assertCount(1, $secondEmbeddedAttachments);
+
+        $secondEmbeddedAttachment = \current($secondEmbeddedAttachments);
+        $this->assertTrue($secondEmbeddedAttachment->isEmbeddedMessage());
+
+        $thirdEmbeddedMessage = $secondEmbeddedAttachment->getEmbeddedMessage();
+        $this->assertSame('0-zero-subject', $thirdEmbeddedMessage->getSubject());
+        $this->assertSame('0-zero-content', \rtrim($thirdEmbeddedMessage->getBodyText()));
+
+        $this->assertCount(0, $thirdEmbeddedMessage->getAttachments());
+    }
 }

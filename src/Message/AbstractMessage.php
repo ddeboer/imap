@@ -126,7 +126,7 @@ abstract class AbstractMessage extends AbstractPart
     /**
      * Get body HTML.
      *
-     * @return string | null Null if message has no HTML message part
+     * @return null|string
      */
     final public function getBodyHtml()
     {
@@ -148,7 +148,7 @@ abstract class AbstractMessage extends AbstractPart
     /**
      * Get body text.
      *
-     * @return string
+     * @return null|string
      */
     final public function getBodyText()
     {
