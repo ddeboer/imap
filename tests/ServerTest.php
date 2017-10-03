@@ -10,7 +10,7 @@ use Ddeboer\Imap\Server;
 /**
  * @covers \Ddeboer\Imap\Server
  */
-class ServerTest extends AbstractTest
+final class ServerTest extends AbstractTest
 {
     public function testValidConnection()
     {

@@ -17,14 +17,15 @@ use Zend\Mime\Mime;
  * @covers \Ddeboer\Imap\Message
  * @covers \Ddeboer\Imap\MessageIterator
  * @covers \Ddeboer\Imap\Message\AbstractMessage
+ * @covers \Ddeboer\Imap\Message\AbstractPart
  * @covers \Ddeboer\Imap\Message\Attachment
  * @covers \Ddeboer\Imap\Message\EmailAddress
  * @covers \Ddeboer\Imap\Message\Headers
  * @covers \Ddeboer\Imap\Message\Parameters
- * @covers \Ddeboer\Imap\Message\Part
+ * @covers \Ddeboer\Imap\Message\SimplePart
  * @covers \Ddeboer\Imap\Message\Transcoder
  */
-class MessageTest extends AbstractTest
+final class MessageTest extends AbstractTest
 {
     /**
      * @var \Ddeboer\Imap\Mailbox

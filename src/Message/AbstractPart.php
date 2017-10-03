@@ -94,42 +94,42 @@ abstract class AbstractPart implements PartInterface
      *
      * @return int
      */
-    public function getNumber(): int
+    final public function getNumber(): int
     {
         return $this->messageNumber;
     }
 
-    public function getCharset(): string
+    final public function getCharset(): string
     {
         return $this->parameters->get('charset');
     }
 
-    public function getType()
+    final public function getType()
     {
         return $this->type;
     }
 
-    public function getSubtype()
+    final public function getSubtype()
     {
         return $this->subtype;
     }
 
-    public function getEncoding()
+    final public function getEncoding()
     {
         return $this->encoding;
     }
 
-    public function getBytes()
+    final public function getBytes()
     {
         return $this->bytes;
     }
 
-    public function getLines()
+    final public function getLines()
     {
         return $this->lines;
     }
 
-    public function getParameters(): Parameters
+    final public function getParameters(): Parameters
     {
         return $this->parameters;
     }
@@ -153,7 +153,7 @@ abstract class AbstractPart implements PartInterface
      *
      * @return string
      */
-    public function getDecodedContent(): string
+    final public function getDecodedContent(): string
     {
         if (null === $this->decodedContent) {
             $content = $this->getContent();
@@ -175,7 +175,7 @@ abstract class AbstractPart implements PartInterface
         return $this->decodedContent;
     }
 
-    public function getStructure(): \stdClass
+    final public function getStructure(): \stdClass
     {
         return $this->structure;
     }
@@ -232,47 +232,47 @@ abstract class AbstractPart implements PartInterface
      *
      * @return PartInterface[]
      */
-    public function getParts(): array
+    final public function getParts(): array
     {
         return $this->parts;
     }
 
-    public function current()
+    final public function current()
     {
         return $this->parts[$this->key];
     }
 
-    public function getChildren()
+    final public function getChildren()
     {
         return $this->current();
     }
 
-    public function hasChildren()
+    final public function hasChildren()
     {
         return \count($this->parts) > 0;
     }
 
-    public function key()
+    final public function key()
     {
         return $this->key;
     }
 
-    public function next()
+    final public function next()
     {
         ++$this->key;
     }
 
-    public function rewind()
+    final public function rewind()
     {
         $this->key = 0;
     }
 
-    public function valid()
+    final public function valid()
     {
         return isset($this->parts[$this->key]);
     }
 
-    public function getDisposition()
+    final public function getDisposition()
     {
         return $this->disposition;
     }

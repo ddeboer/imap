@@ -17,7 +17,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return string
      */
-    public function getId(): string
+    final public function getId(): string
     {
         return $this->getHeaders()->get('message_id');
     }
@@ -27,7 +27,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return EmailAddress
      */
-    public function getFrom(): EmailAddress
+    final public function getFrom(): EmailAddress
     {
         return $this->getHeaders()->get('from');
     }
@@ -37,7 +37,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return EmailAddress[] Empty array in case message has no To: recipients
      */
-    public function getTo(): array
+    final public function getTo(): array
     {
         return $this->getHeaders()->get('to') ?: [];
     }
@@ -47,7 +47,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return EmailAddress[] Empty array in case message has no CC: recipients
      */
-    public function getCc(): array
+    final public function getCc(): array
     {
         return $this->getHeaders()->get('cc') ?: [];
     }
@@ -57,7 +57,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return EmailAddress[] Empty array in case message has no BCC: recipients
      */
-    public function getBcc(): array
+    final public function getBcc(): array
     {
         return $this->getHeaders()->get('bcc') ?: [];
     }
@@ -67,7 +67,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return EmailAddress[] Empty array in case message has no Reply-To: recipients
      */
-    public function getReplyTo(): array
+    final public function getReplyTo(): array
     {
         return $this->getHeaders()->get('reply_to') ?: [];
     }
@@ -77,7 +77,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return EmailAddress[] Empty array in case message has no Sender: recipients
      */
-    public function getSender(): array
+    final public function getSender(): array
     {
         return $this->getHeaders()->get('sender') ?: [];
     }
@@ -87,7 +87,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return EmailAddress[] Empty array in case message has no Return-Path: recipients
      */
-    public function getReturnPath(): array
+    final public function getReturnPath(): array
     {
         return $this->getHeaders()->get('return_path') ?: [];
     }
@@ -97,7 +97,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return \DateTimeImmutable
      */
-    public function getDate(): \DateTimeImmutable
+    final public function getDate(): \DateTimeImmutable
     {
         return $this->getHeaders()->get('date');
     }
@@ -107,7 +107,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return int
      */
-    public function getSize()
+    final public function getSize()
     {
         return $this->getHeaders()->get('size');
     }
@@ -117,7 +117,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return string
      */
-    public function getSubject()
+    final public function getSubject()
     {
         return $this->getHeaders()->get('subject');
     }
@@ -127,7 +127,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return string | null Null if message has no HTML message part
      */
-    public function getBodyHtml()
+    final public function getBodyHtml()
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
@@ -149,7 +149,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return string
      */
-    public function getBodyText()
+    final public function getBodyText()
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
@@ -171,7 +171,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return AttachmentInterface[]
      */
-    public function getAttachments(): array
+    final public function getAttachments(): array
     {
         if (null === $this->attachments) {
             $this->attachments = [];
@@ -197,7 +197,7 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return bool
      */
-    public function hasAttachments(): bool
+    final public function hasAttachments(): bool
     {
         return \count($this->getAttachments()) > 0;
     }

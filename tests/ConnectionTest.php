@@ -15,7 +15,7 @@ use Ddeboer\Imap\Mailbox;
  * @covers \Ddeboer\Imap\Connection
  * @covers \Ddeboer\Imap\ImapResource
  */
-class ConnectionTest extends AbstractTest
+final class ConnectionTest extends AbstractTest
 {
     public function testValidResourceStream()
     {

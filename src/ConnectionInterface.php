@@ -35,7 +35,7 @@ interface ConnectionInterface extends \Countable
     /**
      * Get a list of mailboxes (also known as folders).
      *
-     * @return Mailbox[]
+     * @return MailboxInterface[]
      */
     public function getMailboxes(): array;
 

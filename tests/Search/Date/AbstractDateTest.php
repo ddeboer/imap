@@ -10,7 +10,7 @@ use Ddeboer\Imap\Tests\AbstractTest;
 /**
  * @covers \Ddeboer\Imap\Search\AbstractDate
  */
-class AbstractDateTest extends AbstractTest
+final class AbstractDateTest extends AbstractTest
 {
     protected function setUp()
     {
