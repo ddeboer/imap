@@ -553,4 +553,26 @@ final class MessageTest extends AbstractTest
         $this->assertSame('CBA', $concatSubjects($this->mailbox->getMessages(null, \SORTSUBJECT, true)));
         $this->assertSame('B', $concatSubjects($this->mailbox->getMessages(new Search\Text\Subject('B'), \SORTSUBJECT, true)));
     }
+
+    public function testSignedMessage()
+    {
+        $fixture = $this->getFixture('pec');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+        $attachments = $message->getAttachments();
+
+        $this->assertCount(3, $attachments);
+
+        $expected = [
+            'data.xml' => 'PHhtbC8+',
+            'postacert.eml' => 'test-content',
+            'smime.p7s' => 'MQ==',
+        ];
+
+        foreach ($attachments as $attachment) {
+            $expectedContains = $expected[$attachment->getFilename()];
+            $this->assertContains($expectedContains, \rtrim($attachment->getContent()), $attachment->getFilename());
+        }
+    }
 }
