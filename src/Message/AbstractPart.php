@@ -6,6 +6,7 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\ImapResourceInterface;
+use Ddeboer\Imap\Message;
 
 /**
  * A message part.
@@ -341,7 +342,7 @@ abstract class AbstractPart implements PartInterface
 
         if (isset($structure->parts)) {
             foreach ($structure->parts as $key => $partStructure) {
-                $partNumber = '1' !== $this->partNumber ? $this->partNumber . '.' : '';
+                $partNumber = (!$this instanceof Message) ? $this->partNumber . '.' : '';
                 $partNumber .= (string) ($key + 1);
 
                 $newPartClass = $this->isAttachment($partStructure)
