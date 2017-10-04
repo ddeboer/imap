@@ -1,11 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Exception;
 
-class MessageDeleteException extends Exception
+final class MessageDeleteException extends AbstractException
 {
-    public function __construct($messageNumber)
-    {
-        parent::__construct(sprintf('Message %s cannot be deleted', $messageNumber));
-    }
 }

@@ -1,42 +1,100 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
+use Ddeboer\Imap\Exception\ReopenMailboxException;
+use Ddeboer\Imap\Search\ConditionInterface;
+use Ddeboer\Imap\Search\LogicalOperator\All;
+
 /**
- * An IMAP mailbox (commonly referred to as a ‘folder’)
- *
+ * An IMAP mailbox (commonly referred to as a 'folder').
  */
-class Mailbox implements \Countable, \IteratorAggregate
+final class Mailbox implements MailboxInterface
 {
-    private $mailbox;
-    private $name;
-    private $connection;
+    /**
+     * @var ImapResourceInterface
+     */
+    private $resource;
 
     /**
-     * Constructor
-     *
-     * @param string     $name       Mailbox name
-     * @param Connection $connection IMAP connection
+     * @var string
      */
-    public function __construct($name, Connection $connection)
+    private $name;
+
+    /**
+     * @var \stdClass
+     */
+    private $info;
+
+    /**
+     * Constructor.
+     *
+     * @param ImapResourceInterface $resource IMAP resource
+     * @param string                $name     Mailbox decoded name
+     * @param stdClass              $info     Mailbox info
+     */
+    public function __construct(ImapResourceInterface $resource, string $name, \stdClass $info)
     {
-        $this->mailbox = $name;
-        $this->connection = $connection;
-        $this->name = substr($name, strpos($name, '}')+1);
+        $this->resource = $resource;
+        $this->name = $name;
+        $this->info = $info;
     }
 
     /**
-     * Get mailbox name
+     * Get mailbox decoded name.
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * Get number of messages in this mailbox
+     * Get mailbox encoded path.
+     *
+     * @return string
+     */
+    public function getEncodedName(): string
+    {
+        return \preg_replace('/^{.+}/', '', $this->info->name);
+    }
+
+    /**
+     * Get mailbox encoded full name.
+     *
+     * @return string
+     */
+    public function getFullEncodedName(): string
+    {
+        return $this->info->name;
+    }
+
+    /**
+     * Get mailbox attributes.
+     *
+     * @return int
+     */
+    public function getAttributes(): int
+    {
+        return $this->info->attributes;
+    }
+
+    /**
+     * Get mailbox delimiter.
+     *
+     * @return string
+     */
+    public function getDelimiter(): string
+    {
+        return $this->info->delimiter;
+    }
+
+    /**
+     * Get number of messages in this mailbox.
      *
      * @return int
      */
@@ -44,100 +102,123 @@ class Mailbox implements \Countable, \IteratorAggregate
     {
         $this->init();
 
-        return imap_num_msg($this->connection->getResource());
+        return \imap_num_msg($this->resource->getStream());
     }
 
     /**
-     * Get message ids
+     * Get Mailbox status.
      *
-     * @param SearchExpression $search Search expression (optional)
+     * @param null|int $flags
      *
-     * @return MessageIterator|Message[]
+     * @return \stdClass
      */
-    public function getMessages(SearchExpression $search = null)
+    public function getStatus(int $flags = null): \stdClass
     {
         $this->init();
 
-        $query = ($search ? (string) $search : 'ALL');
-
-        $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
-        if (false == $messageNumbers) {
-            // imap_search can also return false
-            $messageNumbers = array();
-        }
-
-        return new MessageIterator($this->connection->getResource(), $messageNumbers);
+        return \imap_status($this->resource->getStream(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
     }
 
     /**
-     * Get a message by message number
+     * Get message ids.
+     *
+     * @param ConditionInterface $search Search expression (optional)
+     *
+     * @return MessageIteratorInterface
+     */
+    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIteratorInterface
+    {
+        $this->init();
+
+        if (null === $search) {
+            $search = new All();
+        }
+        $query = $search->toString();
+
+        // We need to clear the stack to know whether imap_last_error()
+        // is related to this imap_search
+        \imap_errors();
+
+        if (null !== $sortCriteria) {
+            $messageNumbers = \imap_sort($this->resource->getStream(), $sortCriteria, $descending ? 1 : 0, \SE_UID, $query);
+        } else {
+            $messageNumbers = \imap_search($this->resource->getStream(), $query, \SE_UID);
+        }
+        if (false == $messageNumbers) {
+            if (false !== \imap_last_error()) {
+                throw new InvalidSearchCriteriaException(\sprintf('Invalid search criteria [%s]', $query));
+            }
+
+            // imap_search can also return false
+            $messageNumbers = [];
+        }
+
+        return new MessageIterator($this->resource, $messageNumbers);
+    }
+
+    /**
+     * Get a message by message number.
      *
      * @param int $number Message number
      *
-     * @return Message
+     * @return MessageInterface
      */
-    public function getMessage($number)
+    public function getMessage(int $number): MessageInterface
     {
         $this->init();
 
-        return new Message($this->connection->getResource(), $number);
+        return new Message($this->resource, $number);
     }
 
     /**
-     * Get messages in this mailbox
+     * Get messages in this mailbox.
      *
-     * @return MessageIterator
+     * @return MessageIteratorInterface
      */
-    public function getIterator()
+    public function getIterator(): MessageIteratorInterface
     {
-        $this->init();
-
         return $this->getMessages();
     }
 
     /**
-     * Delete this mailbox
-     *
-     */
-    public function delete()
-    {
-        $this->connection->deleteMailbox($this);
-    }
-
-    /**
-     * Delete all messages marked for deletion
-     *
-     * @return Mailbox
-     */
-    public function expunge()
-    {
-        $this->init();
-
-        imap_expunge($this->connection->getResource());
-
-        return $this;
-    }
-
-    /**
-     * Add a message to the mailbox
+     * Add a message to the mailbox.
      *
      * @param string $message
      *
-     * @return boolean
+     * @return bool
      */
-    public function addMessage($message)
+    public function addMessage(string $message): bool
     {
-        return imap_append($this->connection->getResource(), $this->mailbox, $message);
+        return \imap_append($this->resource->getStream(), $this->getFullEncodedName(), $message);
     }
 
     /**
-     * If connection is not currently in this mailbox, switch it to this mailbox
+     * If connection is not currently in this mailbox, switch it to this mailbox.
      */
     private function init()
     {
-        $check = imap_check($this->connection->getResource());
-        if ($check === false || $check->Mailbox != $this->mailbox) {
-            imap_reopen($this->connection->getResource(), $this->mailbox);
+        if ($this->isMailboxOpen()) {
+            return;
         }
+
+        \imap_reopen($this->resource->getStream(), $this->getFullEncodedName());
+
+        if ($this->isMailboxOpen()) {
+            return;
+        }
+
+        throw new ReopenMailboxException(\sprintf('Cannot reopen mailbox "%s"', $this->getName()));
+    }
+
+    /**
+     * Check whether the current mailbox is open.
+     *
+     * @return bool
+     */
+    private function isMailboxOpen(): bool
+    {
+        $check = \imap_check($this->resource->getStream());
+
+        return false !== $check && $check->Mailbox === $this->getFullEncodedName();
     }
 }

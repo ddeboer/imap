@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Search\Email;
+
+use Ddeboer\Imap\Search\AbstractText;
 
 /**
  * Represents a "From" email address condition. Messages must have been sent
  * from the specified email address in order to match the condition.
  */
-class FromAddress extends AbstractEmail
+final class From extends AbstractText
 {
     /**
      * Returns the keyword that the condition represents.
      *
      * @return string
      */
-    public function getKeyword()
+    protected function getKeyword(): string
     {
         return 'FROM';
     }

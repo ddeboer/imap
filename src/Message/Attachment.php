@@ -1,30 +1,64 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
+
 /**
- * An e-mail attachment
+ * An e-mail attachment.
  */
-class Attachment extends Part
+final class Attachment extends AbstractPart implements AttachmentInterface
 {
     /**
-     * Get attachment filename
+     * Get attachment filename.
      *
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
-        return $this->parameters->get('filename')
-            ?: $this->parameters->get('name');
+        return $this->getParameters()->get('filename')
+            ?: $this->getParameters()->get('name');
     }
 
     /**
-     * Get attachment file size
+     * Get attachment file size.
      *
      * @return int Number of bytes
      */
     public function getSize()
     {
-        return $this->parameters->get('size');
+        return $this->getParameters()->get('size');
+    }
+
+    /**
+     * Is this attachment also an Embedded Message?
+     *
+     * @return bool
+     */
+    public function isEmbeddedMessage(): bool
+    {
+        return self::TYPE_MESSAGE === $this->getType();
+    }
+
+    /**
+     * Return embedded message.
+     *
+     * @throws NotEmbeddedMessageException
+     *
+     * @return EmbeddedMessageInterface
+     */
+    public function getEmbeddedMessage(): EmbeddedMessageInterface
+    {
+        if (!$this->isEmbeddedMessage()) {
+            throw new NotEmbeddedMessageException(\sprintf(
+                'Attachment "%s" in message "%s" is not embedded message',
+                $this->partNumber,
+                $this->getNumber()
+            ));
+        }
+
+        return new EmbeddedMessage($this->resource, $this->getNumber(), $this->partNumber, $this->getStructure()->parts[0]);
     }
 }

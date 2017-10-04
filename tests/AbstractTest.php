@@ -1,99 +1,87 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use Ddeboer\Imap\Connection;
 use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\Server;
-use Ddeboer\Imap\Connection;
+use PHPUnit\Framework\TestCase;
+use Zend\Mail;
+use Zend\Mime;
 
-abstract class AbstractTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractTest extends TestCase
 {
-    protected static $connection;
+    const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
 
-    public static function setUpBeforeClass()
+    const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
+
+    final protected function getConnection(): Connection
     {
-        $server = new Server('imap.gmail.com');
-
-        if (false === \getenv('EMAIL_USERNAME')) {
-            throw new \RuntimeException(
-                'Please set environment variable EMAIL_USERNAME before running functional tests'
-            );
+        static $connection;
+        if (null === $connection) {
+            $connection = $this->createConnection();
         }
 
-        if (false === \getenv('EMAIL_PASSWORD')) {
-            throw new \RuntimeException(
-                'Please set environment variable EMAIL_PASSWORD before running functional tests'
-            );
-        }
-
-        static::$connection = $server->authenticate(\getenv('EMAIL_USERNAME'), \getenv('EMAIL_PASSWORD'));
+        return $connection;
     }
 
-    /**
-     * @return Connection
-     */
-    protected static function getConnection()
+    final protected function createConnection(): Connection
     {
-        return static::$connection;
+        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
+
+        return $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
     }
 
-    /**
-     * Create a mailbox
-     *
-     * If the mailbox already exists, it will be deleted first
-     *
-     * @param string $name Mailbox name
-     *
-     * @return Mailbox
-     */
-    protected function createMailbox($name)
+    final protected function createMailbox(Connection $connection = null): Mailbox
     {
-        $uniqueName = $name . uniqid();
+        $connection = $connection ?? $this->getConnection();
+        $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
 
-        try {
-            $mailbox = static::getConnection()->getMailbox($uniqueName);
-            $this->deleteMailbox($mailbox);
-        } catch (MailboxDoesNotExistException $e) {
-            // Ignore mailbox not found
-        }
-
-        return static::getConnection()->createMailbox($uniqueName);
+        return $connection->createMailbox($this->mailboxName);
     }
 
-    /**
-     * Delete a mailbox and all its messages
-     *
-     * @param Mailbox $mailbox
-     */
-    protected function deleteMailbox(Mailbox $mailbox)
-    {
-        // Move all messages in the mailbox to Gmail trash
-        $trash = self::getConnection()->getMailbox('[Gmail]/Bin');
-
-        foreach ($mailbox->getMessages() as $message) {
-            $message->move($trash);
-        }
-        $mailbox->delete();
-    }
-
-    protected function createTestMessage(
+    final protected function createTestMessage(
         Mailbox $mailbox,
-        $subject = 'Don\'t panic!',
-        $contents = 'Don\'t forget your towel',
-        $from = 'someone@there.com',
-        $to = 'me@here.com'
+        string $subject,
+        string $contents = null,
+        string $encoding = null,
+        string $charset = null,
+        string $overwriteCharset = null
     ) {
-        $message = "From: $from\r\n"
-            . "To: $to\r\n"
-            . "Subject: $subject\r\n"
-            . "\r\n"
-            . "$contents";
+        $bodyPart = new Mime\Part($contents ?? \uniqid($subject));
+        $bodyPart->setType(Mime\Mime::TYPE_TEXT);
+        if ($encoding) {
+            $bodyPart->setEncoding($encoding);
+        }
+        if ($charset) {
+            $bodyPart->setCharset($charset);
+        }
 
-        $mailbox->addMessage($message);
+        $bodyMessage = new Mime\Message();
+        $bodyMessage->addPart($bodyPart);
+
+        $message = new Mail\Message();
+        $message->addFrom('from@here.com');
+        $message->addTo('to@there.com');
+        $message->setSubject($subject);
+        $message->setBody($bodyMessage);
+
+        $messageString = $message->toString();
+        if ($overwriteCharset) {
+            $messageString = \preg_replace(
+                \sprintf('/charset="%s"/', \preg_quote($charset)),
+                \sprintf('charset="%s"', $overwriteCharset),
+                $messageString
+            );
+        }
+
+        $mailbox->addMessage($messageString);
     }
-    
-    protected function getFixture($fixture)
+
+    final protected function getFixture($fixture): string
     {
-        return file_get_contents(__DIR__ . '/fixtures/' . $fixture);
+        return \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
     }
 }

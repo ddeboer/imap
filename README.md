@@ -14,17 +14,12 @@ Develop:
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=develop)
 [![Code Coverage](https://scrutinizer-ci.com/g/ddeboer/imap/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=develop)
 
-A PHP 5.4+ library to read and process e-mails over IMAP.
+A PHP 7.0+ library to read and process e-mails over IMAP.
+
+This library requires both [IMAP](https://secure.php.net/manual/en/book.imap.php) and [Multibyte String](https://secure.php.net/manual/en/book.mbstring.php) extensions installed.
 
 Installation
 ------------
-
-Make sure the [PHP IMAP extension](https://secure.php.net/manual/en/book.imap.php)
-is installed. For instance on Debian:
-
-```bash
-# apt-get install php5-imap
-```
 
 The recommended way to install the IMAP library is through [Composer](https://getcomposer.org):
 
@@ -58,7 +53,7 @@ to the server:
 ```php
 $server = new Server(
     $hostname, // required
-    $port,     // defaults to 993
+    $port,     // defaults to '993'
     $flags,    // defaults to '/imap/ssl/validate-cert'
     $parameters
 );
@@ -73,8 +68,14 @@ over them:
 $mailboxes = $connection->getMailboxes();
 
 foreach ($mailboxes as $mailbox) {
+    // Skip container-only mailboxes
+    // @see https://secure.php.net/manual/en/function.imap-getmailboxes.php
+    if ($mailbox->getAttributes() & \LATT_NOSELECT) {
+        continue;
+    }
+
     // $mailbox is instance of \Ddeboer\Imap\Mailbox
-    printf('Mailbox %s has %s messages', $mailbox->getName(), $mailbox->count());
+    printf('Mailbox "%s" has %s messages', $mailbox->getName(), $mailbox->count());
 }
 ```
 
@@ -87,7 +88,7 @@ $mailbox = $connection->getMailbox('INBOX');
 Delete a mailbox:
 
 ```php
-$mailbox->delete();
+$connection->deleteMailbox($mailbox);
 ```
 
 ### Messages
@@ -110,11 +111,31 @@ use Ddeboer\Imap\Search\Email\To;
 use Ddeboer\Imap\Search\Text\Body;
 
 $search = new SearchExpression();
-$search->addCondition(new To('me@here.com'))
+$search
+    ->addCondition(new To('me@here.com'))
     ->addCondition(new Body('contents'))
 ;
 
 $messages = $mailbox->getMessages($search);
+```
+
+**WARNING** We are currently unable to have both spaces _and_ double-quotes
+escaped together. Only spaces are currently escaped correctly.
+You can use `Ddeboer\Imap\Search\RawExpression` to write the complete search
+condition by yourself.
+
+**WARNING** `OR` condition has never been reported as correctly functioning.
+
+##### Ordered search
+
+Reference: [imap_sort](https://secure.php.net/manual/en/function.imap-sort.php)
+
+```php
+$messages = $mailbox->getMessages(
+    new Ddeboer\Imap\Search\LogicalOperator\All(),
+    \SORTDATE, // Sort criteria
+    true // Descending order
+);
 ```
 
 #### Message Properties and Operations
@@ -153,11 +174,18 @@ $message->getBodyHtml();
 $message->getBodyText();
 ```
 
-Reading the message body marks the message as seen. If you want to keep the
-message unseen:
+Reading the message body keeps the message as unseen.
+If you want to mark the message as seen:
 
 ```php
-$message->keepUnseen()->getBodyHtml();
+$message->maskAsSeen();
+```
+
+Or you can set, or clear, any [flag](https://secure.php.net/manual/en/function.imap-setflag-full.php):
+
+```php
+$message->setFlag('\\Seen \\Flagged');
+$message->clearFlag('\\Flagged');
 ```
 
 Move a message to another mailbox:
@@ -165,6 +193,7 @@ Move a message to another mailbox:
 ```php
 $mailbox = $connection->getMailbox('another-mailbox');
 $message->move($mailbox);
+$connection->expunge();
 ```
 
 Deleting messages:
@@ -172,7 +201,7 @@ Deleting messages:
 ```php
 $mailbox->getMessage(1)->delete();
 $mailbox->getMessage(2)->delete();
-$mailbox->expunge();
+$connection->expunge();
 ```
 
 ### Message Attachments
@@ -196,6 +225,25 @@ file_put_contents(
     $attachment->getDecodedContent()
 );
 ```
+
+
+### Embedded Messages
+
+Check if attachment is embedded message and get it:
+
+```php
+$attachments = $message->getAttachments();
+
+foreach ($attachments as $attachment) {
+    if ($attachment->isEmbeddedMessage()) {
+        $embeddedMessage = $attachment->getEmbeddedMessage();
+        // $embeddedMessage is instance of \Ddeboer\Imap\Message\EmbeddedMessage
+    }
+}
+```
+
+An EmbeddedMessage has the same API as a normal Message, apart from flags
+and operations like copy, move or delete.
 
 Running the Tests
 -----------------

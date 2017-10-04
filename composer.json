@@ -9,23 +9,31 @@
             "email": "david@ddeboer.nl"
         },
         {
+            "name": "Filippo Tessarotto",
+            "email": "zoeslam@gmail.com"
+        },
+        {
             "name": "Community contributors",
             "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
         }   
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": "^7.0",
         "ext-imap": "*",
-        "ddeboer/transcoder": "~1"
+        "ext-mbstring": "*"
     },
     "require-dev": {
-        "ext-mbstring": "*",
-        "ext-iconv": "*",
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "^6.2",
+        "friendsofphp/php-cs-fixer": "^2.6",
+        "zendframework/zend-mail": "^2.8"
     },
     "autoload": {
         "psr-4": {
-            "Ddeboer\\Imap\\": "src/",
+            "Ddeboer\\Imap\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Ddeboer\\Imap\\Tests\\": "tests/"
         }
     }

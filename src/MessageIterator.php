@@ -1,31 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap;
 
-class MessageIterator extends \ArrayIterator
+final class MessageIterator extends \ArrayIterator implements MessageIteratorInterface
 {
-    private $stream;
+    /**
+     * @var ImapResourceInterface
+     */
+    private $resource;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param \resource $stream         IMAP stream
-     * @param array     $messageNumbers Array of message numbers
+     * @param ImapResourceInterface $resource       IMAP resource
+     * @param array                 $messageNumbers Array of message numbers
      */
-    public function __construct($stream, array $messageNumbers)
+    public function __construct(ImapResourceInterface $resource, array $messageNumbers)
     {
-        $this->stream = $stream;
+        $this->resource = $resource;
 
         parent::__construct($messageNumbers);
     }
 
     /**
-     * Get current message
+     * Get current message.
      *
-     * @return Message
+     * @return MessageInterface
      */
-    public function current()
+    public function current(): MessageInterface
     {
-        return new Message($this->stream, parent::current());
+        return new Message($this->resource, parent::current());
     }
 }

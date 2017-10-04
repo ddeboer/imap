@@ -1,80 +1,111 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Exception\MessageDoesNotExistException;
+use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\Mailbox;
-use Ddeboer\Imap\Search\Email\To;
-use Ddeboer\Imap\Search\Text\Body;
-use Ddeboer\Imap\SearchExpression;
 
-class MailboxTest extends AbstractTest
+/**
+ * @covers \Ddeboer\Imap\Exception\AbstractException
+ * @covers \Ddeboer\Imap\Mailbox
+ */
+final class MailboxTest extends AbstractTest
 {
     /**
      * @var Mailbox
      */
     protected $mailbox;
 
-    public function setUp()
+    protected function setUp()
     {
-        $this->mailbox = $this->createMailbox('test-mailbox');
+        $this->mailbox = $this->createMailbox();
 
         $this->createTestMessage($this->mailbox, 'Message 1');
         $this->createTestMessage($this->mailbox, 'Message 2');
         $this->createTestMessage($this->mailbox, 'Message 3');
     }
 
-    public function tearDown()
-    {
-        $this->deleteMailbox($this->mailbox);
-    }
-
     public function testGetName()
     {
-        $this->assertStringStartsWith('test-mailbox', $this->mailbox->getName());
+        $this->assertSame($this->mailboxName, $this->mailbox->getName());
+    }
+
+    public function testGetFullEncodedName()
+    {
+        $this->assertContains(\getenv('IMAP_SERVER_PORT'), $this->mailbox->getFullEncodedName());
+        $this->assertNotContains($this->mailboxName, $this->mailbox->getFullEncodedName());
+        $this->assertContains(\mb_convert_encoding($this->mailboxName, 'UTF7-IMAP', 'UTF-8'), $this->mailbox->getFullEncodedName());
+        $this->assertNotContains(\getenv('IMAP_SERVER_PORT'), $this->mailbox->getEncodedName());
+    }
+
+    public function testGetAttributes()
+    {
+        $this->assertInternalType('integer', $this->mailbox->getAttributes());
+    }
+
+    public function testGetDelimiter()
+    {
+        $this->assertInternalType('string', $this->mailbox->getDelimiter());
     }
 
     public function testGetMessages()
     {
-        $i = 0;
+        $directMethodInc = 0;
         foreach ($this->mailbox->getMessages() as $message) {
-            $i++;
+            ++$directMethodInc;
         }
 
-        $this->assertEquals(3, $i);
+        $this->assertSame(3, $directMethodInc);
+
+        $aggregateIteratorMethodInc = 0;
+        foreach ($this->mailbox as $message) {
+            ++$aggregateIteratorMethodInc;
+        }
+
+        $this->assertSame(3, $aggregateIteratorMethodInc);
     }
 
-    /**
-     * @expectedException \Ddeboer\Imap\Exception\MessageDoesNotExistException
-     * @expectedExceptionMessageRegExp /Message 666 does not exist.*Bad message number/
-     */
     public function testGetMessageThrowsException()
     {
-        $this->mailbox->getMessage(666);
+        $this->expectException(MessageDoesNotExistException::class);
+        $this->expectExceptionMessageRegExp('/E_WARNING.+Message "999" does not exist.+Bad message number/s');
+
+        $this->mailbox->getMessage(999);
     }
 
     public function testCount()
     {
-        $this->assertEquals(3, $this->mailbox->count());
+        $this->assertSame(3, $this->mailbox->count());
     }
 
-    public function testSearch()
+    public function testDelete()
     {
-        $this->createTestMessage($this->mailbox, 'Result', 'Contents');
-        
-        $search = new SearchExpression();
-        $search->addCondition(new To('me@here.com'))
-            ->addCondition(new Body('Contents'))
-        ;
-        
-        $messages = $this->mailbox->getMessages($search);
-        $this->assertCount(1, $messages);
-        $this->assertEquals('Result', $messages->current()->getSubject());
+        $connection = $this->getConnection();
+        $connection->deleteMailbox($this->mailbox);
+
+        $this->expectException(ReopenMailboxException::class);
+
+        $this->mailbox->count();
     }
-    
-    public function testSearchNoResults()
+
+    public function testDefaultStatus()
     {
-        $search = new SearchExpression();
-        $search->addCondition(new To('nope@nope.com'));
-        $this->assertCount(0, $this->mailbox->getMessages($search));
+        $status = $this->mailbox->getStatus();
+
+        $this->assertSame(\SA_ALL, $status->flags);
+        $this->assertSame(3, $status->messages);
+        $this->assertSame(4, $status->uidnext);
+    }
+
+    public function testCustomStatusFlag()
+    {
+        $status = $this->mailbox->getStatus(\SA_MESSAGES);
+
+        $this->assertSame(\SA_MESSAGES, $status->flags);
+        $this->assertSame(3, $status->messages);
+        $this->assertFalse(isset($status->uidnext), 'uidnext shouldn\'t be set');
     }
 }
