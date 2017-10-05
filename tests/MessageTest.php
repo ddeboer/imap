@@ -575,4 +575,23 @@ final class MessageTest extends AbstractTest
             $this->assertContains($expectedContains, \rtrim($attachment->getContent()), $attachment->getFilename());
         }
     }
+
+    public function testSimpleMessageWithoutCharset()
+    {
+        $this->mailbox->addMessage($this->getFixture('without_charset_plain_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('Hi', \rtrim($message->getBodyText()));
+    }
+
+    public function testMultipartMessageWithoutCharset()
+    {
+        $this->mailbox->addMessage($this->getFixture('without_charset_simple_multipart'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('MyPlain', \rtrim($message->getBodyText()));
+        $this->assertSame('MyHtml', \rtrim($message->getBodyHtml()));
+    }
 }

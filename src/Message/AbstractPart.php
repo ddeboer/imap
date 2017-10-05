@@ -172,7 +172,7 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getCharset(): string
     {
-        return $this->parameters->get('charset');
+        return $this->parameters->get('charset') ?: 'us-ascii';
     }
 
     /**
