@@ -108,4 +108,74 @@ final class MailboxTest extends AbstractTest
         $this->assertSame(3, $status->messages);
         $this->assertFalse(isset($status->uidnext), 'uidnext shouldn\'t be set');
     }
+
+    public function testBulkSetFlags()
+    {
+        // prepare second mailbox with 3 messages
+        $anotherMailbox = $this->createMailbox();
+        $this->createTestMessage($anotherMailbox, 'Message 1');
+        $this->createTestMessage($anotherMailbox, 'Message 2');
+        $this->createTestMessage($anotherMailbox, 'Message 3');
+
+        // Message UIDs created in setUp method
+        $messages = [1, 2, 3];
+
+        foreach ($messages as $uid) {
+            $message = $this->mailbox->getMessage($uid);
+            $this->assertFalse($message->isFlagged());
+        }
+
+        $this->mailbox->setFlag('\\Flagged', $messages);
+
+        foreach ($messages as $uid) {
+            $message = $this->mailbox->getMessage($uid);
+            $this->assertTrue($message->isFlagged());
+        }
+
+        $this->mailbox->clearFlag('\\Flagged', $messages);
+
+        foreach ($messages as $uid) {
+            $message = $this->mailbox->getMessage($uid);
+            $this->assertFalse($message->isFlagged());
+        }
+
+        // Set flag for messages from another mailbox
+        $anotherMailbox->setFlag('\\Flagged', [1, 2, 3]);
+
+        $this->assertTrue($anotherMailbox->getMessage(2)->isFlagged());
+    }
+
+    public function testBulkSetFlagsNumbersParameter()
+    {
+        $mailbox = $this->createMailbox();
+
+        $uids = \range(1, 10);
+
+        foreach ($uids as $uid) {
+            $this->createTestMessage($mailbox, 'Message ' . $uid);
+        }
+
+        $mailbox->setFlag('\\Seen', [
+            '1,2',
+            '3',
+            '4:6',
+        ]);
+        $mailbox->setFlag('\\Seen', '7,8:10');
+
+        foreach ($uids as $uid) {
+            $message = $mailbox->getMessage($uid);
+            $this->assertTrue($message->isSeen());
+        }
+
+        $mailbox->clearFlag('\\Seen', '1,2,3,4:6');
+        $mailbox->clearFlag('\\Seen', [
+          '7:9',
+          '10',
+        ]);
+
+        foreach ($uids as $uid) {
+            $message = $mailbox->getMessage($uid);
+            $this->assertFalse($message->isSeen());
+        }
+    }
 }
