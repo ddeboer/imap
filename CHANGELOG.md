@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.0.1](https://github.com/ddeboer/imap/tree/1.0.1) (2017-10-05)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.0...1.0.1)
+
+**Fixed bugs:**
+
+- Error with attachment charset [\#226](https://github.com/ddeboer/imap/issues/226)
+- If charset is not specified defaults to "us-ascii" [\#227](https://github.com/ddeboer/imap/pull/227) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.0](https://github.com/ddeboer/imap/tree/1.0.0) (2017-10-04)
 [Full Changelog](https://github.com/ddeboer/imap/compare/0.5.2...1.0.0)
 
