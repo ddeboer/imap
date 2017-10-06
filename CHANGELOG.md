@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.0.2](https://github.com/ddeboer/imap/tree/1.0.2) (2017-10-06)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.1...1.0.2)
+
+**Fixed bugs:**
+
+- Issue with saving XML attachments [\#228](https://github.com/ddeboer/imap/issues/228)
+- Do not charset-decode attachments [\#231](https://github.com/ddeboer/imap/pull/231) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.1](https://github.com/ddeboer/imap/tree/1.0.1) (2017-10-05)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.0...1.0.1)
 
