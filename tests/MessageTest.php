@@ -603,7 +603,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->assertCount(1, $message->getInReplyTo());
-        $this->assertContains('<b9e87bd5e661a645ed6e3b832828fcc5@example.com>', $message->getReferences());
+        $this->assertContains('<b9e87bd5e661a645ed6e3b832828fcc5@example.com>', $message->getInReplyTo());
 
         $fixture = $this->getFixture('plain_only');
         $this->mailbox->addMessage($fixture);
