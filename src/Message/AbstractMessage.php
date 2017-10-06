@@ -136,7 +136,7 @@ abstract class AbstractMessage extends AbstractPart
     }
 
     /**
-     * Get message references (from headers).
+     * Get message References (from headers).
      *
      * @return array
      */

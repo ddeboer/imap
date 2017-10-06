@@ -107,6 +107,20 @@ interface BasicMessageInterface extends PartInterface
     public function getSubject();
 
     /**
+     * Get message In-Reply-To (from headers).
+     *
+     * @return array
+     */
+    public function getInReplyTo(): array;
+
+    /**
+     * Get message References (from headers).
+     *
+     * @return array
+     */
+    public function getReferences(): array;
+
+    /**
      * Get body HTML.
      *
      * @return string | null Null if message has no HTML message part
