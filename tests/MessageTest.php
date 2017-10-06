@@ -627,7 +627,7 @@ final class MessageTest extends AbstractTest
 
         $this->assertCount(0, $message->getReferences());
     }
-  
+
     public function testAttachmentMustNotBeCharsetDecoded()
     {
         $parts = [];
