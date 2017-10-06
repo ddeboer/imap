@@ -41,7 +41,7 @@ interface PartInterface extends \RecursiveIterator
      *
      * @return string
      */
-    public function getCharset(): string;
+    public function getCharset();
 
     /**
      * Part type.
