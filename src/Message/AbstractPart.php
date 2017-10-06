@@ -168,11 +168,11 @@ abstract class AbstractPart implements PartInterface
     /**
      * Part charset.
      *
-     * @return string
+     * @return null|string
      */
-    final public function getCharset(): string
+    final public function getCharset()
     {
-        return $this->parameters->get('charset') ?: 'us-ascii';
+        return $this->parameters->get('charset') ?: null;
     }
 
     /**
@@ -274,9 +274,9 @@ abstract class AbstractPart implements PartInterface
                 $content = \quoted_printable_decode($content);
             }
 
-            // If this part is a text part, try to convert its encoding to UTF-8.
-            // We don't want to convert an attachment's encoding.
-            if (self::TYPE_TEXT === $this->getType()) {
+            // If this part is a text part, convert its charset to UTF-8.
+            // We don't want to decode an attachment's charset.
+            if (!$this instanceof Attachment && null !== $this->getCharset() && self::TYPE_TEXT === $this->getType()) {
                 $content = Transcoder::decode($content, $this->getCharset());
             }
 
@@ -308,7 +308,7 @@ abstract class AbstractPart implements PartInterface
      *
      * @param \stdClass $structure
      */
-    final protected function parseStructure(\stdClass $structure)
+    private function parseStructure(\stdClass $structure)
     {
         $this->type = $this->typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
 

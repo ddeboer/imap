@@ -6,11 +6,13 @@ namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
+use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\Parameters;
 use Ddeboer\Imap\MessageIterator;
 use Ddeboer\Imap\Search;
-use Zend\Mime\Mime;
+use Zend\Mail;
+use Zend\Mime;
 
 /**
  * @covers \Ddeboer\Imap\Connection::expunge
@@ -27,10 +29,16 @@ use Zend\Mime\Mime;
  */
 final class MessageTest extends AbstractTest
 {
-    /**
-     * @var \Ddeboer\Imap\Mailbox
-     */
-    protected $mailbox;
+    private static $charsets = [
+        'ASCII' => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+        'GB18030' => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
+        'ISO-8859-6' => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
+        'ISO-8859-7' => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
+        'SJIS' => '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯBｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿCﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏDﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ',
+        'UTF-8' => '€✔',
+        'Windows-1251' => 'ЂЃѓЉЊЌЋЏђљњќћџЎўЈҐЁЄЇІіґёєјЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя',
+        'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
+    ];
 
     protected function setUp()
     {
@@ -88,30 +96,19 @@ final class MessageTest extends AbstractTest
 
     public function provideCharsets(): array
     {
-        $charsets = [
-            'ASCII' => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
-            'GB18030' => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
-            'ISO-8859-6' => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
-            'ISO-8859-7' => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
-            'SJIS' => '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯBｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿCﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏDﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ',
-            'UTF-8' => '€✔',
-            'Windows-1251' => 'ЂЃѓЉЊЌЋЏђљњќћџЎўЈҐЁЄЇІіґёєјЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя',
-            'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
-        ];
-
         $provider = [];
 
         // This first data set mimics "us-ascii" imap server default settings
-        $provider[] = [null, $charsets['ASCII'], null];
+        $provider[] = [null, self::$charsets['ASCII'], null];
 
         $encodings = [
-            Mime::ENCODING_7BIT,
-            Mime::ENCODING_8BIT,
-            Mime::ENCODING_QUOTEDPRINTABLE,
-            Mime::ENCODING_BASE64,
+            Mime\Mime::ENCODING_7BIT,
+            Mime\Mime::ENCODING_8BIT,
+            Mime\Mime::ENCODING_QUOTEDPRINTABLE,
+            Mime\Mime::ENCODING_BASE64,
         ];
 
-        foreach ($charsets as $charset => $charList) {
+        foreach (self::$charsets as $charset => $charList) {
             foreach ($encodings as $encoding) {
                 $provider[] = [$charset, $charList, $encoding];
             }
@@ -593,5 +590,82 @@ final class MessageTest extends AbstractTest
 
         $this->assertSame('MyPlain', \rtrim($message->getBodyText()));
         $this->assertSame('MyHtml', \rtrim($message->getBodyHtml()));
+    }
+
+    public function testAttachmentMustNotBeCharsetDecoded()
+    {
+        $parts = [];
+        foreach (self::$charsets as $charset => $charList) {
+            $part = new Mime\Part(\mb_convert_encoding($charList, $charset, 'UTF-8'));
+            $part->setType('text/xml');
+            $part->setEncoding(Mime\Mime::ENCODING_BASE64);
+            $part->setCharset($charset);
+            $part->setDisposition(Mime\Mime::DISPOSITION_ATTACHMENT);
+            $part->setFilename(\sprintf('%s.xml', $charset));
+            $parts[] = $part;
+        }
+
+        $mimeMessage = new Mime\Message();
+        $mimeMessage->setParts($parts);
+
+        $message = new Mail\Message();
+        $message->addFrom('from@here.com');
+        $message->addTo('to@there.com');
+        $message->setSubject('Charsets');
+        $message->setBody($mimeMessage);
+
+        $messageString = $message->toString();
+        $messageString = \preg_replace('/; charset=.+/', '', $messageString);
+
+        $this->mailbox->addMessage($messageString);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->resetAttachmentCharset($message);
+        $this->assertTrue($message->hasAttachments());
+        $attachments = $message->getAttachments();
+        $this->assertCount(\count(self::$charsets), $attachments);
+
+        foreach ($attachments as $attachment) {
+            $charset = \str_replace('.xml', '', $attachment->getFilename());
+            $this->assertSame(\mb_convert_encoding(self::$charsets[$charset], $charset, 'UTF-8'), $attachment->getDecodedContent());
+        }
+    }
+
+    private function resetAttachmentCharset(Message $message)
+    {
+        // Mimic GMAIL behaviour that correctly doesn't report charset
+        // of attachments that don't have it
+        $refMessage = new \ReflectionClass($message);
+        $refAbstractMessage = $refMessage->getParentClass();
+        $refAbstractPart = $refAbstractMessage->getParentClass();
+
+        $refParts = $refAbstractPart->getProperty('parts');
+        $refParts->setAccessible(true);
+        $refParts->setValue($message, []);
+        $refParts->setAccessible(false);
+
+        $refStructure = $refAbstractPart->getProperty('structure');
+        $refStructure->setAccessible(true);
+        $structure = $refStructure->getValue($message);
+        foreach ($structure->parts as $partIndex => $part) {
+            if ($part->ifdisposition && 'attachment' === $part->disposition) {
+                foreach ($part->parameters as $parameterIndex => $parameter) {
+                    if ('charset' === $parameter->attribute) {
+                        unset($structure->parts[$partIndex]->parameters[$parameterIndex]);
+                    }
+                }
+                if (0 === \count($part->parameters)) {
+                    $part->ifparameters = 0;
+                }
+            }
+        }
+        $refStructure->setValue($message, $structure);
+        $refStructure->setAccessible(false);
+
+        $refParseStructure = $refAbstractPart->getMethod('parseStructure');
+        $refParseStructure->setAccessible(true);
+        $refParseStructure->invoke($message, $structure);
+        $refParseStructure->setAccessible(false);
     }
 }
