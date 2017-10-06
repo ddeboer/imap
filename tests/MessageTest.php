@@ -594,4 +594,21 @@ final class MessageTest extends AbstractTest
         $this->assertSame('MyPlain', \rtrim($message->getBodyText()));
         $this->assertSame('MyHtml', \rtrim($message->getBodyHtml()));
     }
+
+    public function testGetReferences()
+    {
+        $fixture = $this->getFixture('references');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame(2, \count($message->getReferences()));
+
+        $fixture = $this->getFixture('plain_only');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(2);
+
+        $this->assertSame(0, \count($message->getReferences()));
+    }
 }

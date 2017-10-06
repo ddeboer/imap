@@ -124,6 +124,22 @@ abstract class AbstractMessage extends AbstractPart
     }
 
     /**
+     * Get message references (from headers).
+     *
+     * @return array
+     */
+    final public function getReferences()
+    {
+        $references = $this->getHeaders()->get('references');
+
+        if (\is_array($references)) {
+            return \array_unique($references);
+        }
+
+        return [];
+    }
+
+    /**
      * Get body HTML.
      *
      * @return null|string
