@@ -595,6 +595,23 @@ final class MessageTest extends AbstractTest
         $this->assertSame('MyHtml', \rtrim($message->getBodyHtml()));
     }
 
+    public function testGetInReplyTo()
+    {
+        $fixture = $this->getFixture('references');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(1, $message->getInReplyTo());
+
+        $fixture = $this->getFixture('plain_only');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(2);
+
+        $this->assertCount(0, $message->getInReplyTo());
+    }
+
     public function testGetReferences()
     {
         $fixture = $this->getFixture('references');

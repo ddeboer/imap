@@ -84,6 +84,7 @@ final class Headers extends Parameters
                 return $emails;
             case 'subject':
                 return $this->decode($value);
+            case 'in_reply_to':
             case 'references':
                 return \explode(' ', $value);
         }
