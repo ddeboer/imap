@@ -128,15 +128,11 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return array
      */
-    final public function getReferences()
+    final public function getReferences(): array
     {
         $references = $this->getHeaders()->get('references');
 
-        if (\is_array($references)) {
-            return \array_unique($references);
-        }
-
-        return [];
+        return \is_array($references) ? $references : [];
     }
 
     /**

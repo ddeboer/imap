@@ -602,13 +602,13 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame(2, \count($message->getReferences()));
+        $this->assertCount(2, $message->getReferences());
 
         $fixture = $this->getFixture('plain_only');
         $this->mailbox->addMessage($fixture);
 
         $message = $this->mailbox->getMessage(2);
 
-        $this->assertSame(0, \count($message->getReferences()));
+        $this->assertCount(0, $message->getReferences());
     }
 }
