@@ -124,6 +124,30 @@ abstract class AbstractMessage extends AbstractPart
     }
 
     /**
+     * Get message In-Reply-To (from headers).
+     *
+     * @return array
+     */
+    final public function getInReplyTo(): array
+    {
+        $inReplyTo = $this->getHeaders()->get('in_reply_to');
+
+        return \is_array($inReplyTo) ? $inReplyTo : [];
+    }
+
+    /**
+     * Get message References (from headers).
+     *
+     * @return array
+     */
+    final public function getReferences(): array
+    {
+        $references = $this->getHeaders()->get('references');
+
+        return \is_array($references) ? $references : [];
+    }
+
+    /**
      * Get body HTML.
      *
      * @return null|string

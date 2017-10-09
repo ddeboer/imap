@@ -592,6 +592,42 @@ final class MessageTest extends AbstractTest
         $this->assertSame('MyHtml', \rtrim($message->getBodyHtml()));
     }
 
+    public function testGetInReplyTo()
+    {
+        $fixture = $this->getFixture('references');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(1, $message->getInReplyTo());
+        $this->assertContains('<b9e87bd5e661a645ed6e3b832828fcc5@example.com>', $message->getInReplyTo());
+
+        $fixture = $this->getFixture('plain_only');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(2);
+
+        $this->assertCount(0, $message->getInReplyTo());
+    }
+
+    public function testGetReferences()
+    {
+        $fixture = $this->getFixture('references');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(2, $message->getReferences());
+        $this->assertContains('<08F04024-A5B3-4FDE-BF2C-6710DE97D8D9@example.com>', $message->getReferences());
+
+        $fixture = $this->getFixture('plain_only');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(2);
+
+        $this->assertCount(0, $message->getReferences());
+    }
+
     public function testAttachmentMustNotBeCharsetDecoded()
     {
         $parts = [];
