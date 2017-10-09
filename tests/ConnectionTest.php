@@ -55,6 +55,12 @@ final class ConnectionTest extends AbstractTest
         $connection = $this->createConnection();
 
         $this->assertTrue($connection->isOpen());
+
+        $connection->close();
+
+        $this->expectException(InvalidResourceException::class);
+
+        $connection->isOpen();
     }
 
     public function testGetMailboxes()
