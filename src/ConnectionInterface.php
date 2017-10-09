@@ -33,6 +33,13 @@ interface ConnectionInterface extends \Countable
     public function close(int $flag = 0): bool;
 
     /**
+     * Check if the connection is still active.
+     *
+     * @return bool
+     */
+    public function isOpen(): bool;
+
+    /**
      * Get a list of mailboxes (also known as folders).
      *
      * @return MailboxInterface[]

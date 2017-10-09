@@ -148,7 +148,7 @@ final class Connection implements ConnectionInterface
      *
      * @return bool
      */
-    public function isOpen()
+    public function isOpen(): bool
     {
         return \imap_ping($this->resource->getStream());
     }
