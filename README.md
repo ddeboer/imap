@@ -84,6 +84,17 @@ Delete a mailbox:
 $connection->deleteMailbox($mailbox);
 ```
 
+You can bulk set, or clear, any [flag](https://secure.php.net/manual/en/function.imap-setflag-full.php) of mailbox messages (by UIDs):
+
+```php
+$mailbox->setFlag('\\Seen \\Flagged', ['1:5', '7', '9']);
+$mailbox->setFlag('\\Seen', '1,3,5,6:8');
+
+$mailbox->clearFlag('\\Flagged', '1,3');
+```
+
+**WARNING** You must retrieve new Message instances in case of bulk modify flags to refresh the single Messages flags.
+
 ### Messages
 
 Retrieve messages (e-mails) from a mailbox and iterate over them:
