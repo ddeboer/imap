@@ -36,7 +36,7 @@ final class Server implements ServerInterface
      *
      * @param string $hostname   Internet domain name or bracketed IP address
      *                           of server
-     * @param int    $port       TCP port number
+     * @param string $port       TCP port number
      * @param string $flags      Optional flags
      * @param array  $parameters Connection parameters
      */
