@@ -50,17 +50,17 @@ final class ConnectionTest extends AbstractTest
         $this->assertInternalType('int', $this->getConnection()->count());
     }
 
-    public function testIsOpen()
+    public function testPing()
     {
         $connection = $this->createConnection();
 
-        $this->assertTrue($connection->isOpen());
+        $this->assertTrue($connection->ping());
 
         $connection->close();
 
         $this->expectException(InvalidResourceException::class);
 
-        $connection->isOpen();
+        $connection->ping();
     }
 
     public function testGetMailboxes()

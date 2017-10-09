@@ -37,7 +37,7 @@ interface ConnectionInterface extends \Countable
      *
      * @return bool
      */
-    public function isOpen(): bool;
+    public function ping(): bool;
 
     /**
      * Get a list of mailboxes (also known as folders).
