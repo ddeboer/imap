@@ -141,6 +141,16 @@ final class Connection implements ConnectionInterface
     }
 
     /**
+     * Check if the connection is still active.
+     *
+     * @return bool
+     */
+    public function isOpen()
+    {
+        return \imap_ping($this->resource->getStream());
+    }
+
+    /**
      * Create mailbox.
      *
      * @param $name

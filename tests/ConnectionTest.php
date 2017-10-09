@@ -50,6 +50,13 @@ final class ConnectionTest extends AbstractTest
         $this->assertInternalType('int', $this->getConnection()->count());
     }
 
+    public function testIsOpen()
+    {
+        $connection = $this->createConnection();
+
+        $this->assertTrue($connection->isOpen());
+    }
+
     public function testGetMailboxes()
     {
         $mailboxes = $this->getConnection()->getMailboxes();
