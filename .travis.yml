@@ -35,6 +35,7 @@ install:
 script:
   - vendor/bin/phpunit --coverage-clover ./clover.xml
   - if [ "$CS_CHECK" = 1 ]; then vendor/bin/php-cs-fixer fix --diff --dry-run --verbose; fi
+  - if [ "$CS_CHECK" = 1 ]; then php .travis/readme-index.php; fi
 
 after_script:
   - if [ "$CODE_COVERAGE" = 1 ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
