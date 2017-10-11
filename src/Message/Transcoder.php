@@ -247,19 +247,50 @@ final class Transcoder
             $fromCharset = self::$charsetAliases[$lowercaseFromCharset];
         }
 
-        \set_error_handler(function ($nr, $message) use ($originalFromCharset, $fromCharset) {
+        $iconvDecodedText = self::iconvDecode($text, $originalFromCharset, $fromCharset);
+        if (false !== $iconvDecodedText) {
+            return $iconvDecodedText;
+        }
+
+        \error_clear_last();
+        $decodedText = @\mb_convert_encoding($text, 'UTF-8', $fromCharset);
+        if (null !== ($lastError = \error_get_last())) {
             throw new UnsupportedCharsetException(\sprintf(
                 'Unsupported charset "%s"%s: %s',
                 $originalFromCharset,
                 ($fromCharset !== $originalFromCharset) ? \sprintf(' (alias found: "%s")', $fromCharset) : '',
-                $message
-            ), $nr);
-        });
-
-        $decodedText = \mb_convert_encoding($text, 'UTF-8', $fromCharset);
-
-        \restore_error_handler();
+                $lastError['message']
+            ), $lastError['type']);
+        }
 
         return $decodedText;
+    }
+
+    /**
+     * Decode text to UTF-8 with iconv.
+     *
+     * @param string $text                Text to decode
+     * @param string $originalFromCharset Original charset
+     * @param string $fromCharset         Aliased charset
+     *
+     * @return bool|string
+     */
+    private static function iconvDecode($text, $originalFromCharset, $fromCharset)
+    {
+        static $iconvLoaded;
+        if (null === $iconvLoaded) {
+            $iconvLoaded = \function_exists('iconv');
+        }
+
+        if (false === $iconvLoaded) {
+            return false;
+        }
+
+        $iconvDecodedText = @\iconv($fromCharset, 'UTF-8', $text);
+        if (false === $iconvDecodedText) {
+            $iconvDecodedText = @\iconv($originalFromCharset, 'UTF-8', $text);
+        }
+
+        return $iconvDecodedText;
     }
 }

@@ -49,17 +49,19 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     private function loadStructure(ImapResourceInterface $resource, int $messageNumber): \stdClass
     {
-        \set_error_handler(function ($nr, $error) use ($messageNumber) {
-            throw new MessageDoesNotExistException(\sprintf('Message "%s" does not exist: %s', $messageNumber, $error), $nr);
-        });
-
-        $structure = \imap_fetchstructure(
+        \error_clear_last();
+        $structure = @\imap_fetchstructure(
             $resource->getStream(),
             $messageNumber,
             \FT_UID
         );
-
-        \restore_error_handler();
+        if (null !== ($lastError = \error_get_last())) {
+            throw new MessageDoesNotExistException(\sprintf(
+                'Message "%s" does not exist: %s',
+                $messageNumber,
+                $lastError['message']
+            ), $lastError['type']);
+        }
 
         if (!$structure instanceof \stdClass) {
             throw new MessageStructureException(\sprintf('Message "%s" structure is empty', $messageNumber));

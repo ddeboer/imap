@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.4](https://github.com/ddeboer/imap/tree/1.0.4) (2017-10-11)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.3...1.0.4)
+
+**Implemented enhancements:**
+
+- Avoid \(set|restor\)\_error\_handler [\#239](https://github.com/ddeboer/imap/pull/239) ([Slamdunk](https://github.com/Slamdunk))
+
+**Fixed bugs:**
+
+- Current Transcoder class does not support all charsets.  [\#237](https://github.com/ddeboer/imap/issues/237)
+- Relay also iconv during decoding [\#238](https://github.com/ddeboer/imap/pull/238) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.3](https://github.com/ddeboer/imap/tree/1.0.3) (2017-10-11)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.2...1.0.3)
 
