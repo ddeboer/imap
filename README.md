@@ -1,5 +1,4 @@
-IMAP library
-============
+# IMAP library
 
 [![Build Status](https://travis-ci.org/ddeboer/imap.svg?branch=master)](https://travis-ci.org/ddeboer/imap)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ddeboer/imap/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ddeboer/imap/?branch=master)
@@ -11,8 +10,20 @@ A PHP 7.0+ library to read and process e-mails over IMAP.
 
 This library requires both [IMAP](https://secure.php.net/manual/en/book.imap.php) and [Multibyte String](https://secure.php.net/manual/en/book.mbstring.php) extensions installed.
 
-Installation
-------------
+## Table of Contents
+
+1. [Installation](#installation)
+1. [Usage](#usage)
+    1. [Connect and Authenticate](#connect-and-authenticate)
+    1. [Mailboxes](#mailboxes)
+    1. [Messages](#messages)
+        1. [Searching for Messages](#searching-for-messages)
+        1. [Message Properties and Operations](#message-properties-and-operations)
+    1. [Message Attachments](#message-attachments)
+    1. [Embedded Messages](#embedded-messages)
+1. [Running the Tests](#running-the-tests)
+
+## Installation
 
 The recommended way to install the IMAP library is through [Composer](https://getcomposer.org):
 
@@ -24,8 +35,7 @@ This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
 
-Usage
------
+## Usage
 
 ### Connect and Authenticate
 
@@ -37,8 +47,6 @@ $server = new Server('imap.gmail.com');
 // $connection is instance of \Ddeboer\Imap\Connection
 $connection = $server->authenticate('my_username', 'my_password');
 ```
-
-#### Options
 
 You can specify port, [flags and parameters](https://secure.php.net/manual/en/function.imap-open.php)
 to the server:
@@ -115,10 +123,8 @@ use Ddeboer\Imap\Search\Email\To;
 use Ddeboer\Imap\Search\Text\Body;
 
 $search = new SearchExpression();
-$search
-    ->addCondition(new To('me@here.com'))
-    ->addCondition(new Body('contents'))
-;
+$search->addCondition(new To('me@here.com'));
+$search->addCondition(new Body('contents'));
 
 $messages = $mailbox->getMessages($search);
 ```
@@ -128,11 +134,8 @@ escaped together. Only spaces are currently escaped correctly.
 You can use `Ddeboer\Imap\Search\RawExpression` to write the complete search
 condition by yourself.
 
-**WARNING** `OR` condition has never been reported as correctly functioning.
-
-##### Ordered search
-
-Reference: [imap_sort](https://secure.php.net/manual/en/function.imap-sort.php)
+Messages can also be retrieved sorted as per [imap_sort](https://secure.php.net/manual/en/function.imap-sort.php)
+function:
 
 ```php
 $messages = $mailbox->getMessages(
@@ -249,8 +252,7 @@ foreach ($attachments as $attachment) {
 An EmbeddedMessage has the same API as a normal Message, apart from flags
 and operations like copy, move or delete.
 
-Running the Tests
------------------
+## Running the Tests
 
 This library is functionally tested on [Travis CI](https://travis-ci.org/ddeboer/imap)
 against a local Dovecot server.
@@ -278,6 +280,11 @@ these environment variables in it:
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
     <php>
         <env name="IMAP_SERVER_NAME" value="my.imap.server.com" />
         <env name="IMAP_SERVER_PORT" value="60993" />
@@ -287,4 +294,4 @@ these environment variables in it:
 </phpunit>
 ```
 
-**WARNING**: currently the tests create new mailboxes without removing them.
+**WARNING** Tests create new mailboxes without removing them.
