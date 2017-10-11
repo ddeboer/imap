@@ -29,6 +29,13 @@ use Zend\Mime;
  */
 final class MessageTest extends AbstractTest
 {
+    private static $encodings = [
+        Mime\Mime::ENCODING_7BIT,
+        Mime\Mime::ENCODING_8BIT,
+        Mime\Mime::ENCODING_QUOTEDPRINTABLE,
+        Mime\Mime::ENCODING_BASE64,
+    ];
+
     private static $charsets = [
         'ASCII' => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
         'GB18030' => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
@@ -38,6 +45,11 @@ final class MessageTest extends AbstractTest
         'UTF-8' => '€✔',
         'Windows-1251' => 'ЂЃѓЉЊЌЋЏђљњќћџЎўЈҐЁЄЇІіґёєјЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя',
         'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
+    ];
+
+    private static $iconvOnlyCharsets = [
+        'macintosh' => '†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈«»…ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ',
+        'Windows-1250' => 'ŚŤŹśťźˇ˘ŁĄŞŻ˛łąşĽ˝ľż',
     ];
 
     protected function setUp()
@@ -100,16 +112,8 @@ final class MessageTest extends AbstractTest
 
         // This first data set mimics "us-ascii" imap server default settings
         $provider[] = [null, self::$charsets['ASCII'], null];
-
-        $encodings = [
-            Mime\Mime::ENCODING_7BIT,
-            Mime\Mime::ENCODING_8BIT,
-            Mime\Mime::ENCODING_QUOTEDPRINTABLE,
-            Mime\Mime::ENCODING_BASE64,
-        ];
-
         foreach (self::$charsets as $charset => $charList) {
-            foreach ($encodings as $encoding) {
+            foreach (self::$encodings as $encoding) {
                 $provider[] = [$charset, $charList, $encoding];
             }
         }
@@ -175,6 +179,38 @@ final class MessageTest extends AbstractTest
 
         $from = $message->getFrom();
         $this->assertSame('김 현진', $from->getName());
+    }
+
+    /**
+     * @dataProvider provideIconvCharsets
+     */
+    public function testIconvFallback(string $charset, string $charList, string $encoding)
+    {
+        $subject = \sprintf('[%s:%s]', $charset, $encoding);
+        $this->createTestMessage(
+            $this->mailbox,
+            $subject,
+            \iconv('UTF-8', $charset, $charList),
+            $encoding,
+            $charset
+        );
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame($subject, $message->getSubject());
+        $this->assertSame($charList, \rtrim($message->getBodyText()));
+    }
+
+    public function provideIconvCharsets(): array
+    {
+        $provider = [];
+        foreach (self::$iconvOnlyCharsets as $charset => $charList) {
+            foreach (self::$encodings as $encoding) {
+                $provider[] = [$charset, $charList, $encoding];
+            }
+        }
+
+        return $provider;
     }
 
     public function testEmailAddress()
