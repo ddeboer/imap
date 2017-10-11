@@ -8,7 +8,7 @@ use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 
 /**
- * Represents a raw expression.
+ * A MessageIterator to be used in a mocked environment.
  */
 final class RawMessageIterator extends \ArrayIterator implements MessageIteratorInterface
 {

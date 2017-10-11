@@ -21,6 +21,7 @@ This library requires both [IMAP](https://secure.php.net/manual/en/book.imap.php
         1. [Message Properties and Operations](#message-properties-and-operations)
     1. [Message Attachments](#message-attachments)
     1. [Embedded Messages](#embedded-messages)
+1. [Mock the library](#mock-the-library)
 1. [Running the Tests](#running-the-tests)
 
 ## Installation
@@ -251,6 +252,12 @@ foreach ($attachments as $attachment) {
 
 An EmbeddedMessage has the same API as a normal Message, apart from flags
 and operations like copy, move or delete.
+
+## Mock the library
+
+Mockability is granted by interfaces present for each API.
+Dig into [MockabilityTest](tests/MockabilityTest.php) for an example of a
+mocked workflow.
 
 ## Running the Tests
 
