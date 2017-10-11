@@ -14,9 +14,9 @@ final class Attachment extends AbstractPart implements AttachmentInterface
     /**
      * Get attachment filename.
      *
-     * @return string
+     * @return null|string
      */
-    public function getFilename(): string
+    public function getFilename()
     {
         return $this->getParameters()->get('filename')
             ?: $this->getParameters()->get('name');
