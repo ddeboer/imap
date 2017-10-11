@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.3](https://github.com/ddeboer/imap/tree/1.0.3) (2017-10-11)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.2...1.0.3)
+
+**Fixed bugs:**
+
+- Attachment::getFilename\(\) may be null on inline-att, widen return type [\#235](https://github.com/ddeboer/imap/pull/235) ([wujku](https://github.com/wujku))
+
 ## [1.0.2](https://github.com/ddeboer/imap/tree/1.0.2) (2017-10-06)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.1...1.0.2)
 

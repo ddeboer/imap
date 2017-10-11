@@ -628,6 +628,16 @@ final class MessageTest extends AbstractTest
         $this->assertCount(0, $message->getReferences());
     }
 
+    public function testInlineAttachment()
+    {
+        $this->mailbox->addMessage($this->getFixture('inline_attachment'));
+        $message = $this->mailbox->getMessage(1);
+
+        $inline = $message->getAttachments()[0];
+
+        $this->assertNull($inline->getFilename());
+    }
+
     public function testAttachmentMustNotBeCharsetDecoded()
     {
         $parts = [];
