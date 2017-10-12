@@ -658,6 +658,14 @@ final class MessageTest extends AbstractTest
         $this->assertNull($message->getFrom());
     }
 
+    public function testMissingDateHeader()
+    {
+        $this->mailbox->addMessage($this->getFixture('missing_date'));
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertNull($message->getDate());
+    }
+
     public function testAttachmentMustNotBeCharsetDecoded()
     {
         $parts = [];
