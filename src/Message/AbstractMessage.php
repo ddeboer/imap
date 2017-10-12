@@ -26,9 +26,9 @@ abstract class AbstractMessage extends AbstractPart
     /**
      * Get message sender (from headers).
      *
-     * @return EmailAddress
+     * @return null|EmailAddress
      */
-    final public function getFrom(): EmailAddress
+    final public function getFrom()
     {
         return $this->getHeaders()->get('from');
     }
@@ -96,9 +96,9 @@ abstract class AbstractMessage extends AbstractPart
     /**
      * Get date (from headers).
      *
-     * @return \DateTimeImmutable
+     * @return null|\DateTimeImmutable
      */
-    final public function getDate(): \DateTimeImmutable
+    final public function getDate()
     {
         return $this->getHeaders()->get('date');
     }

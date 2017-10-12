@@ -39,9 +39,9 @@ interface BasicMessageInterface extends PartInterface
     /**
      * Get message sender (from headers).
      *
-     * @return EmailAddress
+     * @return null|EmailAddress
      */
-    public function getFrom(): EmailAddress;
+    public function getFrom();
 
     /**
      * Get To recipients.
@@ -88,9 +88,9 @@ interface BasicMessageInterface extends PartInterface
     /**
      * Get date (from headers).
      *
-     * @return \DateTimeImmutable
+     * @return null|\DateTimeImmutable
      */
-    public function getDate(): \DateTimeImmutable;
+    public function getDate();
 
     /**
      * Get message size (from headers).

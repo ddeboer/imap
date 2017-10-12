@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.0.6](https://github.com/ddeboer/imap/tree/1.0.6) (2017-10-12)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.5...1.0.6)
+
+**Fixed bugs:**
+
+- Message: Date header can be absent [\#243](https://github.com/ddeboer/imap/pull/243) ([Slamdunk](https://github.com/Slamdunk))
+- Message: From header can be absent [\#242](https://github.com/ddeboer/imap/pull/242) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.5](https://github.com/ddeboer/imap/tree/1.0.5) (2017-10-12)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.4...1.0.5)
 
