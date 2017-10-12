@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
+use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
@@ -55,6 +56,17 @@ final class MessageTest extends AbstractTest
     protected function setUp()
     {
         $this->mailbox = $this->createMailbox();
+    }
+
+    public function testCustomNonExistentMessageFetch()
+    {
+        $connection = $this->getConnection();
+        $messageNumber = 98765;
+
+        $this->expectException(MessageDoesNotExistException::class);
+        $this->expectExceptionMessageRegExp(\sprintf('/E_WARNING.+%s/s', \preg_quote((string) $messageNumber)));
+
+        new Message($connection->getResource(), $messageNumber);
     }
 
     public function testAlwaysKeepUnseen()
