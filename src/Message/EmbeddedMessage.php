@@ -58,7 +58,7 @@ final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageIn
     public function getRawMessage(): string
     {
         if (null === $this->rawMessage) {
-            $this->rawMessage = $this->doGetContent($this->partNumber);
+            $this->rawMessage = $this->doGetContent($this->getPartNumber());
         }
 
         return $this->rawMessage;
@@ -71,7 +71,7 @@ final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageIn
      */
     protected function getContentPartNumber(): string
     {
-        $partNumber = $this->partNumber;
+        $partNumber = $this->getPartNumber();
         if (0 === \count($this->parts)) {
             $partNumber .= '.1';
         }
