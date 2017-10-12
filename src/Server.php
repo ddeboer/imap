@@ -68,8 +68,14 @@ final class Server implements ServerInterface
      */
     public function authenticate(string $username, string $password): ConnectionInterface
     {
-        \error_clear_last();
-        $resource = @\imap_open(
+        $errorMessage = null;
+        $errorNumber = 0;
+        \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
+            $errorMessage = $message;
+            $errorNumber = $nr;
+        });
+
+        $resource = \imap_open(
             $this->getServerString(),
             $username,
             $password,
@@ -77,16 +83,15 @@ final class Server implements ServerInterface
             1,
             $this->parameters
         );
-        if (null !== ($lastError = \error_get_last())) {
-            throw new AuthenticationFailedException(\sprintf(
-                'Authentication failed for user "%s": %s',
-                $username,
-                $lastError['message']
-            ), $lastError['type']);
-        }
 
-        if (false === $resource) {
-            throw new AuthenticationFailedException(\sprintf('Authentication failed for user "%s"', $username));
+        \restore_error_handler();
+
+        if (false === $resource || null !== $errorMessage) {
+            throw new AuthenticationFailedException(\sprintf(
+                'Authentication failed for user "%s"%s',
+                $username,
+                null !== $errorMessage ? ': ' . $errorMessage : ''
+            ), $errorNumber);
         }
 
         $check = \imap_check($resource);

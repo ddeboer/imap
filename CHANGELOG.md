@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.5](https://github.com/ddeboer/imap/tree/1.0.5) (2017-10-12)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.4...1.0.5)
+
+**Fixed bugs:**
+
+- Use set\_error\_handler with late exception [\#240](https://github.com/ddeboer/imap/pull/240) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.4](https://github.com/ddeboer/imap/tree/1.0.4) (2017-10-11)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.3...1.0.4)
 
