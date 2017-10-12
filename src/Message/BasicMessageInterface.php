@@ -39,9 +39,9 @@ interface BasicMessageInterface extends PartInterface
     /**
      * Get message sender (from headers).
      *
-     * @return EmailAddress
+     * @return null|EmailAddress
      */
-    public function getFrom(): EmailAddress;
+    public function getFrom();
 
     /**
      * Get To recipients.
