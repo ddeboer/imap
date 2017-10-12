@@ -88,9 +88,9 @@ interface BasicMessageInterface extends PartInterface
     /**
      * Get date (from headers).
      *
-     * @return \DateTimeImmutable
+     * @return null|\DateTimeImmutable
      */
-    public function getDate(): \DateTimeImmutable;
+    public function getDate();
 
     /**
      * Get message size (from headers).

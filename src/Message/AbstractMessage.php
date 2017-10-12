@@ -96,9 +96,9 @@ abstract class AbstractMessage extends AbstractPart
     /**
      * Get date (from headers).
      *
-     * @return \DateTimeImmutable
+     * @return null|\DateTimeImmutable
      */
-    final public function getDate(): \DateTimeImmutable
+    final public function getDate()
     {
         return $this->getHeaders()->get('date');
     }
