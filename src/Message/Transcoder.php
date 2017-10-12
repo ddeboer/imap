@@ -252,15 +252,24 @@ final class Transcoder
             return $iconvDecodedText;
         }
 
-        \error_clear_last();
-        $decodedText = @\mb_convert_encoding($text, 'UTF-8', $fromCharset);
-        if (null !== ($lastError = \error_get_last())) {
+        $errorMessage = null;
+        $errorNumber = 0;
+        \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
+            $errorMessage = $message;
+            $errorNumber = $nr;
+        });
+
+        $decodedText = \mb_convert_encoding($text, 'UTF-8', $fromCharset);
+
+        \restore_error_handler();
+
+        if (null !== $errorMessage) {
             throw new UnsupportedCharsetException(\sprintf(
                 'Unsupported charset "%s"%s: %s',
                 $originalFromCharset,
                 ($fromCharset !== $originalFromCharset) ? \sprintf(' (alias found: "%s")', $fromCharset) : '',
-                $lastError['message']
-            ), $lastError['type']);
+                $errorMessage
+            ), $errorNumber);
         }
 
         return $decodedText;
@@ -286,10 +295,14 @@ final class Transcoder
             return false;
         }
 
-        $iconvDecodedText = @\iconv($fromCharset, 'UTF-8', $text);
+        \set_error_handler(function () {});
+
+        $iconvDecodedText = \iconv($fromCharset, 'UTF-8', $text);
         if (false === $iconvDecodedText) {
-            $iconvDecodedText = @\iconv($originalFromCharset, 'UTF-8', $text);
+            $iconvDecodedText = \iconv($originalFromCharset, 'UTF-8', $text);
         }
+
+        \restore_error_handler();
 
         return $iconvDecodedText;
     }
