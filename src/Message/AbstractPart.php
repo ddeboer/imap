@@ -24,7 +24,7 @@ abstract class AbstractPart implements PartInterface
     protected $parts = [];
 
     /**
-     * @var null|string
+     * @var string
      */
     private $partNumber;
 
