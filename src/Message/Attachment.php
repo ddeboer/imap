@@ -54,11 +54,11 @@ final class Attachment extends AbstractPart implements AttachmentInterface
         if (!$this->isEmbeddedMessage()) {
             throw new NotEmbeddedMessageException(\sprintf(
                 'Attachment "%s" in message "%s" is not embedded message',
-                $this->partNumber,
+                $this->getPartNumber(),
                 $this->getNumber()
             ));
         }
 
-        return new EmbeddedMessage($this->resource, $this->getNumber(), $this->partNumber, $this->getStructure()->parts[0]);
+        return new EmbeddedMessage($this->resource, $this->getNumber(), $this->getPartNumber(), $this->getStructure()->parts[0]);
     }
 }

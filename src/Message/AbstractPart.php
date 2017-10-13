@@ -19,14 +19,14 @@ abstract class AbstractPart implements PartInterface
     protected $resource;
 
     /**
-     * @var null|string
-     */
-    protected $partNumber;
-
-    /**
      * @var array
      */
     protected $parts = [];
+
+    /**
+     * @var string
+     */
+    private $partNumber;
 
     /**
      * @var int
@@ -255,6 +255,16 @@ abstract class AbstractPart implements PartInterface
      * @return string
      */
     protected function getContentPartNumber(): string
+    {
+        return $this->partNumber;
+    }
+
+    /**
+     * Get part number.
+     *
+     * @return string
+     */
+    final public function getPartNumber(): string
     {
         return $this->partNumber;
     }
