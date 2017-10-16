@@ -56,11 +56,7 @@ final class ImapResource implements ImapResourceInterface
      */
     private function initMailbox()
     {
-        if (null === $this->mailbox) {
-            return;
-        }
-
-        if ($this->isMailboxOpen()) {
+        if (null === $this->mailbox || $this->isMailboxOpen()) {
             return;
         }
 
