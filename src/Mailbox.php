@@ -124,8 +124,6 @@ final class Mailbox implements MailboxInterface
      */
     public function setFlag(string $flag, $numbers): bool
     {
-        $this->init();
-
         if (\is_array($numbers)) {
             $numbers = \implode(',', $numbers);
         }
@@ -143,8 +141,6 @@ final class Mailbox implements MailboxInterface
      */
     public function clearFlag(string $flag, $numbers): bool
     {
-        $this->init();
-
         if (\is_array($numbers)) {
             $numbers = \implode(',', $numbers);
         }
