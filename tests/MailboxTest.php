@@ -38,7 +38,7 @@ final class MailboxTest extends AbstractTest
         $this->assertContains(\getenv('IMAP_SERVER_PORT'), $this->mailbox->getFullEncodedName());
         $this->assertNotContains($this->mailboxName, $this->mailbox->getFullEncodedName());
         $this->assertContains(\mb_convert_encoding($this->mailboxName, 'UTF7-IMAP', 'UTF-8'), $this->mailbox->getFullEncodedName());
-        $this->assertNotContains(\getenv('IMAP_SERVER_PORT'), $this->mailbox->getEncodedName());
+        $this->assertNotContains(':' . \getenv('IMAP_SERVER_PORT'), $this->mailbox->getEncodedName());
     }
 
     public function testGetAttributes()
