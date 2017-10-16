@@ -1,10 +1,19 @@
 # Change Log
 
+## [1.0.7](https://github.com/ddeboer/imap/tree/1.0.7) (2017-10-16)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.6...1.0.7)
+
+**Fixed bugs:**
+
+- Problem with a IMAP resource stream [\#245](https://github.com/ddeboer/imap/issues/245)
+- IMAP resource must be checked at every call for mailbox context [\#247](https://github.com/ddeboer/imap/pull/247) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.6](https://github.com/ddeboer/imap/tree/1.0.6) (2017-10-12)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.5...1.0.6)
 
 **Fixed bugs:**
 
+- \[TypeError\] Return value of AbstractMessage::getFrom\(\) must be an instance of EmailAddress, null returned [\#241](https://github.com/ddeboer/imap/issues/241)
 - Message: Date header can be absent [\#243](https://github.com/ddeboer/imap/pull/243) ([Slamdunk](https://github.com/Slamdunk))
 - Message: From header can be absent [\#242](https://github.com/ddeboer/imap/pull/242) ([Slamdunk](https://github.com/Slamdunk))
 
