@@ -303,6 +303,25 @@ final class MessageTest extends AbstractTest
         $this->assertCount(1, $mailboxTwo);
     }
 
+    public function testResourceMemoryReuse()
+    {
+        $mailboxOne = $this->createMailbox();
+        $this->createTestMessage($mailboxOne, 'Message A');
+        $mailboxTwo = $this->createMailbox();
+
+        $message = $mailboxOne->getMessage(1);
+
+        // Mailbox::count triggers Mailbox::init
+        // Reinitializing the imap resource to the mailbox 2
+        $this->assertCount(0, $mailboxTwo);
+
+        $message->move($mailboxTwo);
+        $this->getConnection()->expunge();
+
+        $this->assertCount(0, $mailboxOne);
+        $this->assertCount(1, $mailboxTwo);
+    }
+
     public function testCopy()
     {
         $mailboxOne = $this->createMailbox();

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
-use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\LogicalOperator\All;
 
@@ -38,7 +37,7 @@ final class Mailbox implements MailboxInterface
      */
     public function __construct(ImapResourceInterface $resource, string $name, \stdClass $info)
     {
-        $this->resource = $resource;
+        $this->resource = new ImapResource($resource->getStream(), $this);
         $this->name = $name;
         $this->info = $info;
     }
@@ -100,8 +99,6 @@ final class Mailbox implements MailboxInterface
      */
     public function count()
     {
-        $this->init();
-
         return \imap_num_msg($this->resource->getStream());
     }
 
@@ -114,8 +111,6 @@ final class Mailbox implements MailboxInterface
      */
     public function getStatus(int $flags = null): \stdClass
     {
-        $this->init();
-
         return \imap_status($this->resource->getStream(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
     }
 
@@ -128,8 +123,6 @@ final class Mailbox implements MailboxInterface
      */
     public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIteratorInterface
     {
-        $this->init();
-
         if (null === $search) {
             $search = new All();
         }
@@ -165,8 +158,6 @@ final class Mailbox implements MailboxInterface
      */
     public function getMessage(int $number): MessageInterface
     {
-        $this->init();
-
         return new Message($this->resource, $number);
     }
 
@@ -190,35 +181,5 @@ final class Mailbox implements MailboxInterface
     public function addMessage(string $message): bool
     {
         return \imap_append($this->resource->getStream(), $this->getFullEncodedName(), $message);
-    }
-
-    /**
-     * If connection is not currently in this mailbox, switch it to this mailbox.
-     */
-    private function init()
-    {
-        if ($this->isMailboxOpen()) {
-            return;
-        }
-
-        \imap_reopen($this->resource->getStream(), $this->getFullEncodedName());
-
-        if ($this->isMailboxOpen()) {
-            return;
-        }
-
-        throw new ReopenMailboxException(\sprintf('Cannot reopen mailbox "%s"', $this->getName()));
-    }
-
-    /**
-     * Check whether the current mailbox is open.
-     *
-     * @return bool
-     */
-    private function isMailboxOpen(): bool
-    {
-        $check = \imap_check($this->resource->getStream());
-
-        return false !== $check && $check->Mailbox === $this->getFullEncodedName();
     }
 }
