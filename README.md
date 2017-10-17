@@ -8,7 +8,9 @@
 
 A PHP 7.0+ library to read and process e-mails over IMAP.
 
-This library requires both [IMAP](https://secure.php.net/manual/en/book.imap.php) and [Multibyte String](https://secure.php.net/manual/en/book.mbstring.php) extensions installed.
+This library requires [IMAP](https://secure.php.net/manual/en/book.imap.php),
+[iconv](https://secure.php.net/manual/en/book.iconv.php) and
+[Multibyte String](https://secure.php.net/manual/en/book.mbstring.php) extensions installed.
 
 ## Table of Contents
 

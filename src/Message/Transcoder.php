@@ -247,7 +247,15 @@ final class Transcoder
             $fromCharset = self::$charsetAliases[$lowercaseFromCharset];
         }
 
-        $iconvDecodedText = self::iconvDecode($text, $originalFromCharset, $fromCharset);
+        \set_error_handler(function () {});
+
+        $iconvDecodedText = \iconv($fromCharset, 'UTF-8', $text);
+        if (false === $iconvDecodedText) {
+            $iconvDecodedText = \iconv($originalFromCharset, 'UTF-8', $text);
+        }
+
+        \restore_error_handler();
+
         if (false !== $iconvDecodedText) {
             return $iconvDecodedText;
         }
@@ -273,37 +281,5 @@ final class Transcoder
         }
 
         return $decodedText;
-    }
-
-    /**
-     * Decode text to UTF-8 with iconv.
-     *
-     * @param string $text                Text to decode
-     * @param string $originalFromCharset Original charset
-     * @param string $fromCharset         Aliased charset
-     *
-     * @return bool|string
-     */
-    private static function iconvDecode($text, $originalFromCharset, $fromCharset)
-    {
-        static $iconvLoaded;
-        if (null === $iconvLoaded) {
-            $iconvLoaded = \function_exists('iconv');
-        }
-
-        if (false === $iconvLoaded) {
-            return false;
-        }
-
-        \set_error_handler(function () {});
-
-        $iconvDecodedText = \iconv($fromCharset, 'UTF-8', $text);
-        if (false === $iconvDecodedText) {
-            $iconvDecodedText = \iconv($originalFromCharset, 'UTF-8', $text);
-        }
-
-        \restore_error_handler();
-
-        return $iconvDecodedText;
     }
 }
