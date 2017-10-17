@@ -182,10 +182,10 @@ final class MailboxTest extends AbstractTest
 
     public function testThread()
     {
-        $this->mailbox = $this->createMailbox();
-        $this->mailbox->addMessage($this->getFixture('thread/my_topic'));
-        $this->mailbox->addMessage($this->getFixture('thread/unrelated'));
-        $this->mailbox->addMessage($this->getFixture('thread/re_my_topic'));
+        $mailboxOne = $this->createMailbox();
+        $mailboxOne->addMessage($this->getFixture('thread/my_topic'));
+        $mailboxOne->addMessage($this->getFixture('thread/unrelated'));
+        $mailboxOne->addMessage($this->getFixture('thread/re_my_topic'));
 
         $expected = [
             '0.num' => 1,
@@ -199,6 +199,10 @@ final class MailboxTest extends AbstractTest
             '2.branch' => 0,
         ];
 
-        $this->assertSame($expected, $this->mailbox->getThread());
+        $this->assertSame($expected, $mailboxOne->getThread());
+
+        $emptyMailbox = $this->createMailbox();
+
+        $this->assertEmpty($emptyMailbox->getThread());
     }
 }
