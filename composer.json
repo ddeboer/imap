@@ -19,6 +19,7 @@
     ],
     "require": {
         "php": "^7.0",
+        "ext-iconv": "*",
         "ext-imap": "*",
         "ext-mbstring": "*"
     },
