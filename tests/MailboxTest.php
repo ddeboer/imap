@@ -10,6 +10,7 @@ use Ddeboer\Imap\Mailbox;
 
 /**
  * @covers \Ddeboer\Imap\Exception\AbstractException
+ * @covers \Ddeboer\Imap\ImapResource
  * @covers \Ddeboer\Imap\Mailbox
  */
 final class MailboxTest extends AbstractTest
