@@ -108,4 +108,11 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * @return bool
      */
     public function addMessage(string $message): bool;
+
+    /**
+     * Returns a tree of threaded message for the current Mailbox.
+     *
+     * @return array
+     */
+    public function getThread(): array;
 }
