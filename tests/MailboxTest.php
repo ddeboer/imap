@@ -179,4 +179,26 @@ final class MailboxTest extends AbstractTest
             $this->assertFalse($message->isSeen());
         }
     }
+
+    public function testThread()
+    {
+        $this->mailbox = $this->createMailbox();
+        $this->mailbox->addMessage($this->getFixture('thread/my_topic'));
+        $this->mailbox->addMessage($this->getFixture('thread/unrelated'));
+        $this->mailbox->addMessage($this->getFixture('thread/re_my_topic'));
+
+        $expected = [
+            '0.num' => 1,
+            '0.next' => 1,
+            '1.num' => 3,
+            '1.next' => 0,
+            '1.branch' => 0,
+            '0.branch' => 2,
+            '2.num' => 2,
+            '2.next' => 0,
+            '2.branch' => 0,
+        ];
+
+        $this->assertSame($expected, $this->mailbox->getThread());
+    }
 }

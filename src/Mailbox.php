@@ -216,4 +216,14 @@ final class Mailbox implements MailboxInterface
     {
         return \imap_append($this->resource->getStream(), $this->getFullEncodedName(), $message);
     }
+
+    /**
+     * Returns a tree of threaded message for the current Mailbox.
+     *
+     * @return array
+     */
+    public function getThread(): array
+    {
+        return \imap_thread($this->resource->getStream());
+    }
 }
