@@ -493,6 +493,9 @@ final class MessageTest extends AbstractTest
         $this->assertArrayHasKey('date', $headers);
         $this->assertArrayHasKey('recent', $headers);
 
+        $this->assertSame('Wed, 27 Sep 2017 12:48:51 +0200', $headers['date']);
+        $this->assertSame('A_€@{è_Z', $headers['bcc'][0]->personal);
+
         $this->assertFalse($message->isSeen());
     }
 
