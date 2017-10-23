@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\Exception\InvalidDateHeaderException;
+
 abstract class AbstractMessage extends AbstractPart
 {
     /**
@@ -30,7 +32,9 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getFrom()
     {
-        return $this->getHeaders()->get('from');
+        $from = $this->getHeaders()->get('from');
+
+        return null !== $from ? $this->decodeEmailAddress($from[0]) : null;
     }
 
     /**
@@ -40,7 +44,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getTo(): array
     {
-        return $this->getHeaders()->get('to') ?: [];
+        return $this->decodeEmailAddresses($this->getHeaders()->get('to') ?: []);
     }
 
     /**
@@ -50,7 +54,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getCc(): array
     {
-        return $this->getHeaders()->get('cc') ?: [];
+        return $this->decodeEmailAddresses($this->getHeaders()->get('cc') ?: []);
     }
 
     /**
@@ -60,7 +64,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getBcc(): array
     {
-        return $this->getHeaders()->get('bcc') ?: [];
+        return $this->decodeEmailAddresses($this->getHeaders()->get('bcc') ?: []);
     }
 
     /**
@@ -70,7 +74,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getReplyTo(): array
     {
-        return $this->getHeaders()->get('reply_to') ?: [];
+        return $this->decodeEmailAddresses($this->getHeaders()->get('reply_to') ?: []);
     }
 
     /**
@@ -80,7 +84,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getSender(): array
     {
-        return $this->getHeaders()->get('sender') ?: [];
+        return $this->decodeEmailAddresses($this->getHeaders()->get('sender') ?: []);
     }
 
     /**
@@ -90,7 +94,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getReturnPath(): array
     {
-        return $this->getHeaders()->get('return_path') ?: [];
+        return $this->decodeEmailAddresses($this->getHeaders()->get('return_path') ?: []);
     }
 
     /**
@@ -100,7 +104,24 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getDate()
     {
-        return $this->getHeaders()->get('date');
+        $dateHeader = $this->getHeaders()->get('date');
+        if (null === $dateHeader) {
+            return;
+        }
+
+        $alteredValue = \str_replace(',', '', $dateHeader);
+        $alteredValue = \preg_replace('/ +\(.*\)/', '', $alteredValue);
+        if (0 === \preg_match('/\d\d:\d\d:\d\d.* [\+\-]?\d\d:?\d\d/', $alteredValue)) {
+            $alteredValue .= ' +0000';
+        }
+
+        try {
+            $date = new \DateTimeImmutable($alteredValue);
+        } catch (\Throwable $ex) {
+            throw new InvalidDateHeaderException(\sprintf('Invalid Date header found: "%s"', $dateHeader), 0, $ex);
+        }
+
+        return $date;
     }
 
     /**
@@ -132,7 +153,7 @@ abstract class AbstractMessage extends AbstractPart
     {
         $inReplyTo = $this->getHeaders()->get('in_reply_to');
 
-        return \is_array($inReplyTo) ? $inReplyTo : [];
+        return null !== $inReplyTo ? \explode(' ', $inReplyTo) : [];
     }
 
     /**
@@ -144,7 +165,7 @@ abstract class AbstractMessage extends AbstractPart
     {
         $references = $this->getHeaders()->get('references');
 
-        return \is_array($references) ? $references : [];
+        return null !== $references ? \explode(' ', $references) : [];
     }
 
     /**
@@ -225,5 +246,32 @@ abstract class AbstractMessage extends AbstractPart
     final public function hasAttachments(): bool
     {
         return \count($this->getAttachments()) > 0;
+    }
+
+    /**
+     * @param array $addresses Addesses
+     *
+     * @return array
+     */
+    private function decodeEmailAddresses(array $addresses): array
+    {
+        $return = [];
+        foreach ($addresses as $address) {
+            if (isset($address->mailbox)) {
+                $return[] = $this->decodeEmailAddress($address);
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param \stdClass $value
+     *
+     * @return EmailAddress
+     */
+    private function decodeEmailAddress(\stdClass $value): EmailAddress
+    {
+        return new EmailAddress($value->mailbox, $value->host, $value->personal);
     }
 }

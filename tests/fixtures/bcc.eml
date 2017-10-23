@@ -5,7 +5,7 @@ Content-Type: text/plain
 Date: Wed, 27 Sep 2017 12:48:51 +0200
 From: from@there.com
 To: to@here.com
-Bcc: bcc@here.com
+Bcc: =?UTF-8?B?QV/igqxAe8OoX1o=?= <bcc@here.com>
 Reply-To: reply-to@here.com
 Sender: sender@here.com
 
