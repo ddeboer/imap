@@ -162,7 +162,7 @@ Get other message properties:
 
 ```php
 $message->getSubject();
-$message->getFrom();
+$message->getFrom(); //returns Email object
 $message->getTo();
 $message->getDate();
 $message->isAnswered();
@@ -177,7 +177,7 @@ Get message headers as a [\Ddeboer\Imap\Message\Headers](/src/Ddeboer/Imap/Messa
 $message->getHeaders();
 ```
 
-Get message body as HTML or plain text:
+Get message body as HTML or plain text(if presents):
 
 ```php
 $message->getBodyHtml();
