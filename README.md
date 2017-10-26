@@ -180,8 +180,8 @@ $message->getHeaders();
 Get message body as HTML or plain text:
 
 ```php
-$message->getBodyHtml();    // Content of mail text/html part, if present
-$message->getBodyText();    // Content of mail text/plain part, if present
+$message->getBodyHtml();    // Content of text/html part, if present
+$message->getBodyText();    // Content of text/plain part, if present
 ```
 
 Reading the message body keeps the message as unseen.
