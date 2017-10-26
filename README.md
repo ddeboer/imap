@@ -162,9 +162,9 @@ Get other message properties:
 
 ```php
 $message->getSubject();
-$message->getFrom(); //returns Email object
-$message->getTo();
-$message->getDate();
+$message->getFrom();    // Message\EmailAddress
+$message->getTo();      // array of Message\EmailAddress
+$message->getDate();    // DateTimeImmutable
 $message->isAnswered();
 $message->isDeleted();
 $message->isDraft();
@@ -177,11 +177,11 @@ Get message headers as a [\Ddeboer\Imap\Message\Headers](/src/Ddeboer/Imap/Messa
 $message->getHeaders();
 ```
 
-Get message body as HTML or plain text(if presents):
+Get message body as HTML or plain text:
 
 ```php
-$message->getBodyHtml();
-$message->getBodyText();
+$message->getBodyHtml();    // Content of mail text/html part, if present
+$message->getBodyText();    // Content of mail text/plain part, if present
 ```
 
 Reading the message body keeps the message as unseen.
