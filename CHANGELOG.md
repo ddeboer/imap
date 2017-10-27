@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.0.8](https://github.com/ddeboer/imap/tree/1.0.8) (2017-10-27)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.7...1.0.8)
+
+**Fixed bugs:**
+
+- \[TypeError\] Return value of Ddeboer\Imap\Message\AbstractMessage::getId\(\) must be of the type string, null returned [\#253](https://github.com/ddeboer/imap/issues/253)
+- BasicMessageInterface::getId\(\) can be null [\#254](https://github.com/ddeboer/imap/pull/254) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.7](https://github.com/ddeboer/imap/tree/1.0.7) (2017-10-16)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.6...1.0.7)
 
