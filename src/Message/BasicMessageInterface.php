@@ -32,9 +32,9 @@ interface BasicMessageInterface extends PartInterface
      *
      * A unique message id in the form <...>
      *
-     * @return string
+     * @return null|string
      */
-    public function getId(): string;
+    public function getId();
 
     /**
      * Get message sender (from headers).
