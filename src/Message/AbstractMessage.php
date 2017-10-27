@@ -16,9 +16,9 @@ abstract class AbstractMessage extends AbstractPart
      *
      * A unique message id in the form <...>
      *
-     * @return string
+     * @return null|string
      */
-    final public function getId(): string
+    final public function getId()
     {
         return $this->getHeaders()->get('message_id');
     }

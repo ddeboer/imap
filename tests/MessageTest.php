@@ -725,6 +725,15 @@ final class MessageTest extends AbstractTest
         }
     }
 
+    public function testNoMessageId()
+    {
+        $this->mailbox->addMessage($this->getFixture('plain_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertNull($message->getId());
+    }
+
     private function resetAttachmentCharset(Message $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
