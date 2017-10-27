@@ -141,8 +141,11 @@ Messages can also be retrieved sorted as per [imap_sort](https://secure.php.net/
 function:
 
 ```php
+$today = new DateTimeImmutable();
+$lastMonth = $today->sub(new DateInterval('P30D'));
+
 $messages = $mailbox->getMessages(
-    new Ddeboer\Imap\Search\LogicalOperator\All(),
+    new Ddeboer\Imap\Search\Date\Since($lastMonth),
     \SORTDATE, // Sort criteria
     true // Descending order
 );
