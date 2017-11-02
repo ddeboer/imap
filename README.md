@@ -191,7 +191,7 @@ Reading the message body keeps the message as unseen.
 If you want to mark the message as seen:
 
 ```php
-$message->maskAsSeen();
+$message->markAsSeen();
 ```
 
 Or you can set, or clear, any [flag](https://secure.php.net/manual/en/function.imap-setflag-full.php):
