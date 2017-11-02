@@ -69,8 +69,17 @@ interface MessageInterface extends Message\BasicMessageInterface
      * Mark message as seen.
      *
      * @return bool
+     *
+     * @deprecated since version 1.1, to be removed in 2.0
      */
     public function maskAsSeen(): bool;
+
+    /**
+     * Mark message as seen.
+     *
+     * @return bool
+     */
+    public function markAsSeen(): bool;
 
     /**
      * Move message to another mailbox.

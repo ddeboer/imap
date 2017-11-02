@@ -12,6 +12,7 @@ use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\Parameters;
 use Ddeboer\Imap\MessageIterator;
 use Ddeboer\Imap\Search;
+use PHPUnit\Framework\Error\Deprecated;
 use Zend\Mail;
 use Zend\Mime;
 
@@ -69,6 +70,16 @@ final class MessageTest extends AbstractTest
         new Message($connection->getResource(), $messageNumber);
     }
 
+    public function testDeprecateMaskAsSeen()
+    {
+        $this->createTestMessage($this->mailbox, 'Message A');
+        $message = $this->mailbox->getMessage(1);
+
+        $this->expectException(Deprecated::class);
+
+        $message->maskAsSeen();
+    }
+
     public function testAlwaysKeepUnseen()
     {
         $this->createTestMessage($this->mailbox, 'Message A');
@@ -79,7 +90,7 @@ final class MessageTest extends AbstractTest
         $message->getBodyText();
         $this->assertFalse($message->isSeen());
 
-        $message->maskAsSeen();
+        $message->markAsSeen();
         $this->assertTrue($message->isSeen());
     }
 
