@@ -1,5 +1,28 @@
 # Change Log
 
+## [1.1.0](https://github.com/ddeboer/imap/tree/1.1.0) (2017-11-06)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.0.8...1.1.0)
+
+**Implemented enhancements:**
+
+- Headers: no catchable exception [\#246](https://github.com/ddeboer/imap/issues/246)
+- imap\_thread [\#113](https://github.com/ddeboer/imap/issues/113)
+- Deprecate MessageInterface::maskAsSeen\(\) in favour of MessageInterface::markAsSeen\(\) [\#255](https://github.com/ddeboer/imap/pull/255) ([Slamdunk](https://github.com/Slamdunk))
+- Lazy load structured Headers [\#250](https://github.com/ddeboer/imap/pull/250) ([Slamdunk](https://github.com/Slamdunk))
+- Implement imap\_thread [\#249](https://github.com/ddeboer/imap/pull/249) ([Slamdunk](https://github.com/Slamdunk))
+- Require ext-iconv [\#248](https://github.com/ddeboer/imap/pull/248) ([Slamdunk](https://github.com/Slamdunk))
+- Message Part: expose $partNumber [\#244](https://github.com/ddeboer/imap/pull/244) ([wujku](https://github.com/wujku))
+- Add Mockability helpers and documentation [\#236](https://github.com/ddeboer/imap/pull/236) ([Slamdunk](https://github.com/Slamdunk))
+- Add missing interface change for \#225 [\#233](https://github.com/ddeboer/imap/pull/233) ([Slamdunk](https://github.com/Slamdunk))
+- Connection: check if the connection is still active with `imap\_ping` [\#232](https://github.com/ddeboer/imap/pull/232) ([wujku](https://github.com/wujku))
+- Message: add `References` and `In-Reply-To` headers shortcuts [\#230](https://github.com/ddeboer/imap/pull/230) ([wujku](https://github.com/wujku))
+- Added bulk set / clear flags functionality for mailbox messages [\#225](https://github.com/ddeboer/imap/pull/225) ([wujku](https://github.com/wujku))
+
+**Merged pull requests:**
+
+- make docs more obvious [\#252](https://github.com/ddeboer/imap/pull/252) ([lgg](https://github.com/lgg))
+- README.md: add Table of Contents with Travis checker [\#234](https://github.com/ddeboer/imap/pull/234) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.0.8](https://github.com/ddeboer/imap/tree/1.0.8) (2017-10-27)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.7...1.0.8)
 
