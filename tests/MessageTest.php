@@ -122,7 +122,22 @@ final class MessageTest extends AbstractTest
             return \strtolower($charset);
         }, $keys);
 
-        $this->assertSame($loweredKeys, $keys);
+        $this->assertSame($loweredKeys, $keys, 'Charset aliases key must be lowercase');
+
+        $sameAliases = \array_filter($aliases, function ($value, $key) {
+            return \strtolower((string) $value) === \strtolower((string) $key);
+        }, \ARRAY_FILTER_USE_BOTH);
+
+        $this->assertSame([], $sameAliases, 'There must not be self-referencing aliases');
+
+        foreach ($aliases as $finalAlias) {
+            $this->assertArrayNotHasKey($finalAlias, $aliases, 'All aliases must refer to final alias');
+        }
+
+        $sortedKeys = $keys;
+        \sort($sortedKeys, \SORT_STRING);
+
+        $this->assertSame($sortedKeys, $keys, 'Aliases must be sorted');
     }
 
     /**
