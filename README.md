@@ -23,6 +23,7 @@ This library requires [IMAP](https://secure.php.net/manual/en/book.imap.php),
         1. [Message Properties and Operations](#message-properties-and-operations)
     1. [Message Attachments](#message-attachments)
     1. [Embedded Messages](#embedded-messages)
+    1. [Timeouts](#timeouts)
 1. [Mock the library](#mock-the-library)
 1. [Running the Tests](#running-the-tests)
 
@@ -239,7 +240,6 @@ file_put_contents(
 );
 ```
 
-
 ### Embedded Messages
 
 Check if attachment is embedded message and get it:
@@ -257,6 +257,20 @@ foreach ($attachments as $attachment) {
 
 An EmbeddedMessage has the same API as a normal Message, apart from flags
 and operations like copy, move or delete.
+
+### Timeouts
+
+The IMAP extension provides the [imap_timeout](https://secure.php.net/manual/en/function.imap-timeout.php)
+function to adjust the timeout seconds for various operations.
+
+However the extension's implementation doesn't link the functionality to a
+specific context or connection, instead they are global. So in order to not
+affect functionalities outside this library, we had to choose whether wrap
+every `imap_*` call around an optional user-provided timeout or leave this
+task to the user.
+
+Because of the heterogeneous world of IMAP servers and the high complexity
+burden cost for such a little gain of the former, we chose the latter.
 
 ## Mock the library
 
