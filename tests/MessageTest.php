@@ -10,9 +10,11 @@ use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\Parameters;
+use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageIterator;
 use Ddeboer\Imap\Search;
 use PHPUnit\Framework\Error\Deprecated;
+use ReflectionClass;
 use Zend\Mail;
 use Zend\Mime;
 
@@ -107,6 +109,20 @@ final class MessageTest extends AbstractTest
         $this->assertFalse($message->isDeleted());
         $this->assertFalse($message->isDraft());
         $this->assertFalse($message->isSeen());
+    }
+
+    public function testLowercaseCharsetAliases()
+    {
+        $refClass = new ReflectionClass(Transcoder::class);
+        $properties = $refClass->getStaticProperties();
+        $aliases = $properties['charsetAliases'];
+
+        $keys = \array_map('strval', \array_keys($aliases));
+        $loweredKeys = \array_map(function ($charset) {
+            return \strtolower($charset);
+        }, $keys);
+
+        $this->assertSame($loweredKeys, $keys);
     }
 
     /**
