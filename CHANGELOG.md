@@ -1,5 +1,20 @@
 # Change Log
 
+## [1.1.1](https://github.com/ddeboer/imap/tree/1.1.1) (2017-11-10)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.1.0...1.1.1)
+
+**Implemented enhancements:**
+
+- Transcoder: expand charset aliases list [\#267](https://github.com/ddeboer/imap/pull/267) ([Slamdunk](https://github.com/Slamdunk))
+
+**Fixed bugs:**
+
+- Charset aliases: fix to lowercase search [\#266](https://github.com/ddeboer/imap/pull/266) ([Slamdunk](https://github.com/Slamdunk))
+
+**Merged pull requests:**
+
+- README.md: add timeout note [\#263](https://github.com/ddeboer/imap/pull/263) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.1.0](https://github.com/ddeboer/imap/tree/1.1.0) (2017-11-06)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.0.8...1.1.0)
 
