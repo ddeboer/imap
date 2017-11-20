@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit
-    bootstrap="./vendor/autoload.php"
-    colors="true"
-    verbose="true"
+        bootstrap="./vendor/autoload.php"
+        colors="true"
+        verbose="true"
 >
     <testsuites>
         <testsuite name="ddeboer/imap">
@@ -15,4 +15,10 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
+    <php>
+        <env name="IMAP_SERVER_NAME" value="lukana.pl"/>
+        <env name="IMAP_SERVER_PORT" value="993"/>
+        <env name="IMAP_USERNAME" value="tests@lukana.pl"/>
+        <env name="IMAP_PASSWORD" value="testowe1"/>
+    </php>
 </phpunit>
