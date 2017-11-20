@@ -37,7 +37,7 @@ abstract class AbstractTest extends TestCase
     final protected function createMailbox(Connection $connection = null): Mailbox
     {
         $connection = $connection ?? $this->getConnection();
-        $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
+        $this->mailboxName = \uniqid('INBOX.mailbox_' . self::SPECIAL_CHARS);
 
         return $connection->createMailbox($this->mailboxName);
     }
