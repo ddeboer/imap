@@ -70,14 +70,14 @@ class MailboxesParser
 
     public function setLanguage($lang)
     {
-        $path = __DIR__ . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . 'folderNames' . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR . 'names.php';
+        $path = __DIR__ . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR . 'names.php';
         if (!is_file($path)) {
             throw new  MailboxesParserException(\sprintf('File for language names %s does not exist', $path));
         }
         $names = require $path;
         $this->setSpecialFoldersNames($names);
 
-        $path = __DIR__ . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . 'folderNames' . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR . 'ids.php';
+        $path = __DIR__ . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR . 'ids.php';
         if (!is_file($path)) {
             throw new  MailboxesParserException(\sprintf('File for language ids %s does not exist', $path));
         }
