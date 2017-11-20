@@ -7,7 +7,6 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
-use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\Parameters;
@@ -40,24 +39,20 @@ final class MessageTest extends AbstractTest
     ];
 
     private static $charsets = [
-        'ASCII'        => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
-        'GB18030'      => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
-        'ISO-8859-6'   => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
-        'ISO-8859-7'   => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
-        'SJIS'         => '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯBｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿCﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏDﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ',
-        'UTF-8'        => '€✔',
+        'ASCII' => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+        'GB18030' => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
+        'ISO-8859-6' => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
+        'ISO-8859-7' => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
+        'SJIS' => '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯBｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿCﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏDﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ',
+        'UTF-8' => '€✔',
         'Windows-1251' => 'ЂЃѓЉЊЌЋЏђљњќћџЎўЈҐЁЄЇІіґёєјЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя',
         'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
     ];
 
     private static $iconvOnlyCharsets = [
-        'macintosh'    => '†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈«»…ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ',
+        'macintosh' => '†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈«»…ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ',
         'Windows-1250' => 'ŚŤŹśťźˇ˘ŁĄŞŻ˛łąşĽ˝ľż',
     ];
-    /**
-     * @var Mailbox
-     */
-    protected $mailbox;
 
     protected function setUp()
     {
@@ -70,7 +65,7 @@ final class MessageTest extends AbstractTest
         $messageNumber = 98765;
 
         $this->expectException(MessageDoesNotExistException::class);
-        $this->expectExceptionMessageRegExp(\sprintf('/E_WARNING.+%s/s', \preg_quote((string)$messageNumber)));
+        $this->expectExceptionMessageRegExp(\sprintf('/E_WARNING.+%s/s', \preg_quote((string) $messageNumber)));
 
         new Message($connection->getResource(), $messageNumber);
     }
@@ -239,12 +234,6 @@ final class MessageTest extends AbstractTest
         }
 
         return $provider;
-    }
-
-    public function testAppendedMessageUid()
-    {
-        $uid = $this->mailbox->addMessage($this->getFixture('email_address'));
-        $this->assertEquals(1, $uid);
     }
 
     public function testEmailAddress()
@@ -484,7 +473,8 @@ final class MessageTest extends AbstractTest
     {
         $headers = 'From: from@there.com' . "\r\n"
             . 'To: to@here.com' . "\n"
-            . "\r\n";
+             . "\r\n"
+        ;
         $originalMessage = $headers . 'Content' . "\n";
 
         $this->mailbox->addMessage($originalMessage);
@@ -653,9 +643,9 @@ final class MessageTest extends AbstractTest
         $this->assertCount(3, $attachments);
 
         $expected = [
-            'data.xml'      => 'PHhtbC8+',
+            'data.xml' => 'PHhtbC8+',
             'postacert.eml' => 'test-content',
-            'smime.p7s'     => 'MQ==',
+            'smime.p7s' => 'MQ==',
         ];
 
         foreach ($attachments as $attachment) {

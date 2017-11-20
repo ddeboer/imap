@@ -128,7 +128,7 @@ final class Mailbox implements MailboxInterface
             $numbers = \implode(',', $numbers);
         }
 
-        return \imap_setflag_full($this->resource->getStream(), (string)$numbers, $flag, \ST_UID);
+        return \imap_setflag_full($this->resource->getStream(), (string) $numbers, $flag, \ST_UID);
     }
 
     /**
@@ -145,7 +145,7 @@ final class Mailbox implements MailboxInterface
             $numbers = \implode(',', $numbers);
         }
 
-        return \imap_clearflag_full($this->resource->getStream(), (string)$numbers, $flag, \ST_UID);
+        return \imap_clearflag_full($this->resource->getStream(), (string) $numbers, $flag, \ST_UID);
     }
 
     /**
@@ -210,14 +210,11 @@ final class Mailbox implements MailboxInterface
      *
      * @param string $message
      *
-     * @return int sppended message UID
+     * @return bool
      */
-    public function addMessage(string $message): int
+    public function addMessage(string $message): bool
     {
-        $status = $this->getStatus(SA_UIDNEXT);
-        if (\imap_append($this->resource->getStream(), $this->getFullEncodedName(), $message)) {
-            return $status->uidnext;
-        }
+        return \imap_append($this->resource->getStream(), $this->getFullEncodedName(), $message);
     }
 
     /**
@@ -227,8 +224,7 @@ final class Mailbox implements MailboxInterface
      */
     public function getThread(): array
     {
-        \set_error_handler(function () {
-        });
+        \set_error_handler(function () {});
 
         $tree = \imap_thread($this->resource->getStream());
 
