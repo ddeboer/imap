@@ -522,10 +522,10 @@ class Message extends Message\Part
     }
 
     public function errorHandler ($nr, $error) {
-        $this->lastException = new MessageDoesNotExistException(
+        $this->setLastException(new MessageDoesNotExistException(
             $this->messageNumber,
             $error
-        );
+        ));
         return  true;
     }
 

@@ -4,6 +4,7 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Parameters;
 use Ddeboer\Imap\Exception\UnknownEncodingException;
+use Exception;
 
 /**
  * A message part
