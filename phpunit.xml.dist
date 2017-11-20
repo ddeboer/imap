@@ -19,6 +19,6 @@
         <env name="IMAP_SERVER_NAME" value="lukana.pl"/>
         <env name="IMAP_SERVER_PORT" value="993"/>
         <env name="IMAP_USERNAME" value="tests@lukana.pl"/>
-        <env name="IMAP_PASSWORD" value="testowe1"/>
+        <env name="IMAP_PASSWORD" value=""/>
     </php>
 </phpunit>
