@@ -11,8 +11,9 @@ namespace MailboxesParser;
 use Ddeboer\Imap\MailboxesParser\MailboxesParser;
 use Ddeboer\Imap\MailboxesParser\ParsedMailbox;
 use Ddeboer\Imap\MailboxInterface;
+use PHPUnit\Framework\TestCase;
 
-class MailboxesParserTest extends \PHPUnit_Framework_TestCase
+final class MailboxesParserTest extends TestCase
 {
     /** @var MailboxInterface[] */
     protected $mailboxes;

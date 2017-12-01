@@ -11,8 +11,9 @@ namespace MailboxesParser;
 use Ddeboer\Imap\MailboxesParser\MailboxesParser;
 use Ddeboer\Imap\MailboxesParser\MailboxesTreeParser;
 use Ddeboer\Imap\MailboxInterface;
+use PHPUnit\Framework\TestCase;
 
-class MailboxesTreeParserTest extends \PHPUnit_Framework_TestCase
+class MailboxesTreeParserTest extends TestCase
 {
     public function testTreeParser()
     {
