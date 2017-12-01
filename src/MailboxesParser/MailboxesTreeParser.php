@@ -8,15 +8,18 @@
 
 namespace Ddeboer\Imap\MailboxesParser;
 
-
-class MailboxesTreeParser
+/**
+ * Class MailboxesTreeParser
+ * @package Ddeboer\Imap\MailboxesParser
+ */
+final class MailboxesTreeParser implements MailboxesTreeParserInterface
 {
     /**
      * @param ParsedMailbox[] $input
      *
      * @return array
      */
-    public function parse($input)
+    public function parse($input): array
     {
         $newKeys = array_map(
             function ($key, $value) {
@@ -54,6 +57,13 @@ class MailboxesTreeParser
         return $res;
     }
 
+    /**
+     * @param $array
+     * @param $key
+     * @param $value
+     *
+     * @return mixed
+     */
     private function set(&$array, $key, $value)
     {
         if (is_null($key)) {

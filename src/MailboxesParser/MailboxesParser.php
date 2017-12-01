@@ -12,7 +12,11 @@ namespace Ddeboer\Imap\MailboxesParser;
 use Ddeboer\Imap\Exception\MailboxesParserException;
 use Ddeboer\Imap\MailboxInterface;
 
-class MailboxesParser
+/**
+ * Class MailboxesParser
+ * @package Ddeboer\Imap\MailboxesParser
+ */
+final class MailboxesParser implements MailboxesParserInterface
 {
     /** @var MailboxInterface[] */
     protected $mailboxes;
@@ -68,7 +72,12 @@ class MailboxesParser
         $this->mailboxes = $mailboxes;
     }
 
-    public function setLanguage($lang)
+    /**
+     * Set language for parser
+     *
+     * @param string $lang
+     */
+    public function setLanguage(string $lang)
     {
         $path = __DIR__ . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR . 'names.php';
         if (!is_file($path)) {
@@ -89,7 +98,10 @@ class MailboxesParser
         }
     }
 
-    protected function parse()
+    /**
+     * @return ParsedMailbox[]
+     */
+    protected function parse(): array
     {
         $this->folders = [];
         usort($this->mailboxes, [$this, "sortByMailboxName"]);
@@ -112,21 +124,32 @@ class MailboxesParser
         return $this->folders;
     }
 
-
-    protected function sortByMailboxName(MailboxInterface $a, MailboxInterface $b)
+    /**
+     * @param MailboxInterface $a
+     * @param MailboxInterface $b
+     *
+     * @return int
+     */
+    protected function sortByMailboxName(MailboxInterface $a, MailboxInterface $b): int
     {
-        return ($a->getName() < $b->getName()) ? -1 : 1;
+        return ($a->getName() <=> $b->getName());
     }
 
-    protected function sortByOrder(ParsedMailbox $a, ParsedMailbox $b)
+    /**
+     * @param ParsedMailbox $a
+     * @param ParsedMailbox $b
+     *
+     * @return int
+     */
+    protected function sortByOrder(ParsedMailbox $a, ParsedMailbox $b): int
     {
-        return ($a->getOrder() < $b->getOrder()) ? -1 : 1;
+        return ($a->getOrder() <=> $b->getOrder());
     }
 
     /**
      * @return ParsedMailbox[]
      */
-    public function getFolders()
+    public function getFolders(): array
     {
         if (!$this->folders) {
             $this->parse();
@@ -136,9 +159,9 @@ class MailboxesParser
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getTreeStructure()
+    public function getTreeStructure(): array
     {
         if (!$this->treeStructure) {
             $treeParser = new MailboxesTreeParser();
@@ -156,6 +179,11 @@ class MailboxesParser
         $this->specialFoldersNames = $specialFoldersNames;
     }
 
+    /**
+     * @param $mailboxName
+     *
+     * @return int|null|string
+     */
     protected function getSpecialFolder($mailboxName)
     {
         foreach ($this->specialFoldersIds AS $specialFolderKind => $names) {
@@ -170,13 +198,25 @@ class MailboxesParser
         return null;
     }
 
-    private function getName($mailboxName, $delimiter = '.')
+    /**
+     * @param        $mailboxName
+     * @param string $delimiter
+     *
+     * @return string
+     */
+    private function getName($mailboxName, $delimiter = '.'): string
     {
         $e = explode($delimiter, $mailboxName);
 
         return ucfirst($e[count($e) - 1]);
     }
 
+    /**
+     * @param $mailboxName
+     * @param $delimiter
+     *
+     * @return float|int|mixed
+     */
     private function getOrder($mailboxName, $delimiter)
     {
         if ($this->folders[$mailboxName]['special']) {
@@ -219,6 +259,11 @@ class MailboxesParser
         }
     }
 
+    /**
+     * @param $special
+     *
+     * @return string|null
+     */
     public function getMailboxNameForSpecial($special)
     {
         /** @var ParsedMailbox $parsedMailbox */
@@ -231,12 +276,22 @@ class MailboxesParser
         return null;
     }
 
+    /**
+     * @param string $specialFolder Name of special folder
+     * @param string $id            Id for that special folder
+     */
     public function addSpecialFolderId($specialFolder, $id)
     {
         $this->specialFoldersIds[$specialFolder][] = $id;
     }
 
-    private function getFolderLevel($mailboxName, $delimiter)
+    /**
+     * @param $mailboxName
+     * @param $delimiter
+     *
+     * @return int
+     */
+    private function getFolderLevel($mailboxName, $delimiter): int
     {
         $e = explode($delimiter, $mailboxName);
 

@@ -55,14 +55,16 @@ class MailboxesParserTest extends \PHPUnit_Framework_TestCase
             ['order' => 101.0001, 'name' => 'INBOX.normal.sub'],
             ['order' => 30000, 'name' => 'INBOX.trash'],
         ];
-//        $tree = $parser->getTreeStructure();
         $this->assertEquals($expected, $order);
     }
 
     public function testSetLanguage()
     {
-        $this->mailboxes[] = $this->createMailboxMock('INBOX.Wysłane');
-        $parser = new MailboxesParser($this->mailboxes);
+        $mailboxes = [
+            $this->createMailboxMock('INBOX'),
+            $this->createMailboxMock('INBOX.Wysłane'),
+        ];
+        $parser = new MailboxesParser($mailboxes);
         $parser->setLanguage('pl');
         $folders = $parser->getFolders();
         $this->assertEquals('INBOX', $folders[0]->getMailboxName());

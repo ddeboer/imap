@@ -11,7 +11,11 @@ namespace Ddeboer\Imap\MailboxesParser;
 
 use Ddeboer\Imap\MailboxInterface;
 
-class ParsedMailbox
+/**
+ * Class ParsedMailbox
+ * @package Ddeboer\Imap\MailboxesParser
+ */
+final class ParsedMailbox
 {
     /** @var MailboxInterface */
     protected $mailbox;
