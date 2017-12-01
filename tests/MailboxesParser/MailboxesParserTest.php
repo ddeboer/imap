@@ -1,9 +1,11 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Lukasz
  * Date: 2017-11-10
- * Time: 19:51
+ * Time: 19:51.
  */
 
 namespace MailboxesParser;
@@ -38,12 +40,12 @@ final class MailboxesParserTest extends TestCase
         $parser = new MailboxesParser($this->mailboxes);
         $folders = $parser->getFolders();
         $this->assertCount(8, $folders);
-        $this->assertEquals('INBOX', $folders[0]->getMailboxName());
-        $this->assertEquals('Inbox', $folders[0]->getName());
+        $this->assertSame('INBOX', $folders[0]->getMailboxName());
+        $this->assertSame('Inbox', $folders[0]->getName());
         $this->assertInstanceOf(MailboxInterface::class, $folders[0]->getMailbox());
         $order = [];
         /** @var ParsedMailbox $parsedMailbox */
-        foreach ($folders AS $parsedMailbox) {
+        foreach ($folders as $parsedMailbox) {
             $order[] = ['order' => $parsedMailbox->getOrder(), 'name' => $parsedMailbox->getMailboxName()];
         }
         $expected = [
@@ -56,7 +58,7 @@ final class MailboxesParserTest extends TestCase
             ['order' => 101.0001, 'name' => 'INBOX.normal.sub'],
             ['order' => 30000, 'name' => 'INBOX.trash'],
         ];
-        $this->assertEquals($expected, $order);
+        $this->assertSame($expected, $order);
     }
 
     public function testSetLanguage()
@@ -68,10 +70,10 @@ final class MailboxesParserTest extends TestCase
         $parser = new MailboxesParser($mailboxes);
         $parser->setLanguage('pl');
         $folders = $parser->getFolders();
-        $this->assertEquals('INBOX', $folders[0]->getMailboxName());
-        $this->assertEquals('Odebrane', $folders[0]->getName());
-        $this->assertEquals('INBOX.Wysłane', $folders[1]->getMailboxName());
-        $this->assertEquals('Wysłane', $folders[1]->getName());
+        $this->assertSame('INBOX', $folders[0]->getMailboxName());
+        $this->assertSame('Odebrane', $folders[0]->getName());
+        $this->assertSame('INBOX.Wysłane', $folders[1]->getMailboxName());
+        $this->assertSame('Wysłane', $folders[1]->getName());
     }
 
     private function createMailboxMock($mailboxName)

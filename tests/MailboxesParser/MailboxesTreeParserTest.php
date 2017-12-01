@@ -1,9 +1,11 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Lukasz
  * Date: 2017-11-10
- * Time: 19:51
+ * Time: 19:51.
  */
 
 namespace MailboxesParser;
@@ -31,30 +33,30 @@ class MailboxesTreeParserTest extends TestCase
         $zwroc = $parser->parse($folders);
         $spodziewane = [
             'inbox' => [
-                'name'        => 'Inbox',
+                'name' => 'Inbox',
                 'mailboxName' => 'inbox',
-                'subfolders'  => [
-                    'first'  => [
-                        'name'        => 'First',
+                'subfolders' => [
+                    'first' => [
+                        'name' => 'First',
                         'mailboxName' => 'inbox.first',
-                        'subfolders'  => [],
+                        'subfolders' => [],
                     ],
                     'second' => [
-                        'name'        => 'Second',
+                        'name' => 'Second',
                         'mailboxName' => 'inbox.second',
-                        'subfolders'  => [
+                        'subfolders' => [
                             'other' => [
-                                'name'        => 'Other',
-                                'subfolders'  => [],
+                                'name' => 'Other',
+                                'subfolders' => [],
                                 'mailboxName' => 'inbox.second.other',
                             ],
                         ],
                     ],
-                    'third'  => [
+                    'third' => [
                         'subfolders' => [
                             'another' => [
-                                'name'        => 'Another',
-                                'subfolders'  => [],
+                                'name' => 'Another',
+                                'subfolders' => [],
                                 'mailboxName' => 'inbox.third.another',
                             ],
                         ],
@@ -62,7 +64,7 @@ class MailboxesTreeParserTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($spodziewane, $zwroc);
+        $this->assertSame($spodziewane, $zwroc);
     }
 
 //    public function testTreeParserWithDashDelimiter()

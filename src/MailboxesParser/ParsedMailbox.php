@@ -1,31 +1,31 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Lukasz
  * Date: 2017-11-10
- * Time: 20:09
+ * Time: 20:09.
  */
 
 namespace Ddeboer\Imap\MailboxesParser;
 
-
 use Ddeboer\Imap\MailboxInterface;
 
 /**
- * Class ParsedMailbox
- * @package Ddeboer\Imap\MailboxesParser
+ * Class ParsedMailbox.
  */
 final class ParsedMailbox
 {
     /** @var MailboxInterface */
-    protected $mailbox;
-    protected $order;
-    protected $mailboxName;
-    protected $name;
-    protected $special;
-    protected $delimiter = '.';
-    protected $level = 1;
-    protected $subfolders = 0;
+    private $mailbox;
+    private $order;
+    private $mailboxName;
+    private $name;
+    private $special;
+    private $delimiter = '.';
+    private $level = 1;
+    private $subfolders = 0;
 
     /**
      * @return MailboxInterface
@@ -154,6 +154,4 @@ final class ParsedMailbox
     {
         $this->subfolders = $subfolders;
     }
-
-
 }
