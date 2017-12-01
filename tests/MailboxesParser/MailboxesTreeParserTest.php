@@ -33,35 +33,35 @@ class MailboxesTreeParserTest extends TestCase
         $zwroc = $parser->parse($folders);
         $spodziewane = [
             'inbox' => [
-                'name' => 'Inbox',
-                'mailboxName' => 'inbox',
                 'subfolders' => [
                     'first' => [
-                        'name' => 'First',
-                        'mailboxName' => 'inbox.first',
                         'subfolders' => [],
+                        'mailboxName' => 'inbox.first',
+                        'name' => 'First',
                     ],
                     'second' => [
-                        'name' => 'Second',
-                        'mailboxName' => 'inbox.second',
                         'subfolders' => [
                             'other' => [
-                                'name' => 'Other',
                                 'subfolders' => [],
                                 'mailboxName' => 'inbox.second.other',
+                                'name' => 'Other',
                             ],
                         ],
+                        'mailboxName' => 'inbox.second',
+                        'name' => 'Second',
                     ],
                     'third' => [
                         'subfolders' => [
                             'another' => [
-                                'name' => 'Another',
                                 'subfolders' => [],
                                 'mailboxName' => 'inbox.third.another',
+                                'name' => 'Another',
                             ],
                         ],
                     ],
                 ],
+                'mailboxName' => 'inbox',
+                'name' => 'Inbox',
             ],
         ];
         $this->assertSame($spodziewane, $zwroc);
