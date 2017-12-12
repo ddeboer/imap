@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.1.2](https://github.com/ddeboer/imap/tree/1.1.2) (2017-12-12)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.1.1...1.1.2)
+
+**Fixed bugs:**
+
+- Unsupported charset "134": mb\_convert\_encoding\(\): Illegal character encoding specified [\#270](https://github.com/ddeboer/imap/issues/270)
+- Support Microsoft charset values [\#271](https://github.com/ddeboer/imap/pull/271) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.1.1](https://github.com/ddeboer/imap/tree/1.1.1) (2017-11-10)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.1.0...1.1.1)
 
