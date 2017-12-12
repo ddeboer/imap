@@ -195,6 +195,26 @@ final class MessageTest extends AbstractTest
         $this->assertSame($text, \rtrim($message->getBodyText()));
     }
 
+    public function testMicrosoftCharsetAlias()
+    {
+        $charset = '134';
+        $charsetAlias = 'GB2312';
+        $text = '电佛';
+
+        $this->createTestMessage(
+            $this->mailbox,
+            $charset,
+            \mb_convert_encoding($text, $charsetAlias, 'UTF-8'),
+            null,
+            $charsetAlias,
+            $charset
+        );
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame($text, \rtrim($message->getBodyText()));
+    }
+
     public function testUnsupportedCharset()
     {
         $charset = \uniqid('NAN_CHARSET_');
