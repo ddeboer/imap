@@ -14,8 +14,21 @@ final class Transcoder
      * @see https://encoding.spec.whatwg.org/#encodings
      * @see https://dxr.mozilla.org/mozilla-central/source/dom/encoding/labelsencodings.properties
      * @see https://dxr.mozilla.org/mozilla1.9.1/source/intl/uconv/src/charsetalias.properties
+     * @see https://msdn.microsoft.com/en-us/library/cc194829.aspx
      */
     private static $charsetAliases = [
+        '128' => 'Shift_JIS',
+        '129' => 'EUC-KR',
+        '134' => 'GB2312',
+        '136' => 'Big5',
+        '161' => 'windows-1253',
+        '162' => 'windows-1254',
+        '177' => 'windows-1255',
+        '178' => 'windows-1256',
+        '186' => 'windows-1257',
+        '204' => 'windows-1251',
+        '222' => 'windows-874',
+        '238' => 'windows-1250',
         '5601' => 'EUC-KR',
         '646' => 'us-ascii',
         '850' => 'IBM850',
