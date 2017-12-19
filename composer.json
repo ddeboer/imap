@@ -1,5 +1,5 @@
 {
-    "name": "ddeboer/imap",
+    "name": "infoservice24/imap",
     "description": "Object-oriented IMAP for PHP",
     "keywords": [ "email", "mail", "imap" ],
     "license": "MIT",
@@ -16,7 +16,7 @@
     "require": {
         "php": ">=5.4.0",
         "ext-imap": "*",
-        "infoservice24/transcoder": "~1"
+        "infoservice24/transcoder": "dev-master"
     },
     "require-dev": {
         "ext-mbstring": "*",
