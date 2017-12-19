@@ -13,10 +13,16 @@
             "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
         }   
     ],
+    "repositories": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/infoservice24/transcoder.git"
+        }
+    ],
     "require": {
         "php": ">=5.4.0",
         "ext-imap": "*",
-        "infoservice24/transcoder": "*"
+        "infoservice24/transcoder": "~1"
     },
     "require-dev": {
         "ext-mbstring": "*",
