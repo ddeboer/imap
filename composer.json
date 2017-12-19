@@ -16,7 +16,7 @@
     "require": {
         "php": ">=5.4.0",
         "ext-imap": "*",
-        "infoservice24/transcoder": "dev-master"
+        "infoservice24/transcoder": "*"
     },
     "require-dev": {
         "ext-mbstring": "*",
