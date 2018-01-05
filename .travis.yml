@@ -37,7 +37,7 @@ script:
   - vendor/bin/phpunit --coverage-clover ./clover.xml
   - if [ "$CS_CHECK" = 1 ]; then vendor/bin/php-cs-fixer fix --diff --dry-run --verbose; fi
   - if [ "$CS_CHECK" = 1 ]; then php .travis/readme-index.php; fi
-  - if [ "$STATIC_ANALYSIS" = 1 ]; then vendor/bin/phpstan analyze --configuration=phpstan.neon src/ tests/; fi
+  - if [ "$STATIC_ANALYSIS" = 1 ]; then vendor/bin/phpstan analyze --no-progress --configuration=phpstan.neon src/ tests/; fi
 
 after_script:
   - if [ "$CODE_COVERAGE" = 1 ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
