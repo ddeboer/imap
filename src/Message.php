@@ -137,9 +137,9 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     /**
      * Get message recent flag value (from headers).
      *
-     * @return string
+     * @return null|string
      */
-    public function isRecent(): string
+    public function isRecent()
     {
         return $this->getHeaders()->get('recent');
     }

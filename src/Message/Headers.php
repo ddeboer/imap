@@ -16,6 +16,8 @@ final class Headers extends Parameters
      */
     public function __construct(\stdClass $headers)
     {
+        parent::__construct();
+
         // Store all headers as lowercase
         $headers = \array_change_key_case((array) $headers);
 
@@ -29,7 +31,7 @@ final class Headers extends Parameters
      *
      * @param string $key
      *
-     * @return string
+     * @return null|string
      */
     public function get(string $key)
     {

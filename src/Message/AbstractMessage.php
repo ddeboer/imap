@@ -14,6 +14,13 @@ abstract class AbstractMessage extends AbstractPart
     private $attachments;
 
     /**
+     * Get message headers.
+     *
+     * @return Headers
+     */
+    abstract public function getHeaders(): Headers;
+
+    /**
      * Get message id.
      *
      * A unique message id in the form <...>
@@ -127,7 +134,7 @@ abstract class AbstractMessage extends AbstractPart
     /**
      * Get message size (from headers).
      *
-     * @return int
+     * @return null|int|string
      */
     final public function getSize()
     {
@@ -137,7 +144,7 @@ abstract class AbstractMessage extends AbstractPart
     /**
      * Get message subject (from headers).
      *
-     * @return string
+     * @return null|string
      */
     final public function getSubject()
     {

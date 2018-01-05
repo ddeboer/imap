@@ -19,9 +19,9 @@ interface MessageInterface extends Message\BasicMessageInterface
     /**
      * Get message recent flag value (from headers).
      *
-     * @return string
+     * @return null|string
      */
-    public function isRecent(): string;
+    public function isRecent();
 
     /**
      * Get message unseen flag value (from headers).
