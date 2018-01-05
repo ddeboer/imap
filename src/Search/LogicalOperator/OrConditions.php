@@ -29,9 +29,7 @@ final class OrConditions implements ConditionInterface
     /**
      * Adds a new condition to the expression.
      *
-     * @param AbstractCondition $condition the condition to be added
-     *
-     * @return self
+     * @param ConditionInterface $condition the condition to be added
      */
     private function addCondition(ConditionInterface $condition)
     {

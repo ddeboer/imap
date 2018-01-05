@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
@@ -279,7 +280,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     /**
      * Set Flag Message.
      *
-     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param string $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
      *
      * @return bool
      */
@@ -295,7 +296,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     /**
      * Clear Flag Message.
      *
-     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param string $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
      *
      * @return bool
      */

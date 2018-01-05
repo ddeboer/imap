@@ -15,9 +15,6 @@ use Ddeboer\Imap\Mailbox;
  */
 final class MailboxTest extends AbstractTest
 {
-    /**
-     * @var Mailbox
-     */
     protected $mailbox;
 
     protected function setUp()

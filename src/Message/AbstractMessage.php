@@ -106,7 +106,7 @@ abstract class AbstractMessage extends AbstractPart
     {
         $dateHeader = $this->getHeaders()->get('date');
         if (null === $dateHeader) {
-            return;
+            return null;
         }
 
         $alteredValue = \str_replace(',', '', $dateHeader);
@@ -187,7 +187,7 @@ abstract class AbstractMessage extends AbstractPart
             return $this->getDecodedContent();
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -209,7 +209,7 @@ abstract class AbstractMessage extends AbstractPart
             return $this->getDecodedContent();
         }
 
-        return;
+        return null;
     }
 
     /**

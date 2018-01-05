@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\Connection;
-use Ddeboer\Imap\Mailbox;
+use Ddeboer\Imap\ConnectionInterface;
+use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Server;
 use PHPUnit\Framework\TestCase;
 use Zend\Mail;
@@ -17,7 +17,12 @@ abstract class AbstractTest extends TestCase
 
     const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
 
-    final protected function getConnection(): Connection
+    /**
+     * @var null|string
+     */
+    protected $mailboxName;
+
+    final protected function getConnection(): ConnectionInterface
     {
         static $connection;
         if (null === $connection) {
@@ -27,14 +32,14 @@ abstract class AbstractTest extends TestCase
         return $connection;
     }
 
-    final protected function createConnection(): Connection
+    final protected function createConnection(): ConnectionInterface
     {
         $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
 
         return $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
     }
 
-    final protected function createMailbox(Connection $connection = null): Mailbox
+    final protected function createMailbox(ConnectionInterface $connection = null): MailboxInterface
     {
         $connection = $connection ?? $this->getConnection();
         $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
@@ -43,7 +48,7 @@ abstract class AbstractTest extends TestCase
     }
 
     final protected function createTestMessage(
-        Mailbox $mailbox,
+        MailboxInterface $mailbox,
         string $subject,
         string $contents = null,
         string $encoding = null,

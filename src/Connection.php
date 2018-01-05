@@ -156,7 +156,7 @@ final class Connection implements ConnectionInterface
     /**
      * Create mailbox.
      *
-     * @param $name
+     * @param string $name
      *
      * @throws CreateMailboxException
      *
@@ -176,7 +176,7 @@ final class Connection implements ConnectionInterface
     /**
      * Create mailbox.
      *
-     * @param MailboxInterface
+     * @param MailboxInterface $mailbox
      *
      * @throws DeleteMailboxException
      */
@@ -191,8 +191,6 @@ final class Connection implements ConnectionInterface
 
     /**
      * Get mailbox names.
-     *
-     * @return array
      */
     private function initMailboxNames()
     {

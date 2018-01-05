@@ -43,6 +43,8 @@ use Ddeboer\Imap\SearchExpression;
  */
 final class MailboxSearchTest extends AbstractTest
 {
+    protected $mailbox;
+
     protected function setUp()
     {
         $this->mailbox = $this->createMailbox();
@@ -147,8 +149,10 @@ final class MailboxSearchTest extends AbstractTest
 
     /**
      * @depends testOrConditionFunctionality
+     *
+     * @param mixed $orCondition
      */
-    public function testOrConditionUsage()
+    public function testOrConditionUsage($orCondition)
     {
         $this->markTestIncomplete('Unable to get a server working with OR condition');
 

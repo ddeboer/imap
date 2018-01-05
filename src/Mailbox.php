@@ -33,7 +33,7 @@ final class Mailbox implements MailboxInterface
      *
      * @param ImapResourceInterface $resource IMAP resource
      * @param string                $name     Mailbox decoded name
-     * @param stdClass              $info     Mailbox info
+     * @param \stdClass             $info     Mailbox info
      */
     public function __construct(ImapResourceInterface $resource, string $name, \stdClass $info)
     {

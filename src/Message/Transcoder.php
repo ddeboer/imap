@@ -81,7 +81,6 @@ final class Transcoder
         'csibm864' => 'IBM864',
         'csibm864i' => 'IBM864i',
         'csibm866' => 'IBM866',
-        'csibm866' => 'IBM866',
         'csiso103t618bit' => 'T.61-8bit',
         'csiso111ecmacyrillic' => 'ISO-IR-111',
         'csiso2022jp' => 'ISO-2022-JP',
