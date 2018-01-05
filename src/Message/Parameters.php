@@ -11,6 +11,8 @@ class Parameters extends \ArrayIterator
      */
     public function __construct(array $parameters = [])
     {
+        parent::__construct();
+
         $this->add($parameters);
     }
 

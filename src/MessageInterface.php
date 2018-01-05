@@ -19,9 +19,9 @@ interface MessageInterface extends Message\BasicMessageInterface
     /**
      * Get message recent flag value (from headers).
      *
-     * @return string
+     * @return null|string
      */
-    public function isRecent(): string;
+    public function isRecent();
 
     /**
      * Get message unseen flag value (from headers).
@@ -103,7 +103,7 @@ interface MessageInterface extends Message\BasicMessageInterface
     /**
      * Set Flag Message.
      *
-     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param string $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
      *
      * @return bool
      */
@@ -112,7 +112,7 @@ interface MessageInterface extends Message\BasicMessageInterface
     /**
      * Clear Flag Message.
      *
-     * @param $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param string $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
      *
      * @return bool
      */

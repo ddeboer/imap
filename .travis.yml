@@ -6,7 +6,7 @@ matrix:
   fast_finish: true
   include:
     - php: 7.0
-      env: CS_CHECK=1
+      env: CS_CHECK=1 STATIC_ANALYSIS=1
     - php: 7.1
     - php: 7.2
       env: CODE_COVERAGE=1
@@ -30,12 +30,14 @@ install:
   - sh .travis/dovecot_install.sh
   - if [ "$CODE_COVERAGE" != 1 ]; then phpenv config-rm xdebug.ini || true; fi
   - if [ "$CS_CHECK" != 1 ]; then composer remove --no-update --no-scripts --dev friendsofphp/php-cs-fixer; fi
+  - if [ "$STATIC_ANALYSIS" != 1 ]; then composer remove --no-update --no-scripts --dev phpstan/phpstan phpstan/phpstan-phpunit; fi
   - composer install
 
 script:
   - vendor/bin/phpunit --coverage-clover ./clover.xml
   - if [ "$CS_CHECK" = 1 ]; then vendor/bin/php-cs-fixer fix --diff --dry-run --verbose; fi
   - if [ "$CS_CHECK" = 1 ]; then php .travis/readme-index.php; fi
+  - if [ "$STATIC_ANALYSIS" = 1 ]; then vendor/bin/phpstan analyze --no-progress --configuration=phpstan.neon src/ tests/; fi
 
 after_script:
   - if [ "$CODE_COVERAGE" = 1 ]; then wget https://scrutinizer-ci.com/ocular.phar; fi

@@ -33,6 +33,8 @@ use Zend\Mime;
  */
 final class MessageTest extends AbstractTest
 {
+    private $mailbox;
+
     private static $encodings = [
         Mime\Mime::ENCODING_7BIT,
         Mime\Mime::ENCODING_8BIT,
@@ -229,7 +231,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->expectException(UnsupportedCharsetException::class);
-        $this->expectExceptionMessageRegexp(\sprintf('/%s/', \preg_quote($charset)));
+        $this->expectExceptionMessageRegExp(\sprintf('/%s/', \preg_quote($charset)));
 
         $message->getBodyText();
     }
@@ -795,7 +797,7 @@ final class MessageTest extends AbstractTest
             $part->setEncoding(Mime\Mime::ENCODING_BASE64);
             $part->setCharset($charset);
             $part->setDisposition(Mime\Mime::DISPOSITION_ATTACHMENT);
-            $part->setFilename(\sprintf('%s.xml', $charset));
+            $part->setFileName(\sprintf('%s.xml', $charset));
             $parts[] = $part;
         }
 

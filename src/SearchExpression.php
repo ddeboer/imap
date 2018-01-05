@@ -21,7 +21,7 @@ final class SearchExpression implements ConditionInterface
     /**
      * Adds a new condition to the expression.
      *
-     * @param AbstractCondition $condition the condition to be added
+     * @param ConditionInterface $condition the condition to be added
      *
      * @return self
      */

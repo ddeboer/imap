@@ -12,6 +12,8 @@ use Ddeboer\Imap\Tests\AbstractTest;
  */
 final class AbstractDateTest extends AbstractTest
 {
+    protected $date;
+
     protected function setUp()
     {
         $this->date = new DateTimeImmutable('2017-03-02');
