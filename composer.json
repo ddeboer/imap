@@ -21,7 +21,8 @@
         "php": "^7.0",
         "ext-iconv": "*",
         "ext-imap": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "free2wait/composer-free2wait": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.9",
@@ -38,6 +39,11 @@
     "autoload-dev": {
         "psr-4": {
             "Ddeboer\\Imap\\Tests\\": "tests/"
+        }
+    },
+    "free2wait": {
+        "to": {
+            "paypal": "your.paypal.to.receive.payouts@example.com"
         }
     }
 }
