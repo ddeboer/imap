@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
+use DateTimeInterface;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\LogicalOperator\All;
@@ -208,13 +209,27 @@ final class Mailbox implements MailboxInterface
     /**
      * Add a message to the mailbox.
      *
-     * @param string $message
+     * @param string                 $message
+     * @param null|string            $options
+     * @param null|DateTimeInterface $internalDate
      *
      * @return bool
      */
-    public function addMessage(string $message): bool
+    public function addMessage(string $message, string $options = null, DateTimeInterface $internalDate = null): bool
     {
-        return \imap_append($this->resource->getStream(), $this->getFullEncodedName(), $message);
+        $arguments = [
+            $this->resource->getStream(),
+            $this->getFullEncodedName(),
+            $message,
+        ];
+        if (null !== $options) {
+            $arguments[] = $options;
+        }
+        if (null !== $internalDate) {
+            $arguments[] = $internalDate->format('d-M-Y H:i:s O');
+        }
+
+        return \imap_append(...$arguments);
     }
 
     /**
