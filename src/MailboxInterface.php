@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
+use DateTimeInterface;
 use Ddeboer\Imap\Search\ConditionInterface;
 
 /**
@@ -103,11 +104,13 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Add a message to the mailbox.
      *
-     * @param string $message
+     * @param string                 $message
+     * @param null|string            $options
+     * @param null|DateTimeInterface $internalDate
      *
      * @return bool
      */
-    public function addMessage(string $message): bool;
+    public function addMessage(string $message, string $options = null, DateTimeInterface $internalDate = null): bool;
 
     /**
      * Returns a tree of threaded message for the current Mailbox.

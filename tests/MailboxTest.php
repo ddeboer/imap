@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use DateTimeImmutable;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\Mailbox;
@@ -201,5 +202,17 @@ final class MailboxTest extends AbstractTest
         $emptyMailbox = $this->createMailbox();
 
         $this->assertEmpty($emptyMailbox->getThread());
+    }
+
+    public function testAppendOptionalArguments()
+    {
+        $mailbox = $this->createMailbox();
+
+        $mailbox->addMessage($this->getFixture('thread/unrelated'), '\\Seen', new DateTimeImmutable('2012-01-03T10:30:03+01:00'));
+
+        $message = $mailbox->getMessage(1);
+
+        $this->assertTrue($message->isSeen());
+        $this->assertSame('03-Jan-2012 10:30:03 +0100', $message->getHeaders()->get('maildate'));
     }
 }
