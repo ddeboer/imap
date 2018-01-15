@@ -25,6 +25,7 @@ interface PartInterface extends \RecursiveIterator
     const ENCODING_BINARY = 'binary';
     const ENCODING_BASE64 = 'base64';
     const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
+    const ENCODING_UNKNOWN = 'unknown';
 
     const SUBTYPE_PLAIN = 'PLAIN';
     const SUBTYPE_HTML = 'HTML';

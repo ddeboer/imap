@@ -277,6 +277,10 @@ abstract class AbstractPart implements PartInterface
     final public function getDecodedContent(): string
     {
         if (null === $this->decodedContent) {
+            if (self::ENCODING_UNKNOWN === $this->getEncoding()) {
+                throw new UnexpectedEncodingException('Cannot decode a content with an uknown encoding');
+            }
+
             $content = $this->getContent();
             if (self::ENCODING_BASE64 === $this->getEncoding()) {
                 $content = \base64_decode($content);
@@ -322,11 +326,8 @@ abstract class AbstractPart implements PartInterface
     {
         $this->type = $this->typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
 
-        if (!isset($this->encodingsMap[$structure->encoding])) {
-            throw new UnexpectedEncodingException(\sprintf('Cannot decode "%s"', $structure->encoding));
-        }
-
-        $this->encoding = $this->encodingsMap[$structure->encoding];
+        // In our context, \ENCOTHER is as useful as an uknown encoding
+        $this->encoding = $this->encodingsMap[$structure->encoding] ?? self::ENCODING_UNKNOWN;
         $this->subtype = $structure->subtype;
 
         foreach (['disposition', 'bytes', 'description'] as $optional) {
