@@ -1,5 +1,24 @@
 # Change Log
 
+## [1.2.0](https://github.com/ddeboer/imap/tree/1.2.0) (2018-01-15)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.1.2...1.2.0)
+
+**Implemented enhancements:**
+
+- Make imap\_append\(\) optional arguments reachable [\#280](https://github.com/ddeboer/imap/pull/280) ([Slamdunk](https://github.com/Slamdunk))
+- PHPStan: introduce static analysis [\#276](https://github.com/ddeboer/imap/pull/276) ([Slamdunk](https://github.com/Slamdunk))
+
+**Fixed bugs:**
+
+- getAttachments\(\) problem when mixin inline and attachment [\#281](https://github.com/ddeboer/imap/issues/281)
+- UnexpectedEncodingException: Cannot decode "5" [\#278](https://github.com/ddeboer/imap/issues/278)
+- Handle correctly multiple nested attachments [\#283](https://github.com/ddeboer/imap/pull/283) ([Slamdunk](https://github.com/Slamdunk))
+- Manageable UnexpectedEncodingException [\#282](https://github.com/ddeboer/imap/pull/282) ([Slamdunk](https://github.com/Slamdunk))
+
+**Closed issues:**
+
+- Appending mail with options [\#279](https://github.com/ddeboer/imap/issues/279)
+
 ## [1.1.2](https://github.com/ddeboer/imap/tree/1.1.2) (2017-12-12)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.1.1...1.1.2)
 
