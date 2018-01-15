@@ -213,6 +213,6 @@ final class MailboxTest extends AbstractTest
         $message = $mailbox->getMessage(1);
 
         $this->assertTrue($message->isSeen());
-        $this->assertSame('03-Jan-2012 10:30:03 +0100', $message->getHeaders()->get('maildate'));
+        $this->assertSame(' 3-Jan-2012 09:30:03 +0000', $message->getHeaders()->get('maildate'));
     }
 }
