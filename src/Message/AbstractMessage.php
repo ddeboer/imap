@@ -227,19 +227,24 @@ abstract class AbstractMessage extends AbstractPart
     final public function getAttachments(): array
     {
         if (null === $this->attachments) {
-            $this->attachments = [];
-            foreach ($this->getParts() as $part) {
-                if ($part instanceof Attachment) {
-                    $this->attachments[] = $part;
-                }
-                if ($part->hasChildren()) {
-                    foreach ($part->getParts() as $child_part) {
-                        if ($child_part instanceof Attachment) {
-                            $this->attachments[] = $child_part;
+            static $gatherAttachments;
+            if (null === $gatherAttachments) {
+                $gatherAttachments = static function (PartInterface $part) use (&$gatherAttachments): array {
+                    $attachments = [];
+                    foreach ($part->getParts() as $childPart) {
+                        if ($childPart instanceof Attachment) {
+                            $attachments[] = $childPart;
+                        }
+                        if ($childPart->hasChildren()) {
+                            $attachments = \array_merge($attachments, $gatherAttachments($childPart));
                         }
                     }
-                }
+
+                    return $attachments;
+                };
             }
+
+            $this->attachments = $gatherAttachments($this);
         }
 
         return $this->attachments;

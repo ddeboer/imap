@@ -861,6 +861,15 @@ final class MessageTest extends AbstractTest
         $plain->getDecodedContent();
     }
 
+    public function testMultipleAttachments()
+    {
+        $this->mailbox->addMessage($this->getFixture('multiple_nested_attachments'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertCount(2, $message->getAttachments());
+    }
+
     private function resetAttachmentCharset(Message $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset

@@ -74,7 +74,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertSame('3-third-content', \rtrim($message->getBodyText()));
 
         $attachments = $message->getAttachments();
-        $this->assertCount(1, $attachments);
+        $this->assertCount(3, $attachments);
 
         $attachment = \current($attachments);
         $this->assertTrue($attachment->isEmbeddedMessage());
@@ -84,7 +84,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertSame('2-second-content', \rtrim($embeddedMessage->getBodyText()));
 
         $embeddedAttachments = $embeddedMessage->getAttachments();
-        $this->assertCount(1, $embeddedAttachments);
+        $this->assertCount(2, $embeddedAttachments);
 
         $embeddedAttachment = \current($embeddedAttachments);
         $this->assertTrue($embeddedAttachment->isEmbeddedMessage());
