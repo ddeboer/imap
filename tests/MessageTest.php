@@ -6,10 +6,12 @@ namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
+use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\Parameters;
+use Ddeboer\Imap\Message\PartInterface;
 use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageIterator;
 use Ddeboer\Imap\Search;
@@ -835,6 +837,28 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->assertNull($message->getId());
+    }
+
+    public function testUnknownEncodingIsManageable()
+    {
+        $this->mailbox->addMessage($this->getFixture('unknown_encoding'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $parts = [];
+        foreach ($message->getParts() as $part) {
+            $parts[$part->getSubtype()] = $part;
+        }
+
+        $this->assertArrayHasKey(PartInterface::SUBTYPE_PLAIN, $parts);
+
+        $plain = $parts[PartInterface::SUBTYPE_PLAIN];
+
+        $this->assertSame(PartInterface::ENCODING_UNKNOWN, $plain->getEncoding());
+
+        $this->expectException(UnexpectedEncodingException::class);
+
+        $plain->getDecodedContent();
     }
 
     private function resetAttachmentCharset(Message $message)
