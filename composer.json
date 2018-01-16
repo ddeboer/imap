@@ -15,7 +15,7 @@
         {
             "name": "Community contributors",
             "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
-        }   
+        }
     ],
     "require": {
         "php": "^7.0",
