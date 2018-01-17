@@ -224,9 +224,9 @@ final class Mailbox implements MailboxInterface
         ];
         if (null !== $options) {
             $arguments[] = $options;
-        }
-        if (null !== $internalDate) {
-            $arguments[] = $internalDate->format('d-M-Y H:i:s O');
+            if (null !== $internalDate) {
+                $arguments[] = $internalDate->format('d-M-Y H:i:s O');
+            }
         }
 
         return \imap_append(...$arguments);
