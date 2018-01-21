@@ -172,7 +172,7 @@ final class Mailbox implements MailboxInterface
         } else {
             $messageNumbers = \imap_search($this->resource->getStream(), $query, \SE_UID);
         }
-        if (false == $messageNumbers) {
+        if (false === $messageNumbers) {
             if (false !== \imap_last_error()) {
                 throw new InvalidSearchCriteriaException(\sprintf('Invalid search criteria [%s]', $query));
             }
