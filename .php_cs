@@ -42,6 +42,7 @@ return PhpCsFixer\Config::create()
         'silenced_deprecation_error' => false,
         'simplified_null_return' => false, // @TODO: enable when PHP ^7.1
         'single_line_comment_style' => true,
+        'strict_comparison' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
