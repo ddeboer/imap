@@ -6,6 +6,7 @@ namespace Ddeboer\Imap\Tests;
 
 use DateTimeImmutable;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
+use Ddeboer\Imap\Exception\OutOfBoundsException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\Mailbox;
 
@@ -223,5 +224,9 @@ final class MailboxTest extends AbstractTest
         $messages = $mailbox->getMessages();
         $this->assertCount(0, $messages);
         $this->assertFalse(\current($messages));
+
+        $this->expectException(OutOfBoundsException::class);
+
+        $messages->current();
     }
 }

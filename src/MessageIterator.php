@@ -31,6 +31,17 @@ final class MessageIterator extends \ArrayIterator implements MessageIteratorInt
      */
     public function current(): MessageInterface
     {
-        return new Message($this->resource, parent::current());
+        $current = parent::current();
+        if (!\is_int($current)) {
+            throw new Exception\OutOfBoundsException(\sprintf(
+                'The current value "%s" isn\'t an integer and doesn\'t represent a message;'
+                . ' try to cycle this "%s" with a native php function like foreach or with the method getArrayCopy(),'
+                . ' or check it by calling the methods valid().',
+                \is_object($current) ? \get_class($current) : \gettype($current),
+                static::class
+            ));
+        }
+
+        return new Message($this->resource, $current);
     }
 }
