@@ -6,6 +6,7 @@ namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\InvalidDateHeaderException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
+use Ddeboer\Imap\Exception\OutOfBoundsException;
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message;
@@ -905,5 +906,18 @@ final class MessageTest extends AbstractTest
         $refParseStructure->setAccessible(true);
         $refParseStructure->invoke($message, $structure);
         $refParseStructure->setAccessible(false);
+    }
+
+    public function testEmptyMessageIterator()
+    {
+        $mailbox = $this->createMailbox();
+
+        $messages = $mailbox->getMessages();
+        $this->assertCount(0, $messages);
+        $this->assertFalse(\current($messages));
+
+        $this->expectException(OutOfBoundsException::class);
+
+        $messages->current();
     }
 }
