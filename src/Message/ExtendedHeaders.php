@@ -93,7 +93,7 @@ class ExtendedHeaders extends Parameters
             $value = trim($value);
 
             $headers[] = array(
-                'name' => trim($match[0],': '),
+                'name' => trim($match[0],": \r\n"),
                 'value' => $value,
             );
             $end = $match[1] ;
