@@ -1,5 +1,19 @@
 # Change Log
 
+## [1.2.1](https://github.com/ddeboer/imap/tree/1.2.1) (2018-01-29)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.2.0...1.2.1)
+
+**Implemented enhancements:**
+
+- Introduce strict comparison [\#289](https://github.com/ddeboer/imap/pull/289) ([Slamdunk](https://github.com/Slamdunk))
+
+**Fixed bugs:**
+
+- Invalid Date header found: "Thur, 04 Jan 2018 06:44:23 +0400" [\#293](https://github.com/ddeboer/imap/issues/293)
+- MessageIterator::current\(\) fails when there are no messages [\#288](https://github.com/ddeboer/imap/issues/288)
+- Remove weekday while parsing date header [\#294](https://github.com/ddeboer/imap/pull/294) ([Slamdunk](https://github.com/Slamdunk))
+- MessageIterator: forbid raw calls [\#290](https://github.com/ddeboer/imap/pull/290) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.2.0](https://github.com/ddeboer/imap/tree/1.2.0) (2018-01-15)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.1.2...1.2.0)
 
