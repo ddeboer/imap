@@ -116,9 +116,11 @@ abstract class AbstractMessage extends AbstractPart
             return null;
         }
 
-        $alteredValue = \str_replace(',', '', $dateHeader);
+        $alteredValue = $dateHeader;
+        $alteredValue = \str_replace(',', '', $alteredValue);
+        $alteredValue = \preg_replace('/^[a-zA-Z]+ ?/', '', $alteredValue);
         $alteredValue = \preg_replace('/ +\(.*\)/', '', $alteredValue);
-        if (0 === \preg_match('/\d\d:\d\d:\d\d.* [\+\-]?\d\d:?\d\d/', $alteredValue)) {
+        if (0 === \preg_match('/\d\d:\d\d:\d\d.* [\+\-]\d\d:?\d\d/', $alteredValue)) {
             $alteredValue .= ' +0000';
         }
 
