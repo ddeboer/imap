@@ -36,6 +36,9 @@ use Zend\Mime;
  */
 final class MessageTest extends AbstractTest
 {
+    /**
+     * @var \Ddeboer\Imap\MailboxInterface
+     */
     private $mailbox;
 
     private static $encodings = [
@@ -421,6 +424,8 @@ final class MessageTest extends AbstractTest
         $this->assertCount(1, $message->getAttachments());
         $attachment = $message->getAttachments()[0];
 
+        $this->assertSame('application', \strtolower($attachment->getType()));
+        $this->assertSame('vnd.ms-excel', \strtolower($attachment->getSubtype()));
         $this->assertSame(
             'Prostřeno_2014_poslední volné termíny.xls',
             $attachment->getFilename()
