@@ -14,6 +14,7 @@ use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\Parameters;
 use Ddeboer\Imap\Message\PartInterface;
 use Ddeboer\Imap\Message\Transcoder;
+use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIterator;
 use Ddeboer\Imap\Search;
 use PHPUnit\Framework\Error\Deprecated;
@@ -713,7 +714,7 @@ final class MessageTest extends AbstractTest
 
         foreach ($attachments as $attachment) {
             $expectedContains = $expected[$attachment->getFilename()];
-            $this->assertContains($expectedContains, \rtrim($attachment->getContent()), $attachment->getFilename());
+            $this->assertContains($expectedContains, \rtrim($attachment->getContent()), \sprintf('Attachment filename: %s', $attachment->getFilename()));
         }
     }
 
@@ -878,7 +879,7 @@ final class MessageTest extends AbstractTest
         $this->assertCount(2, $message->getAttachments());
     }
 
-    private function resetAttachmentCharset(Message $message)
+    private function resetAttachmentCharset(MessageInterface $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
         // of attachments that don't have it
