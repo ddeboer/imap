@@ -27,7 +27,7 @@
         "friendsofphp/php-cs-fixer": "^2.10",
         "phpstan/phpstan": "^0.9.1",
         "phpstan/phpstan-phpunit": "^0.9.3",
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^6.5||^7.0",
         "zendframework/zend-mail": "^2.8"
     },
     "autoload": {
