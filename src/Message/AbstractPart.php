@@ -91,7 +91,7 @@ abstract class AbstractPart implements PartInterface
     /**
      * @var array
      */
-    private $typesMap = [
+    private static $typesMap = [
         \TYPETEXT => self::TYPE_TEXT,
         \TYPEMULTIPART => self::TYPE_MULTIPART,
         \TYPEMESSAGE => self::TYPE_MESSAGE,
@@ -106,7 +106,7 @@ abstract class AbstractPart implements PartInterface
     /**
      * @var array
      */
-    private $encodingsMap = [
+    private static $encodingsMap = [
         \ENC7BIT => self::ENCODING_7BIT,
         \ENC8BIT => self::ENCODING_8BIT,
         \ENCBINARY => self::ENCODING_BINARY,
@@ -324,10 +324,10 @@ abstract class AbstractPart implements PartInterface
      */
     private function parseStructure(\stdClass $structure)
     {
-        $this->type = $this->typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
+        $this->type = self::$typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
 
         // In our context, \ENCOTHER is as useful as an uknown encoding
-        $this->encoding = $this->encodingsMap[$structure->encoding] ?? self::ENCODING_UNKNOWN;
+        $this->encoding = self::$encodingsMap[$structure->encoding] ?? self::ENCODING_UNKNOWN;
         $this->subtype = $structure->subtype;
 
         foreach (['disposition', 'bytes', 'description'] as $optional) {
@@ -455,6 +455,10 @@ abstract class AbstractPart implements PartInterface
      */
     private function isAttachment(\stdClass $part): bool
     {
+        if (self::TYPE_MULTIPART === self::$typesMap[$part->type]) {
+            return false;
+        }
+
         // Attachment with correct Content-Disposition header
         if ($part->ifdisposition) {
             if (
