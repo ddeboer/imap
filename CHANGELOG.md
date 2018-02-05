@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.2.2](https://github.com/ddeboer/imap/tree/1.2.2) (2018-02-05)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.2.1...1.2.2)
+
+**Implemented enhancements:**
+
+- Allow PHPUnit ^7.0 [\#296](https://github.com/ddeboer/imap/pull/296) ([Slamdunk](https://github.com/Slamdunk))
+
+**Fixed bugs:**
+
+- Attachment-\>getFilename return null [\#297](https://github.com/ddeboer/imap/issues/297)
+- Don't handle multiplart as an attachment [\#298](https://github.com/ddeboer/imap/pull/298) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.2.1](https://github.com/ddeboer/imap/tree/1.2.1) (2018-01-29)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.2.0...1.2.1)
 
