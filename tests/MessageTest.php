@@ -879,6 +879,19 @@ final class MessageTest extends AbstractTest
         $this->assertCount(2, $message->getAttachments());
     }
 
+    public function testMixedInlineDisposition()
+    {
+        $this->mailbox->addMessage($this->getFixture('mixed_filename'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $attachments = $message->getAttachments();
+        $this->assertCount(1, $attachments);
+
+        $attachment = current($attachments);
+        $this->assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
+    }
+
     private function resetAttachmentCharset(MessageInterface $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
