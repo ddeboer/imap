@@ -888,7 +888,7 @@ final class MessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         $this->assertCount(1, $attachments);
 
-        $attachment = current($attachments);
+        $attachment = \current($attachments);
         $this->assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
