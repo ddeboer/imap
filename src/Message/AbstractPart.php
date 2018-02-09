@@ -455,7 +455,7 @@ abstract class AbstractPart implements PartInterface
      */
     private function isAttachment(\stdClass $part): bool
     {
-        if (self::TYPE_MULTIPART === self::$typesMap[$part->type]) {
+        if (isset(self::$typesMap[$part->type]) && self::TYPE_MULTIPART === self::$typesMap[$part->type]) {
             return false;
         }
 
