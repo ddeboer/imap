@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.2.3](https://github.com/ddeboer/imap/tree/1.2.3) (2018-02-09)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.2.2...1.2.3)
+
+**Fixed bugs:**
+
+- $part-\>type can be 9 [\#301](https://github.com/ddeboer/imap/issues/301)
+- AbstractPart::isAttachment\(\) handle unknown part type [\#302](https://github.com/ddeboer/imap/pull/302) ([Slamdunk](https://github.com/Slamdunk))
+
+**Merged pull requests:**
+
+- README.md: code-coverage has higher priority than Scrutinizer [\#300](https://github.com/ddeboer/imap/pull/300) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.2.2](https://github.com/ddeboer/imap/tree/1.2.2) (2018-02-05)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.2.1...1.2.2)
 
