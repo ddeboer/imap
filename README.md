@@ -20,6 +20,7 @@ This library requires [IMAP](https://secure.php.net/manual/en/book.imap.php),
     1. [Mailboxes](#mailboxes)
     1. [Messages](#messages)
         1. [Searching for Messages](#searching-for-messages)
+        1. [Unknown search criterion: OR](#unknown-search-criterion-or)
         1. [Message Properties and Operations](#message-properties-and-operations)
     1. [Message Attachments](#message-attachments)
     1. [Embedded Messages](#embedded-messages)
@@ -151,6 +152,20 @@ $messages = $mailbox->getMessages(
     true // Descending order
 );
 ```
+
+#### Unknown search criterion: OR
+
+Note that PHP imap library relies on the `c-client` library available at https://www.washington.edu/imap/
+which doesn't fully support some IMAP4 search criteria like `OR`. If you want those unsupported criteria,
+you need to manually patch the latest version (`imap-2007f` of 23-Jul-2011 at the time of this commit)
+and recompile PHP onto your patched `c-client` library.
+
+By the way most of the common search criteria are available and functioning, browse them in `./src/Search`.
+
+References:
+
+1. https://stackoverflow.com/questions/36356715/imap-search-unknown-search-criterion-or
+1. imap-2007f.tar.gz: `./src/c-client/mail.c` and `./docs/internal.txt`
 
 #### Message Properties and Operations
 

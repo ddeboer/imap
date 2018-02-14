@@ -154,7 +154,7 @@ final class MailboxSearchTest extends AbstractTest
      */
     public function testOrConditionUsage($orCondition)
     {
-        $this->markTestIncomplete('Unable to get a server working with OR condition');
+        $this->markTestIncomplete('OR condition isn\'t supported by the current c-client library');
 
         $messages = $this->mailbox->getMessages($orCondition);
 
