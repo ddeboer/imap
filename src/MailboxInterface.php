@@ -118,4 +118,14 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * @return array
      */
     public function getThread(): array;
+
+    /**
+     * Bulk move messages.
+     *
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param MailboxInterface                      $mailbox Destination Mailbox to move the messages to
+     *
+     * @return bool true on success
+     */
+    public function move($numbers, self $mailbox): bool;
 }

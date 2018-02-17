@@ -7,7 +7,7 @@ namespace Ddeboer\Imap\Tests;
 use DateTimeImmutable;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
-use Ddeboer\Imap\Mailbox;
+use Ddeboer\Imap\MailboxInterface;
 
 /**
  * @covers \Ddeboer\Imap\Exception\AbstractException
@@ -16,6 +16,7 @@ use Ddeboer\Imap\Mailbox;
  */
 final class MailboxTest extends AbstractTest
 {
+    /** @var MailboxInterface */
     protected $mailbox;
 
     protected function setUp()
@@ -214,5 +215,28 @@ final class MailboxTest extends AbstractTest
 
         $this->assertTrue($message->isSeen());
         $this->assertSame(' 3-Jan-2012 09:30:03 +0000', $message->getHeaders()->get('maildate'));
+    }
+
+    public function testBulkMove()
+    {
+        $anotherMailbox = $this->createMailbox();
+
+        // Test move by id
+        $messages = [1, 2, 3];
+
+        $this->assertSame(0, $anotherMailbox->count());
+        $this->mailbox->move($messages, $anotherMailbox);
+        $this->getConnection()->expunge();
+
+        $this->assertSame(3, $anotherMailbox->count());
+        $this->assertSame(0, $this->mailbox->count());
+
+        // move back by iterator
+        $messages = $anotherMailbox->getMessages();
+        $anotherMailbox->move($messages, $this->mailbox);
+        $this->getConnection()->expunge();
+
+        $this->assertSame(0, $anotherMailbox->count());
+        $this->assertSame(3, $this->mailbox->count());
     }
 }

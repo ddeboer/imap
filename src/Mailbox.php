@@ -247,4 +247,25 @@ final class Mailbox implements MailboxInterface
 
         return false !== $tree ? $tree : [];
     }
+
+    /**
+     * Bulk move messages.
+     *
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param MailboxInterface                      $mailbox Destination Mailbox to move the messages to
+     *
+     * @return bool true on success
+     */
+    public function move($numbers, MailboxInterface $mailbox): bool
+    {
+        if ($numbers instanceof MessageIterator) {
+            $numbers = $numbers->getArrayCopy();
+        }
+
+        if (\is_array($numbers)) {
+            $numbers = \implode(',', $numbers);
+        }
+
+        return \imap_mail_move($this->resource->getStream(), (string) $numbers, $mailbox->getEncodedName(), \CP_UID);
+    }
 }
