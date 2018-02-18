@@ -184,6 +184,78 @@ final class Mailbox implements MailboxInterface
         return new MessageIterator($this->resource, $messageNumbers);
     }
 
+
+    /**
+     * Get message ids in pages.
+     *
+     *
+     * @params page (optional) limit (optional) ConditionInterface $search Search expression (optional)
+     *
+     *
+     * @return MessageIteratorInterface
+     * */
+    public function getMessagesPagination(int $page=1, int $limit = 30, ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIteratorInterface
+    {
+        //First we set the page number to 1 if no argument send
+        //Second set the result limit to 30 if no argument send
+        //The other argunets are the same arguments as getMessages original function
+
+        if (null === $search) {
+            $search = new All();
+        }
+        $query = $search->toString();
+        //print_r($query);
+        // We need to clear the stack to know whether imap_last_error()
+        // is related to this imap_search
+        \imap_errors();
+
+        if (null !== $sortCriteria) {
+            $messageNumbers = \imap_sort($this->resource->getStream(), $sortCriteria, $descending ? 1 : 0, \SE_UID, $query);
+        } else {
+            $messageNumbers = \imap_search($this->resource->getStream(), $query, \SE_UID);
+        }
+        if (false === $messageNumbers) {
+            if (false !== \imap_last_error()) {
+                throw new InvalidSearchCriteriaException(\sprintf('Invalid search criteria [%s]', $query));
+            }
+
+            // imap_search can also return false
+            $messageNumbers = [];
+        }
+
+        //starting the couting
+        //some part of this function i get from https://forums.phpfreaks.com/topic/124376-solved-pagination-with-emails/?p=642644
+        //JasonLewis expose a way to paginate and i adapt the code to this library.
+        //Find out how many results there are
+        $totalResults = \imap_check($this->resource->getStream())->Nmsgs;
+
+        //Get the total pages
+        $totalPages = ceil($totalResults / $limit);
+
+        //If the page you are on is bigger then the totalPages then set the page to the totalPages
+        if($page > $totalPages){
+            $page = $totalPages;
+        }
+
+        //Find out where to start looping from
+        $from = ($page * $limit) - $limit;
+
+        //Create a temp array
+        $tmp_emails = array();
+
+        //Start looping
+        for($i = $from; $i < $from + ceil($totalResults / $totalPages); $i++){
+            $tmp_emails[] = $messageNumbers[$i];
+        }
+
+        //Implode the temp array, seperating the elements.
+        //print_r($messageNumbers);
+        //print_r($tmp_emails);
+        //echo implode(", ", $tmp_emails);
+
+        return new MessageIterator($this->resource, $tmp_emails);
+    }
+
     /**
      * Get a message by message number.
      *

@@ -22,6 +22,8 @@ This library requires [IMAP](https://secure.php.net/manual/en/book.imap.php),
         1. [Searching for Messages](#searching-for-messages)
         1. [Unknown search criterion: OR](#unknown-search-criterion-or)
         1. [Message Properties and Operations](#message-properties-and-operations)
+        1. [Messages Pagination](#message-pagination)
+        1. [Messages Encoding](#message-encoding)
     1. [Message Attachments](#message-attachments)
     1. [Embedded Messages](#embedded-messages)
     1. [Timeouts](#timeouts)
@@ -231,6 +233,64 @@ Deleting messages:
 $mailbox->getMessage(1)->delete();
 $mailbox->getMessage(2)->delete();
 $connection->expunge();
+```
+### Messages Pagination
+
+Get Messages in Pages ordered by date or other:
+
+```php
+        //start server connection
+        $server = new Server('mymail.server.cl');
+
+        // $connection is instance of \Ddeboer\Imap\Connection
+        $connection = $server->authenticate('example@test.cl', 'TheMailPassword');
+        
+        
+        //Default value for $casilla is 'INBOX' can be other based on the mailbox you need 
+        //in most of the IMAP servers, tested over (CPANEL, Virtualmin free version)
+        $mailbox = $connection->getMailbox($casilla);
+        
+        
+        //the next function make an internal call to imap_check to get the total mails count
+        //inside mailbox, so we don't need the total just need the page number and results per page 
+        $messages = $mailbox->getMessagesPagination(
+            1, //Page number here 1,2,3,4 .... 9999...
+            30, //The number of results per page in this case 30 but can be any number of results
+            null, // No filter
+            \SORTDATE, // Sort criteria (order by date mails arrival)
+            true // Descending order (to see the newest mails)
+        );
+        
+        //after the last call we have an array of messages IDs and we can iterate over
+        foreach ($messages as $message) {
+        //
+        //we only get 30 results obvious... can be more based on the second argument send
+        //to the previous function
+        
+        $subject = $message->getSubject();
+       
+        }
+```
+NOTE: The method "getMessagesPagination" use the same last arguments from getMessages(). 
+
+### Message Encoding
+
+In normal operation spam and normal mails can be encoded in diferent formats and languages.
+
+The IMAP server give you the RAW mail so you need to re-encode the message to be sure
+
+```php
+        //the next code can throw encoding error in frameworks like Laravel.
+        
+        $subject = $message->getSubject();
+        
+        //and any other get[function] that give you "strings" return can be replaced with
+        
+        $re_encoded_subject = mb_convert_encoding($message->getSubject(), 'UTF-8', 'auto');
+        
+        //this will auto convert any spanish, korea, etc character to UTF-8
+        //UTF-8 can be changed to anything you want.
+        //more info about mb_convert_encoding in the PHP docs as usual.
 ```
 
 ### Message Attachments
