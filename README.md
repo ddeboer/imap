@@ -271,7 +271,7 @@ Get Messages in Pages ordered by date or other:
        
         }
 ```
-NOTE: The method "getMessagesPagination" use the same last arguments from getMessages(). 
+NOTE: The method "getMessagesPagination" use the same last arguments from getMessages().
 
 ### Messages Encoding
 
