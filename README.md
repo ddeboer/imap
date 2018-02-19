@@ -246,13 +246,13 @@ Get Messages in Pages ordered by date or other:
         $connection = $server->authenticate('example@test.cl', 'TheMailPassword');
         
         
-        //Default value for $casilla is 'INBOX' can be other based on the mailbox you need 
+        //Default value for $casilla is 'INBOX' can be other based on the mailbox you need
         //in most of the IMAP servers, tested over (CPANEL, Virtualmin free version)
         $mailbox = $connection->getMailbox($casilla);
         
         
         //the next function make an internal call to imap_check to get the total mails count
-        //inside mailbox, so we don't need the total just need the page number and results per page 
+        //inside mailbox, so we don't need the total just need the page number and results per page
         $messages = $mailbox->getMessagesPagination(
             1, //Page number here 1,2,3,4 .... 9999...
             30, //The number of results per page in this case 30 but can be any number of results
