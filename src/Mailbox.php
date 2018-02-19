@@ -184,17 +184,15 @@ final class Mailbox implements MailboxInterface
         return new MessageIterator($this->resource, $messageNumbers);
     }
 
-
     /**
      * Get message ids in pages.
      *
      *
      * @params page (optional) limit (optional) ConditionInterface $search Search expression (optional)
      *
-     *
      * @return MessageIteratorInterface
      * */
-    public function getMessagesPagination(int $page=1, int $limit = 30, ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIteratorInterface
+    public function getMessagesPagination(int $page = 1, int $limit = 30, ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false): MessageIteratorInterface
     {
         //First we set the page number to 1 if no argument send
         //Second set the result limit to 30 if no argument send
@@ -230,10 +228,10 @@ final class Mailbox implements MailboxInterface
         $totalResults = \imap_check($this->resource->getStream())->Nmsgs;
 
         //Get the total pages
-        $totalPages = ceil($totalResults / $limit);
+        $totalPages = \ceil($totalResults / $limit);
 
         //If the page you are on is bigger then the totalPages then set the page to the totalPages
-        if($page > $totalPages){
+        if ($page > $totalPages) {
             $page = $totalPages;
         }
 
@@ -241,10 +239,10 @@ final class Mailbox implements MailboxInterface
         $from = ($page * $limit) - $limit;
 
         //Create a temp array
-        $tmp_emails = array();
+        $tmp_emails = [];
 
         //Start looping
-        for($i = $from; $i < $from + ceil($totalResults / $totalPages); $i++){
+        for ($i = $from; $i < $from + \ceil($totalResults / $totalPages); ++$i) {
             $tmp_emails[] = $messageNumbers[$i];
         }
 
@@ -311,7 +309,8 @@ final class Mailbox implements MailboxInterface
      */
     public function getThread(): array
     {
-        \set_error_handler(function () {});
+        \set_error_handler(function () {
+        });
 
         $tree = \imap_thread($this->resource->getStream());
 

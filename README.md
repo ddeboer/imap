@@ -22,8 +22,8 @@ This library requires [IMAP](https://secure.php.net/manual/en/book.imap.php),
         1. [Searching for Messages](#searching-for-messages)
         1. [Unknown search criterion: OR](#unknown-search-criterion-or)
         1. [Message Properties and Operations](#message-properties-and-operations)
-        1. [Messages Pagination](#message-pagination)
-        1. [Messages Encoding](#message-encoding)
+        1. [Messages Pagination](#messages-pagination)
+        1. [Messages Encoding](#messages-encoding)
     1. [Message Attachments](#message-attachments)
     1. [Embedded Messages](#embedded-messages)
     1. [Timeouts](#timeouts)
@@ -273,7 +273,7 @@ Get Messages in Pages ordered by date or other:
 ```
 NOTE: The method "getMessagesPagination" use the same last arguments from getMessages(). 
 
-### Message Encoding
+### Messages Encoding
 
 In normal operation spam and normal mails can be encoded in diferent formats and languages.
 
