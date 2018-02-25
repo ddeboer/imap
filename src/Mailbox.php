@@ -6,6 +6,7 @@ namespace Ddeboer\Imap;
 
 use DateTimeInterface;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
+use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\LogicalOperator\All;
 
@@ -254,9 +255,9 @@ final class Mailbox implements MailboxInterface
      * @param array|MessageIteratorInterface|string $numbers Message numbers
      * @param MailboxInterface                      $mailbox Destination Mailbox to move the messages to
      *
-     * @return bool true on success
+     * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
-    public function move($numbers, MailboxInterface $mailbox): bool
+    public function move($numbers, MailboxInterface $mailbox)
     {
         if ($numbers instanceof MessageIterator) {
             $numbers = $numbers->getArrayCopy();
@@ -266,6 +267,8 @@ final class Mailbox implements MailboxInterface
             $numbers = \implode(',', $numbers);
         }
 
-        return \imap_mail_move($this->resource->getStream(), (string) $numbers, $mailbox->getEncodedName(), \CP_UID);
+        if (!\imap_mail_move($this->resource->getStream(), (string) $numbers, $mailbox->getEncodedName(), \CP_UID)) {
+            throw new MessageMoveException(\sprintf('Messages cannot be moved to "%s"', $mailbox->getName()));
+        }
     }
 }

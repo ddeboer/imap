@@ -125,7 +125,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * @param array|MessageIteratorInterface|string $numbers Message numbers
      * @param MailboxInterface                      $mailbox Destination Mailbox to move the messages to
      *
-     * @return bool true on success
+     * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
-    public function move($numbers, self $mailbox): bool;
+    public function move($numbers, self $mailbox);
 }

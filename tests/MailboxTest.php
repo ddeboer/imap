@@ -6,6 +6,7 @@ namespace Ddeboer\Imap\Tests;
 
 use DateTimeImmutable;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
+use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\MailboxInterface;
 
@@ -238,5 +239,10 @@ final class MailboxTest extends AbstractTest
 
         $this->assertSame(0, $anotherMailbox->count());
         $this->assertSame(3, $this->mailbox->count());
+
+        // test failing bulk move - try to move to a non-existent mailbox
+        $this->getConnection()->deleteMailbox($anotherMailbox);
+        $this->expectException(MessageMoveException::class);
+        $this->mailbox->move($messages, $anotherMailbox);
     }
 }
