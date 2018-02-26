@@ -245,4 +245,22 @@ final class MailboxTest extends AbstractTest
         $this->expectException(MessageMoveException::class);
         $this->mailbox->move($messages, $anotherMailbox);
     }
+
+    public function testBulkCopy()
+    {
+        $anotherMailbox = $this->createMailbox();
+        $messages = [1, 2, 3];
+
+        $this->assertSame(0, $anotherMailbox->count());
+        $this->assertSame(3, $this->mailbox->count());
+        $this->mailbox->copy($messages, $anotherMailbox);
+
+        $this->assertSame(3, $anotherMailbox->count());
+        $this->assertSame(3, $this->mailbox->count());
+
+        // test failing bulk copy - try to move to a non-existent mailbox
+        $this->getConnection()->deleteMailbox($anotherMailbox);
+        $this->expectException(MessageMoveException::class);
+        $this->mailbox->copy($messages, $anotherMailbox);
+    }
 }

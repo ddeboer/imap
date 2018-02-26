@@ -257,6 +257,21 @@ final class Mailbox implements MailboxInterface
     }
 
     /**
+     * Bulk copy messages.
+     *
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param MailboxInterface                      $mailbox Destination Mailbox to copy the messages to
+     *
+     * @throws \Ddeboer\Imap\Exception\MessageMoveException
+     */
+    public function copy($numbers, MailboxInterface $mailbox)
+    {
+        if (!\imap_mail_copy($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
+            throw new MessageMoveException(\sprintf('Messages cannot be copied to "%s"', $mailbox->getName()));
+        }
+    }
+
+    /**
      * Prepare message ids for the use with bulk functions.
      *
      * @param array|MessageIteratorInterface|string $messageIds Message numbers

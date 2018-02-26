@@ -128,4 +128,14 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
     public function move($numbers, self $mailbox);
+
+    /**
+     * Bulk copy messages.
+     *
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param MailboxInterface                      $mailbox Destination Mailbox to copy the messages to
+     *
+     * @throws \Ddeboer\Imap\Exception\MessageMoveException
+     */
+    public function copy($numbers, self $mailbox);
 }
