@@ -59,8 +59,8 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Bulk Set Flag for Messages.
      *
-     * @param string       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|string $numbers Message numbers
+     * @param string                                $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
      *
      * @return bool
      */
@@ -69,8 +69,8 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Bulk Clear Flag for Messages.
      *
-     * @param string       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|string $numbers Message numbers
+     * @param string                                $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
      *
      * @return bool
      */
