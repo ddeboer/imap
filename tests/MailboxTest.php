@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use DateTimeImmutable;
+use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
@@ -260,7 +261,7 @@ final class MailboxTest extends AbstractTest
 
         // test failing bulk copy - try to move to a non-existent mailbox
         $this->getConnection()->deleteMailbox($anotherMailbox);
-        $this->expectException(MessageMoveException::class);
+        $this->expectException(MessageCopyException::class);
         $this->mailbox->copy($messages, $anotherMailbox);
     }
 }

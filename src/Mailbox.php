@@ -6,6 +6,7 @@ namespace Ddeboer\Imap;
 
 use DateTimeInterface;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
+use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\LogicalOperator\All;
@@ -262,12 +263,12 @@ final class Mailbox implements MailboxInterface
      * @param array|MessageIterator|string $numbers Message numbers
      * @param MailboxInterface             $mailbox Destination Mailbox to copy the messages to
      *
-     * @throws \Ddeboer\Imap\Exception\MessageMoveException
+     * @throws \Ddeboer\Imap\Exception\MessageCopyException
      */
     public function copy($numbers, MailboxInterface $mailbox)
     {
         if (!\imap_mail_copy($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
-            throw new MessageMoveException(\sprintf('Messages cannot be copied to "%s"', $mailbox->getName()));
+            throw new MessageCopyException(\sprintf('Messages cannot be copied to "%s"', $mailbox->getName()));
         }
     }
 
