@@ -135,7 +135,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * @param array|MessageIterator|string $numbers Message numbers
      * @param MailboxInterface             $mailbox Destination Mailbox to copy the messages to
      *
-     * @throws \Ddeboer\Imap\Exception\MessageMoveException
+     * @throws \Ddeboer\Imap\Exception\MessageCopyException
      */
     public function copy($numbers, self $mailbox);
 }
