@@ -119,8 +119,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk Set Flag for Messages.
      *
-     * @param string                                $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIterator|string $numbers Message numbers
      *
      * @return bool
      */
@@ -132,8 +132,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk Clear Flag for Messages.
      *
-     * @param string                                $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIterator|string $numbers Message numbers
      *
      * @return bool
      */
@@ -244,8 +244,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk move messages.
      *
-     * @param array|MessageIteratorInterface|string $numbers Message numbers
-     * @param MailboxInterface                      $mailbox Destination Mailbox to move the messages to
+     * @param array|MessageIterator|string $numbers Message numbers
+     * @param MailboxInterface             $mailbox Destination Mailbox to move the messages to
      *
      * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
@@ -259,8 +259,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk copy messages.
      *
-     * @param array|MessageIteratorInterface|string $numbers Message numbers
-     * @param MailboxInterface                      $mailbox Destination Mailbox to copy the messages to
+     * @param array|MessageIterator|string $numbers Message numbers
+     * @param MailboxInterface             $mailbox Destination Mailbox to copy the messages to
      *
      * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
@@ -274,7 +274,7 @@ final class Mailbox implements MailboxInterface
     /**
      * Prepare message ids for the use with bulk functions.
      *
-     * @param array|MessageIteratorInterface|string $messageIds Message numbers
+     * @param array|MessageIterator|string $messageIds Message numbers
      *
      * @return string
      */
