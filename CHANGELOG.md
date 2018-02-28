@@ -1,5 +1,20 @@
 # Change Log
 
+## [1.3.0](https://github.com/ddeboer/imap/tree/1.3.0) (2018-02-28)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.2.3...1.3.0)
+
+**Implemented enhancements:**
+
+- Implement bulk-move [\#306](https://github.com/ddeboer/imap/pull/306) ([particleflux](https://github.com/particleflux))
+
+**Closed issues:**
+
+- feature: Bulk move [\#305](https://github.com/ddeboer/imap/issues/305)
+
+**Merged pull requests:**
+
+- README.md: add `Unknown search criterion: OR` note [\#304](https://github.com/ddeboer/imap/pull/304) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.2.3](https://github.com/ddeboer/imap/tree/1.2.3) (2018-02-09)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.2.2...1.2.3)
 
