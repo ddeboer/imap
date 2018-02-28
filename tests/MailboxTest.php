@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use DateTimeImmutable;
+use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
+use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
-use Ddeboer\Imap\Mailbox;
+use Ddeboer\Imap\MailboxInterface;
+use Ddeboer\Imap\MessageIterator;
 
 /**
  * @covers \Ddeboer\Imap\Exception\AbstractException
@@ -16,6 +19,7 @@ use Ddeboer\Imap\Mailbox;
  */
 final class MailboxTest extends AbstractTest
 {
+    /** @var MailboxInterface */
     protected $mailbox;
 
     protected function setUp()
@@ -214,5 +218,52 @@ final class MailboxTest extends AbstractTest
 
         $this->assertTrue($message->isSeen());
         $this->assertSame(' 3-Jan-2012 09:30:03 +0000', $message->getHeaders()->get('maildate'));
+    }
+
+    public function testBulkMove()
+    {
+        $anotherMailbox = $this->createMailbox();
+
+        // Test move by id
+        $messages = [1, 2, 3];
+
+        $this->assertSame(0, $anotherMailbox->count());
+        $this->mailbox->move($messages, $anotherMailbox);
+        $this->getConnection()->expunge();
+
+        $this->assertSame(3, $anotherMailbox->count());
+        $this->assertSame(0, $this->mailbox->count());
+
+        // move back by iterator
+        /** @var MessageIterator $messages */
+        $messages = $anotherMailbox->getMessages();
+        $anotherMailbox->move($messages, $this->mailbox);
+        $this->getConnection()->expunge();
+
+        $this->assertSame(0, $anotherMailbox->count());
+        $this->assertSame(3, $this->mailbox->count());
+
+        // test failing bulk move - try to move to a non-existent mailbox
+        $this->getConnection()->deleteMailbox($anotherMailbox);
+        $this->expectException(MessageMoveException::class);
+        $this->mailbox->move($messages, $anotherMailbox);
+    }
+
+    public function testBulkCopy()
+    {
+        $anotherMailbox = $this->createMailbox();
+        $messages = [1, 2, 3];
+
+        $this->assertSame(0, $anotherMailbox->count());
+        $this->assertSame(3, $this->mailbox->count());
+        $this->mailbox->copy($messages, $anotherMailbox);
+
+        $this->assertSame(3, $anotherMailbox->count());
+        $this->assertSame(3, $this->mailbox->count());
+
+        // test failing bulk copy - try to move to a non-existent mailbox
+        $this->getConnection()->deleteMailbox($anotherMailbox);
+        $this->expectException(MessageCopyException::class);
+        $this->mailbox->copy($messages, $anotherMailbox);
     }
 }

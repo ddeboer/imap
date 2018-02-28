@@ -6,6 +6,8 @@ namespace Ddeboer\Imap;
 
 use DateTimeInterface;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
+use Ddeboer\Imap\Exception\MessageCopyException;
+use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\LogicalOperator\All;
 
@@ -118,35 +120,27 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk Set Flag for Messages.
      *
-     * @param string       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|string $numbers Message numbers
+     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIterator|string $numbers Message numbers
      *
      * @return bool
      */
     public function setFlag(string $flag, $numbers): bool
     {
-        if (\is_array($numbers)) {
-            $numbers = \implode(',', $numbers);
-        }
-
-        return \imap_setflag_full($this->resource->getStream(), (string) $numbers, $flag, \ST_UID);
+        return \imap_setflag_full($this->resource->getStream(), $this->prepareMessageIds($numbers), $flag, \ST_UID);
     }
 
     /**
      * Bulk Clear Flag for Messages.
      *
-     * @param string       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|string $numbers Message numbers
+     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIterator|string $numbers Message numbers
      *
      * @return bool
      */
     public function clearFlag(string $flag, $numbers): bool
     {
-        if (\is_array($numbers)) {
-            $numbers = \implode(',', $numbers);
-        }
-
-        return \imap_clearflag_full($this->resource->getStream(), (string) $numbers, $flag, \ST_UID);
+        return \imap_clearflag_full($this->resource->getStream(), $this->prepareMessageIds($numbers), $flag, \ST_UID);
     }
 
     /**
@@ -246,5 +240,55 @@ final class Mailbox implements MailboxInterface
         \restore_error_handler();
 
         return false !== $tree ? $tree : [];
+    }
+
+    /**
+     * Bulk move messages.
+     *
+     * @param array|MessageIterator|string $numbers Message numbers
+     * @param MailboxInterface             $mailbox Destination Mailbox to move the messages to
+     *
+     * @throws \Ddeboer\Imap\Exception\MessageMoveException
+     */
+    public function move($numbers, MailboxInterface $mailbox)
+    {
+        if (!\imap_mail_move($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
+            throw new MessageMoveException(\sprintf('Messages cannot be moved to "%s"', $mailbox->getName()));
+        }
+    }
+
+    /**
+     * Bulk copy messages.
+     *
+     * @param array|MessageIterator|string $numbers Message numbers
+     * @param MailboxInterface             $mailbox Destination Mailbox to copy the messages to
+     *
+     * @throws \Ddeboer\Imap\Exception\MessageCopyException
+     */
+    public function copy($numbers, MailboxInterface $mailbox)
+    {
+        if (!\imap_mail_copy($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
+            throw new MessageCopyException(\sprintf('Messages cannot be copied to "%s"', $mailbox->getName()));
+        }
+    }
+
+    /**
+     * Prepare message ids for the use with bulk functions.
+     *
+     * @param array|MessageIterator|string $messageIds Message numbers
+     *
+     * @return string
+     */
+    private function prepareMessageIds($messageIds): string
+    {
+        if ($messageIds instanceof MessageIterator) {
+            $messageIds = $messageIds->getArrayCopy();
+        }
+
+        if (\is_array($messageIds)) {
+            $messageIds = \implode(',', $messageIds);
+        }
+
+        return (string) $messageIds;
     }
 }
