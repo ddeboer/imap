@@ -10,6 +10,7 @@ use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\MailboxInterface;
+use Ddeboer\Imap\MessageIterator;
 
 /**
  * @covers \Ddeboer\Imap\Exception\AbstractException
@@ -234,6 +235,7 @@ final class MailboxTest extends AbstractTest
         $this->assertSame(0, $this->mailbox->count());
 
         // move back by iterator
+        /** @var MessageIterator $messages */
         $messages = $anotherMailbox->getMessages();
         $anotherMailbox->move($messages, $this->mailbox);
         $this->getConnection()->expunge();
