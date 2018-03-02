@@ -892,6 +892,15 @@ final class MessageTest extends AbstractTest
         $this->assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
+    public function testHandlerBadAddress()
+    {
+        $this->mailbox->addMessage($this->getFixture('bad_address'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('"Gap" <%%FromAddress%@>', $message->getFrom()->getFullAddress());
+    }
+
     private function resetAttachmentCharset(MessageInterface $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
