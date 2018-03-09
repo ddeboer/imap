@@ -113,9 +113,9 @@ final class Server implements ServerInterface
     private function getServerString(): string
     {
         return \sprintf(
-            '{%s:%s%s}',
+            '{%s%s%s}',
             $this->hostname,
-            $this->port,
+            '' !== $this->port ? ':' . $this->port : '',
             $this->flags
         );
     }
