@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.3.1](https://github.com/ddeboer/imap/tree/1.3.1) (2018-03-09)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.3.0...1.3.1)
+
+**Implemented enhancements:**
+
+- Allow empty port [\#312](https://github.com/ddeboer/imap/pull/312) ([Slamdunk](https://github.com/Slamdunk))
+
+**Closed issues:**
+
+- getServerString\(\) with no port [\#311](https://github.com/ddeboer/imap/issues/311)
+
 ## [1.3.0](https://github.com/ddeboer/imap/tree/1.3.0) (2018-02-28)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.2.3...1.3.0)
 
