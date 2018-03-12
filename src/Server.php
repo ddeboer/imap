@@ -27,6 +27,16 @@ final class Server implements ServerInterface
     private $flags;
 
     /**
+     * @var int Connection options
+     */
+    private $options;
+
+    /**
+     * @var int Retries number
+     */
+    private $retries;
+
+    /**
      * @var array
      */
     private $parameters;
@@ -38,12 +48,16 @@ final class Server implements ServerInterface
      *                           of server
      * @param string $port       TCP port number
      * @param string $flags      Optional flags
+     * @param int $options       Connection options
+     * @param int $retries       Retries number
      * @param array  $parameters Connection parameters
      */
     public function __construct(
         string $hostname,
         string $port = '993',
         string $flags = '/imap/ssl/validate-cert',
+        int $options = 0,
+        int $retries = 1,
         array $parameters = []
     ) {
         if (!\function_exists('imap_open')) {
@@ -53,6 +67,8 @@ final class Server implements ServerInterface
         $this->hostname = $hostname;
         $this->port = $port;
         $this->flags = $flags ? '/' . \ltrim($flags, '/') : '';
+        $this->options = $options;
+        $this->retries = $retries;
         $this->parameters = $parameters;
     }
 
@@ -79,8 +95,8 @@ final class Server implements ServerInterface
             $this->getServerString(),
             $username,
             $password,
-            0,
-            1,
+            $this->options,
+            $this->retries,
             $this->parameters
         );
 
