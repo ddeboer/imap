@@ -14,7 +14,7 @@ use Ddeboer\Imap\Search\LogicalOperator\All;
 /**
  * An IMAP mailbox (commonly referred to as a 'folder').
  */
-final class Mailbox implements MailboxInterface
+class Mailbox implements MailboxInterface
 {
     /**
      * @var ImapResourceInterface
