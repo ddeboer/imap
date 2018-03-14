@@ -10,7 +10,7 @@ use Ddeboer\Imap\Exception\ReopenMailboxException;
 /**
  * An imap resource stream.
  */
-final class ImapResource implements ImapResourceInterface
+class ImapResource implements ImapResourceInterface
 {
     /**
      * @var resource

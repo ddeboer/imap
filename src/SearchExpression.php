@@ -9,7 +9,7 @@ use Ddeboer\Imap\Search\ConditionInterface;
 /**
  * Defines a search expression that can be used to look up email messages.
  */
-final class SearchExpression implements ConditionInterface
+class SearchExpression implements ConditionInterface
 {
     /**
      * The conditions that together represent the expression.

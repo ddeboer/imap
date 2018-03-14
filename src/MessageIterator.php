@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-final class MessageIterator extends \ArrayIterator implements MessageIteratorInterface
+class MessageIterator extends \ArrayIterator implements MessageIteratorInterface
 {
     /**
      * @var ImapResourceInterface

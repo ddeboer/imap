@@ -12,7 +12,7 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 /**
  * A connection to an IMAP server that is authenticated for a user.
  */
-final class Connection implements ConnectionInterface
+class Connection implements ConnectionInterface
 {
     /**
      * @var ImapResourceInterface
