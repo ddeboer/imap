@@ -27,6 +27,11 @@ final class Server implements ServerInterface
     private $flags;
 
     /**
+     * @var array
+     */
+    private $parameters;
+
+    /**
      * @var int Connection options
      */
     private $options;
@@ -35,11 +40,6 @@ final class Server implements ServerInterface
      * @var int Retries number
      */
     private $retries;
-
-    /**
-     * @var array
-     */
-    private $parameters;
 
     /**
      * Constructor.
