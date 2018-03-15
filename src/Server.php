@@ -56,9 +56,9 @@ final class Server implements ServerInterface
         string $hostname,
         string $port = '993',
         string $flags = '/imap/ssl/validate-cert',
+        array $parameters = [],
         int $options = 0,
-        int $retries = 1,
-        array $parameters = []
+        int $retries = 1
     ) {
         if (!\function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');
@@ -67,9 +67,9 @@ final class Server implements ServerInterface
         $this->hostname = $hostname;
         $this->port = $port;
         $this->flags = $flags ? '/' . \ltrim($flags, '/') : '';
+        $this->parameters = $parameters;
         $this->options = $options;
         $this->retries = $retries;
-        $this->parameters = $parameters;
     }
 
     /**
