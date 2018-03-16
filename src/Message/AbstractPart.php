@@ -14,6 +14,11 @@ use Ddeboer\Imap\Message;
 abstract class AbstractPart implements PartInterface
 {
     /**
+     * @var bool
+     */
+    private $structureParsed = false;
+
+    /**
      * @var ImapResourceInterface
      */
     protected $resource;
@@ -21,7 +26,7 @@ abstract class AbstractPart implements PartInterface
     /**
      * @var array
      */
-    protected $parts = [];
+    private $parts = [];
 
     /**
      * @var string
@@ -131,8 +136,7 @@ abstract class AbstractPart implements PartInterface
         $this->resource = $resource;
         $this->messageNumber = $messageNumber;
         $this->partNumber = $partNumber;
-        $this->structure = $structure;
-        $this->parseStructure($structure);
+        $this->setStructure($structure);
     }
 
     /**
@@ -146,13 +150,30 @@ abstract class AbstractPart implements PartInterface
     }
 
     /**
+     * @param \stdClass $structure Part structure
+     */
+    final protected function setStructure(\stdClass $structure)
+    {
+        $this->structure = $structure;
+    }
+
+    /**
      * Part structure.
      *
      * @return \stdClass
      */
     final public function getStructure(): \stdClass
     {
+        $this->lazyLoadStructure();
+
         return $this->structure;
+    }
+
+    /**
+     * Lazy load structure.
+     */
+    protected function lazyLoadStructure()
+    {
     }
 
     /**
@@ -162,6 +183,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getParameters(): Parameters
     {
+        $this->lazyParseStructure();
+
         return $this->parameters;
     }
 
@@ -172,6 +195,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getCharset()
     {
+        $this->lazyParseStructure();
+
         return $this->parameters->get('charset') ?: null;
     }
 
@@ -182,6 +207,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getType()
     {
+        $this->lazyParseStructure();
+
         return $this->type;
     }
 
@@ -192,6 +219,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getSubtype()
     {
+        $this->lazyParseStructure();
+
         return $this->subtype;
     }
 
@@ -202,6 +231,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getEncoding()
     {
+        $this->lazyParseStructure();
+
         return $this->encoding;
     }
 
@@ -212,6 +243,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getDisposition()
     {
+        $this->lazyParseStructure();
+
         return $this->disposition;
     }
 
@@ -222,6 +255,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getBytes()
     {
+        $this->lazyParseStructure();
+
         return $this->bytes;
     }
 
@@ -232,6 +267,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getLines()
     {
+        $this->lazyParseStructure();
+
         return $this->lines;
     }
 
@@ -318,61 +355,14 @@ abstract class AbstractPart implements PartInterface
     }
 
     /**
-     * Parse part structure.
-     *
-     * @param \stdClass $structure
-     */
-    private function parseStructure(\stdClass $structure)
-    {
-        $this->type = self::$typesMap[$structure->type] ?? self::TYPE_UNKNOWN;
-
-        // In our context, \ENCOTHER is as useful as an uknown encoding
-        $this->encoding = self::$encodingsMap[$structure->encoding] ?? self::ENCODING_UNKNOWN;
-        $this->subtype = $structure->subtype;
-
-        foreach (['disposition', 'bytes', 'description'] as $optional) {
-            if (isset($structure->{$optional})) {
-                $this->{$optional} = $structure->{$optional};
-            }
-        }
-
-        $this->parameters = new Parameters();
-        if ($structure->ifparameters) {
-            $this->parameters->add($structure->parameters);
-        }
-
-        if ($structure->ifdparameters) {
-            $this->parameters->add($structure->dparameters);
-        }
-
-        // When the message is not multipart and the body is the attachment content
-        // Prevents infinite recursion
-        if ($this->isAttachment($structure) && !$this instanceof Attachment) {
-            $this->parts[] = new Attachment($this->resource, $this->messageNumber, '1', $structure);
-        }
-
-        if (isset($structure->parts)) {
-            foreach ($structure->parts as $key => $partStructure) {
-                $partNumber = (!$this instanceof Message) ? $this->partNumber . '.' : '';
-                $partNumber .= (string) ($key + 1);
-
-                $newPartClass = $this->isAttachment($partStructure)
-                    ? Attachment::class
-                    : SimplePart::class
-                ;
-
-                $this->parts[] = new $newPartClass($this->resource, $this->messageNumber, $partNumber, $partStructure);
-            }
-        }
-    }
-
-    /**
      * Get an array of all parts for this message.
      *
      * @return PartInterface[]
      */
     final public function getParts(): array
     {
+        $this->lazyParseStructure();
+
         return $this->parts;
     }
 
@@ -383,6 +373,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function current()
     {
+        $this->lazyParseStructure();
+
         return $this->parts[$this->key];
     }
 
@@ -403,6 +395,8 @@ abstract class AbstractPart implements PartInterface
      */
     final public function hasChildren()
     {
+        $this->lazyParseStructure();
+
         return \count($this->parts) > 0;
     }
 
@@ -443,7 +437,63 @@ abstract class AbstractPart implements PartInterface
      */
     final public function valid()
     {
+        $this->lazyParseStructure();
+
         return isset($this->parts[$this->key]);
+    }
+
+    /**
+     * Parse part structure.
+     */
+    private function lazyParseStructure()
+    {
+        if (true === $this->structureParsed) {
+            return;
+        }
+        $this->structureParsed = true;
+
+        $this->lazyLoadStructure();
+
+        $this->type = self::$typesMap[$this->structure->type] ?? self::TYPE_UNKNOWN;
+
+        // In our context, \ENCOTHER is as useful as an uknown encoding
+        $this->encoding = self::$encodingsMap[$this->structure->encoding] ?? self::ENCODING_UNKNOWN;
+        $this->subtype = $this->structure->subtype;
+
+        foreach (['disposition', 'bytes', 'description'] as $optional) {
+            if (isset($this->structure->{$optional})) {
+                $this->{$optional} = $this->structure->{$optional};
+            }
+        }
+
+        $this->parameters = new Parameters();
+        if ($this->structure->ifparameters) {
+            $this->parameters->add($this->structure->parameters);
+        }
+
+        if ($this->structure->ifdparameters) {
+            $this->parameters->add($this->structure->dparameters);
+        }
+
+        // When the message is not multipart and the body is the attachment content
+        // Prevents infinite recursion
+        if (self::isAttachment($this->structure) && !$this instanceof Attachment) {
+            $this->parts[] = new Attachment($this->resource, $this->messageNumber, '1', $this->structure);
+        }
+
+        if (isset($this->structure->parts)) {
+            foreach ($this->structure->parts as $key => $partStructure) {
+                $partNumber = (!$this instanceof Message) ? $this->partNumber . '.' : '';
+                $partNumber .= (string) ($key + 1);
+
+                $newPartClass = self::isAttachment($partStructure)
+                    ? Attachment::class
+                    : SimplePart::class
+                ;
+
+                $this->parts[] = new $newPartClass($this->resource, $this->messageNumber, $partNumber, $partStructure);
+            }
+        }
     }
 
     /**
@@ -453,7 +503,7 @@ abstract class AbstractPart implements PartInterface
      *
      * @return bool
      */
-    private function isAttachment(\stdClass $part): bool
+    private static function isAttachment(\stdClass $part): bool
     {
         if (isset(self::$typesMap[$part->type]) && self::TYPE_MULTIPART === self::$typesMap[$part->type]) {
             return false;

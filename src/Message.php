@@ -16,6 +16,11 @@ use Ddeboer\Imap\Exception\MessageStructureException;
 final class Message extends Message\AbstractMessage implements MessageInterface
 {
     /**
+     * @var bool
+     */
+    private $structureLoaded = false;
+
+    /**
      * @var null|Message\Headers
      */
     private $headers;
@@ -38,8 +43,20 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     public function __construct(ImapResourceInterface $resource, int $messageNumber)
     {
-        $structure = $this->loadStructure($resource, $messageNumber);
-        parent::__construct($resource, $messageNumber, '1', $structure);
+        parent::__construct($resource, $messageNumber, '1', new \stdClass());
+    }
+
+    /**
+     * Lazy load structure.
+     */
+    protected function lazyLoadStructure()
+    {
+        if (true === $this->structureLoaded) {
+            return;
+        }
+        $this->structureLoaded = true;
+
+        $this->setStructure(self::loadStructure($this->resource, $this->getNumber()));
     }
 
     /**
@@ -47,8 +64,10 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      *
      * @param ImapResourceInterface $resource
      * @param int                   $messageNumber
+     *
+     * @return \stdClass
      */
-    private function loadStructure(ImapResourceInterface $resource, int $messageNumber): \stdClass
+    private static function loadStructure(ImapResourceInterface $resource, int $messageNumber): \stdClass
     {
         $errorMessage = null;
         $errorNumber = 0;
