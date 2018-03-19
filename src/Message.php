@@ -79,7 +79,11 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         \restore_error_handler();
 
         if (!$structure instanceof \stdClass) {
-            throw new MessageStructureException(\sprintf('Message "%s" structure is empty', $messageNumber));
+            throw new MessageStructureException(\sprintf(
+                'Message "%s" structure is empty: %s',
+                $messageNumber,
+                $errorMessage
+            ), $errorNumber);
         }
 
         $this->setStructure($structure);
