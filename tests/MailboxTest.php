@@ -73,10 +73,12 @@ final class MailboxTest extends AbstractTest
 
     public function testGetMessageThrowsException()
     {
-        $this->expectException(MessageDoesNotExistException::class);
-        $this->expectExceptionMessageRegExp('/E_WARNING.+Message "999" does not exist.+Bad message number/s');
+        $message = $this->mailbox->getMessage(999);
 
-        $this->mailbox->getMessage(999);
+        $this->expectException(MessageDoesNotExistException::class);
+        $this->expectExceptionMessageRegExp('/Message "999" does not exist/');
+
+        $message->isRecent();
     }
 
     public function testCount()

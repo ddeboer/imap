@@ -14,14 +14,14 @@ use Ddeboer\Imap\Message;
 abstract class AbstractPart implements PartInterface
 {
     /**
-     * @var bool
-     */
-    private $structureParsed = false;
-
-    /**
      * @var ImapResourceInterface
      */
     protected $resource;
+
+    /**
+     * @var bool
+     */
+    private $structureParsed = false;
 
     /**
      * @var array
@@ -146,7 +146,18 @@ abstract class AbstractPart implements PartInterface
      */
     final public function getNumber(): int
     {
+        $this->assertMessageExists($this->messageNumber);
+
         return $this->messageNumber;
+    }
+
+    /**
+     * Ensure message exists.
+     *
+     * @param int $messageNumber
+     */
+    protected function assertMessageExists(int $messageNumber)
+    {
     }
 
     /**

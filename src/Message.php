@@ -18,6 +18,11 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     /**
      * @var bool
      */
+    private $messageNumberVerified = false;
+
+    /**
+     * @var bool
+     */
     private $structureLoaded = false;
 
     /**
@@ -60,6 +65,29 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     }
 
     /**
+     * Ensure message exists.
+     *
+     * @param int $messageNumber
+     */
+    protected function assertMessageExists(int $messageNumber)
+    {
+        if (true === $this->messageNumberVerified) {
+            return;
+        }
+        $this->messageNumberVerified = true;
+
+        $msgno = \imap_msgno($this->resource->getStream(), $messageNumber);
+        if (\is_numeric($msgno) && $msgno > 0) {
+            return;
+        }
+
+        throw new MessageDoesNotExistException(\sprintf(
+            'Message "%s" does not exist',
+            $messageNumber
+        ));
+    }
+
+    /**
      * Load message structure.
      *
      * @param ImapResourceInterface $resource
@@ -83,14 +111,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         );
 
         \restore_error_handler();
-
-        if (null !== $errorMessage) {
-            throw new MessageDoesNotExistException(\sprintf(
-                'Message "%s" does not exist: %s',
-                $messageNumber,
-                $errorMessage
-            ), $errorNumber);
-        }
 
         if (!$structure instanceof \stdClass) {
             throw new MessageStructureException(\sprintf('Message "%s" structure is empty', $messageNumber));
