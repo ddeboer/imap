@@ -16,6 +16,16 @@ use Ddeboer\Imap\Exception\MessageStructureException;
 final class Message extends Message\AbstractMessage implements MessageInterface
 {
     /**
+     * @var bool
+     */
+    private $messageNumberVerified = false;
+
+    /**
+     * @var bool
+     */
+    private $structureLoaded = false;
+
+    /**
      * @var null|Message\Headers
      */
     private $headers;
@@ -38,18 +48,21 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     public function __construct(ImapResourceInterface $resource, int $messageNumber)
     {
-        $structure = $this->loadStructure($resource, $messageNumber);
-        parent::__construct($resource, $messageNumber, '1', $structure);
+        parent::__construct($resource, $messageNumber, '1', new \stdClass());
     }
 
     /**
-     * Load message structure.
-     *
-     * @param ImapResourceInterface $resource
-     * @param int                   $messageNumber
+     * Lazy load structure.
      */
-    private function loadStructure(ImapResourceInterface $resource, int $messageNumber): \stdClass
+    protected function lazyLoadStructure()
     {
+        if (true === $this->structureLoaded) {
+            return;
+        }
+        $this->structureLoaded = true;
+
+        $messageNumber = $this->getNumber();
+
         $errorMessage = null;
         $errorNumber = 0;
         \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
@@ -58,26 +71,45 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         });
 
         $structure = \imap_fetchstructure(
-            $resource->getStream(),
+            $this->resource->getStream(),
             $messageNumber,
             \FT_UID
         );
 
         \restore_error_handler();
 
-        if (null !== $errorMessage) {
-            throw new MessageDoesNotExistException(\sprintf(
-                'Message "%s" does not exist: %s',
+        if (!$structure instanceof \stdClass) {
+            throw new MessageStructureException(\sprintf(
+                'Message "%s" structure is empty: %s',
                 $messageNumber,
                 $errorMessage
             ), $errorNumber);
         }
 
-        if (!$structure instanceof \stdClass) {
-            throw new MessageStructureException(\sprintf('Message "%s" structure is empty', $messageNumber));
+        $this->setStructure($structure);
+    }
+
+    /**
+     * Ensure message exists.
+     *
+     * @param int $messageNumber
+     */
+    protected function assertMessageExists(int $messageNumber)
+    {
+        if (true === $this->messageNumberVerified) {
+            return;
+        }
+        $this->messageNumberVerified = true;
+
+        $msgno = \imap_msgno($this->resource->getStream(), $messageNumber);
+        if (\is_numeric($msgno) && $msgno > 0) {
+            return;
         }
 
-        return $structure;
+        throw new MessageDoesNotExistException(\sprintf(
+            'Message "%s" does not exist',
+            $messageNumber
+        ));
     }
 
     /**

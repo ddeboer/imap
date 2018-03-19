@@ -72,7 +72,7 @@ final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageIn
     protected function getContentPartNumber(): string
     {
         $partNumber = $this->getPartNumber();
-        if (0 === \count($this->parts)) {
+        if (0 === \count($this->getParts())) {
             $partNumber .= '.1';
         }
 

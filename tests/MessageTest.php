@@ -75,10 +75,12 @@ final class MessageTest extends AbstractTest
         $connection = $this->getConnection();
         $messageNumber = 98765;
 
-        $this->expectException(MessageDoesNotExistException::class);
-        $this->expectExceptionMessageRegExp(\sprintf('/E_WARNING.+%s/s', \preg_quote((string) $messageNumber)));
+        $message = new Message($connection->getResource(), $messageNumber);
 
-        new Message($connection->getResource(), $messageNumber);
+        $this->expectException(MessageDoesNotExistException::class);
+        $this->expectExceptionMessageRegExp(\sprintf('/%s/', \preg_quote((string) $messageNumber)));
+
+        $message->hasAttachments();
     }
 
     public function testDeprecateMaskAsSeen()
@@ -900,6 +902,11 @@ final class MessageTest extends AbstractTest
         $refAbstractMessage = $refMessage->getParentClass();
         $refAbstractPart = $refAbstractMessage->getParentClass();
 
+        $refLazyLoadStructure = $refMessage->getMethod('lazyLoadStructure');
+        $refLazyLoadStructure->setAccessible(true);
+        $refLazyLoadStructure->invoke($message);
+        $refLazyLoadStructure->setAccessible(false);
+
         $refParts = $refAbstractPart->getProperty('parts');
         $refParts->setAccessible(true);
         $refParts->setValue($message, []);
@@ -923,9 +930,9 @@ final class MessageTest extends AbstractTest
         $refStructure->setValue($message, $structure);
         $refStructure->setAccessible(false);
 
-        $refParseStructure = $refAbstractPart->getMethod('parseStructure');
+        $refParseStructure = $refAbstractPart->getMethod('lazyParseStructure');
         $refParseStructure->setAccessible(true);
-        $refParseStructure->invoke($message, $structure);
+        $refParseStructure->invoke($message);
         $refParseStructure->setAccessible(false);
     }
 
