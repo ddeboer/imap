@@ -78,7 +78,7 @@ final class MessageTest extends AbstractTest
         $message = new Message($connection->getResource(), $messageNumber);
 
         $this->expectException(MessageDoesNotExistException::class);
-        $this->expectExceptionMessageRegExp(\sprintf('/E_WARNING.+%s/s', \preg_quote((string) $messageNumber)));
+        $this->expectExceptionMessageRegExp(\sprintf('/%s/', \preg_quote((string) $messageNumber)));
 
         $message->hasAttachments();
     }
