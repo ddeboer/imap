@@ -49,6 +49,10 @@ class Parameters extends \ArrayIterator
     {
         $decoded = '';
         $parts = \imap_mime_header_decode($value);
+        if (!\is_array($parts)) {
+            return $decoded;
+        }
+
         foreach ($parts as $part) {
             $text = $part->text;
             if ('default' !== $part->charset) {
