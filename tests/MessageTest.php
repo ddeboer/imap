@@ -894,6 +894,15 @@ final class MessageTest extends AbstractTest
         $this->assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
+    public function test_imap_mime_header_decode_returns_false()
+    {
+        $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('=?UTF-8?B?nnDusSNdG92w6Fuw61fMjAxOF8wMy0xMzMyNTMzMTkzLnBkZg==?=', $message->getSubject());
+    }
+
     private function resetAttachmentCharset(MessageInterface $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
