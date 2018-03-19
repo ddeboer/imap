@@ -61,7 +61,28 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
         $this->structureLoaded = true;
 
-        $this->setStructure(self::loadStructure($this->resource, $this->getNumber()));
+        $messageNumber = $this->getNumber();
+
+        $errorMessage = null;
+        $errorNumber = 0;
+        \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
+            $errorMessage = $message;
+            $errorNumber = $nr;
+        });
+
+        $structure = \imap_fetchstructure(
+            $this->resource->getStream(),
+            $messageNumber,
+            \FT_UID
+        );
+
+        \restore_error_handler();
+
+        if (!$structure instanceof \stdClass) {
+            throw new MessageStructureException(\sprintf('Message "%s" structure is empty', $messageNumber));
+        }
+
+        $this->setStructure($structure);
     }
 
     /**
@@ -85,38 +106,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
             'Message "%s" does not exist',
             $messageNumber
         ));
-    }
-
-    /**
-     * Load message structure.
-     *
-     * @param ImapResourceInterface $resource
-     * @param int                   $messageNumber
-     *
-     * @return \stdClass
-     */
-    private static function loadStructure(ImapResourceInterface $resource, int $messageNumber): \stdClass
-    {
-        $errorMessage = null;
-        $errorNumber = 0;
-        \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
-            $errorMessage = $message;
-            $errorNumber = $nr;
-        });
-
-        $structure = \imap_fetchstructure(
-            $resource->getStream(),
-            $messageNumber,
-            \FT_UID
-        );
-
-        \restore_error_handler();
-
-        if (!$structure instanceof \stdClass) {
-            throw new MessageStructureException(\sprintf('Message "%s" structure is empty', $messageNumber));
-        }
-
-        return $structure;
     }
 
     /**
