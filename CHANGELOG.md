@@ -1,5 +1,18 @@
 # Change Log
 
+## [1.4.0](https://github.com/ddeboer/imap/tree/1.4.0) (2018-03-19)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.3.1...1.4.0)
+
+**Implemented enhancements:**
+
+- Lazy load Message [\#320](https://github.com/ddeboer/imap/pull/320) ([Slamdunk](https://github.com/Slamdunk))
+
+**Fixed bugs:**
+
+- Invalid argument supplied for foreach\(\) in Parameters.php line 52 [\#317](https://github.com/ddeboer/imap/issues/317)
+- Message "11964" does not exist: imap\_fetchstructure\(\): Bad message number [\#310](https://github.com/ddeboer/imap/issues/310)
+- imap\_mime\_header\_decode may return false [\#322](https://github.com/ddeboer/imap/pull/322) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.3.1](https://github.com/ddeboer/imap/tree/1.3.1) (2018-03-09)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.3.0...1.3.1)
 
