@@ -120,12 +120,14 @@ foreach ($messages as $message) {
 }
 ```
 
-Insert a new message into a mailbox. Note that the message should be a string at MIME format (as described in the [RFC2045](http://www.faqs.org/rfcs/rfc2045.html)). For example, to insert a new message (that just has been sent) into the Sent mailbox and flag it as seen :
+To insert a new message (that just has been sent) into the Sent mailbox and flag it as seen:
 
 ```php
 $mailbox = $connection->getMailbox('Sent');
 $mailbox->addMessage($messageMIME, '\\Seen');
 ```
+
+Note that the message should be a string at MIME format (as described in the [RFC2045](https://tools.ietf.org/html/rfc2045)).
 
 #### Searching for Messages
 
