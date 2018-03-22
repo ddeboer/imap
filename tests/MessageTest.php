@@ -905,6 +905,10 @@ final class MessageTest extends AbstractTest
 
     public function testBooleanDecodedContent()
     {
+        if (PHP_VERSION_ID < 70100) {
+            $this->markTestSkipped('Requires PHP < 7.1');
+        }
+
         $this->mailbox->addMessage($this->getFixture('boolean_decoded_content'));
 
         $message = $this->mailbox->getMessage(1);
@@ -913,7 +917,7 @@ final class MessageTest extends AbstractTest
 
         $this->expectException(UnexpectedEncodingException::class);
 
-        \var_dump($attachment->getDecodedContent());
+        $attachment->getDecodedContent();
     }
 
     private function resetAttachmentCharset(MessageInterface $message)
