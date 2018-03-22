@@ -336,6 +336,10 @@ abstract class AbstractPart implements PartInterface
                 $content = \quoted_printable_decode($content);
             }
 
+            if (false === $content) {
+                throw new UnexpectedEncodingException('Cannot decode content');
+            }
+
             // If this part is a text part, convert its charset to UTF-8.
             // We don't want to decode an attachment's charset.
             if (!$this instanceof Attachment && null !== $this->getCharset() && self::TYPE_TEXT === $this->getType()) {

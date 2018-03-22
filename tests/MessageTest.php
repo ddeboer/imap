@@ -911,6 +911,8 @@ final class MessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         $attachment = \current($attachments);
 
+        $this->expectException(UnexpectedEncodingException::class);
+
         \var_dump($attachment->getDecodedContent());
     }
 
