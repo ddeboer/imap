@@ -20,7 +20,7 @@ class Message extends Message\Part
     /**
      * @var boolean
      */
-    private $keepUnseen = false;
+    private $keepUnseen = true;
 
     protected $rawHeaders;
     protected $rawBody;
@@ -255,7 +255,7 @@ class Message extends Message\Part
 
             //instead of imap_fetchbody we can use
             //$headers = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID);
-            $headersText = imap_fetchbody($this->stream, $this->messageNumber, '0', FT_UID);
+            $headersText = imap_fetchbody($this->stream, $this->messageNumber, '0', \FT_UID | \FT_PEEK );
 
             $this->extHeaders = new Message\ExtendedHeaders($headersText);
         }
@@ -370,7 +370,7 @@ class Message extends Message\Part
         $this->checkStream();
 
         if(is_null($this->rawHeaders)){
-            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID );
+            $this->rawHeaders = imap_fetchheader($this->stream, $this->messageNumber, \FT_UID | \FT_PEEK);
             //|\FT_PREFETCHTEXT
             //$this->rawHeaders = imap_fetchbody($this->stream, $this->messageNumber, '0', \FT_UID| \FT_PEEK);
         }
