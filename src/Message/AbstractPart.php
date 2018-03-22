@@ -359,7 +359,7 @@ abstract class AbstractPart implements PartInterface
     {
         return \imap_fetchbody(
             $this->resource->getStream(),
-            $this->messageNumber,
+            $this->getNumber(),
             $partNumber,
             \FT_UID | \FT_PEEK
         );
@@ -489,7 +489,7 @@ abstract class AbstractPart implements PartInterface
         // When the message is not multipart and the body is the attachment content
         // Prevents infinite recursion
         if (self::isAttachment($this->structure) && !$this instanceof Attachment) {
-            $this->parts[] = new Attachment($this->resource, $this->messageNumber, '1', $this->structure);
+            $this->parts[] = new Attachment($this->resource, $this->getNumber(), '1', $this->structure);
         }
 
         if (isset($this->structure->parts)) {
@@ -502,7 +502,7 @@ abstract class AbstractPart implements PartInterface
                     : SimplePart::class
                 ;
 
-                $this->parts[] = new $newPartClass($this->resource, $this->messageNumber, $partNumber, $partStructure);
+                $this->parts[] = new $newPartClass($this->resource, $this->getNumber(), $partNumber, $partStructure);
             }
         }
     }
