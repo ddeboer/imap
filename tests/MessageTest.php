@@ -903,6 +903,23 @@ final class MessageTest extends AbstractTest
         $this->assertSame('=?UTF-8?B?nnDusSNdG92w6Fuw61fMjAxOF8wMy0xMzMyNTMzMTkzLnBkZg==?=', $message->getSubject());
     }
 
+    public function testBooleanDecodedContent()
+    {
+        if (PHP_VERSION_ID >= 70100) {
+            $this->markTestSkipped('Requires PHP < 7.1');
+        }
+
+        $this->mailbox->addMessage($this->getFixture('boolean_decoded_content'));
+
+        $message = $this->mailbox->getMessage(1);
+        $attachments = $message->getAttachments();
+        $attachment = \current($attachments);
+
+        $this->expectException(UnexpectedEncodingException::class);
+
+        $attachment->getDecodedContent();
+    }
+
     private function resetAttachmentCharset(MessageInterface $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
