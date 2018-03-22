@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.4.1](https://github.com/ddeboer/imap/tree/1.4.1) (2018-03-22)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.4.0...1.4.1)
+
+**Fixed bugs:**
+
+- Return value of Ddeboer\\Imap\\Message\\AbstractPart::getDecodedContent\(\) must be of the type string, boolean returned [\#284](https://github.com/ddeboer/imap/issues/284)
+- base64\_decode may return false in PHP \< 7.1 [\#324](https://github.com/ddeboer/imap/pull/324) ([Slamdunk](https://github.com/Slamdunk))
+
+**Merged pull requests:**
+
+- Add entry in README about Mailbox::addMessage [\#325](https://github.com/ddeboer/imap/pull/325) ([soywod](https://github.com/soywod))
+
 ## [1.4.0](https://github.com/ddeboer/imap/tree/1.4.0) (2018-03-19)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.3.1...1.4.0)
 
