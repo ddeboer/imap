@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.0](https://github.com/ddeboer/imap/tree/1.5.0) (2018-03-26)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.4.1...1.5.0)
+
+**Implemented enhancements:**
+
+- ImapResource: cache last opened mailbox [\#328](https://github.com/ddeboer/imap/pull/328) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.4.1](https://github.com/ddeboer/imap/tree/1.4.1) (2018-03-22)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.4.0...1.4.1)
 
