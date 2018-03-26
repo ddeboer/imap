@@ -23,6 +23,11 @@ final class ImapResource implements ImapResourceInterface
     private $mailbox;
 
     /**
+     * @var null|string
+     */
+    private static $lastMailboxUsedCache;
+
+    /**
      * Constructor.
      *
      * @param resource $resource
@@ -52,6 +57,14 @@ final class ImapResource implements ImapResourceInterface
     }
 
     /**
+     * Clear last mailbox used cache.
+     */
+    public function clearLastMailboxUsedCache()
+    {
+        self::$lastMailboxUsedCache = null;
+    }
+
+    /**
      * If connection is not currently in this mailbox, switch it to this mailbox.
      */
     private function initMailbox()
@@ -76,8 +89,19 @@ final class ImapResource implements ImapResourceInterface
      */
     private function isMailboxOpen(): bool
     {
-        $check = \imap_check($this->resource);
+        $currentMailboxName = $this->mailbox->getFullEncodedName();
+        if ($currentMailboxName === self::$lastMailboxUsedCache) {
+            return true;
+        }
 
-        return false !== $check && $check->Mailbox === $this->mailbox->getFullEncodedName();
+        self::$lastMailboxUsedCache = null;
+        $check = \imap_check($this->resource);
+        $return = false !== $check && $check->Mailbox === $currentMailboxName;
+
+        if (true === $return) {
+            self::$lastMailboxUsedCache = $currentMailboxName;
+        }
+
+        return $return;
     }
 }

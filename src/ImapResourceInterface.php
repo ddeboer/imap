@@ -12,4 +12,9 @@ interface ImapResourceInterface
      * @return resource
      */
     public function getStream();
+
+    /**
+     * Clear last mailbox used cache.
+     */
+    public function clearLastMailboxUsedCache();
 }
