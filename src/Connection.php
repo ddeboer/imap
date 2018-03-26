@@ -169,6 +169,7 @@ final class Connection implements ConnectionInterface
         }
 
         $this->mailboxNames = $this->mailboxes = null;
+        $this->resource->clearLastMailboxUsedCache();
 
         return $this->getMailbox($name);
     }
@@ -187,6 +188,7 @@ final class Connection implements ConnectionInterface
         }
 
         $this->mailboxes = $this->mailboxNames = null;
+        $this->resource->clearLastMailboxUsedCache();
     }
 
     /**
