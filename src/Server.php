@@ -11,6 +11,9 @@ use Ddeboer\Imap\Exception\AuthenticationFailedException;
  */
 final class Server implements ServerInterface
 {
+    const DEFAULT_PORT = '993';
+    const DEFAULT_FLAGS = '/imap/ssl/validate-cert';
+
     /**
      * @var string Internet domain name or bracketed IP address of server
      */
@@ -42,8 +45,8 @@ final class Server implements ServerInterface
      */
     public function __construct(
         string $hostname,
-        string $port = '993',
-        string $flags = '/imap/ssl/validate-cert',
+        string $port = self::DEFAULT_PORT,
+        string $flags = self::DEFAULT_FLAGS,
         array $parameters = []
     ) {
         if (!\function_exists('imap_open')) {
@@ -103,6 +106,26 @@ final class Server implements ServerInterface
         \imap_alerts();
 
         return new Connection(new ImapResource($resource), $connection);
+    }
+
+    public function getHostname() : string
+    {
+        return $this->hostname;
+    }
+
+    public function getPort() : string
+    {
+        return $this->port;
+    }
+
+    public function getFlags() : string
+    {
+        return $this->flags;
+    }
+
+    public function getParameters() : array
+    {
+        return $this->parameters;
     }
 
     /**

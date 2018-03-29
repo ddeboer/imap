@@ -13,6 +13,19 @@ use Ddeboer\Imap\Server;
  */
 final class ServerTest extends AbstractTest
 {
+    private $hostname;
+    private $port;
+    private $flags;
+    private $parameters;
+
+    protected function setUp()
+    {
+        $this->hostname = 'dummy-imap-server.example.com';
+        $this->port = '5555'; // TODO: Should't the port be numeric? http://php.net/manual/en/function.imap-open.php states that the port is a number.
+        $this->flags = ( $this->flagsProvider() )[ 'properly formatted' ][ 0 ];
+        $this->parameters = [ 'a' => 'b' ];
+    }
+
     public function testValidConnection()
     {
         $connection = $this->getConnection();
@@ -41,5 +54,67 @@ final class ServerTest extends AbstractTest
         $server = new Server(\getenv('IMAP_SERVER_NAME'), '', self::IMAP_FLAGS);
 
         $this->assertInstanceOf(ConnectionInterface::class, $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD')));
+    }
+
+    public function testGetHostname()
+    {
+        $server = new Server($this->hostname);
+
+        $this->assertEquals($this->hostname, $server->getHostname());
+    }
+
+    public function testGetPortReturnsConstructorPortWhenPortIsStated()
+    {
+        $server = new Server($this->hostname, $this->port);
+
+        $this->assertEquals($this->port, $server->getPort());
+    }
+
+    public function testGetPortReturnsDefaultPortWhenPortIsNotStated()
+    {
+        $server = new Server($this->hostname);
+
+        $this->assertEquals($server::DEFAULT_PORT, $server->getPort());
+    }
+
+    /** @dataProvider flagsProvider */
+    public function testGetFlagsReturnsConstructorFlagsWhenFlagsAreStated( string $flags, string $expectedFlags )
+    {
+        $server = new Server($this->hostname, $this->port, $flags);
+
+        $this->assertEquals($expectedFlags, $server->getFlags());
+    }
+
+    public function testGetFlagsReturnsDefaultFlagsWhenFlagsAreNotStated()
+    {
+        $server = new Server($this->hostname);
+
+        $this->assertEquals($server::DEFAULT_FLAGS, $server->getFlags());
+    }
+
+    public function testGetParametersReturnsConstructorParamatersWhenParametersAreStated()
+    {
+        $server = new Server($this->hostname, $this->port, $this->flags, $this->parameters);
+
+        $this->assertEquals($this->parameters, $server->getParameters());
+    }
+
+    public function testGetParametersReturnsEmptyArrayWhenParametersAreNotStated()
+    {
+        $server = new Server($this->hostname);
+
+        $this->assertCount(0, $server->getParameters());
+    }
+
+    // Data providers
+
+    public function flagsProvider() : array
+    {
+        return [
+            'properly formatted' => [ '/silly/flags', '/silly/flags' ],
+            'without leading slash' => [ 'silly/flags', '/silly/flags' ],
+            'single slash' => [ '/', '/' ],
+            'empty string' => [ '', '' ],
+        ];
     }
 }
