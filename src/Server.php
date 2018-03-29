@@ -108,22 +108,22 @@ final class Server implements ServerInterface
         return new Connection(new ImapResource($resource), $connection);
     }
 
-    public function getHostname() : string
+    public function getHostname(): string
     {
         return $this->hostname;
     }
 
-    public function getPort() : string
+    public function getPort(): string
     {
         return $this->port;
     }
 
-    public function getFlags() : string
+    public function getFlags(): string
     {
         return $this->flags;
     }
 
-    public function getParameters() : array
+    public function getParameters(): array
     {
         return $this->parameters;
     }
