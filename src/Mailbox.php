@@ -150,7 +150,7 @@ final class Mailbox implements MailboxInterface
      *
      * @return MessageIteratorInterface
      */
-    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false, string $charset = null): MessageIteratorInterface
+    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false, string $charset = 'utf-8'): MessageIteratorInterface
     {
         if (null === $search) {
             $search = new All();
