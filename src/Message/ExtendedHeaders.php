@@ -7,6 +7,7 @@ use Ddeboer\Transcoder\Transcoder;
 use Ddeboer\Transcoder\MBTranscoder;
 
 use DateTime;
+use DetectCyrillic\Encoding;
 use Exception;
 /**
  * Collection of message headers
@@ -270,6 +271,11 @@ class ExtendedHeaders extends Parameters
 
         if(!is_null($charset)){
 
+            if(in_array($charset, ['ansi'])) {
+                $charsetDetector = new Encoding();
+                $charset = $charsetDetector->detectMaxRelevant($content);
+            }
+
             try{
                 $content =  Transcoder::create()->transcode(
                     $content,
@@ -301,6 +307,6 @@ class ExtendedHeaders extends Parameters
             $charset = $matches[1];
         }
 
-        return $charset;
+        return trim($charset, "'\"");
     }
 }
