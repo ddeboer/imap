@@ -905,10 +905,9 @@ final class MessageTest extends AbstractTest
             'chrome.png' => 'ZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklH',
             'second.eml' => 'Subject: SECOND',
         ];
-        $actual = [];
         $attachments = $message->getAttachments();
         $this->assertCount(3, $attachments);
-        foreach ($attachments as $index => $attachment) {
+        foreach ($attachments as $attachment) {
             $this->assertContains($expected[$attachment->getFilename()], $attachment->getContent());
         }
     }

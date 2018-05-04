@@ -4,23 +4,23 @@ Subject: Nuu
 Date: Wed, 13 Sep 2017 13:05:45 +0200
 MIME-Version: 1.0
 Content-Type: multipart/mixed;
-	boundary="----=_NextPart_000_0048_01D3E127.FD6DC500"
+	boundary="----=_NextPart_000_000_000"
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0048_01D3E127.FD6DC500
+------=_NextPart_000_000_000
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_001_0049_01D3E127.FD6DC500"
+	boundary="----=_NextPart_000_111_000"
 
 
-------=_NextPart_001_0049_01D3E127.FD6DC500
+------=_NextPart_000_111_000
 Content-Type: text/plain;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
 Dear Sarah
 
-------=_NextPart_001_0049_01D3E127.FD6DC500
+------=_NextPart_000_111_000
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -30,9 +30,9 @@ Content-Transfer-Encoding: quoted-printable
 <DIV>Dear Sarah,</DIV>
 </BODY></HTML>
 
-------=_NextPart_001_0049_01D3E127.FD6DC500--
+------=_NextPart_000_111_000--
 
-------=_NextPart_000_0048_01D3E127.FD6DC500
+------=_NextPart_000_000_000
 Content-Type: message/rfc822;
 	name="first.eml"
 Content-Transfer-Encoding: 7bit
@@ -45,16 +45,16 @@ Subject: FIRST
 Date: Sat, 28 Apr 2018 14:37:16 -0400
 MIME-Version: 1.0
 Content-Type: multipart/mixed;
-	boundary="----=_NextPart_000_079E_01D3DEFE.67DD4450"
+	boundary="----=_NextPart_000_222_000"
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_079E_01D3DEFE.67DD4450
+------=_NextPart_000_222_000
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_001_079F_01D3DEFE.67DD4450"
+	boundary="----=_NextPart_000_222_111"
 
 
-------=_NextPart_001_079F_01D3DEFE.67DD4450
+------=_NextPart_000_222_111
 Content-Type: text/plain;
 	charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -63,7 +63,7 @@ Please respond directly to this email to update your RMA
 
 
 2018-04-17T11:04:03-04:00
-------=_NextPart_001_079F_01D3DEFE.67DD4450
+------=_NextPart_000_222_111
 Content-Type: text/html;
 	charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -74,9 +74,9 @@ Content-Transfer-Encoding: quoted-printable
 email to=20
 update your RMA</DIV></BODY></HTML>
 
-------=_NextPart_001_079F_01D3DEFE.67DD4450--
+------=_NextPart_000_222_111--
 
-------=_NextPart_000_079E_01D3DEFE.67DD4450
+------=_NextPart_000_222_000
 Content-Type: image/png;
 	name="chrome.png"
 Content-Transfer-Encoding: base64
@@ -104,9 +104,9 @@ iTKtWYeHxUvq3bn0pyjCRaiRU6aDO+gb3aEfEeVNsDgm8zzLy9egPa7Qt8TSJdwhjplk06HH43ZN
 J3s91KKCHQ5x4sw1fRGYDZ0n1L4FKb9/BP5JLYxToheoFCVxz57PPS8UhhEpLBVeAAAAAElFTkSu
 QmCC
 
-------=_NextPart_000_079E_01D3DEFE.67DD4450--
+------=_NextPart_000_222_000--
 
-------=_NextPart_000_0048_01D3E127.FD6DC500
+------=_NextPart_000_000_000
 Content-Type: message/rfc822;
 	name="second.eml"
 Content-Transfer-Encoding: 7bit
@@ -119,17 +119,17 @@ Subject: SECOND
 Date: Sat, 28 Apr 2018 13:37:30 -0400
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0783_01D3DEF6.0E499220"
+	boundary="----=_NextPart_000_333_000"
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0783_01D3DEF6.0E499220
+------=_NextPart_000_333_000
 Content-Type: text/plain;
 	charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 T whom it may concern:
-------=_NextPart_000_0783_01D3DEF6.0E499220
+------=_NextPart_000_333_000
 Content-Type: text/html;
 	charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -139,7 +139,7 @@ Content-Transfer-Encoding: quoted-printable
 <DIV>T whom it may concern:</DIV>
 </BODY></HTML>
 
-------=_NextPart_000_0783_01D3DEF6.0E499220--
+------=_NextPart_000_333_000--
 
-------=_NextPart_000_0048_01D3E127.FD6DC500--
+------=_NextPart_000_000_000--
 
