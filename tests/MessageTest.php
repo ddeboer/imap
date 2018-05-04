@@ -894,6 +894,24 @@ final class MessageTest extends AbstractTest
         $this->assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
+    public function test_nestes_embedded_with_attachment()
+    {
+        $this->mailbox->addMessage($this->getFixture('nestes_embedded_with_attachment'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $expected = [
+            'first.eml' => 'Subject: FIRST',
+            'chrome.png' => 'ZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklH',
+            'second.eml' => 'Subject: SECOND',
+        ];
+        $attachments = $message->getAttachments();
+        $this->assertCount(3, $attachments);
+        foreach ($attachments as $attachment) {
+            $this->assertContains($expected[$attachment->getFilename()], $attachment->getContent());
+        }
+    }
+
     public function test_imap_mime_header_decode_returns_false()
     {
         $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));
