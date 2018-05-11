@@ -30,6 +30,7 @@ use Ddeboer\Imap\SearchExpression;
  * @covers \Ddeboer\Imap\Search\Flag\Unseen
  * @covers \Ddeboer\Imap\Search\LogicalOperator\All
  * @covers \Ddeboer\Imap\Search\LogicalOperator\OrConditions
+ * @covers \Ddeboer\Imap\Search\Number
  * @covers \Ddeboer\Imap\Search\RawExpression
  * @covers \Ddeboer\Imap\Search\State\Deleted
  * @covers \Ddeboer\Imap\Search\State\NewMessage
@@ -103,6 +104,7 @@ final class MailboxSearchTest extends AbstractTest
             new Search\Flag\Unanswered(),
             new Search\Flag\Unflagged(),
             new Search\Flag\Unseen(),
+            new Search\Number(15670, 16829),
             new Search\State\Deleted(),
             new Search\State\NewMessage(),
             new Search\State\Old(),
