@@ -12,24 +12,24 @@ final class Number implements ConditionInterface
     /**
      * The minimum accepted message number (null means unlimited).
      *
-     * @var int|null
+     * @var null|int
      */
     private $minNumber;
 
     /**
      * The maximum accepted message number (null means unlimited).
      *
-     * @var int|null
+     * @var null|int
      */
     private $maxNumber;
 
     /**
      * Constructor.
      *
-     * @param int|null $minNumber the minimum accepted message number (null means unlimited)
-     * @param int|null $maxNumber the maximum accepted message number (null means unlimited)
+     * @param null|int $minNumber the minimum accepted message number (null means unlimited)
+     * @param null|int $maxNumber the maximum accepted message number (null means unlimited)
      */
-    public function __construct(int $minNumber = null, int $maxNumber = null)
+    final public function __construct(int $minNumber = null, int $maxNumber = null)
     {
         $this->minNumber = $minNumber;
         $this->maxNumber = $maxNumber;
@@ -42,6 +42,6 @@ final class Number implements ConditionInterface
      */
     final public function toString(): string
     {
-        return \sprintf('UID %s:%s', $this->minNumber ?? '*', $this->maxNumber ?? '*');
+        return \sprintf('UID "%s:%s"', $this->minNumber ?? '*', $this->maxNumber ?? '*');
     }
 }
