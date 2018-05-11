@@ -7,7 +7,7 @@ namespace Ddeboer\Imap\Search;
 /**
  * Represents a number range condition. Number is formally known as UID.
  */
-abstract class Number implements ConditionInterface
+final class Number implements ConditionInterface
 {
     /**
      * The minimum accepted message number (null means unlimited).
