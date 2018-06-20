@@ -80,7 +80,7 @@ final class MailboxSearchTest extends AbstractTest
         $this->assertCount(0, $messages);
     }
 
-    public function testSearchEscapes()
+    public function testSearchEscapesDontRaiseErrors()
     {
         $specialChars = 'A_ spaces _09!#$%&\'*+-/=?^_`{|}~.(),:;<>@[\\]_èπ€_Z';
         $specialEmail = $specialChars . '@example.com';
@@ -120,6 +120,22 @@ final class MailboxSearchTest extends AbstractTest
         }
 
         $messages = $this->mailbox->getMessages($searchExpression);
+
+        $this->assertCount(0, $messages);
+    }
+
+    public function testSearchApostrophe()
+    {
+        $firstSubject = 'Bob\'s Grand Opening';
+        $this->createTestMessage($this->mailbox, $firstSubject);
+        $this->createTestMessage($this->mailbox, \uniqid('second_'));
+
+        $messages = $this->mailbox->getMessages(new Search\Text\Subject($firstSubject));
+
+        $this->assertCount(1, $messages);
+        $this->assertSame($firstSubject, $messages->current()->getSubject());
+
+        $messages = $this->mailbox->getMessages(new Search\Text\Subject(\uniqid('none_')));
 
         $this->assertCount(0, $messages);
     }
