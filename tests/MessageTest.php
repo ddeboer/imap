@@ -923,7 +923,7 @@ final class MessageTest extends AbstractTest
 
     public function testBooleanDecodedContent()
     {
-        if (PHP_VERSION_ID >= 70100) {
+        if (\PHP_VERSION_ID >= 70100) {
             $this->markTestSkipped('Requires PHP < 7.1');
         }
 

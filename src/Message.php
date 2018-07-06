@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\InvalidHeadersException;
 use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
@@ -152,6 +153,9 @@ final class Message extends Message\AbstractMessage implements MessageInterface
             // imap_headerinfo returns only a subset of all mail headers,
             // but it does include the message flags.
             $headers = \imap_headerinfo($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->getNumber()));
+            if (false === $headers) {
+                throw new InvalidHeadersException(\sprintf('Message "%s" has invalid headers', $this->getNumber()));
+            }
             $this->headers = new Message\Headers($headers);
         }
 
