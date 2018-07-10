@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.5.2](https://github.com/ddeboer/imap/tree/1.5.2) (2018-07-10)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.5.1...1.5.2)
+
+**Fixed bugs:**
+
+- Fails to load Message Headers [\#358](https://github.com/ddeboer/imap/issues/358)
+- Handle invalid headers [\#359](https://github.com/ddeboer/imap/pull/359) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.5.1](https://github.com/ddeboer/imap/tree/1.5.1) (2018-05-04)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.5.0...1.5.1)
 
