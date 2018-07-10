@@ -154,6 +154,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
             // but it does include the message flags.
             $headers = \imap_headerinfo($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->getNumber()));
             if (false === $headers) {
+                // @see https://github.com/ddeboer/imap/issues/358
                 throw new InvalidHeadersException(\sprintf('Message "%s" has invalid headers', $this->getNumber()));
             }
             $this->headers = new Message\Headers($headers);
