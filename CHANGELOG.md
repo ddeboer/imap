@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.5.3](https://github.com/ddeboer/imap/tree/1.5.3) (2018-07-20)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.5.2...1.5.3)
+
+**Fixed bugs:**
+
+- Dates: handle UT timezone [\#361](https://github.com/ddeboer/imap/pull/361) ([Slamdunk](https://github.com/Slamdunk))
+- In dates, replace UT with UTC [\#360](https://github.com/ddeboer/imap/pull/360) ([TolstoyDotCom](https://github.com/TolstoyDotCom))
+
 ## [1.5.2](https://github.com/ddeboer/imap/tree/1.5.2) (2018-07-10)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.5.1...1.5.2)
 
