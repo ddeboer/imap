@@ -12,6 +12,7 @@ return PhpCsFixer\Config::create()
         'array_syntax' => ['syntax' => 'short'],
         'blank_line_before_statement' => true,
         'concat_space' => ['spacing' => 'one'],
+        'error_suppression' => false,
         'escape_implicit_backslashes' => true,
         'explicit_indirect_variable' => true,
         'explicit_string_variable' => true,

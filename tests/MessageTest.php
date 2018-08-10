@@ -520,6 +520,8 @@ final class MessageTest extends AbstractTest
             ['2006-01-04T21:47:28+0000', 'WED 04, JAN 2006 21:47:28'],
             ['2018-01-04T06:44:23+0400', 'Thur, 04 Jan 2018 06:44:23 +0400'],
             ['2007-04-06T12:37:39+0000', 'Fri Apr 06 12:37:39 2007'],
+            ['2008-02-12T06:35:05+0000', '12 Feb 2008 06:35:05 UT +0000'],
+            ['2010-07-09T21:40:33+0000', 'Fri, 9 Jul 2010 21:40:33 UT'],
         ];
     }
 
@@ -894,6 +896,24 @@ final class MessageTest extends AbstractTest
         $this->assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
+    public function test_nestes_embedded_with_attachment()
+    {
+        $this->mailbox->addMessage($this->getFixture('nestes_embedded_with_attachment'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $expected = [
+            'first.eml' => 'Subject: FIRST',
+            'chrome.png' => 'ZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklH',
+            'second.eml' => 'Subject: SECOND',
+        ];
+        $attachments = $message->getAttachments();
+        $this->assertCount(3, $attachments);
+        foreach ($attachments as $attachment) {
+            $this->assertContains($expected[$attachment->getFilename()], $attachment->getContent());
+        }
+    }
+
     public function test_imap_mime_header_decode_returns_false()
     {
         $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));
@@ -905,7 +925,7 @@ final class MessageTest extends AbstractTest
 
     public function testBooleanDecodedContent()
     {
-        if (PHP_VERSION_ID >= 70100) {
+        if (\PHP_VERSION_ID >= 70100) {
             $this->markTestSkipped('Requires PHP < 7.1');
         }
 

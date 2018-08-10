@@ -497,7 +497,12 @@ abstract class AbstractPart implements PartInterface
         }
 
         if (isset($this->structure->parts)) {
-            foreach ($this->structure->parts as $key => $partStructure) {
+            $parts = $this->structure->parts;
+            // https://secure.php.net/manual/en/function.imap-fetchbody.php#89002
+            if ($this instanceof Attachment && $this->isEmbeddedMessage() && 1 === \count($parts) && \TYPEMULTIPART === $parts[0]->type) {
+                $parts = $parts[0]->parts;
+            }
+            foreach ($parts as $key => $partStructure) {
                 $partNumber = (!$this instanceof Message) ? $this->partNumber . '.' : '';
                 $partNumber .= (string) ($key + 1);
 

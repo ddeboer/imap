@@ -1,5 +1,29 @@
 # Change Log
 
+## [1.5.3](https://github.com/ddeboer/imap/tree/1.5.3) (2018-07-20)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.5.2...1.5.3)
+
+**Fixed bugs:**
+
+- Dates: handle UT timezone [\#361](https://github.com/ddeboer/imap/pull/361) ([Slamdunk](https://github.com/Slamdunk))
+- In dates, replace UT with UTC [\#360](https://github.com/ddeboer/imap/pull/360) ([TolstoyDotCom](https://github.com/TolstoyDotCom))
+
+## [1.5.2](https://github.com/ddeboer/imap/tree/1.5.2) (2018-07-10)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.5.1...1.5.2)
+
+**Fixed bugs:**
+
+- Fails to load Message Headers [\#358](https://github.com/ddeboer/imap/issues/358)
+- Handle invalid headers [\#359](https://github.com/ddeboer/imap/pull/359) ([Slamdunk](https://github.com/Slamdunk))
+
+## [1.5.1](https://github.com/ddeboer/imap/tree/1.5.1) (2018-05-04)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.5.0...1.5.1)
+
+**Fixed bugs:**
+
+- getContent\(\) method returns wrong content part [\#342](https://github.com/ddeboer/imap/issues/342)
+- Fix handle of attachment messages with attachments [\#343](https://github.com/ddeboer/imap/pull/343) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.5.0](https://github.com/ddeboer/imap/tree/1.5.0) (2018-03-26)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.4.1...1.5.0)
 
