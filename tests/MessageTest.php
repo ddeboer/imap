@@ -446,6 +446,18 @@ final class MessageTest extends AbstractTest
         ];
     }
 
+    public function testAttachmentLongFilename()
+    {
+        $this->mailbox->addMessage($this->getFixture('attachment_long_filename'));
+
+        $message = $this->mailbox->getMessage(1);
+        $this->assertTrue($message->hasAttachments());
+        $this->assertCount(1, $message->getAttachments());
+        $attachment = $message->getAttachments()[0];
+
+        $this->assertNotNull($attachment->getFilename());
+    }
+
     /**
      * @dataProvider provideUndisclosedRecipientsCases
      */

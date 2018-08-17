@@ -1,0 +1,17 @@
+Content-Type: multipart/mixed;
+	boundary="BOUNDARY"
+
+--BOUNDARY
+Content-Type: application/pdf;
+    name*0*=utf-8''Buchungsbest%C3%A4tigung-%20Rechnung-Gesch%C3%A4ftsbedingung;
+    name*1*=en-Nr.B123-45%20-%20XXXX%20xxxxxxxxxxxxxxxxx%20XxxX%2C%20L%C3%BCd;
+    name*2*=xxxxxxxx%20-%20VM%20Klaus%20XXXXXX%20-%20xxxxxxxx.pdf
+Content-Disposition: attachment; size=70551;
+    filename*0*=utf-8''Buchungsbest%C3%A4tigung-%20Rechnung-Gesch%C3%A4ftsbedin;
+    filename*1*=gungen-Nr.B123-45%20-%20XXXXX%20xxxxxxxxxxxxxxxxx%20XxxX%2C;
+    filename*2*=%20L%C3%BCxxxxxxxxxx%20-%20VM%20Klaus%20XXXXXX%20-%20xxxxxxxx.p;
+    filename*3*=df
+Content-Transfer-Encoding: base64
+
+0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAPgADAP7/CQAGAAAAAAAAAAAAAAACAAAAwgAAAAAA
+AAAAEAAA/v///wAAAAD+////AAAAAMAAAADBAAAA////////////////////////////////
