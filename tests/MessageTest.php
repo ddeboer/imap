@@ -452,10 +452,34 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
         $this->assertTrue($message->hasAttachments());
-        $this->assertCount(1, $message->getAttachments());
-        $attachment = $message->getAttachments()[0];
+        $this->assertCount(3, $message->getAttachments());
 
-        $this->assertNotNull($attachment->getFilename());
+        $actual = [];
+        foreach ($message->getAttachments() as $attachment) {
+            $parameters = $attachment->getParameters();
+
+            $actual[] = [
+                'filename' => $parameters->get('filename'),
+                'name' => $parameters->get('name'),
+            ];
+        }
+
+        $expected = [
+            [
+                'filename' => 'Buchungsbestätigung- Rechnung-Geschäftsbedingungen-Nr.B123-45 - XXXXX xxxxxxxxxxxxxxxxx XxxX, Lüxxxxxxxxxx - VM Klaus XXXXXX - xxxxxxxx.pdf',
+                'name' => 'Buchungsbestätigung- Rechnung-Geschäftsbedingungen-Nr.B123-45 - XXXXX xxxxxxxxxxxxxxxxx XxxX, Lüxxxxxxxxxx - VM Klaus XXXXXX - xxxxxxxx.pdf',
+            ],
+            [
+                'filename' => '01_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
+                'name' => '01_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
+            ],
+            [
+                'filename' => '02_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
+                'name' => '02_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
+            ],
+        ];
+
+        $this->assertSame($expected, $actual);
     }
 
     /**

@@ -120,6 +120,16 @@ abstract class AbstractPart implements PartInterface
     ];
 
     /**
+     * @var array
+     */
+    private static $attachmentKeys = [
+        'name' => true,
+        'filename' => true,
+        'name*' => true,
+        'filename*' => true,
+    ];
+
+    /**
      * Constructor.
      *
      * @param ImapResourceInterface $resource      IMAP resource
@@ -543,7 +553,7 @@ abstract class AbstractPart implements PartInterface
         // Attachment without Content-Disposition header
         if ($part->ifparameters) {
             foreach ($part->parameters as $parameter) {
-                if ('name' === \strtolower($parameter->attribute) || 'filename' === \strtolower($parameter->attribute)) {
+                if (isset(self::$attachmentKeys[\strtolower($parameter->attribute)])) {
                     return true;
                 }
             }
@@ -552,7 +562,7 @@ abstract class AbstractPart implements PartInterface
         /*
         if ($part->ifdparameters) {
             foreach ($part->dparameters as $parameter) {
-                if ('name' === strtolower($parameter->attribute) || 'filename' === strtolower($parameter->attribute)) {
+                if (isset(self::$attachmentKeys[\strtolower($parameter->attribute)])) {
                     return true;
                 }
             }

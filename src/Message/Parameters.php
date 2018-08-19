@@ -7,6 +7,14 @@ namespace Ddeboer\Imap\Message;
 class Parameters extends \ArrayIterator
 {
     /**
+     * @var array
+     */
+    private static $attachmentCustomKeys = [
+        'name*' => 'name',
+        'filename*' => 'filename',
+    ];
+
+    /**
      * @param array $parameters
      */
     public function __construct(array $parameters = [])
@@ -23,6 +31,9 @@ class Parameters extends \ArrayIterator
     {
         foreach ($parameters as $parameter) {
             $key = \strtolower($parameter->attribute);
+            if (isset(self::$attachmentCustomKeys[$key])) {
+                $key = self::$attachmentCustomKeys[$key];
+            }
             $value = $this->decode($parameter->value);
             $this[$key] = $value;
         }
