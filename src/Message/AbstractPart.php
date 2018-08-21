@@ -541,8 +541,12 @@ abstract class AbstractPart implements PartInterface
 
         // Attachment with correct Content-Disposition header
         if ($part->ifdisposition) {
+            if ('attachment' === \strtolower($part->disposition)) {
+                return true;
+            }
+
             if (
-                    ('attachment' === \strtolower($part->disposition) || 'inline' === \strtolower($part->disposition))
+                    'inline' === \strtolower($part->disposition)
                 && self::SUBTYPE_PLAIN !== \strtoupper($part->subtype)
                 && self::SUBTYPE_HTML !== \strtoupper($part->subtype)
             ) {
