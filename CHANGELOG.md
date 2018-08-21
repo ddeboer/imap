@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.5.5](https://github.com/ddeboer/imap/tree/1.5.5) (2018-08-21)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.5.4...1.5.5)
+
+**Fixed bugs:**
+
+- Plain text attachments are not identified as Attachment parts [\#341](https://github.com/ddeboer/imap/issues/341)
+- Handle plain/text attachments without Content-Type header [\#367](https://github.com/ddeboer/imap/pull/367) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.5.4](https://github.com/ddeboer/imap/tree/1.5.4) (2018-08-19)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.5.3...1.5.4)
 
