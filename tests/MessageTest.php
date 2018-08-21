@@ -482,6 +482,25 @@ final class MessageTest extends AbstractTest
         $this->assertSame($expected, $actual);
     }
 
+    public function testPlainTextAttachment()
+    {
+        $this->mailbox->addMessage($this->getFixture('plain_text_attachment'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('Test', $message->getBodyText());
+        $this->assertNull($message->getBodyHtml());
+
+        $this->assertTrue($message->hasAttachments());
+
+        $attachments = $message->getAttachments();
+        $this->assertCount(1, $attachments);
+
+        $attachment = \current($attachments);
+
+        $this->assertSame('Hi!', $attachment->getDecodedContent());
+    }
+
     /**
      * @dataProvider provideUndisclosedRecipientsCases
      */
