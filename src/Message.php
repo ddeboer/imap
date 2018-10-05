@@ -121,7 +121,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     public function getRawHeaders(): string
     {
         if (null === $this->rawHeaders) {
-            $this->rawHeaders = \imap_fetchheader($this->resource->getStream(), $this->getNumber(), \FT_UID);
+            $this->rawHeaders = imap_rfc822_parse_headers(\imap_fetchheader($this->resource->getStream(), $this->getNumber(), \FT_UID));
         }
 
         return $this->rawHeaders;
@@ -152,7 +152,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
             // imap_headerinfo is much faster than imap_fetchheader
             // imap_headerinfo returns only a subset of all mail headers,
             // but it does include the message flags.
-            $headers = \imap_headerinfo($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->getNumber()));
+            $headers = imap_rfc822_parse_headers(\imap_fetchheader($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->getNumber())));
             if (false === $headers) {
                 // @see https://github.com/ddeboer/imap/issues/358
                 throw new InvalidHeadersException(\sprintf('Message "%s" has invalid headers', $this->getNumber()));
