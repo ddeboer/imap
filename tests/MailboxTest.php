@@ -71,6 +71,15 @@ final class MailboxTest extends AbstractTest
         $this->assertSame(3, $aggregateIteratorMethodInc);
     }
 
+    public function testGetMessageSequence()
+    {
+        $inc = 0;
+        foreach ($this->mailbox->getMessageSequence('1:*') as $message) {
+            ++$inc;
+        }
+        $this->assertSame(3, $inc);
+    }
+
     public function testGetMessageThrowsException()
     {
         $message = $this->mailbox->getMessage(999);
