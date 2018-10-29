@@ -179,7 +179,7 @@ final class Mailbox implements MailboxInterface
     }
 
     /**
-     * Get message iterator for a sequence
+     * Get message iterator for a sequence.
      *
      * @param string $sequence Message numbers
      *
@@ -190,15 +190,16 @@ final class Mailbox implements MailboxInterface
         \imap_errors();
 
         $overview = \imap_fetch_overview($this->resource->getStream(), $sequence, FT_UID);
-        if (false === $overview) {
+        if (empty($overview)) {
             if (false !== \imap_last_error()) {
                 throw new InvalidSearchCriteriaException(\sprintf('Invalid sequence [%s]', $sequence));
             }
 
             $messageNumbers = [];
         } else {
-            $messageNumbers = array_column($overview, 'uid');
+            $messageNumbers = \array_column($overview, 'uid');
         }
+
         return new MessageIterator($this->resource, $messageNumbers);
     }
 
