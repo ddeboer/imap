@@ -345,3 +345,11 @@ these environment variables in it:
 ```
 
 **WARNING** Tests create new mailboxes without removing them.
+
+### Running Tests using Docker
+
+If you have Docker installed you can run the tests locally with the following command:
+
+```
+docker-compose run tests
+```
