@@ -352,5 +352,5 @@ these environment variables in it:
 If you have Docker installed you can run the tests locally with the following command:
 
 ```
-docker-compose run tests
+$ docker-compose run tests
 ```
