@@ -27,6 +27,7 @@ This library requires [IMAP](https://secure.php.net/manual/en/book.imap.php),
     1. [Timeouts](#timeouts)
 1. [Mock the library](#mock-the-library)
 1. [Running the Tests](#running-the-tests)
+    1. [Running Tests using Docker](#running-tests-using-docker)
 
 ## Installation
 
@@ -345,3 +346,11 @@ these environment variables in it:
 ```
 
 **WARNING** Tests create new mailboxes without removing them.
+
+### Running Tests using Docker
+
+If you have Docker installed you can run the tests locally with the following command:
+
+```
+$ docker-compose run tests
+```
