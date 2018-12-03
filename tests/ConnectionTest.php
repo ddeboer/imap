@@ -134,4 +134,15 @@ final class ConnectionTest extends AbstractTest
         $this->expectException(MailboxDoesNotExistException::class);
         $this->getConnection()->getMailbox('does-not-exist');
     }
+
+    public function testNumericMailbox()
+    {
+        $number = (string) \mt_rand(100, 999);
+        $conn = $this->getConnection();
+        $mailbox = $conn->createMailbox($number);
+
+        $mailboxes = $conn->getMailboxes();
+
+        static::assertArrayHasKey($number, $mailboxes);
+    }
 }

@@ -92,7 +92,7 @@ final class Connection implements ConnectionInterface
         if (null === $this->mailboxes) {
             $this->mailboxes = [];
             foreach ($this->mailboxNames as $mailboxName => $mailboxInfo) {
-                $this->mailboxes[$mailboxName] = $this->getMailbox(strval($mailboxName));
+                $this->mailboxes[(string) $mailboxName] = $this->getMailbox((string) $mailboxName);
             }
         }
 
