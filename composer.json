@@ -28,11 +28,11 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.10",
+        "friendsofphp/php-cs-fixer": "^2.13",
         "phpstan/phpstan": "^0.9.1",
         "phpstan/phpstan-phpunit": "^0.9.3",
-        "phpunit/phpunit": "^6.5 || ^7.0",
-        "zendframework/zend-mail": "^2.8"
+        "phpunit/phpunit": "^7.4",
+        "zendframework/zend-mail": "^2.10"
     },
     "autoload": {
         "psr-4": {

@@ -136,7 +136,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      *
      * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
-    public function move($numbers, self $mailbox);
+    public function move($numbers, self $mailbox): void;
 
     /**
      * Bulk copy messages.
@@ -146,5 +146,5 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      *
      * @throws \Ddeboer\Imap\Exception\MessageCopyException
      */
-    public function copy($numbers, self $mailbox);
+    public function copy($numbers, self $mailbox): void;
 }
