@@ -34,7 +34,7 @@ final class ServerTest extends AbstractTest
 
     public function testEmptyPort()
     {
-        if ('933' !== \getenv('IMAP_SERVER_PORT')) {
+        if ('993' !== (string) \getenv('IMAP_SERVER_PORT')) {
             $this->markTestSkipped('Active IMAP test server must have 993 port for this test');
         }
 

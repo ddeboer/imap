@@ -275,7 +275,7 @@ final class Mailbox implements MailboxInterface
      *
      * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
-    public function move($numbers, MailboxInterface $mailbox)
+    public function move($numbers, MailboxInterface $mailbox): void
     {
         if (!\imap_mail_move($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
             throw new MessageMoveException(\sprintf('Messages cannot be moved to "%s"', $mailbox->getName()));
@@ -290,7 +290,7 @@ final class Mailbox implements MailboxInterface
      *
      * @throws \Ddeboer\Imap\Exception\MessageCopyException
      */
-    public function copy($numbers, MailboxInterface $mailbox)
+    public function copy($numbers, MailboxInterface $mailbox): void
     {
         if (!\imap_mail_copy($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
             throw new MessageCopyException(\sprintf('Messages cannot be copied to "%s"', $mailbox->getName()));
