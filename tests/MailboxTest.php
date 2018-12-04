@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use DateTimeImmutable;
+use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
@@ -69,6 +70,33 @@ final class MailboxTest extends AbstractTest
         }
 
         $this->assertSame(3, $aggregateIteratorMethodInc);
+    }
+
+    public function testGetMessageSequence()
+    {
+        $inc = 0;
+        foreach ($this->mailbox->getMessageSequence('1:*') as $message) {
+            ++$inc;
+        }
+        $this->assertSame(3, $inc);
+
+        $inc = 0;
+        foreach ($this->mailbox->getMessageSequence('1:2') as $message) {
+            ++$inc;
+        }
+
+        $this->assertSame(2, $inc);
+        $inc = 0;
+        foreach ($this->mailbox->getMessageSequence('99998:99999') as $message) {
+            ++$inc;
+        }
+        $this->assertSame(0, $inc);
+    }
+
+    public function testGetMessageSequenceThrowsException()
+    {
+        $this->expectException(InvalidSearchCriteriaException::class);
+        $this->mailbox->getMessageSequence('-1:x');
     }
 
     public function testGetMessageThrowsException()

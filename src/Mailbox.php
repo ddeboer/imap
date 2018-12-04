@@ -179,6 +179,31 @@ final class Mailbox implements MailboxInterface
     }
 
     /**
+     * Get message iterator for a sequence.
+     *
+     * @param string $sequence Message numbers
+     *
+     * @return MessageIteratorInterface
+     */
+    public function getMessageSequence(string $sequence): MessageIteratorInterface
+    {
+        \imap_errors();
+
+        $overview = \imap_fetch_overview($this->resource->getStream(), $sequence, FT_UID);
+        if (empty($overview)) {
+            if (false !== \imap_last_error()) {
+                throw new InvalidSearchCriteriaException(\sprintf('Invalid sequence [%s]', $sequence));
+            }
+
+            $messageNumbers = [];
+        } else {
+            $messageNumbers = \array_column($overview, 'uid');
+        }
+
+        return new MessageIterator($this->resource, $messageNumbers);
+    }
+
+    /**
      * Get a message by message number.
      *
      * @param int $number Message number
