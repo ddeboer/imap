@@ -52,7 +52,7 @@ final class ServerTest extends AbstractTest
         $check = \imap_check($connection->getResource()->getStream());
         $mailbox = \strtolower($check->Mailbox);
 
-        static::assertContains(\getenv('IMAP_SERVER_NAME'), $mailbox);
+        static::assertContains(\getenv('IMAP_USERNAME'), $mailbox);
         static::assertNotContains('inbox', $mailbox);
         static::assertContains('no_mailbox', $mailbox);
     }
