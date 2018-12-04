@@ -48,9 +48,9 @@ final class Server implements ServerInterface
      *                           of server
      * @param string $port       TCP port number
      * @param string $flags      Optional flags
+     * @param array  $parameters Connection parameters
      * @param int    $options    Connection options
      * @param int    $retries    Retries number
-     * @param array  $parameters Connection parameters
      */
     public function __construct(
         string $hostname,
