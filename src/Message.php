@@ -10,6 +10,7 @@ use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\MessageStructureException;
+use Ddeboer\Imap\Exception\MessageUndeleteException;
 
 /**
  * An IMAP message (e-mail).
