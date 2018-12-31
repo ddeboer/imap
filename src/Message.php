@@ -315,6 +315,20 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     }
 
     /**
+     * Undelete message.
+     *
+     * @throws MessageUndeleteException
+     */
+    public function undelete(): void
+    {
+        // 'deleted' header changed, force to reload headers, would be better to set deleted flag to false on header
+        $this->clearHeaders();
+        if (!\imap_undelete($this->resource->getStream(), $this->getNumber(), \FT_UID)) {
+            throw new MessageUndeleteException(\sprintf('Message "%s" cannot be undeleted', $this->getNumber()));
+        }
+    }
+
+    /**
      * Set Flag Message.
      *
      * @param string $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
