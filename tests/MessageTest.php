@@ -1032,4 +1032,13 @@ final class MessageTest extends AbstractTest
 
         $messages->current();
     }
+
+    public function testGbkCharsetDecoding()
+    {
+        $this->mailbox->addMessage($this->getFixture('gbk_charset'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('Hi', trim($message->getDecodedContent()));
+    }
 }

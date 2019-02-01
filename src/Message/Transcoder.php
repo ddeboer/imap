@@ -122,7 +122,7 @@ final class Transcoder
         'elot_928' => 'ISO-8859-7',
         'gb_2312' => 'GB2312',
         'gb_2312-80' => 'GB2312',
-        'gbk' => 'x-gbk',
+        'x-gbk' => 'gbk',
         'greek' => 'ISO-8859-7',
         'greek8' => 'ISO-8859-7',
         'hebrew' => 'ISO-8859-8',
