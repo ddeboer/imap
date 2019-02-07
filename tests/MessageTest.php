@@ -359,6 +359,24 @@ final class MessageTest extends AbstractTest
         }
     }
 
+    public function testUndelete()
+    {
+        $this->createTestMessage($this->mailbox, 'Message A');
+        $this->createTestMessage($this->mailbox, 'Message B');
+        $this->createTestMessage($this->mailbox, 'Message C');
+
+        $message = $this->mailbox->getMessage(3);
+        $message->delete();
+        $message->undelete();
+        $this->assertFalse($message->isDeleted());
+        $this->getConnection()->expunge();
+
+        $this->assertCount(3, $this->mailbox);
+        $this->assertSame('Message A', $this->mailbox->getMessage(1)->getSubject());
+        $this->assertSame('Message B', $this->mailbox->getMessage(2)->getSubject());
+        $this->assertSame('Message C', $this->mailbox->getMessage(3)->getSubject());
+    }
+
     public function testMove()
     {
         $mailboxOne = $this->createMailbox();
