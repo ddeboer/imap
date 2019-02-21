@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap;
 
 use Ddeboer\Imap\Exception\AuthenticationFailedException;
+use Ddeboer\Imap\Exception\ResourceCheckFailureException;
 
 /**
  * An IMAP server.
@@ -111,6 +112,11 @@ final class Server implements ServerInterface
         }
 
         $check = \imap_check($resource);
+
+        if (false === $check) {
+            throw new ResourceCheckFailureException('Resource check failure');
+        }
+
         $mailbox = $check->Mailbox;
         $connection = \substr($mailbox, 0, \strpos($mailbox, '}') + 1);
 
