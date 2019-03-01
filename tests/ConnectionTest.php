@@ -47,7 +47,7 @@ final class ConnectionTest extends AbstractTest
 
     public function testCount()
     {
-        static::assertInternalType('int', $this->getConnection()->count());
+        static::assertIsInt($this->getConnection()->count());
     }
 
     public function testPing()
@@ -66,7 +66,7 @@ final class ConnectionTest extends AbstractTest
     public function testGetMailboxes()
     {
         $mailboxes = $this->getConnection()->getMailboxes();
-        static::assertInternalType('array', $mailboxes);
+        static::assertIsArray($mailboxes);
 
         foreach ($mailboxes as $mailbox) {
             static::assertInstanceOf(Mailbox::class, $mailbox);
