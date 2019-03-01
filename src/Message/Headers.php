@@ -31,7 +31,7 @@ final class Headers extends Parameters
      *
      * @param string $key
      *
-     * @return null|string
+     * @return mixed
      */
     public function get(string $key)
     {

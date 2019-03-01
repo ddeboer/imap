@@ -8,5 +8,9 @@ parameters:
         - src/
         - tests/
     ignoreErrors:
-        - '#Argument of an invalid type array|null supplied for foreach, only iterables are supported#'
-        - '#Parameter \#1 \$addresses of method Ddeboer\\Imap\\Message\\AbstractMessage::decodeEmailAddresses\(\) expects array, array|string given#'
+        -
+            message: '#Argument of an invalid type array\|null supplied for foreach, only iterables are supported#'
+            path: %currentWorkingDirectory%/src/Connection.php
+        -
+            message: '#Parameter \#1 \$resource of class Ddeboer\\Imap\\ImapResource constructor expects resource, string given#'
+            path: %currentWorkingDirectory%/tests/ConnectionTest.php

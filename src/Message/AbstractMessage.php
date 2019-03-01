@@ -111,6 +111,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getDate(): ?\DateTimeImmutable
     {
+        /** @var null|string $dateHeader */
         $dateHeader = $this->getHeaders()->get('date');
         if (null === $dateHeader) {
             return null;
