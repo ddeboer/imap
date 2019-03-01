@@ -23,13 +23,13 @@ final class AbstractDateTest extends AbstractTest
     {
         $condition = new TestAsset\FooDate($this->date);
 
-        $this->assertSame('BAR "2-Mar-2017"', $condition->toString());
+        static::assertSame('BAR "2-Mar-2017"', $condition->toString());
     }
 
     public function testCustomFormat()
     {
         $condition = new TestAsset\FooDate($this->date, 'j F Y');
 
-        $this->assertSame('BAR "2 March 2017"', $condition->toString());
+        static::assertSame('BAR "2 March 2017"', $condition->toString());
     }
 }

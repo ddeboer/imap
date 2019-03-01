@@ -82,14 +82,14 @@ abstract class AbstractTest extends TestCase
             );
         }
 
-        $this->assertIsString($messageString);
+        static::assertIsString($messageString);
         $mailbox->addMessage($messageString);
     }
 
     final protected function getFixture($fixture): string
     {
         $content = \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
-        $this->assertIsString($content);
+        static::assertIsString($content);
 
         return $content;
     }

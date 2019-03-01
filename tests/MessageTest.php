@@ -23,7 +23,6 @@ use Zend\Mime;
 /**
  * @covers \Ddeboer\Imap\Connection::expunge
  * @covers \Ddeboer\Imap\Message
- * @covers \Ddeboer\Imap\MessageIterator
  * @covers \Ddeboer\Imap\Message\AbstractMessage
  * @covers \Ddeboer\Imap\Message\AbstractPart
  * @covers \Ddeboer\Imap\Message\Attachment
@@ -32,6 +31,7 @@ use Zend\Mime;
  * @covers \Ddeboer\Imap\Message\Parameters
  * @covers \Ddeboer\Imap\Message\SimplePart
  * @covers \Ddeboer\Imap\Message\Transcoder
+ * @covers \Ddeboer\Imap\MessageIterator
  */
 final class MessageTest extends AbstractTest
 {
@@ -96,13 +96,13 @@ final class MessageTest extends AbstractTest
         $this->createTestMessage($this->mailbox, 'Message A');
 
         $message = $this->mailbox->getMessage(1);
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
 
         $message->getBodyText();
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
 
         $message->markAsSeen();
-        $this->assertTrue($message->isSeen());
+        static::assertTrue($message->isSeen());
     }
 
     public function testFlags()
@@ -111,13 +111,13 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('N', $message->isRecent());
-        $this->assertFalse($message->isUnseen());
-        $this->assertFalse($message->isFlagged());
-        $this->assertFalse($message->isAnswered());
-        $this->assertFalse($message->isDeleted());
-        $this->assertFalse($message->isDraft());
-        $this->assertFalse($message->isSeen());
+        static::assertSame('N', $message->isRecent());
+        static::assertFalse($message->isUnseen());
+        static::assertFalse($message->isFlagged());
+        static::assertFalse($message->isAnswered());
+        static::assertFalse($message->isDeleted());
+        static::assertFalse($message->isDraft());
+        static::assertFalse($message->isSeen());
     }
 
     public function testLowercaseCharsetAliases()
@@ -132,22 +132,22 @@ final class MessageTest extends AbstractTest
             return \strtolower($charset);
         }, $keys);
 
-        $this->assertSame($loweredKeys, $keys, 'Charset aliases key must be lowercase');
+        static::assertSame($loweredKeys, $keys, 'Charset aliases key must be lowercase');
 
         $sameAliases = \array_filter($aliases, function ($value, $key) {
             return \strtolower((string) $value) === \strtolower((string) $key);
         }, \ARRAY_FILTER_USE_BOTH);
 
-        $this->assertSame([], $sameAliases, 'There must not be self-referencing aliases');
+        static::assertSame([], $sameAliases, 'There must not be self-referencing aliases');
 
         foreach ($aliases as $finalAlias) {
-            $this->assertArrayNotHasKey($finalAlias, $aliases, 'All aliases must refer to final alias');
+            static::assertArrayNotHasKey($finalAlias, $aliases, 'All aliases must refer to final alias');
         }
 
         $sortedKeys = $keys;
         \sort($sortedKeys, \SORT_STRING);
 
-        $this->assertSame($sortedKeys, $keys, 'Aliases must be sorted');
+        static::assertSame($sortedKeys, $keys, 'Aliases must be sorted');
     }
 
     /**
@@ -166,8 +166,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($subject, $message->getSubject());
-        $this->assertSame($charList, $message->getBodyText());
+        static::assertSame($subject, $message->getSubject());
+        static::assertSame($charList, $message->getBodyText());
     }
 
     public function provideCharsets(): array
@@ -202,7 +202,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($text, $message->getBodyText());
+        static::assertSame($text, $message->getBodyText());
     }
 
     public function testMicrosoftCharsetAlias()
@@ -222,7 +222,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($text, $message->getBodyText());
+        static::assertSame($text, $message->getBodyText());
     }
 
     public function testUnsupportedCharset()
@@ -250,7 +250,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi!', $message->getBodyText());
+        static::assertSame('Hi!', $message->getBodyText());
     }
 
     public function testSpecialCharsetOnHeaders()
@@ -259,11 +259,11 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('RE: 회원님께 Ersi님이 메시지를 보냈습니다.', $message->getSubject());
+        static::assertSame('RE: 회원님께 Ersi님이 메시지를 보냈습니다.', $message->getSubject());
 
         $from = $message->getFrom();
-        $this->assertNotNull($from);
-        $this->assertSame('김 현진', $from->getName());
+        static::assertNotNull($from);
+        static::assertSame('김 현진', $from->getName());
     }
 
     /**
@@ -274,7 +274,7 @@ final class MessageTest extends AbstractTest
         $subject = \sprintf('[%s:%s]', $charset, $encoding);
         $contents = \iconv('UTF-8', $charset, $charList);
 
-        $this->assertIsString($contents);
+        static::assertIsString($contents);
 
         $this->createTestMessage(
             $this->mailbox,
@@ -286,8 +286,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($subject, $message->getSubject());
-        $this->assertSame($charList, $message->getBodyText());
+        static::assertSame($subject, $message->getSubject());
+        static::assertSame($charList, $message->getBodyText());
     }
 
     public function provideIconvCharsets(): array
@@ -307,33 +307,33 @@ final class MessageTest extends AbstractTest
         $this->mailbox->addMessage($this->getFixture('email_address'));
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('<123@example.com>', $message->getId());
-        $this->assertGreaterThan(0, $message->getNumber());
-        $this->assertGreaterThan(0, $message->getSize());
-        $this->assertGreaterThan(0, $message->getBytes());
-        $this->assertInstanceOf(Parameters::class, $message->getParameters());
-        $this->assertNull($message->getLines());
-        $this->assertNull($message->getDisposition());
-        $this->assertNotEmpty($message->getStructure());
+        static::assertSame('<123@example.com>', $message->getId());
+        static::assertGreaterThan(0, $message->getNumber());
+        static::assertGreaterThan(0, $message->getSize());
+        static::assertGreaterThan(0, $message->getBytes());
+        static::assertInstanceOf(Parameters::class, $message->getParameters());
+        static::assertNull($message->getLines());
+        static::assertNull($message->getDisposition());
+        static::assertNotEmpty($message->getStructure());
 
         $from = $message->getFrom();
-        $this->assertInstanceOf(EmailAddress::class, $from);
-        $this->assertSame('no_host', $from->getMailbox());
+        static::assertInstanceOf(EmailAddress::class, $from);
+        static::assertSame('no_host', $from->getMailbox());
 
         $cc = $message->getCc();
-        $this->assertCount(2, $cc);
-        $this->assertInstanceOf(EmailAddress::class, $cc[0]);
-        $this->assertSame('This one: is "right"', $cc[0]->getName());
-        $this->assertSame('dong.com', $cc[0]->getHostname());
-        $this->assertSame('ding@dong.com', $cc[0]->getAddress());
-        $this->assertSame('"This one: is \\"right\\"" <ding@dong.com>', $cc[0]->getFullAddress());
+        static::assertCount(2, $cc);
+        static::assertInstanceOf(EmailAddress::class, $cc[0]);
+        static::assertSame('This one: is "right"', $cc[0]->getName());
+        static::assertSame('dong.com', $cc[0]->getHostname());
+        static::assertSame('ding@dong.com', $cc[0]->getAddress());
+        static::assertSame('"This one: is \\"right\\"" <ding@dong.com>', $cc[0]->getFullAddress());
 
-        $this->assertInstanceOf(EmailAddress::class, $cc[1]);
-        $this->assertSame('No-address', $cc[1]->getMailbox());
+        static::assertInstanceOf(EmailAddress::class, $cc[1]);
+        static::assertSame('No-address', $cc[1]->getMailbox());
 
-        $this->assertCount(0, $message->getReturnPath());
+        static::assertCount(0, $message->getReturnPath());
 
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
     }
 
     public function testBcc()
@@ -343,8 +343,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Undisclosed recipients', $message->getSubject());
-        $this->assertCount(0, $message->getTo());
+        static::assertSame('Undisclosed recipients', $message->getSubject());
+        static::assertCount(0, $message->getTo());
     }
 
     public function testDelete()
@@ -357,9 +357,9 @@ final class MessageTest extends AbstractTest
         $message->delete();
         $this->getConnection()->expunge();
 
-        $this->assertCount(2, $this->mailbox);
+        static::assertCount(2, $this->mailbox);
         foreach ($this->mailbox->getMessages() as $message) {
-            $this->assertNotSame('Message C', $message->getSubject());
+            static::assertNotSame('Message C', $message->getSubject());
         }
     }
 
@@ -372,13 +372,13 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(3);
         $message->delete();
         $message->undelete();
-        $this->assertFalse($message->isDeleted());
+        static::assertFalse($message->isDeleted());
         $this->getConnection()->expunge();
 
-        $this->assertCount(3, $this->mailbox);
-        $this->assertSame('Message A', $this->mailbox->getMessage(1)->getSubject());
-        $this->assertSame('Message B', $this->mailbox->getMessage(2)->getSubject());
-        $this->assertSame('Message C', $this->mailbox->getMessage(3)->getSubject());
+        static::assertCount(3, $this->mailbox);
+        static::assertSame('Message A', $this->mailbox->getMessage(1)->getSubject());
+        static::assertSame('Message B', $this->mailbox->getMessage(2)->getSubject());
+        static::assertSame('Message C', $this->mailbox->getMessage(3)->getSubject());
     }
 
     public function testMove()
@@ -387,15 +387,15 @@ final class MessageTest extends AbstractTest
         $mailboxTwo = $this->createMailbox();
         $this->createTestMessage($mailboxOne, 'Message A');
 
-        $this->assertCount(1, $mailboxOne);
-        $this->assertCount(0, $mailboxTwo);
+        static::assertCount(1, $mailboxOne);
+        static::assertCount(0, $mailboxTwo);
 
         $message = $mailboxOne->getMessage(1);
         $message->move($mailboxTwo);
         $this->getConnection()->expunge();
 
-        $this->assertCount(0, $mailboxOne);
-        $this->assertCount(1, $mailboxTwo);
+        static::assertCount(0, $mailboxOne);
+        static::assertCount(1, $mailboxTwo);
     }
 
     public function testResourceMemoryReuse()
@@ -408,13 +408,13 @@ final class MessageTest extends AbstractTest
 
         // Mailbox::count triggers Mailbox::init
         // Reinitializing the imap resource to the mailbox 2
-        $this->assertCount(0, $mailboxTwo);
+        static::assertCount(0, $mailboxTwo);
 
         $message->move($mailboxTwo);
         $this->getConnection()->expunge();
 
-        $this->assertCount(0, $mailboxOne);
-        $this->assertCount(1, $mailboxTwo);
+        static::assertCount(0, $mailboxOne);
+        static::assertCount(1, $mailboxTwo);
     }
 
     public function testCopy()
@@ -423,16 +423,16 @@ final class MessageTest extends AbstractTest
         $mailboxTwo = $this->createMailbox();
         $this->createTestMessage($mailboxOne, 'Message A');
 
-        $this->assertCount(1, $mailboxOne);
-        $this->assertCount(0, $mailboxTwo);
+        static::assertCount(1, $mailboxOne);
+        static::assertCount(0, $mailboxTwo);
 
         $message = $mailboxOne->getMessage(1);
         $message->copy($mailboxTwo);
 
-        $this->assertCount(1, $mailboxOne);
-        $this->assertCount(1, $mailboxTwo);
+        static::assertCount(1, $mailboxOne);
+        static::assertCount(1, $mailboxTwo);
 
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
     }
 
     /**
@@ -445,19 +445,19 @@ final class MessageTest extends AbstractTest
         );
 
         $message = $this->mailbox->getMessage(1);
-        $this->assertTrue($message->hasAttachments());
-        $this->assertCount(1, $message->getAttachments());
+        static::assertTrue($message->hasAttachments());
+        static::assertCount(1, $message->getAttachments());
         $attachment = $message->getAttachments()[0];
 
-        $this->assertSame('application', \strtolower($attachment->getType() ?: ''));
-        $this->assertSame('vnd.ms-excel', \strtolower($attachment->getSubtype() ?: ''));
-        $this->assertSame(
+        static::assertSame('application', \strtolower($attachment->getType() ?: ''));
+        static::assertSame('vnd.ms-excel', \strtolower($attachment->getSubtype() ?: ''));
+        static::assertSame(
             'Prostřeno_2014_poslední volné termíny.xls',
             $attachment->getFilename()
         );
-        $this->assertNull($attachment->getSize());
+        static::assertNull($attachment->getSize());
 
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
     }
 
     public function getAttachmentFixture(): array
@@ -473,8 +473,8 @@ final class MessageTest extends AbstractTest
         $this->mailbox->addMessage($this->getFixture('attachment_long_filename'));
 
         $message = $this->mailbox->getMessage(1);
-        $this->assertTrue($message->hasAttachments());
-        $this->assertCount(3, $message->getAttachments());
+        static::assertTrue($message->hasAttachments());
+        static::assertCount(3, $message->getAttachments());
 
         $actual = [];
         foreach ($message->getAttachments() as $attachment) {
@@ -501,7 +501,7 @@ final class MessageTest extends AbstractTest
             ],
         ];
 
-        $this->assertSame($expected, $actual);
+        static::assertSame($expected, $actual);
     }
 
     public function testPlainTextAttachment()
@@ -510,17 +510,17 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Test', $message->getBodyText());
-        $this->assertNull($message->getBodyHtml());
+        static::assertSame('Test', $message->getBodyText());
+        static::assertNull($message->getBodyHtml());
 
-        $this->assertTrue($message->hasAttachments());
+        static::assertTrue($message->hasAttachments());
 
         $attachments = $message->getAttachments();
-        $this->assertCount(1, $attachments);
+        static::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
 
-        $this->assertSame('Hi!', $attachment->getDecodedContent());
+        static::assertSame('Hi!', $attachment->getDecodedContent());
     }
 
     /**
@@ -532,7 +532,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertCount(1, $message->getTo());
+        static::assertCount(1, $message->getTo());
     }
 
     public function provideUndisclosedRecipientsCases(): array
@@ -559,11 +559,11 @@ final class MessageTest extends AbstractTest
             $method = 'get' . \str_replace('-', '', $type);
             $emails = $message->{$method}();
 
-            $this->assertCount(1, $emails, $type);
+            static::assertCount(1, $emails, $type);
 
             $email = \current($emails);
 
-            $this->assertSame(\sprintf('%s@here.com', \strtolower($type)), $email->getAddress(), $type);
+            static::assertSame(\sprintf('%s@here.com', \strtolower($type)), $email->getAddress(), $type);
         }
     }
 
@@ -579,8 +579,8 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
         $date = $message->getDate();
 
-        $this->assertInstanceOf(\DateTimeImmutable::class, $date);
-        $this->assertSame($output, $date->format(\DATE_ISO8601), \sprintf('RAW: %s', $dateRawHeader));
+        static::assertInstanceOf(\DateTimeImmutable::class, $date);
+        static::assertSame($output, $date->format(\DATE_ISO8601), \sprintf('RAW: %s', $dateRawHeader));
     }
 
     /**
@@ -626,12 +626,12 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $expectedHeaders = \preg_split('/\R/u', $headers);
-        $this->assertIsArray($expectedHeaders);
+        static::assertIsArray($expectedHeaders);
         $expectedHeaders = \implode("\r\n", $expectedHeaders);
 
-        $this->assertSame($expectedHeaders, $message->getRawHeaders());
+        static::assertSame($expectedHeaders, $message->getRawHeaders());
 
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
     }
 
     /**
@@ -644,16 +644,16 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
         $headers = $message->getHeaders();
 
-        $this->assertGreaterThan(9, \count($headers));
+        static::assertGreaterThan(9, \count($headers));
 
-        $this->assertArrayHasKey('from', $headers);
-        $this->assertArrayHasKey('date', $headers);
-        $this->assertArrayHasKey('recent', $headers);
+        static::assertArrayHasKey('from', $headers);
+        static::assertArrayHasKey('date', $headers);
+        static::assertArrayHasKey('recent', $headers);
 
-        $this->assertSame('Wed, 27 Sep 2017 12:48:51 +0200', $headers['date']);
-        $this->assertSame('A_€@{è_Z', $headers['bcc'][0]->personal);
+        static::assertSame('Wed, 27 Sep 2017 12:48:51 +0200', $headers['date']);
+        static::assertSame('A_€@{è_Z', $headers['bcc'][0]->personal);
 
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
     }
 
     public function testSetFlags()
@@ -662,19 +662,19 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertFalse($message->isFlagged());
+        static::assertFalse($message->isFlagged());
 
         $message->setFlag('\\Flagged');
 
-        $this->assertTrue($message->isFlagged());
+        static::assertTrue($message->isFlagged());
 
         $message->clearFlag('\\Flagged');
 
-        $this->assertFalse($message->isFlagged());
+        static::assertFalse($message->isFlagged());
 
         $message->setFlag('\\Seen');
-        $this->assertSame('R', $message->isRecent());
-        $this->assertTrue($message->isSeen());
+        static::assertSame('R', $message->isRecent());
+        static::assertTrue($message->isSeen());
     }
 
     /**
@@ -682,7 +682,7 @@ final class MessageTest extends AbstractTest
      */
     public function testUnstructuredMessage()
     {
-        $this->markTestIncomplete('Missing test case that gets imap_fetchstructure() to return false;');
+        static::markTestIncomplete('Missing test case that gets imap_fetchstructure() to return false;');
     }
 
     public function testPlainOnlyMessage()
@@ -691,8 +691,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi', $message->getBodyText());
-        $this->assertNull($message->getBodyHtml());
+        static::assertSame('Hi', $message->getBodyText());
+        static::assertNull($message->getBodyHtml());
     }
 
     public function testHtmlOnlyMessage()
@@ -701,8 +701,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
-        $this->assertNull($message->getBodyText());
+        static::assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
+        static::assertNull($message->getBodyText());
     }
 
     public function testSimpleMultipart()
@@ -711,17 +711,17 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('MyPlain', $message->getBodyText());
-        $this->assertSame('MyHtml', $message->getBodyHtml());
+        static::assertSame('MyPlain', $message->getBodyText());
+        static::assertSame('MyHtml', $message->getBodyHtml());
 
         $parts = [];
         foreach ($message as $key => $part) {
             $parts[$key] = $part;
         }
 
-        $this->assertCount(2, $parts);
+        static::assertCount(2, $parts);
 
-        $this->assertFalse($message->isSeen());
+        static::assertFalse($message->isSeen());
     }
 
     public function testGetRawMessage()
@@ -731,7 +731,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($fixture, $message->getRawMessage());
+        static::assertSame($fixture, $message->getRawMessage());
     }
 
     public function testAttachmentOnlyEmail()
@@ -741,7 +741,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertCount(1, $message->getAttachments());
+        static::assertCount(1, $message->getAttachments());
     }
 
     /**
@@ -754,7 +754,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertCount(1, $message->getAttachments());
+        static::assertCount(1, $message->getAttachments());
     }
 
     public function testSignedMessage()
@@ -765,7 +765,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
         $attachments = $message->getAttachments();
 
-        $this->assertCount(3, $attachments);
+        static::assertCount(3, $attachments);
 
         $expected = [
             'data.xml' => 'PHhtbC8+',
@@ -775,7 +775,7 @@ final class MessageTest extends AbstractTest
 
         foreach ($attachments as $attachment) {
             $expectedContains = $expected[$attachment->getFilename()];
-            $this->assertContains($expectedContains, $attachment->getContent(), \sprintf('Attachment filename: %s', $attachment->getFilename()));
+            static::assertContains($expectedContains, $attachment->getContent(), \sprintf('Attachment filename: %s', $attachment->getFilename()));
         }
     }
 
@@ -785,7 +785,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi', $message->getBodyText());
+        static::assertSame('Hi', $message->getBodyText());
     }
 
     public function testMultipartMessageWithoutCharset()
@@ -794,8 +794,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('MyPlain', $message->getBodyText());
-        $this->assertSame('MyHtml', $message->getBodyHtml());
+        static::assertSame('MyPlain', $message->getBodyText());
+        static::assertSame('MyHtml', $message->getBodyHtml());
     }
 
     public function testGetInReplyTo()
@@ -805,15 +805,15 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertCount(1, $message->getInReplyTo());
-        $this->assertContains('<b9e87bd5e661a645ed6e3b832828fcc5@example.com>', $message->getInReplyTo());
+        static::assertCount(1, $message->getInReplyTo());
+        static::assertContains('<b9e87bd5e661a645ed6e3b832828fcc5@example.com>', $message->getInReplyTo());
 
         $fixture = $this->getFixture('plain_only');
         $this->mailbox->addMessage($fixture);
 
         $message = $this->mailbox->getMessage(2);
 
-        $this->assertCount(0, $message->getInReplyTo());
+        static::assertCount(0, $message->getInReplyTo());
     }
 
     public function testGetReferences()
@@ -823,15 +823,15 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertCount(2, $message->getReferences());
-        $this->assertContains('<08F04024-A5B3-4FDE-BF2C-6710DE97D8D9@example.com>', $message->getReferences());
+        static::assertCount(2, $message->getReferences());
+        static::assertContains('<08F04024-A5B3-4FDE-BF2C-6710DE97D8D9@example.com>', $message->getReferences());
 
         $fixture = $this->getFixture('plain_only');
         $this->mailbox->addMessage($fixture);
 
         $message = $this->mailbox->getMessage(2);
 
-        $this->assertCount(0, $message->getReferences());
+        static::assertCount(0, $message->getReferences());
     }
 
     public function testInlineAttachment()
@@ -841,7 +841,7 @@ final class MessageTest extends AbstractTest
 
         $inline = $message->getAttachments()[0];
 
-        $this->assertNull($inline->getFilename());
+        static::assertNull($inline->getFilename());
     }
 
     public function testMissingFromHeader()
@@ -849,7 +849,7 @@ final class MessageTest extends AbstractTest
         $this->mailbox->addMessage($this->getFixture('missing_from'));
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertNull($message->getFrom());
+        static::assertNull($message->getFrom());
     }
 
     public function testMissingDateHeader()
@@ -857,7 +857,7 @@ final class MessageTest extends AbstractTest
         $this->mailbox->addMessage($this->getFixture('missing_date'));
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertNull($message->getDate());
+        static::assertNull($message->getDate());
     }
 
     public function testAttachmentMustNotBeCharsetDecoded()
@@ -885,22 +885,22 @@ final class MessageTest extends AbstractTest
         $messageString = $message->toString();
         $messageString = \preg_replace('/; charset=.+/', '', $messageString);
 
-        $this->assertIsString($messageString);
+        static::assertIsString($messageString);
 
         $this->mailbox->addMessage($messageString);
 
         $message = $this->mailbox->getMessage(1);
 
         $this->resetAttachmentCharset($message);
-        $this->assertTrue($message->hasAttachments());
+        static::assertTrue($message->hasAttachments());
         $attachments = $message->getAttachments();
-        $this->assertCount(\count(self::$charsets), $attachments);
+        static::assertCount(\count(self::$charsets), $attachments);
 
         foreach ($attachments as $attachment) {
             $filename = $attachment->getFilename();
-            $this->assertNotNull($filename);
+            static::assertNotNull($filename);
             $charset = \str_replace('.xml', '', $filename);
-            $this->assertSame(\mb_convert_encoding(self::$charsets[$charset], $charset, 'UTF-8'), $attachment->getDecodedContent());
+            static::assertSame(\mb_convert_encoding(self::$charsets[$charset], $charset, 'UTF-8'), $attachment->getDecodedContent());
         }
     }
 
@@ -910,7 +910,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertNull($message->getId());
+        static::assertNull($message->getId());
     }
 
     public function testUnknownEncodingIsManageable()
@@ -924,11 +924,11 @@ final class MessageTest extends AbstractTest
             $parts[$part->getSubtype()] = $part;
         }
 
-        $this->assertArrayHasKey(PartInterface::SUBTYPE_PLAIN, $parts);
+        static::assertArrayHasKey(PartInterface::SUBTYPE_PLAIN, $parts);
 
         $plain = $parts[PartInterface::SUBTYPE_PLAIN];
 
-        $this->assertSame(PartInterface::ENCODING_UNKNOWN, $plain->getEncoding());
+        static::assertSame(PartInterface::ENCODING_UNKNOWN, $plain->getEncoding());
 
         $this->expectException(UnexpectedEncodingException::class);
 
@@ -941,7 +941,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertCount(2, $message->getAttachments());
+        static::assertCount(2, $message->getAttachments());
     }
 
     public function testMixedInlineDisposition()
@@ -951,13 +951,13 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $attachments = $message->getAttachments();
-        $this->assertCount(1, $attachments);
+        static::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
-        $this->assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
+        static::assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
-    public function test_nestes_embedded_with_attachment()
+    public function testNestesEmbeddedWithAttachment()
     {
         $this->mailbox->addMessage($this->getFixture('nestes_embedded_with_attachment'));
 
@@ -969,19 +969,19 @@ final class MessageTest extends AbstractTest
             'second.eml' => 'Subject: SECOND',
         ];
         $attachments = $message->getAttachments();
-        $this->assertCount(3, $attachments);
+        static::assertCount(3, $attachments);
         foreach ($attachments as $attachment) {
-            $this->assertContains($expected[$attachment->getFilename()], $attachment->getContent());
+            static::assertContains($expected[$attachment->getFilename()], $attachment->getContent());
         }
     }
 
-    public function test_imap_mime_header_decode_returns_false()
+    public function testImapMimeHeaderDecodeReturnsFalse()
     {
         $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('=?UTF-8?B?nnDusSNdG92w6Fuw61fMjAxOF8wMy0xMzMyNTMzMTkzLnBkZg==?=', $message->getSubject());
+        static::assertSame('=?UTF-8?B?nnDusSNdG92w6Fuw61fMjAxOF8wMy0xMzMyNTMzMTkzLnBkZg==?=', $message->getSubject());
     }
 
     private function resetAttachmentCharset(MessageInterface $message)
@@ -990,9 +990,9 @@ final class MessageTest extends AbstractTest
         // of attachments that don't have it
         $refMessage = new \ReflectionClass($message);
         $refAbstractMessage = $refMessage->getParentClass();
-        $this->assertInstanceOf(ReflectionClass::class, $refAbstractMessage);
+        static::assertInstanceOf(ReflectionClass::class, $refAbstractMessage);
         $refAbstractPart = $refAbstractMessage->getParentClass();
-        $this->assertInstanceOf(ReflectionClass::class, $refAbstractPart);
+        static::assertInstanceOf(ReflectionClass::class, $refAbstractPart);
 
         $refLazyLoadStructure = $refMessage->getMethod('lazyLoadStructure');
         $refLazyLoadStructure->setAccessible(true);
@@ -1033,8 +1033,8 @@ final class MessageTest extends AbstractTest
         $mailbox = $this->createMailbox();
 
         $messages = $mailbox->getMessages();
-        $this->assertCount(0, $messages);
-        $this->assertFalse(\current($messages));
+        static::assertCount(0, $messages);
+        static::assertFalse(\current($messages));
 
         $this->expectException(OutOfBoundsException::class);
 
@@ -1047,6 +1047,6 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi', \trim($message->getDecodedContent()));
+        static::assertSame('Hi', \trim($message->getDecodedContent()));
     }
 }

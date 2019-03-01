@@ -19,7 +19,7 @@ final class ServerTest extends AbstractTest
 
         $check = \imap_check($connection->getResource()->getStream());
 
-        $this->assertInstanceOf(\stdClass::class, $check);
+        static::assertInstanceOf(\stdClass::class, $check);
     }
 
     public function testFailedAuthenticate()
@@ -35,15 +35,15 @@ final class ServerTest extends AbstractTest
     public function testEmptyPort()
     {
         if ('993' !== (string) \getenv('IMAP_SERVER_PORT')) {
-            $this->markTestSkipped('Active IMAP test server must have 993 port for this test');
+            static::markTestSkipped('Active IMAP test server must have 993 port for this test');
         }
 
         $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', '', self::IMAP_FLAGS);
 
-        $this->assertInstanceOf(ConnectionInterface::class, $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: ''));
+        static::assertInstanceOf(ConnectionInterface::class, $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: ''));
     }
 
-    public function test_custom_options()
+    public function testCustomOptions()
     {
         $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS, [], \OP_HALFOPEN);
 
