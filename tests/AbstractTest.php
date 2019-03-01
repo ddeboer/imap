@@ -17,8 +17,6 @@ abstract class AbstractTest extends TestCase
 
     const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
 
-    const CONTENT_ENDING = "\r\n";
-
     /**
      * @var null|string
      */

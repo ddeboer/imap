@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
+use Ddeboer\Imap\Message\AttachmentInterface;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\PartInterface;
 
@@ -80,7 +81,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $message = $mailbox->getMessage(1);
         $this->assertSame('3-third-subject', $message->getSubject());
-        $this->assertSame('3-third-content' . self::CONTENT_ENDING, $message->getBodyText());
+        $this->assertSame('3-third-content', $message->getBodyText());
 
         $attachments = $message->getAttachments();
         $this->assertCount(3, $attachments);
@@ -90,17 +91,18 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
         $this->assertSame('2-second-subject', $embeddedMessage->getSubject());
-        $this->assertSame('2-second-content', \rtrim($embeddedMessage->getBodyText()));
+        $this->assertSame('2-second-content', $embeddedMessage->getBodyText());
 
         $embeddedAttachments = $embeddedMessage->getAttachments();
         $this->assertCount(2, $embeddedAttachments);
 
+        /** @var AttachmentInterface $embeddedAttachment */
         $embeddedAttachment = \current($embeddedAttachments);
         $this->assertTrue($embeddedAttachment->isEmbeddedMessage());
 
         $secondEmbeddedMessage = $embeddedAttachment->getEmbeddedMessage();
         $this->assertSame('1-first-subject', $secondEmbeddedMessage->getSubject());
-        $this->assertSame('1-first-content', \rtrim($secondEmbeddedMessage->getBodyText()));
+        $this->assertSame('1-first-content', $secondEmbeddedMessage->getBodyText());
 
         $secondEmbeddedAttachments = $secondEmbeddedMessage->getAttachments();
         $this->assertCount(1, $secondEmbeddedAttachments);
@@ -110,7 +112,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $thirdEmbeddedMessage = $secondEmbeddedAttachment->getEmbeddedMessage();
         $this->assertSame('0-zero-subject', $thirdEmbeddedMessage->getSubject());
-        $this->assertSame('0-zero-content', \rtrim($thirdEmbeddedMessage->getBodyText()));
+        $this->assertSame('0-zero-content', $thirdEmbeddedMessage->getBodyText());
 
         $this->assertCount(0, $thirdEmbeddedMessage->getAttachments());
     }

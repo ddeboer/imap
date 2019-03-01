@@ -252,7 +252,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi!' . self::CONTENT_ENDING, $message->getBodyText());
+        $this->assertSame('Hi!', $message->getBodyText());
     }
 
     public function testSpecialCharsetOnHeaders()
@@ -693,7 +693,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi' . self::CONTENT_ENDING, $message->getBodyText());
+        $this->assertSame('Hi', $message->getBodyText());
         $this->assertNull($message->getBodyHtml());
     }
 
@@ -703,7 +703,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('<html><body>Hi</body></html>' . self::CONTENT_ENDING, $message->getBodyHtml());
+        $this->assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
         $this->assertNull($message->getBodyText());
     }
 
@@ -713,7 +713,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('MyPlain' . self::CONTENT_ENDING, $message->getBodyText());
+        $this->assertSame('MyPlain', $message->getBodyText());
         $this->assertSame('MyHtml', $message->getBodyHtml());
 
         $parts = [];
@@ -808,7 +808,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi' . self::CONTENT_ENDING, $message->getBodyText());
+        $this->assertSame('Hi', $message->getBodyText());
     }
 
     public function testMultipartMessageWithoutCharset()
@@ -817,7 +817,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('MyPlain' . self::CONTENT_ENDING, $message->getBodyText());
+        $this->assertSame('MyPlain', $message->getBodyText());
         $this->assertSame('MyHtml', $message->getBodyHtml());
     }
 
