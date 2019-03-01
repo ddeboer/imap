@@ -6,7 +6,7 @@ return PhpCsFixer\Config::create()
         '@Symfony' => true,
         '@Symfony:risky' => true,
         '@PHPUnit60Migration:risky' => true,
-        '@PHP70Migration' => true,
+        '@PHP71Migration' => true,
         '@PHP70Migration:risky' => true,
         'align_multiline_comment' => ['comment_type' => 'all_multiline'],
         'array_syntax' => ['syntax' => 'short'],

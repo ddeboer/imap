@@ -13,9 +13,9 @@ use Zend\Mime;
 
 abstract class AbstractTest extends TestCase
 {
-    const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
+    public const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
 
-    const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
+    public const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
 
     /**
      * @var null|string
