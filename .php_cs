@@ -53,8 +53,10 @@ return PhpCsFixer\Config::create()
         'random_api_migration' => true,
         'semicolon_after_instruction' => true,
         'silenced_deprecation_error' => false,
-        'simplified_null_return' => false, // @TODO: enable when PHP ^7.1
+        'simplified_null_return' => true,
         'single_line_comment_style' => true,
+        'space_after_semicolon' => true,
+        'static_lambda' => true,
         'strict_comparison' => true,
     ])
     ->setFinder(

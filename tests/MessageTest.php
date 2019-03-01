@@ -128,13 +128,13 @@ final class MessageTest extends AbstractTest
         $aliases = $properties['charsetAliases'];
 
         $keys = \array_map('strval', \array_keys($aliases));
-        $loweredKeys = \array_map(function ($charset) {
+        $loweredKeys = \array_map(static function ($charset) {
             return \strtolower($charset);
         }, $keys);
 
         static::assertSame($loweredKeys, $keys, 'Charset aliases key must be lowercase');
 
-        $sameAliases = \array_filter($aliases, function ($value, $key) {
+        $sameAliases = \array_filter($aliases, static function ($value, $key) {
             return \strtolower((string) $value) === \strtolower((string) $key);
         }, \ARRAY_FILTER_USE_BOTH);
 

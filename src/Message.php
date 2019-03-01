@@ -73,7 +73,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
 
         $errorMessage = null;
         $errorNumber = 0;
-        \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
+        \set_error_handler(static function ($nr, $message) use (&$errorMessage, &$errorNumber) {
             $errorMessage = $message;
             $errorNumber = $nr;
         });

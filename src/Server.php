@@ -87,7 +87,7 @@ final class Server implements ServerInterface
     {
         $errorMessage = null;
         $errorNumber = 0;
-        \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
+        \set_error_handler(static function ($nr, $message) use (&$errorMessage, &$errorNumber) {
             $errorMessage = $message;
             $errorNumber = $nr;
         });

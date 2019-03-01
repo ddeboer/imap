@@ -288,7 +288,7 @@ final class Transcoder
             $fromCharset = self::$charsetAliases[$lowercaseFromCharset];
         }
 
-        \set_error_handler(function () {});
+        \set_error_handler(static function () {});
 
         $iconvDecodedText = \iconv($fromCharset, 'UTF-8', $text);
         if (false === $iconvDecodedText) {
@@ -303,7 +303,7 @@ final class Transcoder
 
         $errorMessage = null;
         $errorNumber = 0;
-        \set_error_handler(function ($nr, $message) use (&$errorMessage, &$errorNumber) {
+        \set_error_handler(static function ($nr, $message) use (&$errorMessage, &$errorNumber) {
             $errorMessage = $message;
             $errorNumber = $nr;
         });

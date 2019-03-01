@@ -275,7 +275,7 @@ final class Mailbox implements MailboxInterface
      */
     public function getThread(): array
     {
-        \set_error_handler(function () {});
+        \set_error_handler(static function () {});
 
         /** @var array|false $tree */
         $tree = \imap_thread($this->resource->getStream());
