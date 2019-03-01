@@ -9,6 +9,7 @@ return PhpCsFixer\Config::create()
         '@PHP71Migration' => true,
         '@PHP70Migration:risky' => true,
         'align_multiline_comment' => ['comment_type' => 'all_multiline'],
+        'array_indentation' => true,
         'array_syntax' => ['syntax' => 'short'],
         'blank_line_before_statement' => true,
         'class_definition' => ['singleItemSingleLine' => true],
@@ -58,6 +59,7 @@ return PhpCsFixer\Config::create()
         'space_after_semicolon' => true,
         'static_lambda' => true,
         'strict_comparison' => true,
+        'string_line_ending' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()

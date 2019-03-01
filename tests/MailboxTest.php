@@ -206,8 +206,8 @@ final class MailboxTest extends AbstractTest
 
         $mailbox->clearFlag('\\Seen', '1,2,3,4:6');
         $mailbox->clearFlag('\\Seen', [
-          '7:9',
-          '10',
+            '7:9',
+            '10',
         ]);
 
         foreach ($uids as $uid) {
