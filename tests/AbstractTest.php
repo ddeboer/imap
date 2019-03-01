@@ -34,9 +34,9 @@ abstract class AbstractTest extends TestCase
 
     final protected function createConnection(): ConnectionInterface
     {
-        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
+        $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS);
 
-        return $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
+        return $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: '');
     }
 
     final protected function createMailbox(ConnectionInterface $connection = null): MailboxInterface
@@ -76,17 +76,21 @@ abstract class AbstractTest extends TestCase
         $messageString = $message->toString();
         if ($overwriteCharset) {
             $messageString = \preg_replace(
-                \sprintf('/charset="%s"/', \preg_quote($charset)),
+                \sprintf('/charset="%s"/', \preg_quote($charset ?: '')),
                 \sprintf('charset="%s"', $overwriteCharset),
                 $messageString
             );
         }
 
+        $this->assertIsString($messageString);
         $mailbox->addMessage($messageString);
     }
 
     final protected function getFixture($fixture): string
     {
-        return \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
+        $content = \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
+        $this->assertIsString($content);
+
+        return $content;
     }
 }

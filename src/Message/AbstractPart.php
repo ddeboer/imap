@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
+use Ddeboer\Imap\Exception\ImapFetchbodyException;
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\ImapResourceInterface;
 use Ddeboer\Imap\Message;
@@ -371,12 +372,18 @@ abstract class AbstractPart implements PartInterface
      */
     final protected function doGetContent(string $partNumber): string
     {
-        return \imap_fetchbody(
+        $return = \imap_fetchbody(
             $this->resource->getStream(),
             $this->getNumber(),
             $partNumber,
             \FT_UID | \FT_PEEK
         );
+
+        if (false === $return) {
+            throw new ImapFetchbodyException('imap_fetchbody failed');
+        }
+
+        return $return;
     }
 
     /**

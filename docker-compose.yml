@@ -6,7 +6,7 @@ services:
     container_name: php-imap
     volumes:
       - .:/project_orig
-    command: bash -c "wait-for-it.sh imap.server:993 && cp -dpr /project_orig /project && cd /project && composer install && vendor/bin/phpunit --stop-on-failure"
+    command: bash -c "wait-for-it.sh imap.server:993 && cp -dpr /project_orig /project && cd /project && composer install && vendor/bin/phpunit"
     environment:
       - IMAP_SERVER_NAME=imap.server
       - IMAP_SERVER_PORT=993

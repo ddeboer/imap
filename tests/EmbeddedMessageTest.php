@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
+use Ddeboer\Imap\Message\AttachmentInterface;
+use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\PartInterface;
 
 /**
@@ -29,9 +31,17 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertNull($embeddedMessage->getBodyHtml());
         $this->assertSame('demo text', $embeddedMessage->getBodyText());
         $this->assertSame([], $embeddedMessage->getCc());
-        $this->assertSame($emailDate->format(\DATE_ISO8601), $embeddedMessage->getDate()->format(\DATE_ISO8601));
+
+        $actualDate = $embeddedMessage->getDate();
+        $this->assertInstanceOf(\DateTimeImmutable::class, $actualDate);
+        $this->assertSame($emailDate->format(\DATE_ISO8601), $actualDate->format(\DATE_ISO8601));
+
         $this->assertSame('demo', $embeddedMessage->getSubject());
-        $this->assertSame('demo-from@cerstor.cz', $embeddedMessage->getFrom()->getFullAddress());
+
+        $actualFrom = $embeddedMessage->getFrom();
+        $this->assertInstanceOf(EmailAddress::class, $actualFrom);
+        $this->assertSame('demo-from@cerstor.cz', $actualFrom->getFullAddress());
+
         $this->assertSame('demo-to@cerstor.cz', $embeddedMessage->getTo()[0]->getFullAddress());
 
         $this->assertFalse($message->isSeen());
@@ -47,7 +57,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $embeddedAttachment = $embeddedMessage->getAttachments()[0];
         $this->assertSame('testfile.txt', $embeddedAttachment->getFilename());
-        $this->assertSame('29', $embeddedAttachment->getSize());
+        $this->assertSame(29, $embeddedAttachment->getSize());
         $this->assertSame('attachment', $embeddedAttachment->getDisposition());
         $this->assertSame('IHRoaXMgaXMgY29udGVudCBvZiB0ZXN0IGZpbGU=', $embeddedAttachment->getContent());
         $this->assertSame('base64', $embeddedAttachment->getEncoding());
@@ -71,7 +81,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $message = $mailbox->getMessage(1);
         $this->assertSame('3-third-subject', $message->getSubject());
-        $this->assertSame('3-third-content', \rtrim($message->getBodyText()));
+        $this->assertSame('3-third-content', $message->getBodyText());
 
         $attachments = $message->getAttachments();
         $this->assertCount(3, $attachments);
@@ -81,17 +91,18 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
         $this->assertSame('2-second-subject', $embeddedMessage->getSubject());
-        $this->assertSame('2-second-content', \rtrim($embeddedMessage->getBodyText()));
+        $this->assertSame('2-second-content', $embeddedMessage->getBodyText());
 
         $embeddedAttachments = $embeddedMessage->getAttachments();
         $this->assertCount(2, $embeddedAttachments);
 
+        /** @var AttachmentInterface $embeddedAttachment */
         $embeddedAttachment = \current($embeddedAttachments);
         $this->assertTrue($embeddedAttachment->isEmbeddedMessage());
 
         $secondEmbeddedMessage = $embeddedAttachment->getEmbeddedMessage();
         $this->assertSame('1-first-subject', $secondEmbeddedMessage->getSubject());
-        $this->assertSame('1-first-content', \rtrim($secondEmbeddedMessage->getBodyText()));
+        $this->assertSame('1-first-content', $secondEmbeddedMessage->getBodyText());
 
         $secondEmbeddedAttachments = $secondEmbeddedMessage->getAttachments();
         $this->assertCount(1, $secondEmbeddedAttachments);
@@ -101,7 +112,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $thirdEmbeddedMessage = $secondEmbeddedAttachment->getEmbeddedMessage();
         $this->assertSame('0-zero-subject', $thirdEmbeddedMessage->getSubject());
-        $this->assertSame('0-zero-content', \rtrim($thirdEmbeddedMessage->getBodyText()));
+        $this->assertSame('0-zero-content', $thirdEmbeddedMessage->getBodyText());
 
         $this->assertCount(0, $thirdEmbeddedMessage->getAttachments());
     }

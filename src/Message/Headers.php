@@ -31,7 +31,7 @@ final class Headers extends Parameters
      *
      * @param string $key
      *
-     * @return null|string
+     * @return mixed
      */
     public function get(string $key)
     {
@@ -58,6 +58,7 @@ final class Headers extends Parameters
             case 'reply_to':
             case 'sender':
             case 'return_path':
+                /** @var \stdClass $address */
                 foreach ($value as $address) {
                     if (isset($address->mailbox)) {
                         $address->host = $address->host ?? null;

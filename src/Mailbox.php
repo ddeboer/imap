@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ddeboer\Imap;
 
 use DateTimeInterface;
+use Ddeboer\Imap\Exception\ImapNumMsgException;
+use Ddeboer\Imap\Exception\ImapStatusException;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageMoveException;
@@ -62,7 +64,10 @@ final class Mailbox implements MailboxInterface
      */
     public function getEncodedName(): string
     {
-        return \preg_replace('/^{.+}/', '', $this->info->name);
+        /** @var string $name */
+        $name = $this->info->name;
+
+        return (string) \preg_replace('/^{.+}/', '', $name);
     }
 
     /**
@@ -102,7 +107,13 @@ final class Mailbox implements MailboxInterface
      */
     public function count()
     {
-        return \imap_num_msg($this->resource->getStream());
+        $return = \imap_num_msg($this->resource->getStream());
+
+        if (false === $return) {
+            throw new ImapNumMsgException('imap_num_msg failed');
+        }
+
+        return $return;
     }
 
     /**
@@ -114,7 +125,13 @@ final class Mailbox implements MailboxInterface
      */
     public function getStatus(int $flags = null): \stdClass
     {
-        return \imap_status($this->resource->getStream(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
+        $return = \imap_status($this->resource->getStream(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
+
+        if (false === $return) {
+            throw new ImapStatusException('imap_status failed');
+        }
+
+        return $return;
     }
 
     /**
@@ -260,6 +277,7 @@ final class Mailbox implements MailboxInterface
     {
         \set_error_handler(function () {});
 
+        /** @var array|false $tree */
         $tree = \imap_thread($this->resource->getStream());
 
         \restore_error_handler();

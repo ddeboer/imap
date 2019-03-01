@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
+use Ddeboer\Imap\Exception\ImapFetchheaderException;
 use Ddeboer\Imap\Exception\InvalidHeadersException;
 use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDeleteException;
@@ -21,6 +22,11 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      * @var bool
      */
     private $messageNumberVerified = false;
+
+    /**
+     * @var int
+     */
+    private $imapMsgNo = 0;
 
     /**
      * @var bool
@@ -105,6 +111,8 @@ final class Message extends Message\AbstractMessage implements MessageInterface
 
         $msgno = \imap_msgno($this->resource->getStream(), $messageNumber);
         if (\is_numeric($msgno) && $msgno > 0) {
+            $this->imapMsgNo = $msgno;
+
             return;
         }
 
@@ -112,6 +120,14 @@ final class Message extends Message\AbstractMessage implements MessageInterface
             'Message "%s" does not exist',
             $messageNumber
         ));
+    }
+
+    private function getMsgNo(): int
+    {
+        // Triggers assertMessageExists()
+        $this->getNumber();
+
+        return $this->imapMsgNo;
     }
 
     /**
@@ -122,7 +138,13 @@ final class Message extends Message\AbstractMessage implements MessageInterface
     public function getRawHeaders(): string
     {
         if (null === $this->rawHeaders) {
-            $this->rawHeaders = \imap_fetchheader($this->resource->getStream(), $this->getNumber(), \FT_UID);
+            $rawHeaders = \imap_fetchheader($this->resource->getStream(), $this->getNumber(), \FT_UID);
+
+            if (false === $rawHeaders) {
+                throw new ImapFetchheaderException('imap_fetchheader failed');
+            }
+
+            $this->rawHeaders = $rawHeaders;
         }
 
         return $this->rawHeaders;
@@ -153,7 +175,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
             // imap_headerinfo is much faster than imap_fetchheader
             // imap_headerinfo returns only a subset of all mail headers,
             // but it does include the message flags.
-            $headers = \imap_headerinfo($this->resource->getStream(), \imap_msgno($this->resource->getStream(), $this->getNumber()));
+            $headers = \imap_headerinfo($this->resource->getStream(), $this->getMsgNo());
             if (false === $headers) {
                 // @see https://github.com/ddeboer/imap/issues/358
                 throw new InvalidHeadersException(\sprintf('Message "%s" has invalid headers', $this->getNumber()));

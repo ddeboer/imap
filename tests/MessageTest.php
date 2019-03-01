@@ -15,7 +15,7 @@ use Ddeboer\Imap\Message\Parameters;
 use Ddeboer\Imap\Message\PartInterface;
 use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageInterface;
-use Ddeboer\Imap\MessageIterator;
+use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search;
 use PHPUnit\Framework\Error\Deprecated;
 use ReflectionClass;
@@ -126,6 +126,7 @@ final class MessageTest extends AbstractTest
     {
         $refClass = new ReflectionClass(Transcoder::class);
         $properties = $refClass->getStaticProperties();
+        /** @var array $aliases */
         $aliases = $properties['charsetAliases'];
 
         $keys = \array_map('strval', \array_keys($aliases));
@@ -168,7 +169,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->assertSame($subject, $message->getSubject());
-        $this->assertSame($charList, \rtrim($message->getBodyText()));
+        $this->assertSame($charList, $message->getBodyText());
     }
 
     public function provideCharsets(): array
@@ -203,7 +204,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($text, \rtrim($message->getBodyText()));
+        $this->assertSame($text, $message->getBodyText());
     }
 
     public function testMicrosoftCharsetAlias()
@@ -223,7 +224,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame($text, \rtrim($message->getBodyText()));
+        $this->assertSame($text, $message->getBodyText());
     }
 
     public function testUnsupportedCharset()
@@ -251,7 +252,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi!', \rtrim($message->getBodyText()));
+        $this->assertSame('Hi!', $message->getBodyText());
     }
 
     public function testSpecialCharsetOnHeaders()
@@ -263,6 +264,7 @@ final class MessageTest extends AbstractTest
         $this->assertSame('RE: 회원님께 Ersi님이 메시지를 보냈습니다.', $message->getSubject());
 
         $from = $message->getFrom();
+        $this->assertNotNull($from);
         $this->assertSame('김 현진', $from->getName());
     }
 
@@ -272,10 +274,14 @@ final class MessageTest extends AbstractTest
     public function testIconvFallback(string $charset, string $charList, string $encoding)
     {
         $subject = \sprintf('[%s:%s]', $charset, $encoding);
+        $contents = \iconv('UTF-8', $charset, $charList);
+
+        $this->assertIsString($contents);
+
         $this->createTestMessage(
             $this->mailbox,
             $subject,
-            \iconv('UTF-8', $charset, $charList),
+            $contents,
             $encoding,
             $charset
         );
@@ -283,7 +289,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->assertSame($subject, $message->getSubject());
-        $this->assertSame($charList, \rtrim($message->getBodyText()));
+        $this->assertSame($charList, $message->getBodyText());
     }
 
     public function provideIconvCharsets(): array
@@ -445,8 +451,8 @@ final class MessageTest extends AbstractTest
         $this->assertCount(1, $message->getAttachments());
         $attachment = $message->getAttachments()[0];
 
-        $this->assertSame('application', \strtolower($attachment->getType()));
-        $this->assertSame('vnd.ms-excel', \strtolower($attachment->getSubtype()));
+        $this->assertSame('application', \strtolower($attachment->getType() ?: ''));
+        $this->assertSame('vnd.ms-excel', \strtolower($attachment->getSubtype() ?: ''));
         $this->assertSame(
             'Prostřeno_2014_poslední volné termíny.xls',
             $attachment->getFilename()
@@ -622,6 +628,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $expectedHeaders = \preg_split('/\R/u', $headers);
+        $this->assertIsArray($expectedHeaders);
         $expectedHeaders = \implode("\r\n", $expectedHeaders);
 
         $this->assertSame($expectedHeaders, $message->getRawHeaders());
@@ -686,7 +693,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi', \rtrim($message->getBodyText()));
+        $this->assertSame('Hi', $message->getBodyText());
         $this->assertNull($message->getBodyHtml());
     }
 
@@ -696,7 +703,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('<html><body>Hi</body></html>', \rtrim($message->getBodyHtml()));
+        $this->assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
         $this->assertNull($message->getBodyText());
     }
 
@@ -706,8 +713,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('MyPlain', \rtrim($message->getBodyText()));
-        $this->assertSame('MyHtml', \rtrim($message->getBodyHtml()));
+        $this->assertSame('MyPlain', $message->getBodyText());
+        $this->assertSame('MyHtml', $message->getBodyHtml());
 
         $parts = [];
         foreach ($message as $key => $part) {
@@ -758,7 +765,7 @@ final class MessageTest extends AbstractTest
         $this->createTestMessage($this->mailbox, 'A');
         $this->createTestMessage($this->mailbox, 'C');
 
-        $concatSubjects = function (MessageIterator $it) {
+        $concatSubjects = function (MessageIteratorInterface $it) {
             $subject = '';
             foreach ($it as $message) {
                 $subject .= $message->getSubject();
@@ -791,7 +798,7 @@ final class MessageTest extends AbstractTest
 
         foreach ($attachments as $attachment) {
             $expectedContains = $expected[$attachment->getFilename()];
-            $this->assertContains($expectedContains, \rtrim($attachment->getContent()), \sprintf('Attachment filename: %s', $attachment->getFilename()));
+            $this->assertContains($expectedContains, $attachment->getContent(), \sprintf('Attachment filename: %s', $attachment->getFilename()));
         }
     }
 
@@ -801,7 +808,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi', \rtrim($message->getBodyText()));
+        $this->assertSame('Hi', $message->getBodyText());
     }
 
     public function testMultipartMessageWithoutCharset()
@@ -810,8 +817,8 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('MyPlain', \rtrim($message->getBodyText()));
-        $this->assertSame('MyHtml', \rtrim($message->getBodyHtml()));
+        $this->assertSame('MyPlain', $message->getBodyText());
+        $this->assertSame('MyHtml', $message->getBodyHtml());
     }
 
     public function testGetInReplyTo()
@@ -901,6 +908,8 @@ final class MessageTest extends AbstractTest
         $messageString = $message->toString();
         $messageString = \preg_replace('/; charset=.+/', '', $messageString);
 
+        $this->assertIsString($messageString);
+
         $this->mailbox->addMessage($messageString);
 
         $message = $this->mailbox->getMessage(1);
@@ -911,7 +920,9 @@ final class MessageTest extends AbstractTest
         $this->assertCount(\count(self::$charsets), $attachments);
 
         foreach ($attachments as $attachment) {
-            $charset = \str_replace('.xml', '', $attachment->getFilename());
+            $filename = $attachment->getFilename();
+            $this->assertNotNull($filename);
+            $charset = \str_replace('.xml', '', $filename);
             $this->assertSame(\mb_convert_encoding(self::$charsets[$charset], $charset, 'UTF-8'), $attachment->getDecodedContent());
         }
     }
@@ -1002,7 +1013,9 @@ final class MessageTest extends AbstractTest
         // of attachments that don't have it
         $refMessage = new \ReflectionClass($message);
         $refAbstractMessage = $refMessage->getParentClass();
+        $this->assertInstanceOf(ReflectionClass::class, $refAbstractMessage);
         $refAbstractPart = $refAbstractMessage->getParentClass();
+        $this->assertInstanceOf(ReflectionClass::class, $refAbstractPart);
 
         $refLazyLoadStructure = $refMessage->getMethod('lazyLoadStructure');
         $refLazyLoadStructure->setAccessible(true);
@@ -1057,6 +1070,6 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $this->assertSame('Hi', trim($message->getDecodedContent()));
+        $this->assertSame('Hi', \trim($message->getDecodedContent()));
     }
 }
