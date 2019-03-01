@@ -19,14 +19,14 @@ final class EmbeddedMessageTest extends AbstractTest
     public function testEmbeddedMessage()
     {
         $mailbox = $this->createMailbox();
-        $raw = $this->getFixture('embedded_email');
+        $raw     = $this->getFixture('embedded_email');
         $mailbox->addMessage($raw);
 
-        $message = $mailbox->getMessage(1);
+        $message    = $mailbox->getMessage(1);
         $attachment = $message->getAttachments()[0];
         static::assertTrue($attachment->isEmbeddedMessage());
 
-        $emailDate = new \DateTimeImmutable('29 Jan 2016 14:22:13 +0100');
+        $emailDate       = new \DateTimeImmutable('29 Jan 2016 14:22:13 +0100');
         $embeddedMessage = $attachment->getEmbeddedMessage();
         static::assertNull($embeddedMessage->getBodyHtml());
         static::assertSame('demo text', $embeddedMessage->getBodyText());
@@ -50,7 +50,7 @@ final class EmbeddedMessageTest extends AbstractTest
     public function testEmbeddedAttachment()
     {
         $mailbox = $this->createMailbox();
-        $raw = $this->getFixture('embedded_email');
+        $raw     = $this->getFixture('embedded_email');
         $mailbox->addMessage($raw);
 
         $embeddedMessage = $mailbox->getMessage(1)->getAttachments()[0]->getEmbeddedMessage();
@@ -76,7 +76,7 @@ final class EmbeddedMessageTest extends AbstractTest
     public function testRecursiveEmbeddedAttachment()
     {
         $mailbox = $this->createMailbox();
-        $raw = $this->getFixture('four_nested_emails');
+        $raw     = $this->getFixture('four_nested_emails');
         $mailbox->addMessage($raw);
 
         $message = $mailbox->getMessage(1);

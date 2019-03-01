@@ -72,7 +72,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         $messageNumber = $this->getNumber();
 
         $errorMessage = null;
-        $errorNumber = 0;
+        $errorNumber  = 0;
         \set_error_handler(static function ($nr, $message) use (&$errorMessage, &$errorNumber) {
             $errorMessage = $message;
             $errorNumber = $nr;

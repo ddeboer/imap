@@ -48,18 +48,18 @@ final class MessageTest extends AbstractTest
     ];
 
     private static $charsets = [
-        'ASCII' => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
-        'GB18030' => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
-        'ISO-8859-6' => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
-        'ISO-8859-7' => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
-        'SJIS' => '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯBｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿCﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏDﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ',
-        'UTF-8' => '€✔',
+        'ASCII'        => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+        'GB18030'      => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
+        'ISO-8859-6'   => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
+        'ISO-8859-7'   => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
+        'SJIS'         => '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯBｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿCﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏDﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ',
+        'UTF-8'        => '€✔',
         'Windows-1251' => 'ЂЃѓЉЊЌЋЏђљњќћџЎўЈҐЁЄЇІіґёєјЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя',
         'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
     ];
 
     private static $iconvOnlyCharsets = [
-        'macintosh' => '†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈«»…ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ',
+        'macintosh'    => '†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈«»…ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ',
         'Windows-1250' => 'ŚŤŹśťźˇ˘ŁĄŞŻ˛łąşĽ˝ľż',
     ];
 
@@ -70,7 +70,7 @@ final class MessageTest extends AbstractTest
 
     public function testCustomNonExistentMessageFetch()
     {
-        $connection = $this->getConnection();
+        $connection    = $this->getConnection();
         $messageNumber = 98765;
 
         $message = new Message($connection->getResource(), $messageNumber);
@@ -122,12 +122,12 @@ final class MessageTest extends AbstractTest
 
     public function testLowercaseCharsetAliases()
     {
-        $refClass = new ReflectionClass(Transcoder::class);
+        $refClass   = new ReflectionClass(Transcoder::class);
         $properties = $refClass->getStaticProperties();
         /** @var array $aliases */
         $aliases = $properties['charsetAliases'];
 
-        $keys = \array_map('strval', \array_keys($aliases));
+        $keys        = \array_map('strval', \array_keys($aliases));
         $loweredKeys = \array_map(static function ($charset) {
             return \strtolower($charset);
         }, $keys);
@@ -187,9 +187,9 @@ final class MessageTest extends AbstractTest
 
     public function testCharsetAlias()
     {
-        $charset = 'ks_c_5601-1987';
+        $charset      = 'ks_c_5601-1987';
         $charsetAlias = 'EUC-KR';
-        $text = '사진';
+        $text         = '사진';
 
         $this->createTestMessage(
             $this->mailbox,
@@ -207,9 +207,9 @@ final class MessageTest extends AbstractTest
 
     public function testMicrosoftCharsetAlias()
     {
-        $charset = '134';
+        $charset      = '134';
         $charsetAlias = 'GB2312';
-        $text = '电佛';
+        $text         = '电佛';
 
         $this->createTestMessage(
             $this->mailbox,
@@ -271,7 +271,7 @@ final class MessageTest extends AbstractTest
      */
     public function testIconvFallback(string $charset, string $charList, string $encoding)
     {
-        $subject = \sprintf('[%s:%s]', $charset, $encoding);
+        $subject  = \sprintf('[%s:%s]', $charset, $encoding);
         $contents = \iconv('UTF-8', $charset, $charList);
 
         static::assertIsString($contents);
@@ -482,22 +482,22 @@ final class MessageTest extends AbstractTest
 
             $actual[] = [
                 'filename' => $parameters->get('filename'),
-                'name' => $parameters->get('name'),
+                'name'     => $parameters->get('name'),
             ];
         }
 
         $expected = [
             [
                 'filename' => 'Buchungsbestätigung- Rechnung-Geschäftsbedingungen-Nr.B123-45 - XXXXX xxxxxxxxxxxxxxxxx XxxX, Lüxxxxxxxxxx - VM Klaus XXXXXX - xxxxxxxx.pdf',
-                'name' => 'Buchungsbestätigung- Rechnung-Geschäftsbedingungen-Nr.B123-45 - XXXX xxxxxxxxxxxxxxxxx XxxX, Lüdxxxxxxxx - VM Klaus XXXXXX - xxxxxxxx.pdf',
+                'name'     => 'Buchungsbestätigung- Rechnung-Geschäftsbedingungen-Nr.B123-45 - XXXX xxxxxxxxxxxxxxxxx XxxX, Lüdxxxxxxxx - VM Klaus XXXXXX - xxxxxxxx.pdf',
             ],
             [
                 'filename' => '01_A€àä????@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
-                'name' => '01_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
+                'name'     => '01_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
             ],
             [
                 'filename' => '02_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
-                'name' => '02_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
+                'name'     => '02_A€àäąбيد@Z-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz-0123456789-qwertyuiopasdfghjklzxcvbnmopqrstuvz.txt',
             ],
         ];
 
@@ -573,11 +573,11 @@ final class MessageTest extends AbstractTest
     public function testDates(string $output, string $dateRawHeader)
     {
         $template = $this->getFixture('date-template');
-        $message = \str_replace('%date_raw_header%', $dateRawHeader, $template);
+        $message  = \str_replace('%date_raw_header%', $dateRawHeader, $template);
         $this->mailbox->addMessage($message);
 
         $message = $this->mailbox->getMessage(1);
-        $date = $message->getDate();
+        $date    = $message->getDate();
 
         static::assertInstanceOf(\DateTimeImmutable::class, $date);
         static::assertSame($output, $date->format(\DATE_ISO8601), \sprintf('RAW: %s', $dateRawHeader));
@@ -605,7 +605,7 @@ final class MessageTest extends AbstractTest
     public function testInvalidDate()
     {
         $template = $this->getFixture('date-template');
-        $message = \str_replace('%date_raw_header%', 'Fri!', $template);
+        $message  = \str_replace('%date_raw_header%', 'Fri!', $template);
         $this->mailbox->addMessage($message);
 
         $message = $this->mailbox->getMessage(1);
@@ -762,15 +762,15 @@ final class MessageTest extends AbstractTest
         $fixture = $this->getFixture('pec');
         $this->mailbox->addMessage($fixture);
 
-        $message = $this->mailbox->getMessage(1);
+        $message     = $this->mailbox->getMessage(1);
         $attachments = $message->getAttachments();
 
         static::assertCount(3, $attachments);
 
         $expected = [
-            'data.xml' => 'PHhtbC8+',
+            'data.xml'      => 'PHhtbC8+',
             'postacert.eml' => 'test-content',
-            'smime.p7s' => 'MQ==',
+            'smime.p7s'     => 'MQ==',
         ];
 
         foreach ($attachments as $attachment) {
@@ -964,7 +964,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $expected = [
-            'first.eml' => 'Subject: FIRST',
+            'first.eml'  => 'Subject: FIRST',
             'chrome.png' => 'ZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklH',
             'second.eml' => 'Subject: SECOND',
         ];
@@ -988,7 +988,7 @@ final class MessageTest extends AbstractTest
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
         // of attachments that don't have it
-        $refMessage = new \ReflectionClass($message);
+        $refMessage         = new \ReflectionClass($message);
         $refAbstractMessage = $refMessage->getParentClass();
         static::assertInstanceOf(ReflectionClass::class, $refAbstractMessage);
         $refAbstractPart = $refAbstractMessage->getParentClass();

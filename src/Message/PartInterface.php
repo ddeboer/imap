@@ -9,26 +9,26 @@ namespace Ddeboer\Imap\Message;
  */
 interface PartInterface extends \RecursiveIterator
 {
-    public const TYPE_TEXT = 'text';
-    public const TYPE_MULTIPART = 'multipart';
-    public const TYPE_MESSAGE = 'message';
-    public const TYPE_APPLICATION = 'application';
-    public const TYPE_AUDIO = 'audio';
-    public const TYPE_IMAGE = 'image';
-    public const TYPE_VIDEO = 'video';
-    public const TYPE_MODEL = 'model';
-    public const TYPE_OTHER = 'other';
-    public const TYPE_UNKNOWN = 'unknown';
+    public const TYPE_TEXT          = 'text';
+    public const TYPE_MULTIPART     = 'multipart';
+    public const TYPE_MESSAGE       = 'message';
+    public const TYPE_APPLICATION   = 'application';
+    public const TYPE_AUDIO         = 'audio';
+    public const TYPE_IMAGE         = 'image';
+    public const TYPE_VIDEO         = 'video';
+    public const TYPE_MODEL         = 'model';
+    public const TYPE_OTHER         = 'other';
+    public const TYPE_UNKNOWN       = 'unknown';
 
-    public const ENCODING_7BIT = '7bit';
-    public const ENCODING_8BIT = '8bit';
-    public const ENCODING_BINARY = 'binary';
-    public const ENCODING_BASE64 = 'base64';
-    public const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
-    public const ENCODING_UNKNOWN = 'unknown';
+    public const ENCODING_7BIT              = '7bit';
+    public const ENCODING_8BIT              = '8bit';
+    public const ENCODING_BINARY            = 'binary';
+    public const ENCODING_BASE64            = 'base64';
+    public const ENCODING_QUOTED_PRINTABLE  = 'quoted-printable';
+    public const ENCODING_UNKNOWN           = 'unknown';
 
-    public const SUBTYPE_PLAIN = 'PLAIN';
-    public const SUBTYPE_HTML = 'HTML';
+    public const SUBTYPE_PLAIN  = 'PLAIN';
+    public const SUBTYPE_HTML   = 'HTML';
 
     /**
      * Get message number (from headers).

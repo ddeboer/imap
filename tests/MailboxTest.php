@@ -224,14 +224,14 @@ final class MailboxTest extends AbstractTest
         $mailboxOne->addMessage($this->getFixture('thread/re_my_topic'));
 
         $expected = [
-            '0.num' => 1,
-            '0.next' => 1,
-            '1.num' => 3,
-            '1.next' => 0,
+            '0.num'    => 1,
+            '0.next'   => 1,
+            '1.num'    => 3,
+            '1.next'   => 0,
             '1.branch' => 0,
             '0.branch' => 2,
-            '2.num' => 2,
-            '2.next' => 0,
+            '2.num'    => 2,
+            '2.next'   => 0,
             '2.branch' => 0,
         ];
 
@@ -286,7 +286,7 @@ final class MailboxTest extends AbstractTest
     public function testBulkCopy()
     {
         $anotherMailbox = $this->createMailbox();
-        $messages = [1, 2, 3];
+        $messages       = [1, 2, 3];
 
         static::assertSame(0, $anotherMailbox->count());
         static::assertSame(3, $this->mailbox->count());

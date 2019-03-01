@@ -98,25 +98,25 @@ abstract class AbstractPart implements PartInterface
      * @var array
      */
     private static $typesMap = [
-        \TYPETEXT => self::TYPE_TEXT,
-        \TYPEMULTIPART => self::TYPE_MULTIPART,
-        \TYPEMESSAGE => self::TYPE_MESSAGE,
+        \TYPETEXT        => self::TYPE_TEXT,
+        \TYPEMULTIPART   => self::TYPE_MULTIPART,
+        \TYPEMESSAGE     => self::TYPE_MESSAGE,
         \TYPEAPPLICATION => self::TYPE_APPLICATION,
-        \TYPEAUDIO => self::TYPE_AUDIO,
-        \TYPEIMAGE => self::TYPE_IMAGE,
-        \TYPEVIDEO => self::TYPE_VIDEO,
-        \TYPEMODEL => self::TYPE_MODEL,
-        \TYPEOTHER => self::TYPE_OTHER,
+        \TYPEAUDIO       => self::TYPE_AUDIO,
+        \TYPEIMAGE       => self::TYPE_IMAGE,
+        \TYPEVIDEO       => self::TYPE_VIDEO,
+        \TYPEMODEL       => self::TYPE_MODEL,
+        \TYPEOTHER       => self::TYPE_OTHER,
     ];
 
     /**
      * @var array
      */
     private static $encodingsMap = [
-        \ENC7BIT => self::ENCODING_7BIT,
-        \ENC8BIT => self::ENCODING_8BIT,
-        \ENCBINARY => self::ENCODING_BINARY,
-        \ENCBASE64 => self::ENCODING_BASE64,
+        \ENC7BIT            => self::ENCODING_7BIT,
+        \ENC8BIT            => self::ENCODING_8BIT,
+        \ENCBINARY          => self::ENCODING_BINARY,
+        \ENCBASE64          => self::ENCODING_BASE64,
         \ENCQUOTEDPRINTABLE => self::ENCODING_QUOTED_PRINTABLE,
     ];
 
@@ -124,9 +124,9 @@ abstract class AbstractPart implements PartInterface
      * @var array
      */
     private static $attachmentKeys = [
-        'name' => true,
-        'filename' => true,
-        'name*' => true,
+        'name'      => true,
+        'filename'  => true,
+        'name*'     => true,
         'filename*' => true,
     ];
 
@@ -144,9 +144,9 @@ abstract class AbstractPart implements PartInterface
         string $partNumber,
         \stdClass $structure
     ) {
-        $this->resource = $resource;
+        $this->resource      = $resource;
         $this->messageNumber = $messageNumber;
-        $this->partNumber = $partNumber;
+        $this->partNumber    = $partNumber;
         $this->setStructure($structure);
     }
 
@@ -490,7 +490,7 @@ abstract class AbstractPart implements PartInterface
 
         // In our context, \ENCOTHER is as useful as an uknown encoding
         $this->encoding = self::$encodingsMap[$this->structure->encoding] ?? self::ENCODING_UNKNOWN;
-        $this->subtype = $this->structure->subtype;
+        $this->subtype  = $this->structure->subtype;
 
         foreach (['disposition', 'bytes', 'description'] as $optional) {
             if (isset($this->structure->{$optional})) {

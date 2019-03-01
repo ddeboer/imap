@@ -20,9 +20,9 @@ final class MockabilityTest extends TestCase
     public function testFullMockedBehaviour()
     {
         // Setup
-        $username = \uniqid('username_');
-        $password = \uniqid('password_');
-        $inboxName = \uniqid('INBOX_');
+        $username           = \uniqid('username_');
+        $password           = \uniqid('password_');
+        $inboxName          = \uniqid('INBOX_');
         $attachmentFilename = \uniqid('filename_');
 
         $attachmentMock = $this->createMock(AttachmentInterface::class);
@@ -67,8 +67,8 @@ final class MockabilityTest extends TestCase
 
         // Run
         $connection = $serverMock->authenticate($username, $password);
-        $mailbox = $connection->getMailbox($inboxName);
-        $messages = $mailbox->getMessages();
+        $mailbox    = $connection->getMailbox($inboxName);
+        $messages   = $mailbox->getMessages();
 
         static::assertCount(1, $messages);
 

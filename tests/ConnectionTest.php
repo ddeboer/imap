@@ -83,7 +83,7 @@ final class ConnectionTest extends AbstractTest
     {
         $connection = $this->getConnection();
 
-        $name = \uniqid('test_');
+        $name    = \uniqid('test_');
         $mailbox = $connection->createMailbox($name);
         static::assertSame($name, $mailbox->getName());
         static::assertSame($name, $connection->getMailbox($name)->getName());
@@ -98,7 +98,7 @@ final class ConnectionTest extends AbstractTest
     public function testCannotDeleteInvalidMailbox()
     {
         $connection = $this->getConnection();
-        $mailbox = $this->createMailbox();
+        $mailbox    = $this->createMailbox();
 
         $connection->deleteMailbox($mailbox);
 
@@ -137,8 +137,8 @@ final class ConnectionTest extends AbstractTest
 
     public function testNumericMailbox()
     {
-        $number = (string) \mt_rand(100, 999);
-        $conn = $this->getConnection();
+        $number  = (string) \mt_rand(100, 999);
+        $conn    = $this->getConnection();
         $mailbox = $conn->createMailbox($number);
 
         $mailboxes = $conn->getMailboxes();

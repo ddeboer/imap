@@ -41,7 +41,7 @@ abstract class AbstractTest extends TestCase
 
     final protected function createMailbox(ConnectionInterface $connection = null): MailboxInterface
     {
-        $connection = $connection ?? $this->getConnection();
+        $connection        = $connection ?? $this->getConnection();
         $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
 
         return $connection->createMailbox($this->mailboxName);

@@ -65,12 +65,12 @@ final class Server implements ServerInterface
             throw new \RuntimeException('IMAP extension must be enabled');
         }
 
-        $this->hostname = $hostname;
-        $this->port = $port;
-        $this->flags = $flags ? '/' . \ltrim($flags, '/') : '';
+        $this->hostname   = $hostname;
+        $this->port       = $port;
+        $this->flags      = $flags ? '/' . \ltrim($flags, '/') : '';
         $this->parameters = $parameters;
-        $this->options = $options;
-        $this->retries = $retries;
+        $this->options    = $options;
+        $this->retries    = $retries;
     }
 
     /**
@@ -86,7 +86,7 @@ final class Server implements ServerInterface
     public function authenticate(string $username, string $password): ConnectionInterface
     {
         $errorMessage = null;
-        $errorNumber = 0;
+        $errorNumber  = 0;
         \set_error_handler(static function ($nr, $message) use (&$errorMessage, &$errorNumber) {
             $errorMessage = $message;
             $errorNumber = $nr;
@@ -117,7 +117,7 @@ final class Server implements ServerInterface
             throw new ResourceCheckFailureException('Resource check failure');
         }
 
-        $mailbox = $check->Mailbox;
+        $mailbox    = $check->Mailbox;
         $connection = \substr($mailbox, 0, \strpos($mailbox, '}') + 1);
 
         // These are necessary to get rid of PHP throwing IMAP errors

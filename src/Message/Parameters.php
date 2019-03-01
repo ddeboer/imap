@@ -10,7 +10,7 @@ class Parameters extends \ArrayIterator
      * @var array
      */
     private static $attachmentCustomKeys = [
-        'name*' => 'name',
+        'name*'     => 'name',
         'filename*' => 'filename',
     ];
 
@@ -34,7 +34,7 @@ class Parameters extends \ArrayIterator
             if (isset(self::$attachmentCustomKeys[$key])) {
                 $key = self::$attachmentCustomKeys[$key];
             }
-            $value = $this->decode($parameter->value);
+            $value      = $this->decode($parameter->value);
             $this[$key] = $value;
         }
     }

@@ -43,8 +43,8 @@ final class Mailbox implements MailboxInterface
     public function __construct(ImapResourceInterface $resource, string $name, \stdClass $info)
     {
         $this->resource = new ImapResource($resource->getStream(), $this);
-        $this->name = $name;
-        $this->info = $info;
+        $this->name     = $name;
+        $this->info     = $info;
     }
 
     /**
