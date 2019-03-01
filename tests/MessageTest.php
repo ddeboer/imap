@@ -15,8 +15,6 @@ use Ddeboer\Imap\Message\Parameters;
 use Ddeboer\Imap\Message\PartInterface;
 use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageInterface;
-use Ddeboer\Imap\MessageIteratorInterface;
-use Ddeboer\Imap\Search;
 use PHPUnit\Framework\Error\Deprecated;
 use ReflectionClass;
 use Zend\Mail;
@@ -757,27 +755,6 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->assertCount(1, $message->getAttachments());
-    }
-
-    public function testSort()
-    {
-        $this->createTestMessage($this->mailbox, 'B');
-        $this->createTestMessage($this->mailbox, 'A');
-        $this->createTestMessage($this->mailbox, 'C');
-
-        $concatSubjects = function (MessageIteratorInterface $it) {
-            $subject = '';
-            foreach ($it as $message) {
-                $subject .= $message->getSubject();
-            }
-
-            return $subject;
-        };
-
-        $this->assertSame('BAC', $concatSubjects($this->mailbox->getMessages()));
-        $this->assertSame('ABC', $concatSubjects($this->mailbox->getMessages(null, \SORTSUBJECT)));
-        $this->assertSame('CBA', $concatSubjects($this->mailbox->getMessages(null, \SORTSUBJECT, true)));
-        $this->assertSame('B', $concatSubjects($this->mailbox->getMessages(new Search\Text\Subject('B'), \SORTSUBJECT, true)));
     }
 
     public function testSignedMessage()

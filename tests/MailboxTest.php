@@ -12,6 +12,8 @@ use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIterator;
+use Ddeboer\Imap\MessageIteratorInterface;
+use Ddeboer\Imap\Search;
 
 /**
  * @covers \Ddeboer\Imap\Exception\AbstractException
@@ -297,5 +299,55 @@ final class MailboxTest extends AbstractTest
         $this->getConnection()->deleteMailbox($anotherMailbox);
         $this->expectException(MessageCopyException::class);
         $this->mailbox->copy($messages, $anotherMailbox);
+    }
+
+    public function testSort()
+    {
+        $anotherMailbox = $this->createMailbox();
+        $this->createTestMessage($anotherMailbox, 'B');
+        $this->createTestMessage($anotherMailbox, 'A');
+        $this->createTestMessage($anotherMailbox, 'C');
+
+        $concatSubjects = function (MessageIteratorInterface $it) {
+            $subject = '';
+            foreach ($it as $message) {
+                $subject .= $message->getSubject();
+            }
+
+            return $subject;
+        };
+
+        $this->assertSame('BAC', $concatSubjects($anotherMailbox->getMessages()));
+        $this->assertSame('ABC', $concatSubjects($anotherMailbox->getMessages(null, \SORTSUBJECT)));
+        $this->assertSame('CBA', $concatSubjects($anotherMailbox->getMessages(null, \SORTSUBJECT, true)));
+        $this->assertSame('B', $concatSubjects($anotherMailbox->getMessages(new Search\Text\Subject('B'), \SORTSUBJECT, true)));
+    }
+
+    public function testGetMessagesWithUtf8Subject()
+    {
+        $anotherMailbox = $this->createMailbox();
+        $this->createTestMessage($anotherMailbox, '1', 'Ж П');
+        $this->createTestMessage($anotherMailbox, '2', 'Ж б');
+        $this->createTestMessage($anotherMailbox, '3', 'б П');
+
+        $messagesFound = '';
+        foreach ($anotherMailbox->getMessages(new Search\Text\Body(\mb_convert_encoding('б', 'Windows-1251', 'UTF-8')), null, false, 'Windows-1251') as $message) {
+            $subject = $message->getSubject();
+            $this->assertIsString($subject);
+
+            $messagesFound .= \substr($subject, 0, 1);
+        }
+
+        $this->assertSame('23', $messagesFound);
+
+        $messagesFound = '';
+        foreach ($anotherMailbox->getMessages(new Search\Text\Body(\mb_convert_encoding('П', 'Windows-1251', 'UTF-8')), \SORTSUBJECT, true, 'Windows-1251') as $message) {
+            $subject = $message->getSubject();
+            $this->assertIsString($subject);
+
+            $messagesFound .= \substr($subject, 0, 1);
+        }
+
+        $this->assertSame('31', $messagesFound);
     }
 }
