@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 $readMeFilepath = \dirname(__DIR__) . '/README.md';
-$readMeFile = new \SplFileObject($readMeFilepath);
+$readMeFile     = new \SplFileObject($readMeFilepath);
 $readMeFile->setFlags(SplFileObject::DROP_NEW_LINE);
 
 $cliRedBackground = "\033[37;41m";
-$cliReset = "\033[0m";
-$exitStatus = 0;
+$cliReset         = "\033[0m";
+$exitStatus       = 0;
 
-$linesWithSpaces = [];
-$tableOfContentsStarted = 0;
+$linesWithSpaces                = [];
+$tableOfContentsStarted         = 0;
 $currentTableOfContentsChapters = [];
-$chaptersFound = [];
+$chaptersFound                  = [];
 foreach ($readMeFile as $lineNumber => $line) {
     if (\preg_match('/\s$/', $line)) {
         $linesWithSpaces[] = \sprintf('%5s: %s', 1 + $lineNumber, $line);
@@ -45,7 +45,7 @@ if (\count($linesWithSpaces)) {
 }
 
 $currentTableOfContentsChaptersFilename = __DIR__ . '/current-chapters';
-$chaptersFoundFilename = __DIR__ . '/chapters-found';
+$chaptersFoundFilename                  = __DIR__ . '/chapters-found';
 
 \file_put_contents($currentTableOfContentsChaptersFilename, \implode(\PHP_EOL, $currentTableOfContentsChapters));
 \file_put_contents($chaptersFoundFilename, \implode(\PHP_EOL, $chaptersFound));

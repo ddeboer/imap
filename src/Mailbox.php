@@ -43,8 +43,8 @@ final class Mailbox implements MailboxInterface
     public function __construct(ImapResourceInterface $resource, string $name, \stdClass $info)
     {
         $this->resource = new ImapResource($resource->getStream(), $this);
-        $this->name = $name;
-        $this->info = $info;
+        $this->name     = $name;
+        $this->info     = $info;
     }
 
     /**
@@ -206,7 +206,7 @@ final class Mailbox implements MailboxInterface
     {
         \imap_errors();
 
-        $overview = \imap_fetch_overview($this->resource->getStream(), $sequence, FT_UID);
+        $overview = \imap_fetch_overview($this->resource->getStream(), $sequence, \FT_UID);
         if (empty($overview)) {
             if (false !== \imap_last_error()) {
                 throw new InvalidSearchCriteriaException(\sprintf('Invalid sequence [%s]', $sequence));
@@ -275,7 +275,7 @@ final class Mailbox implements MailboxInterface
      */
     public function getThread(): array
     {
-        \set_error_handler(function () {});
+        \set_error_handler(static function () {});
 
         /** @var array|false $tree */
         $tree = \imap_thread($this->resource->getStream());

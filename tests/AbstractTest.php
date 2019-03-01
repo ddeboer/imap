@@ -13,9 +13,9 @@ use Zend\Mime;
 
 abstract class AbstractTest extends TestCase
 {
-    const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
+    public const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
 
-    const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
+    public const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
 
     /**
      * @var null|string
@@ -41,7 +41,7 @@ abstract class AbstractTest extends TestCase
 
     final protected function createMailbox(ConnectionInterface $connection = null): MailboxInterface
     {
-        $connection = $connection ?? $this->getConnection();
+        $connection        = $connection ?? $this->getConnection();
         $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
 
         return $connection->createMailbox($this->mailboxName);
@@ -82,14 +82,14 @@ abstract class AbstractTest extends TestCase
             );
         }
 
-        $this->assertIsString($messageString);
+        static::assertIsString($messageString);
         $mailbox->addMessage($messageString);
     }
 
     final protected function getFixture($fixture): string
     {
         $content = \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
-        $this->assertIsString($content);
+        static::assertIsString($content);
 
         return $content;
     }

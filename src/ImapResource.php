@@ -35,7 +35,7 @@ final class ImapResource implements ImapResourceInterface
     public function __construct($resource, MailboxInterface $mailbox = null)
     {
         $this->resource = $resource;
-        $this->mailbox = $mailbox;
+        $this->mailbox  = $mailbox;
     }
 
     /**
@@ -95,8 +95,8 @@ final class ImapResource implements ImapResourceInterface
         }
 
         self::$lastMailboxUsedCache = null;
-        $check = \imap_check($resource);
-        $return = false !== $check && $check->Mailbox === $currentMailboxName;
+        $check                      = \imap_check($resource);
+        $return                     = false !== $check && $check->Mailbox === $currentMailboxName;
 
         if (true === $return) {
             self::$lastMailboxUsedCache = $currentMailboxName;

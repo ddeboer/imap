@@ -61,7 +61,7 @@ final class Headers extends Parameters
                 /** @var \stdClass $address */
                 foreach ($value as $address) {
                     if (isset($address->mailbox)) {
-                        $address->host = $address->host ?? null;
+                        $address->host     = $address->host ?? null;
                         $address->personal = isset($address->personal) ? $this->decode($address->personal) : null;
                     }
                 }

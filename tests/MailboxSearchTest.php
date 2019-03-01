@@ -11,7 +11,6 @@ use Ddeboer\Imap\SearchExpression;
 
 /**
  * @covers \Ddeboer\Imap\Mailbox::getMessages
- * @covers \Ddeboer\Imap\SearchExpression
  * @covers \Ddeboer\Imap\Search\AbstractDate
  * @covers \Ddeboer\Imap\Search\AbstractText
  * @covers \Ddeboer\Imap\Search\Date\Before
@@ -40,6 +39,7 @@ use Ddeboer\Imap\SearchExpression;
  * @covers \Ddeboer\Imap\Search\Text\Subject
  * @covers \Ddeboer\Imap\Search\Text\Text
  * @covers \Ddeboer\Imap\Search\Text\Unkeyword
+ * @covers \Ddeboer\Imap\SearchExpression
  */
 final class MailboxSearchTest extends AbstractTest
 {
@@ -58,12 +58,12 @@ final class MailboxSearchTest extends AbstractTest
 
         $messages = $this->mailbox->getMessages(new Search\Text\Subject($firstSubject));
 
-        $this->assertCount(1, $messages);
-        $this->assertSame($firstSubject, $messages->current()->getSubject());
+        static::assertCount(1, $messages);
+        static::assertSame($firstSubject, $messages->current()->getSubject());
 
         $messages = $this->mailbox->getMessages(new Search\Text\Subject(\uniqid('none_')));
 
-        $this->assertCount(0, $messages);
+        static::assertCount(0, $messages);
     }
 
     public function testUnknownCriterion()
@@ -77,7 +77,7 @@ final class MailboxSearchTest extends AbstractTest
     {
         $messages = $this->mailbox->getMessages(new Search\RawExpression('ON "1-Oct-2017"'));
 
-        $this->assertCount(0, $messages);
+        static::assertCount(0, $messages);
     }
 
     public function testSearchEscapes()
@@ -121,18 +121,18 @@ final class MailboxSearchTest extends AbstractTest
 
         $messages = $this->mailbox->getMessages($searchExpression);
 
-        $this->assertCount(0, $messages);
+        static::assertCount(0, $messages);
     }
 
     public function testSpacesAndDoubleQuoteEscape()
     {
         $spaceAndDoubleQuoteCondition = new Search\Text\Text('A " Z');
 
-        $this->markTestIncomplete('Unable to get spaces and double quote search together');
+        static::markTestIncomplete('Unable to get spaces and double quote search together');
 
         $messages = $this->mailbox->getMessages($spaceAndDoubleQuoteCondition);
 
-        $this->assertCount(0, $messages);
+        static::assertCount(0, $messages);
     }
 
     public function testOrConditionFunctionality()
@@ -142,7 +142,7 @@ final class MailboxSearchTest extends AbstractTest
             new Search\Text\Subject(\uniqid()),
         ]);
 
-        $this->assertContains('(', $orCondition->toString());
+        static::assertContains('(', $orCondition->toString());
 
         return $orCondition;
     }
@@ -154,10 +154,10 @@ final class MailboxSearchTest extends AbstractTest
      */
     public function testOrConditionUsage($orCondition)
     {
-        $this->markTestIncomplete('OR condition isn\'t supported by the current c-client library');
+        static::markTestIncomplete('OR condition isn\'t supported by the current c-client library');
 
         $messages = $this->mailbox->getMessages($orCondition);
 
-        $this->assertCount(0, $messages);
+        static::assertCount(0, $messages);
     }
 }

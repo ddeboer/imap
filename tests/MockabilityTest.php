@@ -20,57 +20,57 @@ final class MockabilityTest extends TestCase
     public function testFullMockedBehaviour()
     {
         // Setup
-        $username = \uniqid('username_');
-        $password = \uniqid('password_');
-        $inboxName = \uniqid('INBOX_');
+        $username           = \uniqid('username_');
+        $password           = \uniqid('password_');
+        $inboxName          = \uniqid('INBOX_');
         $attachmentFilename = \uniqid('filename_');
 
         $attachmentMock = $this->createMock(AttachmentInterface::class);
         $attachmentMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getFilename')
             ->willReturn($attachmentFilename)
         ;
 
         $messageMock = $this->createMock(MessageInterface::class);
         $messageMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getAttachments')
             ->willReturn([$attachmentMock])
         ;
 
         $mailboxMock = $this->createMock(MailboxInterface::class);
         $mailboxMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getMessages')
             ->willReturn(new RawMessageIterator([$messageMock]))
         ;
 
         $connectionMock = $this->createMock(ConnectionInterface::class);
         $connectionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getMailbox')
-            ->with($this->identicalTo($inboxName))
+            ->with(static::identicalTo($inboxName))
             ->willReturn($mailboxMock)
         ;
 
         $serverMock = $this->createMock(ServerInterface::class);
         $serverMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('authenticate')
             ->with(
-                $this->identicalTo($username),
-                $this->identicalTo($password)
+                static::identicalTo($username),
+                static::identicalTo($password)
             )
             ->willReturn($connectionMock)
         ;
 
         // Run
         $connection = $serverMock->authenticate($username, $password);
-        $mailbox = $connection->getMailbox($inboxName);
-        $messages = $mailbox->getMessages();
+        $mailbox    = $connection->getMailbox($inboxName);
+        $messages   = $mailbox->getMessages();
 
-        $this->assertCount(1, $messages);
+        static::assertCount(1, $messages);
 
         // This foreach has the solely purpose to trigger code-coverage for
         // RawMessageIterator::current() and prove RawMessageIterator is
@@ -80,13 +80,13 @@ final class MockabilityTest extends TestCase
             break;
         }
 
-        $this->assertInstanceOf(MessageInterface::class, $message);
+        static::assertInstanceOf(MessageInterface::class, $message);
         $attachments = $message->getAttachments();
 
-        $this->assertCount(1, $attachments);
+        static::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
 
-        $this->assertSame($attachmentFilename, $attachment->getFilename());
+        static::assertSame($attachmentFilename, $attachment->getFilename());
     }
 }

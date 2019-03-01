@@ -23,7 +23,7 @@ final class ConnectionTest extends AbstractTest
 
         $check = \imap_check($connection->getResource()->getStream());
 
-        $this->assertInstanceOf(\stdClass::class, $check);
+        static::assertInstanceOf(\stdClass::class, $check);
     }
 
     public function testCannotInstantiateArbitraryConnections()
@@ -47,14 +47,14 @@ final class ConnectionTest extends AbstractTest
 
     public function testCount()
     {
-        $this->assertInternalType('int', $this->getConnection()->count());
+        static::assertIsInt($this->getConnection()->count());
     }
 
     public function testPing()
     {
         $connection = $this->createConnection();
 
-        $this->assertTrue($connection->ping());
+        static::assertTrue($connection->ping());
 
         $connection->close();
 
@@ -66,27 +66,27 @@ final class ConnectionTest extends AbstractTest
     public function testGetMailboxes()
     {
         $mailboxes = $this->getConnection()->getMailboxes();
-        $this->assertInternalType('array', $mailboxes);
+        static::assertIsArray($mailboxes);
 
         foreach ($mailboxes as $mailbox) {
-            $this->assertInstanceOf(Mailbox::class, $mailbox);
+            static::assertInstanceOf(Mailbox::class, $mailbox);
         }
     }
 
     public function testGetMailbox()
     {
         $mailbox = $this->getConnection()->getMailbox('INBOX');
-        $this->assertInstanceOf(Mailbox::class, $mailbox);
+        static::assertInstanceOf(Mailbox::class, $mailbox);
     }
 
     public function testCreateMailbox()
     {
         $connection = $this->getConnection();
 
-        $name = \uniqid('test_');
+        $name    = \uniqid('test_');
         $mailbox = $connection->createMailbox($name);
-        $this->assertSame($name, $mailbox->getName());
-        $this->assertSame($name, $connection->getMailbox($name)->getName());
+        static::assertSame($name, $mailbox->getName());
+        static::assertSame($name, $connection->getMailbox($name)->getName());
 
         $connection->deleteMailbox($mailbox);
 
@@ -98,7 +98,7 @@ final class ConnectionTest extends AbstractTest
     public function testCannotDeleteInvalidMailbox()
     {
         $connection = $this->getConnection();
-        $mailbox = $this->createMailbox();
+        $mailbox    = $this->createMailbox();
 
         $connection->deleteMailbox($mailbox);
 
@@ -118,7 +118,7 @@ final class ConnectionTest extends AbstractTest
 
     public function testEscapesMailboxNames()
     {
-        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid(self::SPECIAL_CHARS)));
+        static::assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid(self::SPECIAL_CHARS)));
     }
 
     public function testCustomExceptionOnInvalidMailboxName()
@@ -126,7 +126,7 @@ final class ConnectionTest extends AbstractTest
         $this->expectException(CreateMailboxException::class);
         $this->expectExceptionMessageRegExp('/CANNOT/');
 
-        $this->assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid("\t")));
+        static::assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid("\t")));
     }
 
     public function testGetInvalidMailbox()
@@ -137,8 +137,8 @@ final class ConnectionTest extends AbstractTest
 
     public function testNumericMailbox()
     {
-        $number = (string) \mt_rand(100, 999);
-        $conn = $this->getConnection();
+        $number  = (string) \mt_rand(100, 999);
+        $conn    = $this->getConnection();
         $mailbox = $conn->createMailbox($number);
 
         $mailboxes = $conn->getMailboxes();
