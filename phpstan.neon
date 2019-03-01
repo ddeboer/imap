@@ -3,7 +3,10 @@ includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
+    tmpDir: tmp/custom-cache/
+    paths:
+        - src/
+        - tests/
     ignoreErrors:
         - '#Argument of an invalid type array|null supplied for foreach, only iterables are supported#'
-        - '#Calling method .+ on possibly null value of type#'
         - '#Parameter \#1 \$addresses of method Ddeboer\\Imap\\Message\\AbstractMessage::decodeEmailAddresses\(\) expects array, array|string given#'

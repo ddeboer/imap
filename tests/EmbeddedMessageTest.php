@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
+use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\PartInterface;
 
 /**
@@ -29,9 +30,17 @@ final class EmbeddedMessageTest extends AbstractTest
         $this->assertNull($embeddedMessage->getBodyHtml());
         $this->assertSame('demo text', $embeddedMessage->getBodyText());
         $this->assertSame([], $embeddedMessage->getCc());
-        $this->assertSame($emailDate->format(\DATE_ISO8601), $embeddedMessage->getDate()->format(\DATE_ISO8601));
+
+        $actualDate = $embeddedMessage->getDate();
+        $this->assertInstanceOf(\DateTimeImmutable::class, $actualDate);
+        $this->assertSame($emailDate->format(\DATE_ISO8601), $actualDate->format(\DATE_ISO8601));
+
         $this->assertSame('demo', $embeddedMessage->getSubject());
-        $this->assertSame('demo-from@cerstor.cz', $embeddedMessage->getFrom()->getFullAddress());
+
+        $actualFrom = $embeddedMessage->getFrom();
+        $this->assertInstanceOf(EmailAddress::class, $actualFrom);
+        $this->assertSame('demo-from@cerstor.cz', $actualFrom->getFullAddress());
+
         $this->assertSame('demo-to@cerstor.cz', $embeddedMessage->getTo()[0]->getFullAddress());
 
         $this->assertFalse($message->isSeen());
@@ -47,7 +56,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $embeddedAttachment = $embeddedMessage->getAttachments()[0];
         $this->assertSame('testfile.txt', $embeddedAttachment->getFilename());
-        $this->assertSame('29', $embeddedAttachment->getSize());
+        $this->assertSame(29, $embeddedAttachment->getSize());
         $this->assertSame('attachment', $embeddedAttachment->getDisposition());
         $this->assertSame('IHRoaXMgaXMgY29udGVudCBvZiB0ZXN0IGZpbGU=', $embeddedAttachment->getContent());
         $this->assertSame('base64', $embeddedAttachment->getEncoding());
@@ -71,7 +80,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $message = $mailbox->getMessage(1);
         $this->assertSame('3-third-subject', $message->getSubject());
-        $this->assertSame('3-third-content', \rtrim($message->getBodyText()));
+        $this->assertSame('3-third-content' . self::CONTENT_ENDING, $message->getBodyText());
 
         $attachments = $message->getAttachments();
         $this->assertCount(3, $attachments);

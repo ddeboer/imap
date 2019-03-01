@@ -7,6 +7,7 @@ namespace Ddeboer\Imap;
 use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
 use Ddeboer\Imap\Exception\ImapGetmailboxesException;
+use Ddeboer\Imap\Exception\ImapNumMsgException;
 use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 
@@ -139,7 +140,13 @@ final class Connection implements ConnectionInterface
      */
     public function count()
     {
-        return \imap_num_msg($this->resource->getStream());
+        $return = \imap_num_msg($this->resource->getStream());
+
+        if (false === $return) {
+            throw new ImapNumMsgException('imap_num_msg failed');
+        }
+
+        return $return;
     }
 
     /**

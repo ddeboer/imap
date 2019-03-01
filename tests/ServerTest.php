@@ -24,7 +24,7 @@ final class ServerTest extends AbstractTest
 
     public function testFailedAuthenticate()
     {
-        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
+        $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS);
 
         $this->expectException(AuthenticationFailedException::class);
         $this->expectExceptionMessageRegExp('/E_WARNING.+AUTHENTICATIONFAILED/s');
@@ -38,18 +38,21 @@ final class ServerTest extends AbstractTest
             $this->markTestSkipped('Active IMAP test server must have 993 port for this test');
         }
 
-        $server = new Server(\getenv('IMAP_SERVER_NAME'), '', self::IMAP_FLAGS);
+        $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', '', self::IMAP_FLAGS);
 
-        $this->assertInstanceOf(ConnectionInterface::class, $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD')));
+        $this->assertInstanceOf(ConnectionInterface::class, $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: ''));
     }
 
     public function test_custom_options()
     {
-        $server = new Server(\getenv('IMAP_SERVER_NAME'), \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS, [], \OP_HALFOPEN);
+        $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS, [], \OP_HALFOPEN);
 
-        $connection = $server->authenticate(\getenv('IMAP_USERNAME'), \getenv('IMAP_PASSWORD'));
+        $connection = $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: '');
 
         $check = \imap_check($connection->getResource()->getStream());
+
+        static::assertNotFalse($check);
+
         $mailbox = \strtolower($check->Mailbox);
 
         static::assertContains(\getenv('IMAP_USERNAME'), $mailbox);
