@@ -167,7 +167,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         static::assertSame($subject, $message->getSubject());
-        static::assertSame($charList, $message->getBodyText());
+        static::assertSame($charList, \rtrim($message->getBodyText() ?: ''));
     }
 
     public function provideCharsets(): array
@@ -202,7 +202,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame($text, $message->getBodyText());
+        static::assertSame($text, \rtrim($message->getBodyText() ?: ''));
     }
 
     public function testMicrosoftCharsetAlias()
@@ -222,7 +222,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame($text, $message->getBodyText());
+        static::assertSame($text, \rtrim($message->getBodyText() ?: ''));
     }
 
     public function testUnsupportedCharset()
@@ -250,7 +250,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('Hi!', $message->getBodyText());
+        static::assertSame('Hi!', \rtrim($message->getBodyText() ?: ''));
     }
 
     public function testSpecialCharsetOnHeaders()
@@ -287,7 +287,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         static::assertSame($subject, $message->getSubject());
-        static::assertSame($charList, $message->getBodyText());
+        static::assertSame($charList, \rtrim($message->getBodyText() ?: ''));
     }
 
     public function provideIconvCharsets(): array
@@ -691,7 +691,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('Hi', $message->getBodyText());
+        static::assertSame('Hi', \rtrim($message->getBodyText() ?: ''));
         static::assertNull($message->getBodyHtml());
     }
 
@@ -701,7 +701,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('<html><body>Hi</body></html>', $message->getBodyHtml());
+        static::assertSame('<html><body>Hi</body></html>', \rtrim($message->getBodyHtml() ?: ''));
         static::assertNull($message->getBodyText());
     }
 
@@ -785,7 +785,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('Hi', $message->getBodyText());
+        static::assertSame('Hi', \rtrim($message->getBodyText() ?: ''));
     }
 
     public function testMultipartMessageWithoutCharset()
