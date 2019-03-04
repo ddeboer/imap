@@ -1,5 +1,26 @@
 # Change Log
 
+## [1.7.0](https://github.com/ddeboer/imap/tree/1.7.0) (2019-03-04)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.6.0...1.7.0)
+
+**Implemented enhancements:**
+
+- Docker and Travis differs in handling new message eols [\#404](https://github.com/ddeboer/imap/pull/404) ([Slamdunk](https://github.com/Slamdunk))
+- Update PHP-CS-Fixer rules [\#403](https://github.com/ddeboer/imap/pull/403) ([Slamdunk](https://github.com/Slamdunk))
+- Add charset for imap\_search or imap\_sort [\#402](https://github.com/ddeboer/imap/pull/402) ([Slamdunk](https://github.com/Slamdunk))
+- PHPStan clean ups [\#400](https://github.com/ddeboer/imap/pull/400) ([Slamdunk](https://github.com/Slamdunk))
+- Adding an undelete\(\) message method [\#386](https://github.com/ddeboer/imap/pull/386) ([C-Duv](https://github.com/C-Duv))
+
+**Closed issues:**
+
+- Convert from GBK \(X-GBK\) to UTF-8 Issue [\#395](https://github.com/ddeboer/imap/issues/395)
+
+**Merged pull requests:**
+
+- Add new ResourceCheckFailureException to handle imap\_check\(\) false [\#399](https://github.com/ddeboer/imap/pull/399) ([pyatnitsev](https://github.com/pyatnitsev))
+- Remove GBK -\> X-GBK Alias and add X-GBK -\> GBK [\#396](https://github.com/ddeboer/imap/pull/396) ([pyatnitsev](https://github.com/pyatnitsev))
+- Add Feature Requests to README.md [\#394](https://github.com/ddeboer/imap/pull/394) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.6.0](https://github.com/ddeboer/imap/tree/1.6.0) (2018-12-04)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.5.5...1.6.0)
 
