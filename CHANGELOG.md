@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.7.1](https://github.com/ddeboer/imap/tree/1.7.1) (2019-03-18)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.7.0...1.7.1)
+
+**Fixed bugs:**
+
+- Encoding problem with 1.7 [\#405](https://github.com/ddeboer/imap/issues/405)
+- imap\_search/imap\_sort: default params must not be passed if unspecified [\#406](https://github.com/ddeboer/imap/pull/406) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.7.0](https://github.com/ddeboer/imap/tree/1.7.0) (2019-03-04)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.6.0...1.7.0)
 
