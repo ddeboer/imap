@@ -167,7 +167,7 @@ final class Mailbox implements MailboxInterface
      *
      * @return MessageIteratorInterface
      */
-    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false, string $charset = 'UTF-8'): MessageIteratorInterface
+    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false, string $charset = null): MessageIteratorInterface
     {
         if (null === $search) {
             $search = new All();
@@ -179,9 +179,27 @@ final class Mailbox implements MailboxInterface
         \imap_errors();
 
         if (null !== $sortCriteria) {
-            $messageNumbers = \imap_sort($this->resource->getStream(), $sortCriteria, $descending ? 1 : 0, \SE_UID, $query, $charset);
+            $params = [
+                $this->resource->getStream(),
+                $sortCriteria,
+                $descending ? 1 : 0,
+                \SE_UID,
+                $query,
+            ];
+            if (null !== $charset) {
+                $params[] = $charset;
+            }
+            $messageNumbers = \imap_sort(...$params);
         } else {
-            $messageNumbers = \imap_search($this->resource->getStream(), $query, \SE_UID, $charset);
+            $params = [
+                $this->resource->getStream(),
+                $query,
+                \SE_UID,
+            ];
+            if (null !== $charset) {
+                $params[] = $charset;
+            }
+            $messageNumbers = \imap_search(...$params);
         }
         if (false === $messageNumbers) {
             if (false !== \imap_last_error()) {
