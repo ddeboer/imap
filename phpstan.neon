@@ -1,13 +1,15 @@
 includes:
     - vendor/phpstan/phpstan/conf/config.levelmax.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
-    tmpDir: tmp/custom-cache/
+    tmpDir: tmp/
     paths:
         - src/
         - tests/
     ignoreErrors:
+        - '#Method .+ has no return typehint specified#'
         -
             message: '#Argument of an invalid type array\|null supplied for foreach, only iterables are supported#'
             path: %currentWorkingDirectory%/src/Connection.php

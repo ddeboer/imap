@@ -71,8 +71,8 @@ class Parameters extends \ArrayIterator
             }
             // RFC2231
             if (1 === \preg_match('/^(?<encoding>[^\']+)\'[^\']*?\'(?<urltext>.+)$/', $text, $matches)) {
-                $hasInvalidChars = \preg_match('#[^%a-zA-Z0-9\-_\.\+]#', $matches['urltext']);
-                $hasEscapedChars = \preg_match('#%[a-zA-Z0-9]{2}#', $matches['urltext']);
+                $hasInvalidChars = 1 === \preg_match('#[^%a-zA-Z0-9\-_\.\+]#', $matches['urltext']);
+                $hasEscapedChars = 1 === \preg_match('#%[a-zA-Z0-9]{2}#', $matches['urltext']);
                 if (!$hasInvalidChars && $hasEscapedChars) {
                     $text = Transcoder::decode(\urldecode($matches['urltext']), $matches['encoding']);
                 }

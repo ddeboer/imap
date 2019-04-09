@@ -342,7 +342,7 @@ abstract class AbstractPart implements PartInterface
 
             $content = $this->getContent();
             if (self::ENCODING_BASE64 === $this->getEncoding()) {
-                $content = \base64_decode($content);
+                $content = \base64_decode($content, false);
             } elseif (self::ENCODING_QUOTED_PRINTABLE === $this->getEncoding()) {
                 $content = \quoted_printable_decode($content);
             }

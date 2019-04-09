@@ -6,6 +6,7 @@ namespace Ddeboer\Imap\Tests;
 
 use DateTimeImmutable;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
+use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Search;
 use Ddeboer\Imap\SearchExpression;
 
@@ -43,6 +44,9 @@ use Ddeboer\Imap\SearchExpression;
  */
 final class MailboxSearchTest extends AbstractTest
 {
+    /**
+     * @var MailboxInterface
+     */
     protected $mailbox;
 
     protected function setUp()

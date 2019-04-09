@@ -67,7 +67,7 @@ final class Server implements ServerInterface
 
         $this->hostname   = $hostname;
         $this->port       = $port;
-        $this->flags      = $flags ? '/' . \ltrim($flags, '/') : '';
+        $this->flags      = '' !== $flags ? '/' . \ltrim($flags, '/') : '';
         $this->parameters = $parameters;
         $this->options    = $options;
         $this->retries    = $retries;

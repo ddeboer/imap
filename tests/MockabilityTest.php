@@ -75,13 +75,15 @@ final class MockabilityTest extends TestCase
         // This foreach has the solely purpose to trigger code-coverage for
         // RawMessageIterator::current() and prove RawMessageIterator is
         // iterable. There is no need to do this in your app test suite
-        $message = null;
+        $loopedMessages = [];
         foreach ($messages as $message) {
-            break;
+            $loopedMessages[] = $message;
         }
 
-        static::assertInstanceOf(MessageInterface::class, $message);
-        $attachments = $message->getAttachments();
+        static::assertCount(1, $loopedMessages);
+        $foundMessage = \current($loopedMessages);
+        static::assertInstanceOf(MessageInterface::class, $foundMessage);
+        $attachments = $foundMessage->getAttachments();
 
         static::assertCount(1, $attachments);
 
