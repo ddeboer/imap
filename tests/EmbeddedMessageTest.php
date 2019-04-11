@@ -116,4 +116,43 @@ final class EmbeddedMessageTest extends AbstractTest
 
         static::assertCount(0, $thirdEmbeddedMessage->getAttachments());
     }
+    
+    public function testEmbeddedMessageWithoutContentDisposition()
+    {
+        $mailbox = $this->createMailbox();
+        $raw     = $this->getFixture('embedded_email_without_content_disposition');
+        $mailbox->addMessage($raw);
+
+        $message     = $mailbox->getMessage(1);
+        $attachments = $message->getAttachments();
+        static::assertCount(6, $attachments);
+
+        $attachment = \current($attachments);
+        static::assertNotEmpty($attachment->getContent());
+        static::assertSame('file.jpg', $attachment->getFilename());
+
+        $attachment = \next($attachments);
+        static::assertTrue($attachment->isEmbeddedMessage());
+
+        $embeddedMessage = $attachment->getEmbeddedMessage();
+        static::assertSame('embedded_message_subject', $embeddedMessage->getSubject());
+        static::assertNotEmpty($embeddedMessage->getBodyText());
+        static::assertNotEmpty($embeddedMessage->getBodyText());
+
+        $attachment = \next($attachments);
+        static::assertNotEmpty($attachment->getContent());
+        static::assertSame('file1.xlsx', $attachment->getFilename());
+
+        $attachment = \next($attachments);
+        static::assertNotEmpty($attachment->getContent());
+        static::assertSame('file2.xlsx', $attachment->getFilename());
+
+        $attachment = \next($attachments);
+        static::assertNotEmpty($attachment->getContent());
+        static::assertSame('file3.xlsx', $attachment->getFilename());
+
+        $attachment = \next($attachments);
+        static::assertNotEmpty($attachment->getContent());
+        static::assertSame('file4.zip', $attachment->getFilename());
+    }
 }
