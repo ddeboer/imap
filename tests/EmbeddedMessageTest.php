@@ -116,7 +116,7 @@ final class EmbeddedMessageTest extends AbstractTest
 
         static::assertCount(0, $thirdEmbeddedMessage->getAttachments());
     }
-    
+
     public function testEmbeddedMessageWithoutContentDisposition()
     {
         $mailbox = $this->createMailbox();
@@ -133,11 +133,6 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $attachment = \next($attachments);
         static::assertTrue($attachment->isEmbeddedMessage());
-
-        $embeddedMessage = $attachment->getEmbeddedMessage();
-        static::assertSame('embedded_message_subject', $embeddedMessage->getSubject());
-        static::assertNotEmpty($embeddedMessage->getBodyText());
-        static::assertNotEmpty($embeddedMessage->getBodyText());
 
         $attachment = \next($attachments);
         static::assertNotEmpty($attachment->getContent());
