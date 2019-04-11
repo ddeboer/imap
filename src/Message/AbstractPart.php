@@ -580,7 +580,7 @@ abstract class AbstractPart implements PartInterface
         }
          */
 
-        if (\strtoupper($part->subtype) === self::SUBTYPE_RFC822) {
+        if (self::SUBTYPE_RFC822 === \strtoupper($part->subtype)) {
             return true;
         }
         
