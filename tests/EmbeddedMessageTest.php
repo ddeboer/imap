@@ -134,6 +134,11 @@ final class EmbeddedMessageTest extends AbstractTest
         $attachment = \next($attachments);
         static::assertTrue($attachment->isEmbeddedMessage());
 
+        $embeddedMessage = $attachment->getEmbeddedMessage();
+        static::assertSame('embedded_message_subject', $embeddedMessage->getSubject());
+        static::assertNotEmpty($embeddedMessage->getBodyText());
+        static::assertNotEmpty($embeddedMessage->getBodyHtml());
+        
         $attachment = \next($attachments);
         static::assertNotEmpty($attachment->getContent());
         static::assertSame('file1.xlsx', $attachment->getFilename());
