@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.7.2](https://github.com/ddeboer/imap/tree/1.7.2) (2019-04-12)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.7.1...1.7.2)
+
+**Fixed bugs:**
+
+- Handle message/rfc822 when content-disposition is missing [\#410](https://github.com/ddeboer/imap/pull/410) ([Daredzik](https://github.com/Daredzik))
+
 ## [1.7.1](https://github.com/ddeboer/imap/tree/1.7.1) (2019-03-18)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.7.0...1.7.1)
 
