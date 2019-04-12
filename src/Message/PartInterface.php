@@ -29,6 +29,7 @@ interface PartInterface extends \RecursiveIterator
 
     public const SUBTYPE_PLAIN  = 'PLAIN';
     public const SUBTYPE_HTML   = 'HTML';
+    public const SUBTYPE_RFC822 = 'RFC822';
 
     /**
      * Get message number (from headers).
