@@ -56,7 +56,7 @@ final class MailboxTest extends AbstractTest
 
     public function testGetDelimiter()
     {
-        static::assertSame('.', $this->mailbox->getDelimiter());
+        static::assertNotEmpty($this->mailbox->getDelimiter());
     }
 
     public function testGetMessages()

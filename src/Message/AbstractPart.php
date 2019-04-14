@@ -509,7 +509,9 @@ abstract class AbstractPart implements PartInterface
         $this->encoding = self::$encodingsMap[$this->structure->encoding] ?? self::ENCODING_UNKNOWN;
         $this->subtype  = $this->structure->subtype;
 
-        $this->bytes = $this->structure->bytes;
+        if (isset($this->structure->bytes)) {
+            $this->bytes = $this->structure->bytes;
+        }
         if ($this->structure->ifdisposition) {
             $this->disposition = $this->structure->disposition;
         }
