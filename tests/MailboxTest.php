@@ -51,12 +51,12 @@ final class MailboxTest extends AbstractTest
 
     public function testGetAttributes()
     {
-        static::assertIsInt($this->mailbox->getAttributes());
+        static::assertGreaterThan(0, $this->mailbox->getAttributes());
     }
 
     public function testGetDelimiter()
     {
-        static::assertIsString($this->mailbox->getDelimiter());
+        static::assertSame('.', $this->mailbox->getDelimiter());
     }
 
     public function testGetMessages()

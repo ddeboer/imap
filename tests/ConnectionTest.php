@@ -66,8 +66,6 @@ final class ConnectionTest extends AbstractTest
     public function testGetMailboxes()
     {
         $mailboxes = $this->getConnection()->getMailboxes();
-        static::assertIsArray($mailboxes);
-
         foreach ($mailboxes as $mailbox) {
             static::assertInstanceOf(Mailbox::class, $mailbox);
         }

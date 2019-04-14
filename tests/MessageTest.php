@@ -322,6 +322,7 @@ final class MessageTest extends AbstractTest
         static::assertNotEmpty($message->getParameters());
         static::assertNull($message->getLines());
         static::assertNull($message->getDisposition());
+        static::assertNull($message->getDescription());
         static::assertNotEmpty($message->getStructure());
 
         $from = $message->getFrom();

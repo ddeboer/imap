@@ -72,6 +72,11 @@ abstract class AbstractPart implements PartInterface
     /**
      * @var null|string
      */
+    private $description;
+
+    /**
+     * @var null|string
+     */
     private $bytes;
 
     /**
@@ -271,6 +276,18 @@ abstract class AbstractPart implements PartInterface
     }
 
     /**
+     * Part description.
+     *
+     * @return null|string
+     */
+    final public function getDescription(): ?string
+    {
+        $this->lazyParseStructure();
+
+        return $this->description;
+    }
+
+    /**
      * Part bytes.
      *
      * @return null|int|string
@@ -413,7 +430,7 @@ abstract class AbstractPart implements PartInterface
     /**
      * Get current child part.
      *
-     * @return mixed
+     * @return \RecursiveIterator
      */
     final public function getChildren()
     {
@@ -492,10 +509,12 @@ abstract class AbstractPart implements PartInterface
         $this->encoding = self::$encodingsMap[$this->structure->encoding] ?? self::ENCODING_UNKNOWN;
         $this->subtype  = $this->structure->subtype;
 
-        foreach (['disposition', 'bytes', 'description'] as $optional) {
-            if (isset($this->structure->{$optional})) {
-                $this->{$optional} = $this->structure->{$optional};
-            }
+        $this->bytes = $this->structure->bytes;
+        if ($this->structure->ifdisposition) {
+            $this->disposition = $this->structure->disposition;
+        }
+        if ($this->structure->ifdescription) {
+            $this->description = $this->structure->description;
         }
 
         $this->parameters = new Parameters();

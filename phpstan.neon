@@ -19,3 +19,9 @@ parameters:
         -
             message: '#Parameter \#1 \$resource of class Ddeboer\\Imap\\ImapResource constructor expects resource, string given#'
             path: %currentWorkingDirectory%/tests/ConnectionTest.php
+        -
+            message: '#Call to static method PHPUnit\\Framework\\Assert::assertInstanceOf\(\) with .+ and Ddeboer\\Imap\\Message\\EmailAddress will always evaluate to true#'
+            path: %currentWorkingDirectory%/tests/MessageTest.php
+        -
+            message: '#Call to static method PHPUnit\\Framework\\Assert::assertIsInt\(\) with int will always evaluate to true#'
+            path: %currentWorkingDirectory%/tests/ConnectionTest.php

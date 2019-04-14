@@ -117,8 +117,12 @@ final class Server implements ServerInterface
             throw new ResourceCheckFailureException('Resource check failure');
         }
 
-        $mailbox    = $check->Mailbox;
-        $connection = \substr($mailbox, 0, \strpos($mailbox, '}') + 1);
+        $mailbox       = $check->Mailbox;
+        $connection    = $mailbox;
+        $curlyPosition = \strpos($mailbox, '}');
+        if (false !== $curlyPosition) {
+            $connection = \substr($mailbox, 0, $curlyPosition + 1);
+        }
 
         // These are necessary to get rid of PHP throwing IMAP errors
         \imap_errors();

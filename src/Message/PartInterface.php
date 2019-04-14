@@ -74,6 +74,13 @@ interface PartInterface extends \RecursiveIterator
     public function getDisposition(): ?string;
 
     /**
+     * Part description.
+     *
+     * @return null|string
+     */
+    public function getDescription(): ?string;
+
+    /**
      * Part bytes.
      *
      * @return null|int|string

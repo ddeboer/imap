@@ -57,10 +57,10 @@ abstract class AbstractTest extends TestCase
     ) {
         $bodyPart = new Mime\Part($contents ?? \uniqid($subject));
         $bodyPart->setType(Mime\Mime::TYPE_TEXT);
-        if ($encoding) {
+        if (null !== $encoding) {
             $bodyPart->setEncoding($encoding);
         }
-        if ($charset) {
+        if (null !== $charset) {
             $bodyPart->setCharset($charset);
         }
 
@@ -74,7 +74,7 @@ abstract class AbstractTest extends TestCase
         $message->setBody($bodyMessage);
 
         $messageString = $message->toString();
-        if ($overwriteCharset) {
+        if (null !== $overwriteCharset) {
             $messageString = \preg_replace(
                 \sprintf('/charset="%s"/', \preg_quote($charset ?: '')),
                 \sprintf('charset="%s"', $overwriteCharset),
@@ -86,7 +86,7 @@ abstract class AbstractTest extends TestCase
         $mailbox->addMessage($messageString);
     }
 
-    final protected function getFixture($fixture): string
+    final protected function getFixture(string $fixture): string
     {
         $content = \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
         static::assertIsString($content);
