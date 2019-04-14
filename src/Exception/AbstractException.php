@@ -35,7 +35,7 @@ abstract class AbstractException extends \RuntimeException
     final public function __construct(string $message, int $code = 0, \Throwable $previous = null)
     {
         $errorType = '';
-        if (\is_int($code) && isset(self::$errorLabels[$code])) {
+        if (isset(self::$errorLabels[$code])) {
             $errorType = \sprintf('[%s] ', self::$errorLabels[$code]);
         }
 
@@ -46,10 +46,10 @@ abstract class AbstractException extends \RuntimeException
             "%s%s\nimap_alerts (%s):%s\nimap_errors (%s):%s",
             $errorType,
             $message,
-            $alerts ? \count($alerts) : 0,
-            $alerts ? $joinString . \implode($joinString, $alerts) : '',
-            $errors ? \count($errors) : 0,
-            $errors ? $joinString . \implode($joinString, $errors) : ''
+            false !== $alerts ? \count($alerts) : 0,
+            false !== $alerts ? $joinString . \implode($joinString, $alerts) : '',
+            false !== $errors ? \count($errors) : 0,
+            false !== $errors ? $joinString . \implode($joinString, $errors) : ''
         );
 
         parent::__construct($completeMessage, $code, $previous);

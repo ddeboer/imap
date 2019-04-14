@@ -1,16 +1,27 @@
 includes:
     - vendor/phpstan/phpstan/conf/config.levelmax.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
-    tmpDir: tmp/custom-cache/
+    tmpDir: tmp/
     paths:
         - src/
         - tests/
     ignoreErrors:
+        - '#Method .+ has no return typehint specified#'
         -
             message: '#Argument of an invalid type array\|null supplied for foreach, only iterables are supported#'
             path: %currentWorkingDirectory%/src/Connection.php
         -
+            message: '#Call to function base64_decode\(\) requires parameter \#2 to be true#'
+            path: %currentWorkingDirectory%/src/Message/AbstractPart.php
+        -
             message: '#Parameter \#1 \$resource of class Ddeboer\\Imap\\ImapResource constructor expects resource, string given#'
+            path: %currentWorkingDirectory%/tests/ConnectionTest.php
+        -
+            message: '#Call to static method PHPUnit\\Framework\\Assert::assertInstanceOf\(\) with .+ and Ddeboer\\Imap\\Message\\EmailAddress will always evaluate to true#'
+            path: %currentWorkingDirectory%/tests/MessageTest.php
+        -
+            message: '#Call to static method PHPUnit\\Framework\\Assert::assertIsInt\(\) with int will always evaluate to true#'
             path: %currentWorkingDirectory%/tests/ConnectionTest.php

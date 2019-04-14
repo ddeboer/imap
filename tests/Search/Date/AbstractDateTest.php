@@ -12,6 +12,9 @@ use Ddeboer\Imap\Tests\AbstractTest;
  */
 final class AbstractDateTest extends AbstractTest
 {
+    /**
+     * @var DateTimeImmutable
+     */
     protected $date;
 
     protected function setUp()

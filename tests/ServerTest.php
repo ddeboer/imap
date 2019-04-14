@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
-use Ddeboer\Imap\ConnectionInterface;
+use Ddeboer\Imap\Connection;
 use Ddeboer\Imap\Exception\AuthenticationFailedException;
 use Ddeboer\Imap\Server;
 
@@ -40,7 +40,7 @@ final class ServerTest extends AbstractTest
 
         $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', '', self::IMAP_FLAGS);
 
-        static::assertInstanceOf(ConnectionInterface::class, $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: ''));
+        static::assertInstanceOf(Connection::class, $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: ''));
     }
 
     public function testCustomOptions()

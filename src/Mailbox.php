@@ -225,14 +225,14 @@ final class Mailbox implements MailboxInterface
         \imap_errors();
 
         $overview = \imap_fetch_overview($this->resource->getStream(), $sequence, \FT_UID);
-        if (empty($overview)) {
+        if (\is_array($overview) && [] !== $overview) {
+            $messageNumbers = \array_column($overview, 'uid');
+        } else {
             if (false !== \imap_last_error()) {
                 throw new InvalidSearchCriteriaException(\sprintf('Invalid sequence [%s]', $sequence));
             }
 
             $messageNumbers = [];
-        } else {
-            $messageNumbers = \array_column($overview, 'uid');
         }
 
         return new MessageIterator($this->resource, $messageNumbers);
@@ -350,6 +350,6 @@ final class Mailbox implements MailboxInterface
             $messageIds = \implode(',', $messageIds);
         }
 
-        return (string) $messageIds;
+        return $messageIds;
     }
 }

@@ -11,7 +11,6 @@ use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
-use Ddeboer\Imap\Message\Parameters;
 use Ddeboer\Imap\Message\PartInterface;
 use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageInterface;
@@ -40,6 +39,9 @@ final class MessageTest extends AbstractTest
      */
     private $mailbox;
 
+    /**
+     * @var array
+     */
     private static $encodings = [
         Mime\Mime::ENCODING_7BIT,
         Mime\Mime::ENCODING_8BIT,
@@ -47,6 +49,9 @@ final class MessageTest extends AbstractTest
         Mime\Mime::ENCODING_BASE64,
     ];
 
+    /**
+     * @var array
+     */
     private static $charsets = [
         'ASCII'        => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
         'GB18030'      => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
@@ -58,6 +63,9 @@ final class MessageTest extends AbstractTest
         'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
     ];
 
+    /**
+     * @var array
+     */
     private static $iconvOnlyCharsets = [
         'macintosh'    => '†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈«»…ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ',
         'Windows-1250' => 'ŚŤŹśťźˇ˘ŁĄŞŻ˛łąşĽ˝ľż',
@@ -311,9 +319,10 @@ final class MessageTest extends AbstractTest
         static::assertGreaterThan(0, $message->getNumber());
         static::assertGreaterThan(0, $message->getSize());
         static::assertGreaterThan(0, $message->getBytes());
-        static::assertInstanceOf(Parameters::class, $message->getParameters());
+        static::assertNotEmpty($message->getParameters());
         static::assertNull($message->getLines());
         static::assertNull($message->getDisposition());
+        static::assertNull($message->getDescription());
         static::assertNotEmpty($message->getStructure());
 
         $from = $message->getFrom();
@@ -358,8 +367,8 @@ final class MessageTest extends AbstractTest
         $this->getConnection()->expunge();
 
         static::assertCount(2, $this->mailbox);
-        foreach ($this->mailbox->getMessages() as $message) {
-            static::assertNotSame('Message C', $message->getSubject());
+        foreach ($this->mailbox->getMessages() as $currentMessage) {
+            static::assertNotSame('Message C', $currentMessage->getSubject());
         }
     }
 
@@ -549,16 +558,13 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $types = [
-            'Bcc',
-            'Reply-To',
-            'Sender',
+        $emailsByType = [
+            'Bcc'       => $message->getBcc(),
+            'Reply-To'  => $message->getReplyTo(),
+            'Sender'    => $message->getSender(),
             // 'Return-Path', // Can't get Dovecot return the Return-Path
         ];
-        foreach ($types as $type) {
-            $method = 'get' . \str_replace('-', '', $type);
-            $emails = $message->{$method}();
-
+        foreach ($emailsByType as $type => $emails) {
             static::assertCount(1, $emails, $type);
 
             $email = \current($emails);
