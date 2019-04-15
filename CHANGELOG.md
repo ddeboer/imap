@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.8.0](https://github.com/ddeboer/imap/tree/1.8.0) (2019-04-15)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.7.2...1.8.0)
+
+**Implemented enhancements:**
+
+- Add phpstan-strict-rules, expose PartiInterface::getDescription\(\) [\#409](https://github.com/ddeboer/imap/pull/409) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.7.2](https://github.com/ddeboer/imap/tree/1.7.2) (2019-04-12)
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.7.1...1.7.2)
 
