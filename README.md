@@ -159,10 +159,10 @@ function:
 
 ```php
 $today = new DateTimeImmutable();
-$lastMonth = $today->sub(new DateInterval('P30D'));
+$thirtyDaysAgo = $today->sub(new DateInterval('P30D'));
 
 $messages = $mailbox->getMessages(
-    new Ddeboer\Imap\Search\Date\Since($lastMonth),
+    new Ddeboer\Imap\Search\Date\Since($thirtyDaysAgo),
     \SORTDATE, // Sort criteria
     true // Descending order
 );
