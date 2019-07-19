@@ -1,6 +1,6 @@
 <?php
 
-namespace Ddeboer\Imap\Search\Text;
+namespace Ddeboer\Imap\Search\Header;
 
 use Ddeboer\Imap\Search\AbstractText;
 
