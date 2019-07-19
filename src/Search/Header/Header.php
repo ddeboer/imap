@@ -11,7 +11,7 @@ use Ddeboer\Imap\Search\AbstractText;
  *
  * @author Philip Maaß <PhilipMaaß@aol.com>
  */
-class Header extends AbstractText
+final class Header extends AbstractText
 {
     /**
      * @return string
