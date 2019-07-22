@@ -40,6 +40,7 @@ use Ddeboer\Imap\SearchExpression;
  * @covers \Ddeboer\Imap\Search\Text\Subject
  * @covers \Ddeboer\Imap\Search\Text\Text
  * @covers \Ddeboer\Imap\Search\Text\Unkeyword
+ * @covers \Ddeboer\Imap\Search\Header\Header
  * @covers \Ddeboer\Imap\SearchExpression
  */
 final class MailboxSearchTest extends AbstractTest
@@ -116,6 +117,7 @@ final class MailboxSearchTest extends AbstractTest
             new Search\Text\Subject($specialChars),
             new Search\Text\Text($specialChars),
             new Search\Text\Unkeyword($specialChars),
+            new Search\Header\Header($specialChars),
         ];
 
         $searchExpression = new SearchExpression();
