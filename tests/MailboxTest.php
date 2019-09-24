@@ -152,7 +152,6 @@ final class MailboxTest extends AbstractTest
 
         $quota = $this->mailbox->getQuota();
 
-        static::assertIsArray($quota);
         static::assertArrayHasKey('usage', $quota);
         static::assertArrayHasKey('limit', $quota);
     }
