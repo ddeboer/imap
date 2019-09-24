@@ -135,6 +135,24 @@ final class Mailbox implements MailboxInterface
     }
 
     /**
+     * Get Mailbox quota.
+     *
+     * @param string $root
+     *
+     * @return array
+     */
+    public function getQuota(string $root = 'INBOX'): array
+    {
+        $return = \imap_get_quotaroot($this->resource->getStream(), $root);
+
+        if (false === $return) {
+            throw new ImapQuotaException('imap_get_quotaroot failed');
+        }
+
+        return $return;
+    }
+
+    /**
      * Bulk Set Flag for Messages.
      *
      * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft

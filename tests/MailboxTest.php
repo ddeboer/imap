@@ -146,6 +146,17 @@ final class MailboxTest extends AbstractTest
         static::assertFalse(isset($status->uidnext), 'uidnext shouldn\'t be set');
     }
 
+    public function testQuota()
+    {
+        static::markTestIncomplete('imap_get_quotaroot isn\'t supported by the current c-client library');
+
+        $quota = $this->mailbox->getQuota();
+
+        static::assertIsArray($quota);
+        static::assertArrayHasKey('usage', $quota);
+        static::assertArrayHasKey('limit', $quota);
+    }
+
     public function testBulkSetFlags()
     {
         // prepare second mailbox with 3 messages
