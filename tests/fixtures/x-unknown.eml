@@ -1,0 +1,38 @@
+Received: from mailsrv.dsidata.sk (80.87.208.28) by alfa2.no.dsidata.sk
+ (10.0.0.12) with Microsoft SMTP Server (TLS) id 14.0.722.0; Fri, 1 Feb 2019
+ 12:12:15 +0100
+Received: from mail2.st.sk (mail2.st.sk [195.146.138.75])        by
+ mailsrv.dsidata.sk (12.1.1 build 4 x64) with ESMTP id 201902011212123107
+        for <hotline@dsidata.sk>; Fri, 01 Feb 2019 12:12:12 +0100
+X-TM-IMSS-Message-ID: <7606c42a0011c7ff@telekom.sk>
+Received: from EXCHANGEKE1.st.sk (10.168.71.51) by EXCHANGEPO2.st.sk
+ (10.170.71.52) with Microsoft SMTP Server (TLS) id 8.3.515.0; Fri, 1 Feb 2019
+ 12:11:56 +0100
+Received: from exchangefe.st.sk (10.168.134.41) by exchangefe.st.sk
+ (10.168.71.57) with Microsoft SMTP Server id 8.3.515.0; Fri, 1 Feb 2019
+ 12:11:56 +0100
+From: <ttm@st.sk>
+Subject: Case ID zakaznika <7924325>, Trouble Ticket <TT:1-4GDK0PP>, Identifikacia <0017218146> - zalozeny
+To: <hotline@dsidata.sk>
+CC:
+Reply-To:
+Content-Type: text/plain
+Message-ID: <9baab651-6bbd-4a06-8b16-1c6aadf1f7b1@EXCHANGEKE1.st.sk>
+Return-Path: ttm@st.sk
+Date: Fri, 1 Feb 2019 12:11:56 +0100
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (1.1) on mailsrv.dsidata.sk
+X-Spam-Level:
+X-Spam-Status: "No, score=0,00 required=7,00 tests=SPF_PASS=0,00 autolearn=Yes version=3.3.2"
+X-CTCH: RefID="str=0001.0A0C020D.5C54298F.0055,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0"; Spam="Unknown"; VOD="Unknown"
+X-Spam-IndexStatus: 0
+Znacka: check_mark_1599
+X-MS-Exchange-Organization-AuthSource: alfa2.no.dsidata.sk
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 10
+MIME-Version: 1.0
+
+Case ID zakaznika: 7924325 =0A=
+Datum a cas nahlasenia poruchy: 02/01/2019 12:11:33 =0A=
+Prejav poruchy: Reklamacia opravy=0A=
+

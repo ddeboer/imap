@@ -1055,4 +1055,13 @@ final class MessageTest extends AbstractTest
 
         static::assertSame('Hi', \trim($message->getDecodedContent()));
     }
+
+    public function testUknownCharset()
+    {
+        $this->mailbox->addMessage($this->getFixture('x-unknown'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        static::assertSame("Case ID zakaznika: 7924325 \nDatum a cas nahlasenia poruchy: 02/01/2019 12:11:33 \nPrejav poruchy: Reklamacia opravy", \trim($message->getDecodedContent()));
+    }
 }
