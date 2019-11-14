@@ -1055,4 +1055,19 @@ final class MessageTest extends AbstractTest
 
         static::assertSame('Hi', \trim($message->getDecodedContent()));
     }
+
+    public function testCuttedFilename()
+    {
+        $this->mailbox->addMessage($this->getFixture('cutted_filename'));
+
+        $message     = $this->mailbox->getMessage(1);
+        $attachments = $message->getAttachments();
+
+        static::assertCount(1, $attachments);
+
+        /** @var Message\AttachmentInterface $attachment */
+        $attachment = \current($attachments);
+
+        static::assertSame('Zählerstanderfassung_2019___Test1.csv', $attachment->getFilename());
+    }
 }
