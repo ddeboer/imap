@@ -60,6 +60,7 @@ return PhpCsFixer\Config::create()
         'silenced_deprecation_error'                => false,
         'simplified_null_return'                    => true,
         'single_line_comment_style'                 => true,
+        'single_line_throw'                         => false,
         'space_after_semicolon'                     => true,
         'static_lambda'                             => true,
         'strict_comparison'                         => true,
