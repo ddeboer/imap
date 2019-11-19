@@ -265,8 +265,6 @@ final class Transcoder
      *
      * @param string $text        Text to decode
      * @param string $fromCharset Original charset
-     *
-     * @return string
      */
     public static function decode(string $text, string $fromCharset): string
     {

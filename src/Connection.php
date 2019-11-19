@@ -39,9 +39,6 @@ final class Connection implements ConnectionInterface
     /**
      * Constructor.
      *
-     * @param ImapResourceInterface $resource
-     * @param string                $server
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct(ImapResourceInterface $resource, string $server)
@@ -52,8 +49,6 @@ final class Connection implements ConnectionInterface
 
     /**
      * Get IMAP resource.
-     *
-     * @return ImapResourceInterface
      */
     public function getResource(): ImapResourceInterface
     {
@@ -62,8 +57,6 @@ final class Connection implements ConnectionInterface
 
     /**
      * Delete all messages marked for deletion.
-     *
-     * @return bool
      */
     public function expunge(): bool
     {
@@ -72,10 +65,6 @@ final class Connection implements ConnectionInterface
 
     /**
      * Close connection.
-     *
-     * @param int $flag
-     *
-     * @return bool
      */
     public function close(int $flag = 0): bool
     {
@@ -105,8 +94,6 @@ final class Connection implements ConnectionInterface
      * Check that a mailbox with the given name exists.
      *
      * @param string $name Mailbox name
-     *
-     * @return bool
      */
     public function hasMailbox(string $name): bool
     {
@@ -121,8 +108,6 @@ final class Connection implements ConnectionInterface
      * @param string $name Mailbox name
      *
      * @throws MailboxDoesNotExistException If mailbox does not exist
-     *
-     * @return MailboxInterface
      */
     public function getMailbox(string $name): MailboxInterface
     {
@@ -153,8 +138,6 @@ final class Connection implements ConnectionInterface
      * Check if the connection is still active.
      *
      * @throws InvalidResourceException If connection was closed
-     *
-     * @return bool
      */
     public function ping(): bool
     {
@@ -164,11 +147,7 @@ final class Connection implements ConnectionInterface
     /**
      * Create mailbox.
      *
-     * @param string $name
-     *
      * @throws CreateMailboxException
-     *
-     * @return MailboxInterface
      */
     public function createMailbox(string $name): MailboxInterface
     {
@@ -184,8 +163,6 @@ final class Connection implements ConnectionInterface
 
     /**
      * Create mailbox.
-     *
-     * @param MailboxInterface $mailbox
      *
      * @throws DeleteMailboxException
      */
