@@ -33,7 +33,6 @@ interface ConnectionInterface extends \Countable
      * Get Mailbox quota.
      *
      * @param string $root
-     *
      * @return array
      */
     public function getQuota(string $root = 'INBOX'): array;
