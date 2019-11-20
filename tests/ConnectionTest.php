@@ -65,7 +65,7 @@ final class ConnectionTest extends AbstractTest
 
     public function testQuota()
     {
-        if (\getenv('IMAP_QUOTAROOT_SUPPORTED') !== false) {
+        if (false !== \getenv('IMAP_QUOTAROOT_SUPPORTED')) {
             $quota = $this->getConnection()->getQuota();
             static::assertArrayHasKey('usage', $quota);
             static::assertArrayHasKey('limit', $quota);
