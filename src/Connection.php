@@ -95,9 +95,9 @@ final class Connection implements ConnectionInterface
         if (false === $return || null !== $errorMessage) {
             throw new ImapQuotaException(
                 \sprintf(
-                    'IMAP Quota failed for "%s" (%s)',
+                    'IMAP Quota request failed for "%s"%s',
                     $root,
-                    null !== $errorMessage ? $errorMessage : ''
+                    null !== $errorMessage ? ': ' . $errorMessage : ''
                 ),
                 $errorNumber
             );
