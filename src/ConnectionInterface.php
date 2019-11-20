@@ -30,6 +30,15 @@ interface ConnectionInterface extends \Countable
     public function ping(): bool;
 
     /**
+     * Get Mailbox quota.
+     *
+     * @param string $root
+     *
+     * @return array
+     */
+    public function getQuota(string $root = 'INBOX'): array;
+
+    /**
      * Get a list of mailboxes (also known as folders).
      *
      * @return MailboxInterface[]

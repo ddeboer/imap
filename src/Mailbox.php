@@ -6,7 +6,6 @@ namespace Ddeboer\Imap;
 
 use DateTimeInterface;
 use Ddeboer\Imap\Exception\ImapNumMsgException;
-use Ddeboer\Imap\Exception\ImapQuotaException;
 use Ddeboer\Imap\Exception\ImapStatusException;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Exception\MessageCopyException;
@@ -116,24 +115,6 @@ final class Mailbox implements MailboxInterface
 
         if (false === $return) {
             throw new ImapStatusException('imap_status failed');
-        }
-
-        return $return;
-    }
-
-    /**
-     * Get Mailbox quota.
-     *
-     * @param string $root
-     *
-     * @return array
-     */
-    public function getQuota(string $root = 'INBOX'): array
-    {
-        $return = \imap_get_quotaroot($this->resource->getStream(), $root);
-
-        if (false === $return) {
-            throw new ImapQuotaException('imap_get_quotaroot failed');
         }
 
         return $return;

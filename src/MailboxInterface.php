@@ -43,15 +43,6 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     public function getStatus(int $flags = null): \stdClass;
 
     /**
-     * Get Mailbox quota.
-     *
-     * @param string $root
-     *
-     * @return array
-     */
-    public function getQuota(string $root = 'INBOX'): array;
-
-    /**
      * Bulk Set Flag for Messages.
      *
      * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft

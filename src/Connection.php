@@ -8,6 +8,7 @@ use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
 use Ddeboer\Imap\Exception\ImapGetmailboxesException;
 use Ddeboer\Imap\Exception\ImapNumMsgException;
+use Ddeboer\Imap\Exception\ImapQuotaException;
 use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 
@@ -69,6 +70,40 @@ final class Connection implements ConnectionInterface
     public function close(int $flag = 0): bool
     {
         return \imap_close($this->resource->getStream(), $flag);
+    }
+
+    /**
+     * Get Mailbox quota.
+     *
+     * @param string $root
+     *
+     * @return array
+     */
+    public function getQuota(string $root = 'INBOX'): array
+    {
+        $errorMessage = null;
+        $errorNumber  = 0;
+        \set_error_handler(static function ($nr, $message) use (&$errorMessage, &$errorNumber) {
+            $errorMessage = $message;
+            $errorNumber = $nr;
+        });
+
+        $return = \imap_get_quotaroot($this->resource->getStream(), $root);
+
+        \restore_error_handler();
+
+        if (false === $return || null !== $errorMessage) {
+            throw new ImapQuotaException(
+                \sprintf(
+                    'IMAP Quota failed for "%s" (%s)',
+                    $root,
+                    null !== $errorMessage ? $errorMessage : ''
+                ),
+                $errorNumber
+            );
+        }
+
+        return $return;
     }
 
     /**

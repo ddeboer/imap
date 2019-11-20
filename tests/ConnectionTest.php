@@ -63,6 +63,15 @@ final class ConnectionTest extends AbstractTest
         $connection->ping();
     }
 
+    public function testQuota()
+    {
+        if (getenv('IMAP_QUOTAROOT_SUPPORTED')) {
+            $quota = $this->getConnection()->getQuota();
+            static::assertArrayHasKey('usage', $quota);
+            static::assertArrayHasKey('limit', $quota);
+        }
+    }
+
     public function testGetMailboxes()
     {
         $mailboxes = $this->getConnection()->getMailboxes();
