@@ -21,6 +21,7 @@ env:
     - IMAP_SERVER_PORT=993
     - IMAP_USERNAME=dovecot_travis_testuser
     - IMAP_PASSWORD=dovecot_travis_testpwd
+    - IMAP_QUOTAROOT_SUPPORTED=true
 
 cache:
   directories:
