@@ -66,10 +66,13 @@ final class ConnectionTest extends AbstractTest
     public function testQuota()
     {
         if (false !== \getenv('IMAP_QUOTAROOT_SUPPORTED')) {
-            $quota = $this->getConnection()->getQuota();
-            static::assertArrayHasKey('usage', $quota);
-            static::assertArrayHasKey('limit', $quota);
+            $this->markTestSkipped('IMAP quota root support is disabled.');
         }
+
+        $quota = $this->getConnection()->getQuota();
+
+        static::assertArrayHasKey('usage', $quota);
+        static::assertArrayHasKey('limit', $quota);
     }
 
     public function testGetMailboxes()
