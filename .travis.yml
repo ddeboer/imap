@@ -7,9 +7,9 @@ matrix:
   include:
     - php: 7.1
       env: CS_CHECK=1 STATIC_ANALYSIS=1
-    - php: 7.2
-      env: CODE_COVERAGE=1
-    - php: 7.3
+    # - php: 7.2
+    #   env: CODE_COVERAGE=1
+    # - php: 7.3
 
 addons:
   hosts:

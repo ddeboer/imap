@@ -70,6 +70,8 @@ final class ConnectionTest extends AbstractTest
         }
 
         $quota = $this->getConnection()->getQuota();
+        var_dump($quota);
+        exit(1);
 
         static::assertArrayHasKey('usage', $quota);
         static::assertArrayHasKey('limit', $quota);
