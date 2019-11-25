@@ -1,8 +1,8 @@
 # Changelog
 
-## [v1.9.0](https://github.com/ddeboer/imap/tree/v1.9.0) (2019-11-25)
+## [1.9.0](https://github.com/ddeboer/imap/tree/1.9.0) (2019-11-25)
 
-[Full Changelog](https://github.com/ddeboer/imap/compare/1.8.0...v1.9.0)
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.8.0...1.9.0)
 
 **Implemented enhancements:**
 
