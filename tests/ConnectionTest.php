@@ -72,7 +72,11 @@ final class ConnectionTest extends AbstractTest
         $quota = $this->getConnection()->getQuota();
 
         static::assertArrayHasKey('usage', $quota);
+        static::assertIsInt($quota['usage']);
+
         static::assertArrayHasKey('limit', $quota);
+        // @see quota_rule in .travis/dovecot_install.sh
+        static::assertSame(1048576, $quota['limit']);
     }
 
     public function testGetMailboxes()
