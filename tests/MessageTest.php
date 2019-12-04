@@ -990,6 +990,15 @@ final class MessageTest extends AbstractTest
         static::assertSame('=?UTF-8?B?nnDusSNdG92w6Fuw61fMjAxOF8wMy0xMzMyNTMzMTkzLnBkZg==?=', $message->getSubject());
     }
 
+    public function testHandlerBadAddress()
+    {
+        $this->mailbox->addMessage($this->getFixture('bad_address'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $this->assertSame('"Gap" <%%FromAddress%@>', $message->getFrom()->getFullAddress());
+    }
+
     private function resetAttachmentCharset(MessageInterface $message)
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset
