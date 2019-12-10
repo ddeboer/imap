@@ -49,12 +49,12 @@ final class MailboxSearchTest extends AbstractTest
      */
     protected $mailbox;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mailbox = $this->createMailbox();
     }
 
-    public function testSearchCapabilities()
+    public function testSearchCapabilities(): void
     {
         $firstSubject = \uniqid('first_');
         $this->createTestMessage($this->mailbox, $firstSubject);
@@ -70,21 +70,21 @@ final class MailboxSearchTest extends AbstractTest
         static::assertCount(0, $messages);
     }
 
-    public function testUnknownCriterion()
+    public function testUnknownCriterion(): void
     {
         $this->expectException(InvalidSearchCriteriaException::class);
 
         $this->mailbox->getMessages(new TestAsset\UnknownCriterion());
     }
 
-    public function testRawExpressionCondition()
+    public function testRawExpressionCondition(): void
     {
         $messages = $this->mailbox->getMessages(new Search\RawExpression('ON "1-Oct-2017"'));
 
         static::assertCount(0, $messages);
     }
 
-    public function testSearchEscapes()
+    public function testSearchEscapes(): void
     {
         $specialChars = 'A_ spaces _09!#$%&\'*+-/=?^_`{|}~.(),:;<>@[\\]_èπ€_Z';
         $specialEmail = $specialChars . '@example.com';
@@ -128,40 +128,35 @@ final class MailboxSearchTest extends AbstractTest
         static::assertCount(0, $messages);
     }
 
-    public function testSpacesAndDoubleQuoteEscape()
+    public function testSpacesAndDoubleQuoteEscape(): void
     {
-        $spaceAndDoubleQuoteCondition = new Search\Text\Text('A " Z');
-
         static::markTestIncomplete('Unable to get spaces and double quote search together');
 
-        $messages = $this->mailbox->getMessages($spaceAndDoubleQuoteCondition);
-
-        static::assertCount(0, $messages);
+        // $spaceAndDoubleQuoteCondition = new Search\Text\Text('A " Z');
+        // $messages = $this->mailbox->getMessages($spaceAndDoubleQuoteCondition);
+        // static::assertCount(0, $messages);
     }
 
-    public function testOrConditionFunctionality()
+    public function testOrConditionFunctionality(): Search\LogicalOperator\OrConditions
     {
         $orCondition = new Search\LogicalOperator\OrConditions([
             new Search\Text\Body(\uniqid()),
             new Search\Text\Subject(\uniqid()),
         ]);
 
-        static::assertContains('(', $orCondition->toString());
+        static::assertStringContainsString('(', $orCondition->toString());
 
         return $orCondition;
     }
 
     /**
      * @depends testOrConditionFunctionality
-     *
-     * @param mixed $orCondition
      */
-    public function testOrConditionUsage($orCondition)
+    public function testOrConditionUsage(Search\LogicalOperator\OrConditions $orCondition): void
     {
         static::markTestIncomplete('OR condition isn\'t supported by the current c-client library');
 
-        $messages = $this->mailbox->getMessages($orCondition);
-
-        static::assertCount(0, $messages);
+        // $messages = $this->mailbox->getMessages($orCondition);
+        // static::assertCount(0, $messages);
     }
 }

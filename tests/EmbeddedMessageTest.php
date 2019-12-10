@@ -16,7 +16,7 @@ use Ddeboer\Imap\Message\PartInterface;
  */
 final class EmbeddedMessageTest extends AbstractTest
 {
-    public function testEmbeddedMessage()
+    public function testEmbeddedMessage(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('embedded_email');
@@ -47,7 +47,7 @@ final class EmbeddedMessageTest extends AbstractTest
         static::assertFalse($message->isSeen());
     }
 
-    public function testEmbeddedAttachment()
+    public function testEmbeddedAttachment(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('embedded_email');
@@ -73,7 +73,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $embeddedAttachment->getEmbeddedMessage();
     }
 
-    public function testRecursiveEmbeddedAttachment()
+    public function testRecursiveEmbeddedAttachment(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('four_nested_emails');
@@ -117,7 +117,7 @@ final class EmbeddedMessageTest extends AbstractTest
         static::assertCount(0, $thirdEmbeddedMessage->getAttachments());
     }
 
-    public function testEmbeddedMessageWithoutContentDisposition()
+    public function testEmbeddedMessageWithoutContentDisposition(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('embedded_email_without_content_disposition');

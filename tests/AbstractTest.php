@@ -54,7 +54,7 @@ abstract class AbstractTest extends TestCase
         string $encoding = null,
         string $charset = null,
         string $overwriteCharset = null
-    ) {
+    ): void {
         $bodyPart = new Mime\Part($contents ?? \uniqid($subject));
         $bodyPart->setType(Mime\Mime::TYPE_TEXT);
         if (null !== $encoding) {

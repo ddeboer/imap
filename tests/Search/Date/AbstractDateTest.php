@@ -17,19 +17,19 @@ final class AbstractDateTest extends AbstractTest
      */
     protected $date;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->date = new DateTimeImmutable('2017-03-02');
     }
 
-    public function testDefaultFormat()
+    public function testDefaultFormat(): void
     {
         $condition = new TestAsset\FooDate($this->date);
 
         static::assertSame('BAR "2-Mar-2017"', $condition->toString());
     }
 
-    public function testCustomFormat()
+    public function testCustomFormat(): void
     {
         $condition = new TestAsset\FooDate($this->date, 'j F Y');
 

@@ -8,7 +8,7 @@ return PhpCsFixer\Config::create()
         '@DoctrineAnnotation'                       => true,
         '@Symfony'                                  => true,
         '@Symfony:risky'                            => true,
-        '@PHPUnit60Migration:risky'                 => true,
+        '@PHPUnit75Migration:risky'                 => true,
         '@PHP71Migration'                           => true,
         '@PHP70Migration:risky'                     => true, // @TODO with next major version
         'align_multiline_comment'                   => ['comment_type' => 'all_multiline'],
