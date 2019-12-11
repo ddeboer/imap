@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
-use Ddeboer\Imap\Message\AttachmentInterface;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\PartInterface;
 
@@ -86,7 +85,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(3, $attachments);
 
-        $attachment = $attachments->current();
+        $attachment = \current($attachments);
         static::assertTrue($attachment->isEmbeddedMessage());
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
@@ -96,8 +95,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $embeddedAttachments = $embeddedMessage->getAttachments();
         static::assertCount(2, $embeddedAttachments);
 
-        /** @var AttachmentInterface $embeddedAttachment */
-        $embeddedAttachment = $embeddedAttachments->current();
+        $embeddedAttachment = \current($embeddedAttachments);
         static::assertTrue($embeddedAttachment->isEmbeddedMessage());
 
         $secondEmbeddedMessage = $embeddedAttachment->getEmbeddedMessage();
@@ -107,7 +105,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $secondEmbeddedAttachments = $secondEmbeddedMessage->getAttachments();
         static::assertCount(1, $secondEmbeddedAttachments);
 
-        $secondEmbeddedAttachment = $secondEmbeddedAttachments->current();
+        $secondEmbeddedAttachment = \current($secondEmbeddedAttachments);
         static::assertTrue($secondEmbeddedAttachment->isEmbeddedMessage());
 
         $thirdEmbeddedMessage = $secondEmbeddedAttachment->getEmbeddedMessage();
@@ -127,7 +125,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(6, $attachments);
 
-        $attachment = $attachments->current();
+        $attachment = \current($attachments);
         static::assertNotEmpty($attachment->getContent());
         static::assertSame('file.jpg', $attachment->getFilename());
 

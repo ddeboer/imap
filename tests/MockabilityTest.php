@@ -87,7 +87,7 @@ final class MockabilityTest extends TestCase
 
         static::assertCount(1, $attachments);
 
-        $attachment = $attachments->current();
+        $attachment = \current($attachments);
 
         static::assertSame($attachmentFilename, $attachment->getFilename());
     }

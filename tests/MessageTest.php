@@ -527,7 +527,7 @@ final class MessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(1, $attachments);
 
-        $attachment = $attachments->current();
+        $attachment = \current($attachments);
 
         static::assertSame('Hi!', $attachment->getDecodedContent());
     }
@@ -959,7 +959,7 @@ final class MessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(1, $attachments);
 
-        $attachment = $attachments->current();
+        $attachment = \current($attachments);
         static::assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
