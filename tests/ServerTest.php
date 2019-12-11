@@ -13,7 +13,7 @@ use Ddeboer\Imap\Server;
  */
 final class ServerTest extends AbstractTest
 {
-    public function testValidConnection()
+    public function testValidConnection(): void
     {
         $connection = $this->getConnection();
 
@@ -22,7 +22,7 @@ final class ServerTest extends AbstractTest
         static::assertInstanceOf(\stdClass::class, $check);
     }
 
-    public function testFailedAuthenticate()
+    public function testFailedAuthenticate(): void
     {
         $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS);
 
@@ -32,7 +32,7 @@ final class ServerTest extends AbstractTest
         $server->authenticate(\uniqid('fake_username_'), \uniqid('fake_password_'));
     }
 
-    public function testEmptyPort()
+    public function testEmptyPort(): void
     {
         if ('993' !== (string) \getenv('IMAP_SERVER_PORT')) {
             static::markTestSkipped('Active IMAP test server must have 993 port for this test');
@@ -43,7 +43,7 @@ final class ServerTest extends AbstractTest
         static::assertInstanceOf(Connection::class, $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: ''));
     }
 
-    public function testCustomOptions()
+    public function testCustomOptions(): void
     {
         $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS, [], \OP_HALFOPEN);
 
@@ -55,8 +55,8 @@ final class ServerTest extends AbstractTest
 
         $mailbox = \strtolower($check->Mailbox);
 
-        static::assertContains(\getenv('IMAP_USERNAME'), $mailbox);
-        static::assertNotContains('inbox', $mailbox);
-        static::assertContains('no_mailbox', $mailbox);
+        static::assertStringContainsString((string) \getenv('IMAP_USERNAME'), $mailbox);
+        static::assertStringNotContainsString('inbox', $mailbox);
+        static::assertStringContainsString('no_mailbox', $mailbox);
     }
 }

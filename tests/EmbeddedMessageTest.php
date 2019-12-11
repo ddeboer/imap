@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
-use Ddeboer\Imap\Message\AttachmentInterface;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\PartInterface;
 
@@ -16,7 +15,7 @@ use Ddeboer\Imap\Message\PartInterface;
  */
 final class EmbeddedMessageTest extends AbstractTest
 {
-    public function testEmbeddedMessage()
+    public function testEmbeddedMessage(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('embedded_email');
@@ -47,7 +46,7 @@ final class EmbeddedMessageTest extends AbstractTest
         static::assertFalse($message->isSeen());
     }
 
-    public function testEmbeddedAttachment()
+    public function testEmbeddedAttachment(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('embedded_email');
@@ -73,7 +72,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $embeddedAttachment->getEmbeddedMessage();
     }
 
-    public function testRecursiveEmbeddedAttachment()
+    public function testRecursiveEmbeddedAttachment(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('four_nested_emails');
@@ -96,7 +95,6 @@ final class EmbeddedMessageTest extends AbstractTest
         $embeddedAttachments = $embeddedMessage->getAttachments();
         static::assertCount(2, $embeddedAttachments);
 
-        /** @var AttachmentInterface $embeddedAttachment */
         $embeddedAttachment = \current($embeddedAttachments);
         static::assertTrue($embeddedAttachment->isEmbeddedMessage());
 
@@ -117,7 +115,7 @@ final class EmbeddedMessageTest extends AbstractTest
         static::assertCount(0, $thirdEmbeddedMessage->getAttachments());
     }
 
-    public function testEmbeddedMessageWithoutContentDisposition()
+    public function testEmbeddedMessageWithoutContentDisposition(): void
     {
         $mailbox = $this->createMailbox();
         $raw     = $this->getFixture('embedded_email_without_content_disposition');

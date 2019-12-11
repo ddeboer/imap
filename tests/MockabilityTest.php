@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class MockabilityTest extends TestCase
 {
-    public function testFullMockedBehaviour()
+    public function testFullMockedBehaviour(): void
     {
         // Setup
         $username           = \uniqid('username_');
