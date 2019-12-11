@@ -527,7 +527,7 @@ final class MessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(1, $attachments);
 
-        $attachment = \current($attachments);
+        $attachment = $attachments->current();
 
         static::assertSame('Hi!', $attachment->getDecodedContent());
     }
@@ -959,7 +959,7 @@ final class MessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(1, $attachments);
 
-        $attachment = \current($attachments);
+        $attachment = $attachments->current();
         static::assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
@@ -1040,7 +1040,6 @@ final class MessageTest extends AbstractTest
 
         $messages = $mailbox->getMessages();
         static::assertCount(0, $messages);
-        static::assertFalse(\current($messages));
 
         $this->expectException(OutOfBoundsException::class);
 

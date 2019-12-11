@@ -86,7 +86,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(3, $attachments);
 
-        $attachment = \current($attachments);
+        $attachment = $attachments->current();
         static::assertTrue($attachment->isEmbeddedMessage());
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
@@ -97,7 +97,7 @@ final class EmbeddedMessageTest extends AbstractTest
         static::assertCount(2, $embeddedAttachments);
 
         /** @var AttachmentInterface $embeddedAttachment */
-        $embeddedAttachment = \current($embeddedAttachments);
+        $embeddedAttachment = $embeddedAttachments->current();
         static::assertTrue($embeddedAttachment->isEmbeddedMessage());
 
         $secondEmbeddedMessage = $embeddedAttachment->getEmbeddedMessage();
@@ -107,7 +107,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $secondEmbeddedAttachments = $secondEmbeddedMessage->getAttachments();
         static::assertCount(1, $secondEmbeddedAttachments);
 
-        $secondEmbeddedAttachment = \current($secondEmbeddedAttachments);
+        $secondEmbeddedAttachment = $secondEmbeddedAttachments->current();
         static::assertTrue($secondEmbeddedAttachment->isEmbeddedMessage());
 
         $thirdEmbeddedMessage = $secondEmbeddedAttachment->getEmbeddedMessage();
@@ -127,7 +127,7 @@ final class EmbeddedMessageTest extends AbstractTest
         $attachments = $message->getAttachments();
         static::assertCount(6, $attachments);
 
-        $attachment = \current($attachments);
+        $attachment = $attachments->current();
         static::assertNotEmpty($attachment->getContent());
         static::assertSame('file.jpg', $attachment->getFilename());
 
