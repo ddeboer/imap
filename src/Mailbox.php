@@ -182,8 +182,10 @@ final class Mailbox implements MailboxInterface
             $messageNumbers = \imap_search(...$params);
         }
         if (false === $messageNumbers) {
-            if (false !== \imap_last_error()) {
-                throw new InvalidSearchCriteriaException(\sprintf('Invalid search criteria [%s]', $query));
+            if (false !== $errorMessage = \imap_last_error()) {
+                throw new InvalidSearchCriteriaException(
+                    $errorMessage ?: \sprintf('Invalid search criteria [%s]', $query)
+                );
             }
 
             // imap_search can also return false
@@ -206,8 +208,10 @@ final class Mailbox implements MailboxInterface
         if (\is_array($overview) && [] !== $overview) {
             $messageNumbers = \array_column($overview, 'uid');
         } else {
-            if (false !== \imap_last_error()) {
-                throw new InvalidSearchCriteriaException(\sprintf('Invalid sequence [%s]', $sequence));
+            if (false !== $errorMessage = \imap_last_error()) {
+                throw new InvalidSearchCriteriaException(
+                    $errorMessage ?: \sprintf('Invalid sequence [%s]', $sequence)
+                );
             }
 
             $messageNumbers = [];
