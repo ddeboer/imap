@@ -117,6 +117,11 @@ abstract class AbstractMessage extends AbstractPart
         if (0 === \preg_match('/\d\d:\d\d:\d\d.* [\+\-]\d\d:?\d\d/', $alteredValue)) {
             $alteredValue .= ' +0000';
         }
+        // Handle numeric months
+        $alteredValue = (string) \preg_replace('/^(\d\d) (\d\d) (\d\d(?:\d\d)?) /', '$3-$2-$1 ', $alteredValue);
+        // Handle comments as specified in RFC2822
+        $alteredValue = (string) \preg_replace('/^\s*\(.*?\)\s*/', '', $alteredValue);
+        $alteredValue = (string) \preg_replace('/\s*\(.*?\)\s*$/', '', $alteredValue);
 
         try {
             $date = new \DateTimeImmutable($alteredValue);
