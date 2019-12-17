@@ -101,6 +101,8 @@ final class MailboxTest extends AbstractTest
     public function testGetMessageSequenceThrowsException(): void
     {
         $this->expectException(InvalidSearchCriteriaException::class);
+        $this->expectExceptionMessageRegExp('/Syntax error in sequence/');
+
         $this->mailbox->getMessageSequence('-1:x');
     }
 
