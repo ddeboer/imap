@@ -6,7 +6,7 @@
 [![Latest Stable Version](https://poser.pugx.org/ddeboer/imap/v/stable.svg)](https://packagist.org/packages/ddeboer/imap)
 [![Total Downloads](https://poser.pugx.org/ddeboer/imap/downloads.png)](https://packagist.org/packages/ddeboer/imap)
 
-A PHP 7.1+ library to read and process e-mails over IMAP.
+A PHP 7.2+ library to read and process e-mails over IMAP.
 
 This library requires [IMAP](https://secure.php.net/manual/en/book.imap.php),
 [iconv](https://secure.php.net/manual/en/book.iconv.php) and
