@@ -185,7 +185,7 @@ final class Mailbox implements MailboxInterface
         if (!empty($errors = \imap_errors())) {
             // this way all errors occurred during search will be reported
             throw new InvalidSearchCriteriaException(
-                \sprintf('Invalid search criteria [%s] - %s', $query, \implode(PHP_EOL, $errors))
+                \sprintf('Invalid search criteria [%s] - %s', $query, \implode(\PHP_EOL, $errors))
             );
         }
         if (false === $messageNumbers) {
@@ -211,7 +211,7 @@ final class Mailbox implements MailboxInterface
         } else {
             if (!empty($errors = \imap_errors())) {
                 throw new InvalidSearchCriteriaException(
-                    \sprintf('Invalid sequence [%s] - %s', $sequence, \implode(PHP_EOL, $errors))
+                    \sprintf('Invalid sequence [%s] - %s', $sequence, \implode(\PHP_EOL, $errors))
                 );
             }
 
