@@ -181,8 +181,8 @@ final class Mailbox implements MailboxInterface
             }
             $messageNumbers = \imap_search(...$params);
         }
-
-        if (!empty($errors = \imap_errors())) {
+        $errors = \imap_errors();
+        if ($errors !== false && count($errors) > 0) {
             // this way all errors occurred during search will be reported
             throw new InvalidSearchCriteriaException(
                 \sprintf('Invalid search criteria [%s] - %s', $query, \implode(\PHP_EOL, $errors))
@@ -206,15 +206,15 @@ final class Mailbox implements MailboxInterface
         \imap_errors();
 
         $overview = \imap_fetch_overview($this->resource->getStream(), $sequence, \FT_UID);
+        $errors = \imap_errors();
+        if ($errors !== false && count($errors) > 0) {
+            throw new InvalidSearchCriteriaException(
+                \sprintf('Invalid sequence [%s] - %s', $sequence, \implode(\PHP_EOL, $errors))
+            );
+        }
         if (\is_array($overview) && [] !== $overview) {
             $messageNumbers = \array_column($overview, 'uid');
         } else {
-            if (!empty($errors = \imap_errors())) {
-                throw new InvalidSearchCriteriaException(
-                    \sprintf('Invalid sequence [%s] - %s', $sequence, \implode(\PHP_EOL, $errors))
-                );
-            }
-
             $messageNumbers = [];
         }
 
