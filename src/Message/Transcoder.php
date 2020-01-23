@@ -41,6 +41,7 @@ final class Transcoder
         '866'                       => 'IBM866',
         'ansi-1251'                 => 'windows-1251',
         'ansi_x3.4-1968'            => 'us-ascii',
+        'ansi_x3.110-1983'          => 'ISO-8859-1',
         'arabic'                    => 'ISO-8859-6',
         'ascii'                     => 'us-ascii',
         'asmo-708'                  => 'ISO-8859-6',

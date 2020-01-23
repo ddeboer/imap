@@ -1057,4 +1057,13 @@ final class MessageTest extends AbstractTest
 
         static::assertSame('Hi', \trim($message->getDecodedContent()));
     }
+
+    public function testMessageWithCharsetAnsi110(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('ansi_x3.110-1983'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        static::assertSame('Automated Response - RE: Re: Test Customer Service Email', $message->getSubject());
+    }
 }

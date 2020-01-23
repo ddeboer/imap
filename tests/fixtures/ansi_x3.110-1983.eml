@@ -1,0 +1,154 @@
+Return-Path: <donotreply@sender.com>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on server3.example.com
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=7.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HTML_MESSAGE,MIME_HTML_ONLY autolearn=ham autolearn_force=no
+	version=3.4.0
+X-Original-To: email@example.com
+Delivered-To: email@example.com
+Received: from cpanel1.sender.com (cpanel1.sender.com [0.0.0.0])
+	by server3.example.com (Postfix) with ESMTPS id 721831280047
+	for <email@example.com>; Thu, 23 Jan 2020 12:15:05 +0000 (GMT)
+Authentication-Results: server3.example.com;
+	spf=pass (sender IP is 0.0.0.0) smtp.mailfrom=donotreply@sender.com smtp.helo=cpanel1.sender.com
+Received-SPF: pass (server3.example.com: domain of sender.com designates 0.0.0.0 as permitted sender) client-ip=0.0.0.0; envelope-from=donotreply@sender.com; helo=cpanel1.sender.com;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sender.com;
+	 s=default; h=Content-Transfer-Encoding:Content-Type:Mime-Version:To:Subject:
+	Message-Id:From:Date:Sender:Reply-To:Cc:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=GbYLTIXF6YZE/8EqpJZ+nNyS0yWZFnhT7R6UNHacOFI=; b=r2xMCDGFpPVTike2paD7ImKQnO
+	XksA6T51hqWN/3ZdQVDGR/tnfEHAM39M9liB0pT8HarmsFDoq4jnnw+N+tzpBlrart9F5wHwbv2VG
+	D5RKYjLyBxXaJ30jJ3nokOasvd+r/YnxQSm05Um0l2luE5jKk7qynUzcba4m96veqIx2ITmUd8Gq0
+	ejEBQKCIKqtP71sevfF2pdEGAeNx2mNM74JnyL50gCJz+g6A8teWWXve3p/DCBhpbspza1hB44SUf
+	+X5A82d1uid5jhpKTeT6ydMDV5cCge4SbIt4u9D1BLvhjn8beDetJdLq8WKqAIbEY4/XjWnR9VdKA
+	VVS2/LkA==;
+Received: from sendercom by cpanel1.sender.com with local (Exim 4.92)
+	(envelope-from <donotreply@sender.com>)
+	id 1iubO5-000SqL-5R
+	for email@example.com; Thu, 23 Jan 2020 12:15:05 +0000
+Date: Thu, 23 Jan 2020 12:15:05 GMT
+From: "sender.com" <donotreply@sender.com>
+Message-Id: <1579781705.H1PMHgVDymG2qoPp@cpanel1.sender.com>
+Precedence: auto_reply
+Subject: Automated Response - RE: Re: Test Customer Service Email
+To: email@example.com
+X-Autorespond: Re: Test Customer Service Email
+X-Loop: email@example.com
+X-Precedence: auto_reply
+Mime-Version: 1.0
+Content-Type: text/html; charset=ansi_x3.110-1983
+Content-Transfer-Encoding: quoted-printable
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel1.sender.com
+X-AntiAbuse: Original Domain - example.com
+X-AntiAbuse: Originator/Caller UID/GID - [1016 993] / [47 12]
+X-AntiAbuse: Sender Address Domain - sender.com
+X-Get-Message-Sender-Via: cpanel1.sender.com: authenticated_id: sendercom/from_h
+X-Authenticated-Sender: cpanel1.sender.com: donotreply@sender.com
+X-Source: /usr/local/cpanel/bin/autorespond
+X-Source-Args: /usr/local/cpanel/bin/autorespond donotreply@sender.com /home/sendercom/.autorespond
+X-Source-Dir: /
+
+<!DOCTYPE html>=0D
+<html>=0D
+	<head>=0D
+		<title>Thank You For Contacting Sender</title>=0D
+		<meta http-equiv=3D"Content-Type" content=3D"text/html;charset=3DUTF-8" /=
+>=0D
+	</head>=0D
+	<body>=0D
+		<style type=3D"text/css">=0D
+			* { margin: 0 auto; color: #434343; font-size: 12px; line-height: 16px }=
+=0D
+			body { background: #fff; font-family: 'Arial', sans-serif; text-align: l=
+eft; }=0D
+			div, p, a, li, td { -webkit-text-size-adjust:none; padding: 0; border-sp=
+acing: 0; }=0D
+			td, th { padding: 0; margin: 0; font-weight: normal }=0D
+			p { margin: 0 0 20px }=0D
+			img { border: none }=0D
+			a img { border: none }=0D
+			a { outline: none; color: #2882c1; text-decoration: none }=0D
+			a:hover { text-decoration: underline }=0D
+			h1 { font-size: 20px; line-height: 22px; font-weight: normal; margin: 0 =
+0 25px; padding: 0; text-align: left }=0D
+				h1 em { font-size: 20px; line-height: 22px }=0D
+			=0D
+			.salutation { color: #222; font-style: italic; font-weight: bold }=0D
+			.padding-right { padding-right: 10px }=0D
+			=0D
+			#wrapper { width: 900px }=0D
+				#header {  }=0D
+					#header td { border-bottom: 2px solid #1e8ac6; padding: 20px 10px 10px=
+; vertical-align: middle }=0D
+				#content { margin: 30px 0 }=0D
+					#content td { padding: 10px; vertical-align: top }=0D
+						#content td td { padding: 0 }=0D
+				#footer {  }=0D
+					#footer td { padding: 5px 10px; vertical-align: middle; text-align: ce=
+nter; font-size: 12px; line-height: 12px; color: #2882c1 }=0D
+					#footer td.copyright { font-size: 10px; vertical-align: bottom }=0D
+						#footer td a { font-size: 10px }=0D
+						#footer td img { vertical-align: text-bottom; margin-bottom: -2px }=0D
+		</style>=0D
+		<table width=3D"100%" border=3D"0" align=3D"center" cellpadding=3D"0" cel=
+lspacing=3D"0" bgcolor=3D"#ffffff" id=3D"wrapper">=0D
+			<tr>=0D
+				<td align=3D"left">=0D
+					<table width=3D"100%" border=3D"0" align=3D"center" cellpadding=3D"0" =
+cellspacing=3D"0" id=3D"header">=0D
+						<tr>=0D
+							<td valign=3D"middle" style=3D"border-bottom: 2px solid #1e8ac6; pad=
+ding: 20px 10px 10px; vertical-align: middle">=0D
+								<a href=3D"https://www.sender.com/gb/"><img src=3D"https://www.sender=
+.com/files/email-resources/auto-responder/email-logo.png" width=3D"194" hei=
+ght=3D"44" alt=3D"Sender" /></a>=0D
+							</td>=0D
+							<td width=3D"150" valign=3D"middle" align=3D"right" style=3D"border-=
+bottom: 2px solid #1e8ac6; padding: 20px 10px 10px; vertical-align: middle"=
+>=0D
+								<a href=3D"https://twitter.com/Sender_GB"><img src=3D"https://www.on=
+buy.com/files/email-resources/auto-responder/twitter.png" width=3D"32" heig=
+ht=3D"32" alt=3D"Twitter" /></a>=0D
+								&nbsp;=0D
+								<a href=3D"https://www.facebook.com/SenderGB"><img src=3D"https://ww=
+w.sender.com/files/email-resources/auto-responder/facebook.png" width=3D"32"=
+ height=3D"32" alt=3D"Facebook" /></a>=0D
+							</td>=0D
+						</tr>=0D
+					</table>=0D
+				</td>=0D
+			</tr>=0D
+			<tr>=0D
+				<td align=3D"left">=0D
+					<table width=3D"100%" border=3D"0" align=3D"center" cellpadding=3D"0" =
+cellspacing=3D"0" id=3D"content" style=3D"margin: 30px 0">=0D
+						<tr>=0D
+							<td valign=3D"top">=0D
+								=0D
+								<h1 style=3D"font-size: 20px; line-height: 22px; font-weight: norma=
+l; margin: 0 0 25px; padding: 0; text-align: left">This email address is no=
+t monitored</h1>=0D
+								<p style=3D"margin: 0 0 20px; font-size: 12px; line-height: 16px">P=
+lease be aware that this email account is not monitored, so we will not be =
+able to respond.</p>=0D
+								<p style=3D"margin: 0 0 20px; font-size: 12px; line-height: 16px">F=
+or general enquiries, please visit our contact page at <a href=3D"https://w=
+ww.sender.com/gb/contact/">https://www.sender.com/gb/contact/</a>.</p>=0D
+								<p style=3D"margin: 0 0 20px; font-size: 12px; line-height: 16px">T=
+hanks,</p>=0D
+								<p style=3D"margin: 0 0 20px; font-size: 12px; line-height: 16px"><=
+em>The Sender Team</em></p>=0D
+=0D
+							</td>=0D
+						</tr>=0D
+					</table>=0D
+				</td>=0D
+			</tr>=0D
+		</table>=0D
+	</body>=0D
+</html>=0D
+=0D
+
