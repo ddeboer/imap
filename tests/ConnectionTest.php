@@ -159,4 +159,22 @@ final class ConnectionTest extends AbstractTest
 
         static::assertArrayHasKey($number, $mailboxes);
     }
+
+    public function testMailboxSelectionAfterReconnect(): void
+    {
+        $connection  = $this->createConnection();
+        $mailbox     = $this->createMailbox($connection);
+        $mailboxName = $mailbox->getName();
+        $this->createTestMessage($mailbox, 'Reconnect test');
+
+        $connection->close();
+
+        $connection = $this->createConnection();
+        $mailbox    = $connection->getMailbox($mailboxName);
+
+        // This fails if we haven't properly reselected the mailbox
+        static::assertSame('Reconnect test', $mailbox->getMessages()->current()->getSubject());
+
+        $connection->close();
+    }
 }
