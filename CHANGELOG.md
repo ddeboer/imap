@@ -1,5 +1,24 @@
 # Changelog
 
+## [v1.10.0](https://github.com/ddeboer/imap/tree/1.10.0) (2020-01-24)
+
+[Full Changelog](https://github.com/ddeboer/imap/compare/1.9.0...1.10.0)
+
+**Implemented enhancements:**
+
+- Handle comments \(CFWS\) in Date header + not-valid formats [\#439](https://github.com/ddeboer/imap/pull/439) ([pupaxxo](https://github.com/pupaxxo))
+- Support PHP 7.4, require PHP 7.2 [\#433](https://github.com/ddeboer/imap/pull/433) ([Slamdunk](https://github.com/Slamdunk))
+
+**Closed issues:**
+
+- Invalid Date header when trying to fetching date on not RFC compliant emails [\#438](https://github.com/ddeboer/imap/issues/438)
+
+**Merged pull requests:**
+
+- Clear the last used mailbox cache when closing a connection [\#447](https://github.com/ddeboer/imap/pull/447) ([dhzavann](https://github.com/dhzavann))
+- README: update PHP version to match composer.json [\#441](https://github.com/ddeboer/imap/pull/441) ([Slamdunk](https://github.com/Slamdunk))
+- Typo [\#440](https://github.com/ddeboer/imap/pull/440) ([OskarStark](https://github.com/OskarStark))
+
 ## [1.9.0](https://github.com/ddeboer/imap/tree/1.9.0) (2019-11-25)
 
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.8.0...1.9.0)
@@ -142,6 +161,10 @@
 
 - ImapResource: cache last opened mailbox [\#328](https://github.com/ddeboer/imap/pull/328) ([Slamdunk](https://github.com/Slamdunk))
 
+**Fixed bugs:**
+
+- AbstractPart::isAttachment\(\) handle unknown part type [\#302](https://github.com/ddeboer/imap/pull/302) ([Slamdunk](https://github.com/Slamdunk))
+
 ## [1.4.1](https://github.com/ddeboer/imap/tree/1.4.1) (2018-03-22)
 
 [Full Changelog](https://github.com/ddeboer/imap/compare/1.4.0...1.4.1)
@@ -204,7 +227,6 @@
 **Fixed bugs:**
 
 - $part-\>type can be 9 [\#301](https://github.com/ddeboer/imap/issues/301)
-- AbstractPart::isAttachment\(\) handle unknown part type [\#302](https://github.com/ddeboer/imap/pull/302) ([Slamdunk](https://github.com/Slamdunk))
 
 **Merged pull requests:**
 
