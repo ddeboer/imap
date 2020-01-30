@@ -1057,4 +1057,14 @@ final class MessageTest extends AbstractTest
 
         static::assertSame('Hi', \trim($message->getDecodedContent()));
     }
+    
+    
+    public function testHtmlMultipartMessage(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('HTMLmultipartMessage'));
+
+        $message = $this->mailbox->getMessage(1);
+        
+    }
+ 
 }
