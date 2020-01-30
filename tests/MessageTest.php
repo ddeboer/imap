@@ -1064,8 +1064,9 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
         
-        static::assertSame('<html>', $message->getBodyHtml());
-        
+        static::assertContains('First Part HTML Message', $message->getBodyHtml());
+        static::assertContains('Second part HTML Message', $message->getBodyHtml());
+        static::assertContains('Last Part HTML Message', $message->getBodyHtml());
     }
  
 }
