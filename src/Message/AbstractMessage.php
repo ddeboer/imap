@@ -168,12 +168,13 @@ abstract class AbstractMessage extends AbstractPart
     }
 
     /**
-     * Get body HTML.
-     */
-    final public function getBodyHtml(): ?string
+    * Get body Mixed.
+    *
+    * @return string
+    */
+    private function getBodyMixed($iterator): ?string
     {
         $mixedHTML = '';
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
             if (self::SUBTYPE_MIXED === $part->getSubtype()) {
                 foreach ($part->getParts() as $mixedPart) {
@@ -181,14 +182,33 @@ abstract class AbstractMessage extends AbstractPart
                         $mixedHTML .= $mixedPart->getDecodedContent();
                     }
                 }
-                return $mixedHTML;
             }
-            
+        }
+        return $mixedHTML;
+    }
+ 
+    /**
+     * Get body HTML.
+     */
+    final public function getBodyHtml(): ?string
+    {
+        
+        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $mixedHTML = self::getBodyMixed($iterator);
+        $bodyHTML = '';
+
+        foreach ($iterator as $part) {
             if (self::SUBTYPE_HTML === $part->getSubtype()) {
-                return $part->getDecodedContent();
+                $bodyHTML = $part->getDecodedContent();
             }
         }
 
+        if (mb_strlen($mixedHTML) > mb_strlen($bodyHTML)) {
+            return $mixedHTML;
+        } else if ($bodyHTML != '') {
+            return $bodyHTML;
+        }
+        
         // If message has no parts and is HTML, return content of message itself.
         if (self::SUBTYPE_HTML === $this->getSubtype()) {
             return $this->getDecodedContent();
