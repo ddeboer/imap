@@ -172,8 +172,18 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getBodyHtml(): ?string
     {
+        $mixedHTML = '';
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $part) {
+            if (self::SUBTYPE_MIXED === $part->getSubtype()) {
+                foreach ($part->getParts() as $mixedPart) {
+                    if(self::SUBTYPE_HTML === $mixedPart->getSubtype()) {
+                        $mixedHTML .= $mixedPart->getDecodedContent();
+                    }
+                }
+                return $mixedHTML;
+            }
+            
             if (self::SUBTYPE_HTML === $part->getSubtype()) {
                 return $part->getDecodedContent();
             }
