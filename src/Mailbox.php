@@ -123,8 +123,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk Set Flag for Messages.
      *
-     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|MessageIterator|string $numbers Message numbers
+     * @param string                                $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
      */
     public function setFlag(string $flag, $numbers): bool
     {
@@ -134,8 +134,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk Clear Flag for Messages.
      *
-     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|MessageIterator|string $numbers Message numbers
+     * @param string                                $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
      */
     public function clearFlag(string $flag, $numbers): bool
     {
@@ -277,8 +277,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk move messages.
      *
-     * @param array|MessageIterator|string $numbers Message numbers
-     * @param MailboxInterface             $mailbox Destination Mailbox to move the messages to
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param MailboxInterface                      $mailbox Destination Mailbox to move the messages to
      *
      * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
@@ -292,8 +292,8 @@ final class Mailbox implements MailboxInterface
     /**
      * Bulk copy messages.
      *
-     * @param array|MessageIterator|string $numbers Message numbers
-     * @param MailboxInterface             $mailbox Destination Mailbox to copy the messages to
+     * @param array|MessageIteratorInterface|string $numbers Message numbers
+     * @param MailboxInterface                      $mailbox Destination Mailbox to copy the messages to
      *
      * @throws \Ddeboer\Imap\Exception\MessageCopyException
      */
