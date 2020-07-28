@@ -108,7 +108,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * Bulk copy messages.
      *
      * @param array|MessageIteratorInterface|string $numbers Message numbers
-     * @param MailboxInterface                       $mailbox Destination Mailbox to copy the messages to
+     * @param MailboxInterface                      $mailbox Destination Mailbox to copy the messages to
      *
      * @throws \Ddeboer\Imap\Exception\MessageCopyException
      */
