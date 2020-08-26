@@ -11,10 +11,6 @@ services:
       && wait-for-it.sh imap.server:993 \
       && cp -dpr /project_orig /project \
       && cd /project \
-      && composer install \
-      && vendor/bin/php-cs-fixer fix --diff --dry-run --verbose \
-      && php .travis/readme-index.php \
-      && vendor/bin/phpstan analyze --no-progress \
       && vendor/bin/phpunit \
       "
     environment:

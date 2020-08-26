@@ -109,7 +109,7 @@ final class MailboxTest extends AbstractTest
         $message = $this->mailbox->getMessage(999);
 
         $this->expectException(MessageDoesNotExistException::class);
-        $this->expectExceptionMessageRegExp('/Message "999" does not exist/');
+        $this->expectExceptionMessageMatches('/Message "999" does not exist/');
 
         $message->isRecent();
     }
@@ -220,18 +220,27 @@ final class MailboxTest extends AbstractTest
     public function testThread(): void
     {
         $mailboxOne = $this->createMailbox();
+        $mailboxOne->addMessage($this->getFixture('plain_only'));
         $mailboxOne->addMessage($this->getFixture('thread/my_topic'));
         $mailboxOne->addMessage($this->getFixture('thread/unrelated'));
         $mailboxOne->addMessage($this->getFixture('thread/re_my_topic'));
 
+        // Add and remove the first message to test SE_UID
+        foreach ($mailboxOne as $message) {
+            $message->delete();
+
+            break;
+        }
+        $this->getConnection()->expunge();
+
         $expected = [
-            '0.num'    => 1,
+            '0.num'    => 2,
             '0.next'   => 1,
-            '1.num'    => 3,
+            '1.num'    => 4,
             '1.next'   => 0,
             '1.branch' => 0,
             '0.branch' => 2,
-            '2.num'    => 2,
+            '2.num'    => 3,
             '2.next'   => 0,
             '2.branch' => 0,
         ];

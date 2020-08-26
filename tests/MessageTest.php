@@ -14,10 +14,10 @@ use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\PartInterface;
 use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageInterface;
+use Laminas\Mail;
+use Laminas\Mime;
 use PHPUnit\Framework\Error\Deprecated;
 use ReflectionClass;
-use Zend\Mail;
-use Zend\Mime;
 
 /**
  * @covers \Ddeboer\Imap\Connection::expunge
@@ -84,7 +84,7 @@ final class MessageTest extends AbstractTest
         $message = new Message($connection->getResource(), $messageNumber);
 
         $this->expectException(MessageDoesNotExistException::class);
-        $this->expectExceptionMessageRegExp(\sprintf('/%s/', \preg_quote((string) $messageNumber)));
+        $this->expectExceptionMessageMatches(\sprintf('/%s/', \preg_quote((string) $messageNumber)));
 
         $message->hasAttachments();
     }
@@ -247,7 +247,7 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         $this->expectException(UnsupportedCharsetException::class);
-        $this->expectExceptionMessageRegExp(\sprintf('/%s/', \preg_quote($charset)));
+        $this->expectExceptionMessageMatches(\sprintf('/%s/', \preg_quote($charset)));
 
         $message->getBodyText();
     }
