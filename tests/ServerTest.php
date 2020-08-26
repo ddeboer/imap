@@ -27,7 +27,7 @@ final class ServerTest extends AbstractTest
         $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS);
 
         $this->expectException(AuthenticationFailedException::class);
-        $this->expectExceptionMessageRegExp('/E_WARNING.+AUTHENTICATIONFAILED/s');
+        $this->expectExceptionMessageMatches('/E_WARNING.+AUTHENTICATIONFAILED/s');
 
         $server->authenticate(\uniqid('fake_username_'), \uniqid('fake_password_'));
     }

@@ -7,9 +7,9 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Server;
+use Laminas\Mail;
+use Laminas\Mime;
 use PHPUnit\Framework\TestCase;
-use Zend\Mail;
-use Zend\Mime;
 
 abstract class AbstractTest extends TestCase
 {

@@ -29,11 +29,11 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
+        "laminas/laminas-mail": "^2.10",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-phpunit": "^0.12",
         "phpstan/phpstan-strict-rules": "^0.12",
-        "phpunit/phpunit": "^8.5",
-        "zendframework/zend-mail": "^2.10"
+        "phpunit/phpunit": "^8.5"
     },
     "autoload": {
         "psr-4": {
@@ -43,6 +43,11 @@
     "autoload-dev": {
         "psr-4": {
             "Ddeboer\\Imap\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.2"
         }
     }
 }

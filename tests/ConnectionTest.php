@@ -117,7 +117,7 @@ final class ConnectionTest extends AbstractTest
         $connection->deleteMailbox($mailbox);
 
         $this->expectException(DeleteMailboxException::class);
-        $this->expectExceptionMessageRegExp('/NONEXISTENT/');
+        $this->expectExceptionMessageMatches('/NONEXISTENT/');
 
         $connection->deleteMailbox($mailbox);
     }
@@ -125,7 +125,7 @@ final class ConnectionTest extends AbstractTest
     public function testCannotCreateMailboxesOnReadonly(): void
     {
         $this->expectException(CreateMailboxException::class);
-        $this->expectExceptionMessageRegExp('/(SERVERBUG|ALREADYEXISTS)/');
+        $this->expectExceptionMessageMatches('/(SERVERBUG|ALREADYEXISTS)/');
 
         $this->getConnection()->createMailbox('INBOX');
     }
@@ -138,7 +138,7 @@ final class ConnectionTest extends AbstractTest
     public function testCustomExceptionOnInvalidMailboxName(): void
     {
         $this->expectException(CreateMailboxException::class);
-        $this->expectExceptionMessageRegExp('/CANNOT/');
+        $this->expectExceptionMessageMatches('/CANNOT/');
 
         static::assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid("\t")));
     }
