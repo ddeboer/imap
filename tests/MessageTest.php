@@ -608,6 +608,7 @@ final class MessageTest extends AbstractTest
             ['2014-09-15T05:25:04+0000', 'Mon, 15 09 2014 05:25:04'], // Non compliant to RFC2822#section-3.3
             ['2014-09-30T10:50:58+0200', 'Tue, 30 Sep 2014 10:50:58 +0200 (added by postmaster@redacted.it) '],
             ['2014-09-30T10:50:58+0200', ' (added by postmaster@redacted.it)  Tue, 30 Sep 2014 10:50:58 +0200'],
+            ['2020-10-27T10:25:58+0000', 'Tue, 27 Oct 2020 10:25:58 +0000 <AM8PR08MB565014C82DF69A14167D12829D160@AM8PR08MB5650.eurprd08.prod.outlook.com>'],
         ];
     }
 
