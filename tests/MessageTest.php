@@ -16,7 +16,6 @@ use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageInterface;
 use Laminas\Mail;
 use Laminas\Mime;
-use PHPUnit\Framework\Error\Deprecated;
 use ReflectionClass;
 
 /**
@@ -94,7 +93,7 @@ final class MessageTest extends AbstractTest
         $this->createTestMessage($this->mailbox, 'Message A');
         $message = $this->mailbox->getMessage(1);
 
-        $this->expectException(Deprecated::class);
+        $this->expectDeprecation();
 
         $message->maskAsSeen();
     }
@@ -528,7 +527,7 @@ final class MessageTest extends AbstractTest
         static::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
-
+        static::assertNotFalse($attachment);
         static::assertSame('Hi!', $attachment->getDecodedContent());
     }
 
@@ -568,7 +567,7 @@ final class MessageTest extends AbstractTest
             static::assertCount(1, $emails, $type);
 
             $email = \current($emails);
-
+            static::assertNotFalse($email);
             static::assertSame(\sprintf('%s@here.com', \strtolower($type)), $email->getAddress(), $type);
         }
     }
@@ -964,6 +963,7 @@ final class MessageTest extends AbstractTest
         static::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
+        static::assertNotFalse($attachment);
         static::assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 
