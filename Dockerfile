@@ -1,4 +1,4 @@
-FROM php:7.2
+FROM php:7.3
 
 RUN runtimeDeps=" \
         curl \
@@ -13,4 +13,5 @@ RUN runtimeDeps=" \
     && docker-php-ext-install iconv mbstring imap \
     && rm -r /var/lib/apt/lists/*
 
-RUN curl -sS https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /usr/local/bin/wait-for-it.sh && chmod +x /usr/local/bin/wait-for-it.sh
+RUN curl -sS https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /usr/local/bin/wait-for-it.sh \
+    && chmod +x /usr/local/bin/wait-for-it.sh
