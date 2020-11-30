@@ -15,5 +15,4 @@ static-analysis: vendor
 
 .PHONY: test
 test: vendor
-	php .travis/readme-index.php
 	docker-compose run tests
