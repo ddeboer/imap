@@ -80,46 +80,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Start IMAPd services"
-        uses: "sh .github/dovecot_install.sh"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
-          ini-values: zend.assertions=1
-
-      - name: "Get composer cache directory"
-        id: composercache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: "Cache dependencies"
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composercache.outputs.dir }}
-          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-
-
-      - name: "Install dependencies"
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Run tests"
-        timeout-minutes: 3
-        run: "vendor/bin/phpunit --no-coverage --no-logging"
-
-  code-coverage:
-    name: "Code Coverage"
-
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
+        run: "sh .github/dovecot_install.sh"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -127,6 +88,9 @@ jobs:
           coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
           ini-values: zend.assertions=1
+          extensions: imap
+        env:
+          fail-fast: true
 
       - name: "Get composer cache directory"
         id: composercache
@@ -142,11 +106,18 @@ jobs:
       - name: "Install dependencies"
         run: "composer update --no-interaction --no-progress"
 
-      - name: "Run tests"
+      - name: "Run tests without coverage"
+        if: ${{ matrix.php-version != '7.4' }}
+        timeout-minutes: 3
+        run: "vendor/bin/phpunit --no-coverage --no-logging"
+
+      - name: "Run tests with coverage"
+        if: ${{ matrix.php-version == '7.4' }}
         timeout-minutes: 3
         run: "vendor/bin/phpunit --coverage-clover=coverage.xml"
 
       - name: "Send code coverage report to Codecov.io"
+        if: ${{ matrix.php-version == '7.4' }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

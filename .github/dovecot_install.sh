@@ -5,6 +5,10 @@ set -ex
 sudo apt-get -q update
 sudo apt-get -q -y install dovecot-imapd
 
+{
+    echo "127.0.0.1 dovecot.travis.dev"
+} | sudo tee -a /etc/hosts
+
 SSL_CERT="/etc/ssl/certs/dovecot.crt"
 SSL_KEY="/etc/ssl/private/dovecot.key"
 

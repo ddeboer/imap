@@ -1,3 +1,5 @@
+# libonig-dev required for PHP 8.0
+
 FROM php:7.3
 
 RUN runtimeDeps=" \
@@ -6,6 +8,7 @@ RUN runtimeDeps=" \
         zip \
         libc-client-dev \
         libkrb5-dev \
+        libonig-dev \
         libxml2-dev \
     " \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y $runtimeDeps \
