@@ -15,4 +15,5 @@ static-analysis: vendor
 
 .PHONY: test
 test: vendor
+	docker-compose build --pull
 	docker-compose run tests

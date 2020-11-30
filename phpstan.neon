@@ -22,6 +22,11 @@ parameters:
             message: '#Offset string does not exist on array\|null#'
             path: src/Connection.php
         -
+            message: '#Parameter .+ of function imap_.+ expects .+ given#'
+            paths:
+                - src/Mailbox.php
+                - src/Message.php
+        -
             message: '#Call to function base64_decode\(\) requires parameter \#2 to be true#'
             path: src/Message/AbstractPart.php
         -

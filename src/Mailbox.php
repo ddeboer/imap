@@ -162,7 +162,7 @@ final class Mailbox implements MailboxInterface
             $params = [
                 $this->resource->getStream(),
                 $sortCriteria,
-                $descending ? 1 : 0,
+                $descending,
                 \SE_UID,
                 $query,
             ];
