@@ -321,39 +321,9 @@ $ IMAP_SERVER_NAME="my.imap.server.com" IMAP_SERVER_PORT="60993" IMAP_USERNAME="
 ```
 
 You can also copy `phpunit.xml.dist` file to a custom `phpunit.xml` and put
-these environment variables in it:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    bootstrap="./vendor/autoload.php"
-    colors="true"
-    verbose="true"
->
-    <testsuites>
-        <testsuite name="ddeboer/imap">
-            <directory>./tests/</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
-    <php>
-        <env name="IMAP_SERVER_NAME" value="my.imap.server.com" />
-        <env name="IMAP_SERVER_PORT" value="60993" />
-        <env name="IMAP_USERNAME" value="johndoe" />
-        <env name="IMAP_PASSWORD" value="p4ssword" />
-    </php>
-</phpunit>
-```
+these environment variables in it.
 
 **WARNING** Tests create new mailboxes without removing them.
-
-### Running Tests using Docker
-
-If you have Docker installed you can run the tests locally with the following command:
 
 ```
 $ docker-compose run tests

@@ -5,3 +5,4 @@ vendor/
 .phpunit.result.cache
 composer.lock
 phpunit.xml
+wait-for-it
