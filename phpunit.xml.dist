@@ -10,6 +10,9 @@
     <include>
       <directory suffix=".php">./src</directory>
     </include>
+    <report>
+      <text outputFile="php://stdout" showOnlySummary="true"/>
+    </report>
   </coverage>
   <testsuites>
     <testsuite name="ddeboer/imap">
