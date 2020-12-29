@@ -252,6 +252,7 @@ final class Transcoder
         'x-iso-10646-ucs-2-le'      => 'UTF-16LE',
         'x-iso-10646-ucs-4-be'      => 'UTF-32BE',
         'x-iso-10646-ucs-4-le'      => 'UTF-32LE',
+        'x-mac-ce'                  => 'windows-1250',
         'x-sjis'                    => 'Shift_JIS',
         'x-unicode-2-0-utf-7'       => 'UTF-7',
         'x-x-big5'                  => 'Big5',
