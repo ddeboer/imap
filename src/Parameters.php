@@ -38,6 +38,10 @@ class Parameters
         foreach ($parts as $part) {
             $charset = 'default' == $part->charset ? 'auto' : $part->charset;
             // imap_utf8 doesn't seem to work properly, so use Transcoder instead
+            // cheat here - If chatset == windows-874, coerce it into tis-620
+            if($charset == 'windows-874'){
+                $charset = 'tis-620';
+            }
             $decoded .= Transcoder::create()->transcode($part->text, $charset);
         }
         
