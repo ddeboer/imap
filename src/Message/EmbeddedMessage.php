@@ -10,9 +10,6 @@ final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageIn
     private ?string $rawHeaders = null;
     private ?string $rawMessage = null;
 
-    /**
-     * Get message headers.
-     */
     public function getHeaders(): Headers
     {
         if (null === $this->headers) {
@@ -22,9 +19,6 @@ final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageIn
         return $this->headers;
     }
 
-    /**
-     * Get raw message headers.
-     */
     public function getRawHeaders(): string
     {
         if (null === $this->rawHeaders) {
@@ -35,11 +29,6 @@ final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageIn
         return $this->rawHeaders;
     }
 
-    /**
-     * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
-     *
-     * @return string the raw message
-     */
     public function getRawMessage(): string
     {
         if (null === $this->rawMessage) {

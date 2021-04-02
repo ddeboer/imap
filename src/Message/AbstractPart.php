@@ -83,9 +83,6 @@ abstract class AbstractPart implements PartInterface
         $this->setStructure($structure);
     }
 
-    /**
-     * Get message number (from headers).
-     */
     final public function getNumber(): int
     {
         $this->assertMessageExists($this->messageNumber);
@@ -108,9 +105,6 @@ abstract class AbstractPart implements PartInterface
         $this->structure = $structure;
     }
 
-    /**
-     * Part structure.
-     */
     final public function getStructure(): \stdClass
     {
         $this->lazyLoadStructure();
@@ -125,9 +119,6 @@ abstract class AbstractPart implements PartInterface
     {
     }
 
-    /**
-     * Part parameters.
-     */
     final public function getParameters(): Parameters
     {
         $this->lazyParseStructure();
@@ -135,9 +126,6 @@ abstract class AbstractPart implements PartInterface
         return $this->parameters;
     }
 
-    /**
-     * Part charset.
-     */
     final public function getCharset(): ?string
     {
         $this->lazyParseStructure();
@@ -148,9 +136,6 @@ abstract class AbstractPart implements PartInterface
         return '' !== $charset ? $charset : null;
     }
 
-    /**
-     * Part type.
-     */
     final public function getType(): ?string
     {
         $this->lazyParseStructure();
@@ -158,9 +143,6 @@ abstract class AbstractPart implements PartInterface
         return $this->type;
     }
 
-    /**
-     * Part subtype.
-     */
     final public function getSubtype(): ?string
     {
         $this->lazyParseStructure();
@@ -168,9 +150,6 @@ abstract class AbstractPart implements PartInterface
         return $this->subtype;
     }
 
-    /**
-     * Part encoding.
-     */
     final public function getEncoding(): ?string
     {
         $this->lazyParseStructure();
@@ -178,9 +157,6 @@ abstract class AbstractPart implements PartInterface
         return $this->encoding;
     }
 
-    /**
-     * Part disposition.
-     */
     final public function getDisposition(): ?string
     {
         $this->lazyParseStructure();
@@ -188,9 +164,6 @@ abstract class AbstractPart implements PartInterface
         return $this->disposition;
     }
 
-    /**
-     * Part description.
-     */
     final public function getDescription(): ?string
     {
         $this->lazyParseStructure();
@@ -198,11 +171,6 @@ abstract class AbstractPart implements PartInterface
         return $this->description;
     }
 
-    /**
-     * Part bytes.
-     *
-     * @return null|int|string
-     */
     final public function getBytes()
     {
         $this->lazyParseStructure();
@@ -210,9 +178,6 @@ abstract class AbstractPart implements PartInterface
         return $this->bytes;
     }
 
-    /**
-     * Part lines.
-     */
     final public function getLines(): ?string
     {
         $this->lazyParseStructure();
@@ -220,9 +185,6 @@ abstract class AbstractPart implements PartInterface
         return $this->lines;
     }
 
-    /**
-     * Get raw part content.
-     */
     final public function getContent(): string
     {
         if (null === $this->content) {
@@ -240,17 +202,11 @@ abstract class AbstractPart implements PartInterface
         return $this->partNumber;
     }
 
-    /**
-     * Get part number.
-     */
     final public function getPartNumber(): string
     {
         return $this->partNumber;
     }
 
-    /**
-     * Get decoded part content.
-     */
     final public function getDecodedContent(): string
     {
         if (null === $this->decodedContent) {
@@ -300,11 +256,6 @@ abstract class AbstractPart implements PartInterface
         return $return;
     }
 
-    /**
-     * Get an array of all parts for this message.
-     *
-     * @return PartInterface[]
-     */
     final public function getParts(): array
     {
         $this->lazyParseStructure();
@@ -324,21 +275,11 @@ abstract class AbstractPart implements PartInterface
         return $this->parts[$this->key];
     }
 
-    /**
-     * Get current child part.
-     *
-     * @return \RecursiveIterator
-     */
     final public function getChildren()
     {
         return $this->current();
     }
 
-    /**
-     * Get current child part.
-     *
-     * @return bool
-     */
     final public function hasChildren()
     {
         $this->lazyParseStructure();
@@ -347,8 +288,6 @@ abstract class AbstractPart implements PartInterface
     }
 
     /**
-     * Get current part key.
-     *
      * @return int
      */
     final public function key()
@@ -356,31 +295,16 @@ abstract class AbstractPart implements PartInterface
         return $this->key;
     }
 
-    /**
-     * Move to next part.
-     *
-     * @return void
-     */
     final public function next()
     {
         ++$this->key;
     }
 
-    /**
-     * Reset part key.
-     *
-     * @return void
-     */
     final public function rewind()
     {
         $this->key = 0;
     }
 
-    /**
-     * Check if current part is a valid one.
-     *
-     * @return bool
-     */
     final public function valid()
     {
         $this->lazyParseStructure();

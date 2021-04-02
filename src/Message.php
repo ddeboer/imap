@@ -36,9 +36,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         parent::__construct($resource, $messageNumber, '1', new \stdClass());
     }
 
-    /**
-     * Lazy load structure.
-     */
     protected function lazyLoadStructure(): void
     {
         if (true === $this->structureLoaded) {
@@ -76,9 +73,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         $this->setStructure($structure);
     }
 
-    /**
-     * Ensure message exists.
-     */
     protected function assertMessageExists(int $messageNumber): void
     {
         if (true === $this->messageNumberVerified) {
@@ -115,9 +109,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         return $this->imapMsgNo;
     }
 
-    /**
-     * Get raw message headers.
-     */
     public function getRawHeaders(): string
     {
         if (null === $this->rawHeaders) {
@@ -133,11 +124,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         return $this->rawHeaders;
     }
 
-    /**
-     * Get the raw message, including all headers, parts, etc. unencoded and unparsed.
-     *
-     * @return string the raw message
-     */
     public function getRawMessage(): string
     {
         if (null === $this->rawMessage) {
@@ -147,9 +133,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         return $this->rawMessage;
     }
 
-    /**
-     * Get message headers.
-     */
     public function getHeaders(): Message\Headers
     {
         if (null === $this->headers) {
@@ -175,9 +158,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         $this->headers = null;
     }
 
-    /**
-     * Get message recent flag value (from headers).
-     */
     public function isRecent(): ?string
     {
         $recent = $this->getHeaders()->get('recent');
@@ -186,59 +166,36 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         return $recent;
     }
 
-    /**
-     * Get message unseen flag value (from headers).
-     */
     public function isUnseen(): bool
     {
         return 'U' === $this->getHeaders()->get('unseen');
     }
 
-    /**
-     * Get message flagged flag value (from headers).
-     */
     public function isFlagged(): bool
     {
         return 'F' === $this->getHeaders()->get('flagged');
     }
 
-    /**
-     * Get message answered flag value (from headers).
-     */
     public function isAnswered(): bool
     {
         return 'A' === $this->getHeaders()->get('answered');
     }
 
-    /**
-     * Get message deleted flag value (from headers).
-     */
     public function isDeleted(): bool
     {
         return 'D' === $this->getHeaders()->get('deleted');
     }
 
-    /**
-     * Get message draft flag value (from headers).
-     */
     public function isDraft(): bool
     {
         return 'X' === $this->getHeaders()->get('draft');
     }
 
-    /**
-     * Has the message been marked as read?
-     */
     public function isSeen(): bool
     {
         return 'N' !== $this->getHeaders()->get('recent') && 'U' !== $this->getHeaders()->get('unseen');
     }
 
-    /**
-     * Mark message as seen.
-     *
-     * @deprecated since version 1.1, to be removed in 2.0
-     */
     public function maskAsSeen(): bool
     {
         \trigger_error(\sprintf('%s is deprecated and will be removed in 2.0. Use %s::markAsSeen instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
@@ -246,19 +203,11 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         return $this->markAsSeen();
     }
 
-    /**
-     * Mark message as seen.
-     */
     public function markAsSeen(): bool
     {
         return $this->setFlag('\\Seen');
     }
 
-    /**
-     * Move message to another mailbox.
-     *
-     * @throws MessageCopyException
-     */
     public function copy(MailboxInterface $mailbox): void
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
@@ -269,11 +218,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
     }
 
-    /**
-     * Move message to another mailbox.
-     *
-     * @throws MessageMoveException
-     */
     public function move(MailboxInterface $mailbox): void
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
@@ -284,11 +228,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
     }
 
-    /**
-     * Delete message.
-     *
-     * @throws MessageDeleteException
-     */
     public function delete(): void
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
@@ -299,11 +238,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
     }
 
-    /**
-     * Undelete message.
-     *
-     * @throws MessageUndeleteException
-     */
     public function undelete(): void
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to false on header
@@ -313,11 +247,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
     }
 
-    /**
-     * Set Flag Message.
-     *
-     * @param string $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     */
     public function setFlag(string $flag): bool
     {
         $result = \imap_setflag_full($this->resource->getStream(), (string) $this->getNumber(), $flag, \ST_UID);
@@ -327,11 +256,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         return $result;
     }
 
-    /**
-     * Clear Flag Message.
-     *
-     * @param string $flag \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     */
     public function clearFlag(string $flag): bool
     {
         $result = \imap_clearflag_full($this->resource->getStream(), (string) $this->getNumber(), $flag, \ST_UID);
