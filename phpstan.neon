@@ -2,42 +2,10 @@ includes:
     - phar://phpstan.phar/conf/config.levelmax.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
+    - phpstan-baseline.neon
 
 parameters:
-    checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
     tmpDir: tmp/
     paths:
         - src/
         - tests/
-    ignoreErrors:
-        - '#Short ternary operator is not allowed. Use null coalesce operator if applicable or consider using long ternary#'
-        -
-            message: '#Method .+ has no return typehint specified#'
-            path: src/
-        -
-            message: '#Argument of an invalid type array\|null supplied for foreach, only iterables are supported#'
-            path: src/Connection.php
-        -
-            message: '#Offset string does not exist on array\|null#'
-            path: src/Connection.php
-        -
-            message: '#Parameter .+ of function imap_.+ expects .+ given#'
-            paths:
-                - src/Mailbox.php
-                - src/Message.php
-        -
-            message: '#Call to function base64_decode\(\) requires parameter \#2 to be true#'
-            path: src/Message/AbstractPart.php
-        -
-            message: '#Strict comparison using === between false and string will always evaluate to false#'
-            path: src/Message/AbstractPart.php
-        -
-            message: '#Parameter \#1 \$resource of class Ddeboer\\Imap\\ImapResource constructor expects resource, string given#'
-            path: tests/ConnectionTest.php
-        -
-            message: '#Call to static method PHPUnit\\Framework\\Assert::assertInstanceOf\(\) with .+ and Ddeboer\\Imap\\Message\\EmailAddress will always evaluate to true#'
-            path: tests/MessageTest.php
-        -
-            message: '#Call to static method PHPUnit\\Framework\\Assert::assertIsInt\(\) with int.+ will always evaluate to true#'
-            path: tests/ConnectionTest.php

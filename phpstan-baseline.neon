@@ -1,0 +1,77 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to function is_resource\\(\\) with resource will always evaluate to true\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and true will always evaluate to false\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
+			message: "#^Parameter \\#3 \\$reverse of function imap_sort expects int, bool\\|int given\\.$#"
+			count: 1
+			path: src/Mailbox.php
+
+		-
+			message: "#^Parameter \\#2 \\$msg_no of function imap_delete expects int, string given\\.$#"
+			count: 1
+			path: src/Message.php
+
+		-
+			message: "#^Parameter \\#2 \\$msg_no of function imap_undelete expects int, string given\\.$#"
+			count: 1
+			path: src/Message.php
+
+		-
+			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be true\\.$#"
+			count: 1
+			path: src/Message/AbstractPart.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Message/AbstractPart.php
+
+		-
+			message: "#^Call to function is_int\\(\\) with Ddeboer\\\\Imap\\\\MessageInterface will always evaluate to false\\.$#"
+			count: 1
+			path: src/MessageIterator.php
+
+		-
+			message: "#^Call to function is_object\\(\\) with Ddeboer\\\\Imap\\\\MessageInterface will always evaluate to true\\.$#"
+			count: 1
+			path: src/MessageIterator.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: src/MessageIterator.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/MessageIterator.php
+
+		-
+			message: "#^Parameter \\#1 \\$resource of class Ddeboer\\\\Imap\\\\ImapResource constructor expects resource, string given\\.$#"
+			count: 1
+			path: tests/ConnectionTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertIsInt\\(\\) with int\\<0, max\\> will always evaluate to true\\.$#"
+			count: 1
+			path: tests/ConnectionTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertIsInt\\(\\) with int will always evaluate to true\\.$#"
+			count: 1
+			path: tests/ConnectionTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Ddeboer\\\\\\\\Imap\\\\\\\\Message\\\\\\\\EmailAddress' and Ddeboer\\\\Imap\\\\Message\\\\EmailAddress will always evaluate to true\\.$#"
+			count: 2
+			path: tests/MessageTest.php
+
