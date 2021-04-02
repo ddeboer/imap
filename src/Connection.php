@@ -9,7 +9,6 @@ use Ddeboer\Imap\Exception\DeleteMailboxException;
 use Ddeboer\Imap\Exception\ImapGetmailboxesException;
 use Ddeboer\Imap\Exception\ImapNumMsgException;
 use Ddeboer\Imap\Exception\ImapQuotaException;
-use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
 
 /**
@@ -88,10 +87,9 @@ final class Connection implements ConnectionInterface
     public function getMailboxes(): array
     {
         $this->initMailboxNames();
-        assert(null !== $this->mailboxNames);
+        \assert(null !== $this->mailboxNames);
 
         if (null === $this->mailboxes) {
-
             $this->mailboxes = [];
             foreach ($this->mailboxNames as $mailboxName => $mailboxInfo) {
                 $this->mailboxes[(string) $mailboxName] = $this->getMailbox((string) $mailboxName);
@@ -104,7 +102,7 @@ final class Connection implements ConnectionInterface
     public function hasMailbox(string $name): bool
     {
         $this->initMailboxNames();
-        assert(null !== $this->mailboxNames);
+        \assert(null !== $this->mailboxNames);
 
         return isset($this->mailboxNames[$name]);
     }
@@ -114,7 +112,7 @@ final class Connection implements ConnectionInterface
         if (false === $this->hasMailbox($name)) {
             throw new MailboxDoesNotExistException(\sprintf('Mailbox name "%s" does not exist', $name));
         }
-        assert(isset($this->mailboxNames[$name]));
+        \assert(isset($this->mailboxNames[$name]));
 
         return new Mailbox($this->resource, $name, $this->mailboxNames[$name]);
     }

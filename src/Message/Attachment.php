@@ -20,7 +20,7 @@ final class Attachment extends AbstractPart implements AttachmentInterface
         if (null === $filename || '' === $filename) {
             $filename = $this->getParameters()->get('name');
         }
-        assert(null === $filename || is_string($filename));
+        \assert(null === $filename || \is_string($filename));
 
         return $filename;
     }
@@ -36,7 +36,7 @@ final class Attachment extends AbstractPart implements AttachmentInterface
         if (\is_numeric($size)) {
             $size = (int) $size;
         }
-        assert(null === $size || is_int($size));
+        \assert(null === $size || \is_int($size));
 
         return $size;
     }

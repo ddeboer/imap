@@ -25,13 +25,13 @@ final class Server implements ServerInterface
     /**
      * Constructor.
      *
-     * @param string $hostname   Internet domain name or bracketed IP address
-     *                           of server
-     * @param string $port       TCP port number
-     * @param string $flags      Optional flags
+     * @param string  $hostname   Internet domain name or bracketed IP address
+     *                            of server
+     * @param string  $port       TCP port number
+     * @param string  $flags      Optional flags
      * @param mixed[] $parameters Connection parameters
-     * @param int    $options    Connection options
-     * @param int    $retries    Retries number
+     * @param int     $options    Connection options
+     * @param int     $retries    Retries number
      */
     public function __construct(
         string $hostname,

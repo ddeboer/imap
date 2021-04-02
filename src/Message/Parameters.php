@@ -33,7 +33,7 @@ class Parameters extends \ArrayIterator
     }
 
     /**
-     * @return int|string|\stdClass[]|null
+     * @return null|int|\stdClass[]|string
      */
     public function get(string $key)
     {

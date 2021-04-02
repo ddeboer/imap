@@ -21,7 +21,7 @@ final class Headers extends Parameters
     /**
      * Get header.
      *
-     * @return int|string|\stdClass[]|null
+     * @return null|int|\stdClass[]|string
      */
     public function get(string $key)
     {
@@ -31,15 +31,16 @@ final class Headers extends Parameters
     /**
      * Parse header.
      *
-     * @param int|string|\stdClass[] $value
+     * @param int|\stdClass[]|string $value
      *
-     * @return int|string|\stdClass[]
+     * @return int|\stdClass[]|string
      */
     private function parseHeader(string $key, $value)
     {
         switch ($key) {
             case 'msgno':
-                assert(is_string($value));
+                \assert(\is_string($value));
+
                 return (int) $value;
             case 'from':
             case 'to':
@@ -48,7 +49,7 @@ final class Headers extends Parameters
             case 'reply_to':
             case 'sender':
             case 'return_path':
-                assert(is_array($value));
+                \assert(\is_array($value));
                 /** @var \stdClass $address */
                 foreach ($value as $address) {
                     if (isset($address->mailbox)) {
@@ -60,7 +61,8 @@ final class Headers extends Parameters
                 return $value;
             case 'date':
             case 'subject':
-                assert(is_string($value));
+                \assert(\is_string($value));
+
                 return $this->decode($value);
         }
 

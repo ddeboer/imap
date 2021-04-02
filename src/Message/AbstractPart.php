@@ -51,17 +51,17 @@ abstract class AbstractPart implements PartInterface
     private int $messageNumber;
     private \stdClass $structure;
     private Parameters $parameters;
-    private ?string $type = null;
-    private ?string $subtype = null;
-    private ?string $encoding = null;
+    private ?string $type        = null;
+    private ?string $subtype     = null;
+    private ?string $encoding    = null;
     private ?string $disposition = null;
     private ?string $description = null;
     /** @var null|int|string */
-    private $bytes = null;
-    private ?string $lines = null;
-    private ?string $content = null;
+    private $bytes;
+    private ?string $lines          = null;
+    private ?string $content        = null;
     private ?string $decodedContent = null;
-    private int $key = 0;
+    private int $key                = 0;
 
     /**
      * Constructor.
@@ -143,9 +143,9 @@ abstract class AbstractPart implements PartInterface
         $this->lazyParseStructure();
 
         $charset = $this->parameters->get('charset');
-        assert(null === $charset || is_string($charset));
+        \assert(null === $charset || \is_string($charset));
 
-        return $charset !== '' ? $charset : null;
+        return '' !== $charset ? $charset : null;
     }
 
     /**

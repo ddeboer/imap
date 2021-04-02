@@ -48,7 +48,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Bulk Set Flag for Messages.
      *
-     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param string                                        $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
      * @param array<int, int|string>|MessageIterator|string $numbers Message numbers
      */
     public function setFlag(string $flag, $numbers): bool;
@@ -56,7 +56,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Bulk Clear Flag for Messages.
      *
-     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
+     * @param string                                        $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
      * @param array<int, int|string>|MessageIterator|string $numbers Message numbers
      */
     public function clearFlag(string $flag, $numbers): bool;
@@ -105,7 +105,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * Bulk move messages.
      *
      * @param array<int, int|string>|MessageIterator|string $numbers Message numbers
-     * @param MailboxInterface             $mailbox Destination Mailbox to move the messages to
+     * @param MailboxInterface                              $mailbox Destination Mailbox to move the messages to
      *
      * @throws \Ddeboer\Imap\Exception\MessageMoveException
      */
@@ -115,7 +115,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * Bulk copy messages.
      *
      * @param array<int, int|string>|MessageIterator|string $numbers Message numbers
-     * @param MailboxInterface             $mailbox Destination Mailbox to copy the messages to
+     * @param MailboxInterface                              $mailbox Destination Mailbox to copy the messages to
      *
      * @throws \Ddeboer\Imap\Exception\MessageCopyException
      */

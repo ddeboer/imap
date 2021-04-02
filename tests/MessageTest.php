@@ -120,9 +120,9 @@ final class MessageTest extends AbstractTest
     {
         $refClass   = new ReflectionClass(Transcoder::class);
         $properties = $refClass->getConstants();
-        $aliases = $properties['CHARSET_ALIASES'];
+        $aliases    = $properties['CHARSET_ALIASES'];
 
-        self::assertIsArray($aliases);
+        static::assertIsArray($aliases);
 
         $keys        = \array_map('strval', \array_keys($aliases));
         $loweredKeys = \array_map(static function (string $charset): string {
@@ -168,7 +168,7 @@ final class MessageTest extends AbstractTest
     }
 
     /**
-     * @return array<int, array<int, string|null>>
+     * @return array<int, array<int, null|string>>
      */
     public function provideCharsets(): array
     {
