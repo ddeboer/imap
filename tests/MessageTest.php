@@ -9,6 +9,7 @@ use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\OutOfBoundsException;
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
+use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Message;
 use Ddeboer\Imap\Message\EmailAddress;
 use Ddeboer\Imap\Message\PartInterface;
@@ -33,25 +34,14 @@ use ReflectionClass;
  */
 final class MessageTest extends AbstractTest
 {
-    /**
-     * @var \Ddeboer\Imap\MailboxInterface
-     */
-    private $mailbox;
-
-    /**
-     * @var string[]
-     */
-    private static $encodings = [
+    private const ENCODINGS = [
         Mime\Mime::ENCODING_7BIT,
         Mime\Mime::ENCODING_8BIT,
         Mime\Mime::ENCODING_QUOTEDPRINTABLE,
         Mime\Mime::ENCODING_BASE64,
     ];
 
-    /**
-     * @var array<string, string>
-     */
-    private static $charsets = [
+    private const CHARSETS = [
         'ASCII'        => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
         'GB18030'      => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
         'ISO-8859-6'   => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
@@ -62,13 +52,12 @@ final class MessageTest extends AbstractTest
         'Windows-1252' => 'ƒŠŒŽšœžŸªºÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
     ];
 
-    /**
-     * @var array
-     */
-    private static $iconvOnlyCharsets = [
+    private const ICONV_ONLY_CHARSETS = [
         'macintosh'    => '†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø¿¡¬√ƒ≈«»…ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔ',
         'Windows-1250' => 'ŚŤŹśťźˇ˘ŁĄŞŻ˛łąşĽ˝ľż',
     ];
+
+    private MailboxInterface $mailbox;
 
     protected function setUp(): void
     {
@@ -131,11 +120,12 @@ final class MessageTest extends AbstractTest
     {
         $refClass   = new ReflectionClass(Transcoder::class);
         $properties = $refClass->getConstants();
-        /** @var array $aliases */
         $aliases = $properties['CHARSET_ALIASES'];
 
+        self::assertIsArray($aliases);
+
         $keys        = \array_map('strval', \array_keys($aliases));
-        $loweredKeys = \array_map(static function ($charset): string {
+        $loweredKeys = \array_map(static function (string $charset): string {
             return \strtolower($charset);
         }, $keys);
 
@@ -174,17 +164,20 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         static::assertSame($subject, $message->getSubject());
-        static::assertSame($charList, \rtrim($message->getBodyText() ?: ''));
+        static::assertSame($charList, \rtrim((string) $message->getBodyText()));
     }
 
+    /**
+     * @return array<int, array<int, string|null>>
+     */
     public function provideCharsets(): array
     {
         $provider = [];
 
         // This first data set mimics "us-ascii" imap server default settings
-        $provider[] = [null, self::$charsets['ASCII'], null];
-        foreach (self::$charsets as $charset => $charList) {
-            foreach (self::$encodings as $encoding) {
+        $provider[] = [null, self::CHARSETS['ASCII'], null];
+        foreach (self::CHARSETS as $charset => $charList) {
+            foreach (self::ENCODINGS as $encoding) {
                 $provider[] = [$charset, $charList, $encoding];
             }
         }
@@ -209,7 +202,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame($text, \rtrim($message->getBodyText() ?: ''));
+        static::assertSame($text, \rtrim((string) $message->getBodyText()));
     }
 
     public function testMicrosoftCharsetAlias(): void
@@ -229,7 +222,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame($text, \rtrim($message->getBodyText() ?: ''));
+        static::assertSame($text, \rtrim((string) $message->getBodyText()));
     }
 
     public function testUnsupportedCharset(): void
@@ -257,7 +250,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('Hi!', \rtrim($message->getBodyText() ?: ''));
+        static::assertSame('Hi!', \rtrim((string) $message->getBodyText()));
     }
 
     public function testSpecialCharsetOnHeaders(): void
@@ -294,14 +287,17 @@ final class MessageTest extends AbstractTest
         $message = $this->mailbox->getMessage(1);
 
         static::assertSame($subject, $message->getSubject());
-        static::assertSame($charList, \rtrim($message->getBodyText() ?: ''));
+        static::assertSame($charList, \rtrim((string) $message->getBodyText()));
     }
 
+    /**
+     * @return array<int, string[]>
+     */
     public function provideIconvCharsets(): array
     {
         $provider = [];
-        foreach (self::$iconvOnlyCharsets as $charset => $charList) {
-            foreach (self::$encodings as $encoding) {
+        foreach (self::ICONV_ONLY_CHARSETS as $charset => $charList) {
+            foreach (self::ENCODINGS as $encoding) {
                 $provider[] = [$charset, $charList, $encoding];
             }
         }
@@ -457,8 +453,8 @@ final class MessageTest extends AbstractTest
         static::assertCount(1, $message->getAttachments());
         $attachment = $message->getAttachments()[0];
 
-        static::assertSame('application', \strtolower($attachment->getType() ?: ''));
-        static::assertSame('vnd.ms-excel', \strtolower($attachment->getSubtype() ?: ''));
+        static::assertSame('application', \strtolower((string) $attachment->getType()));
+        static::assertSame('vnd.ms-excel', \strtolower((string) $attachment->getSubtype()));
         static::assertSame(
             'Prostřeno_2014_poslední volné termíny.xls',
             $attachment->getFilename()
@@ -468,6 +464,9 @@ final class MessageTest extends AbstractTest
         static::assertFalse($message->isSeen());
     }
 
+    /**
+     * @return array<int, array<int, string>>
+     */
     public function getAttachmentFixture(): array
     {
         return [
@@ -543,6 +542,9 @@ final class MessageTest extends AbstractTest
         static::assertCount(1, $message->getTo());
     }
 
+    /**
+     * @return array<int, array<int, string>>
+     */
     public function provideUndisclosedRecipientsCases(): array
     {
         return [
@@ -590,6 +592,8 @@ final class MessageTest extends AbstractTest
 
     /**
      * @see https://gist.github.com/mikesart/b33762363153e2b8c7c7
+     *
+     * @return array<int, string[]>
      */
     public function provideDateCases(): array
     {
@@ -660,7 +664,9 @@ final class MessageTest extends AbstractTest
         static::assertArrayHasKey('recent', $headers);
 
         static::assertSame('Wed, 27 Sep 2017 12:48:51 +0200', $headers['date']);
-        static::assertSame('A_€@{è_Z', $headers['bcc'][0]->personal);
+        $bcc = $headers['bcc'];
+        static::assertIsArray($bcc);
+        static::assertSame('A_€@{è_Z', $bcc[0]->personal);
 
         static::assertFalse($message->isSeen());
     }
@@ -700,7 +706,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('Hi', \rtrim($message->getBodyText() ?: ''));
+        static::assertSame('Hi', \rtrim((string) $message->getBodyText()));
         static::assertNull($message->getBodyHtml());
     }
 
@@ -710,7 +716,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('<html><body>Hi</body></html>', \rtrim($message->getBodyHtml() ?: ''));
+        static::assertSame('<html><body>Hi</body></html>', \rtrim((string) $message->getBodyHtml()));
         static::assertNull($message->getBodyText());
     }
 
@@ -794,7 +800,7 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        static::assertSame('Hi', \rtrim($message->getBodyText() ?: ''));
+        static::assertSame('Hi', \rtrim((string) $message->getBodyText()));
     }
 
     public function testMultipartMessageWithoutCharset(): void
@@ -872,7 +878,7 @@ final class MessageTest extends AbstractTest
     public function testAttachmentMustNotBeCharsetDecoded(): void
     {
         $parts = [];
-        foreach (self::$charsets as $charset => $charList) {
+        foreach (self::CHARSETS as $charset => $charList) {
             $part = new Mime\Part(\mb_convert_encoding($charList, $charset, 'UTF-8'));
             $part->setType('text/xml');
             $part->setEncoding(Mime\Mime::ENCODING_BASE64);
@@ -903,13 +909,13 @@ final class MessageTest extends AbstractTest
         $this->resetAttachmentCharset($message);
         static::assertTrue($message->hasAttachments());
         $attachments = $message->getAttachments();
-        static::assertCount(\count(self::$charsets), $attachments);
+        static::assertCount(\count(self::CHARSETS), $attachments);
 
         foreach ($attachments as $attachment) {
             $filename = $attachment->getFilename();
             static::assertNotNull($filename);
             $charset = \str_replace('.xml', '', $filename);
-            static::assertSame(\mb_convert_encoding(self::$charsets[$charset], $charset, 'UTF-8'), $attachment->getDecodedContent());
+            static::assertSame(\mb_convert_encoding(self::CHARSETS[$charset], $charset, 'UTF-8'), $attachment->getDecodedContent());
         }
     }
 
@@ -994,6 +1000,9 @@ final class MessageTest extends AbstractTest
         static::assertSame('=?UTF-8?B?nnDusSNdG92w6Fuw61fMjAxOF8wMy0xMzMyNTMzMTkzLnBkZg==?=', $message->getSubject());
     }
 
+    /**
+     * @param MessageInterface<PartInterface> $message
+     */
     private function resetAttachmentCharset(MessageInterface $message): void
     {
         // Mimic GMAIL behaviour that correctly doesn't report charset

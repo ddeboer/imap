@@ -17,10 +17,7 @@ abstract class AbstractTest extends TestCase
 
     public const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
 
-    /**
-     * @var null|string
-     */
-    protected $mailboxName;
+    protected ?string $mailboxName;
 
     final protected function getConnection(): ConnectionInterface
     {
@@ -34,9 +31,9 @@ abstract class AbstractTest extends TestCase
 
     final protected function createConnection(): ConnectionInterface
     {
-        $server = new Server(\getenv('IMAP_SERVER_NAME') ?: '', \getenv('IMAP_SERVER_PORT') ?: '', self::IMAP_FLAGS);
+        $server = new Server((string) \getenv('IMAP_SERVER_NAME'), (string) \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS);
 
-        return $server->authenticate(\getenv('IMAP_USERNAME') ?: '', \getenv('IMAP_PASSWORD') ?: '');
+        return $server->authenticate((string) \getenv('IMAP_USERNAME'), (string) \getenv('IMAP_PASSWORD'));
     }
 
     final protected function createMailbox(ConnectionInterface $connection = null): MailboxInterface
@@ -76,7 +73,7 @@ abstract class AbstractTest extends TestCase
         $messageString = $message->toString();
         if (null !== $overwriteCharset) {
             $messageString = \preg_replace(
-                \sprintf('/charset="%s"/', \preg_quote($charset ?: '')),
+                \sprintf('/charset="%s"/', \preg_quote((string) $charset)),
                 \sprintf('charset="%s"', $overwriteCharset),
                 $messageString
             );
