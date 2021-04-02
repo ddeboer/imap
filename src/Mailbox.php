@@ -288,7 +288,7 @@ final class Mailbox implements MailboxInterface
      */
     public function move($numbers, MailboxInterface $mailbox): void
     {
-        if (!\imap_mail_move($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
+        if (!\imap_mail_copy($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID | \CP_MOVE)) {
             throw new MessageMoveException(\sprintf('Messages cannot be moved to "%s"', $mailbox->getName()));
         }
     }
