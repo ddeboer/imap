@@ -7,31 +7,9 @@
 
 A PHP IMAP library to read and process e-mails over IMAP protocol, built with robust Object-Oriented architecture.
 
-This library requires PHP >= 7.3 with [IMAP](https://www.php.net/manual/en/book.imap.php),
+This library requires PHP >= 7.4 with [IMAP](https://www.php.net/manual/en/book.imap.php),
 [iconv](https://www.php.net/manual/en/book.iconv.php) and
 [Multibyte String](https://www.php.net/manual/en/book.mbstring.php) extensions installed.
-
-## Table of Contents
-
-1. [Feature Requests](#feature-requests)
-1. [Installation](#installation)
-1. [Usage](#usage)
-    1. [Connect and Authenticate](#connect-and-authenticate)
-    1. [Mailboxes](#mailboxes)
-    1. [Messages](#messages)
-        1. [Searching for Messages](#searching-for-messages)
-        1. [Unknown search criterion: OR](#unknown-search-criterion-or)
-        1. [Message Properties and Operations](#message-properties-and-operations)
-    1. [Message Attachments](#message-attachments)
-    1. [Embedded Messages](#embedded-messages)
-    1. [Timeouts](#timeouts)
-1. [Mock the library](#mock-the-library)
-1. [Running the Tests](#running-the-tests)
-    1. [Running Tests using Docker](#running-tests-using-docker)
-
-## Feature Requests
-
-[![Feature Requests](https://feathub.com/ddeboer/imap?format=svg)](https://feathub.com/ddeboer/imap)
 
 ## Installation
 
