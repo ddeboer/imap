@@ -18,20 +18,9 @@ use Ddeboer\Imap\Search\LogicalOperator\All;
  */
 final class Mailbox implements MailboxInterface
 {
-    /**
-     * @var ImapResourceInterface
-     */
-    private $resource;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var \stdClass
-     */
-    private $info;
+    private ImapResourceInterface $resource;
+    private string $name;
+    private \stdClass $info;
 
     /**
      * Constructor.
@@ -183,9 +172,6 @@ final class Mailbox implements MailboxInterface
         return new Message($this->resource, $number);
     }
 
-    /**
-     * Get messages in this mailbox.
-     */
     public function getIterator(): MessageIteratorInterface
     {
         return $this->getMessages();

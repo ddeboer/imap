@@ -1,6 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to function is_resource\\(\\) with resource will always evaluate to true\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and true will always evaluate to false\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
 			message: "#^Parameter \\#3 \\$reverse of function imap_sort expects int, bool\\|int given\\.$#"
 			count: 1
 			path: src/Mailbox.php
