@@ -20,7 +20,7 @@ wait-for-it:
 .PHONY: start-imap-server
 start-imap-server: wait-for-it
 	docker run --name=ddeboer_imap_server --detach --rm --publish 10993:993 --env MAILNAME=test.test --env MAIL_ADDRESS=test@test.test --env MAIL_PASS=p4ssword antespi/docker-imap-devel:latest
-	./wait-for-it 10993
+	./wait-for-it localhost:10993
 
 .PHONY: stop-imap-server
 stop-imap-server:
