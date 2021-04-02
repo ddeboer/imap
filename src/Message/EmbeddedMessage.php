@@ -6,20 +6,9 @@ namespace Ddeboer\Imap\Message;
 
 final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageInterface
 {
-    /**
-     * @var null|Headers
-     */
-    private $headers;
-
-    /**
-     * @var null|string
-     */
-    private $rawHeaders;
-
-    /**
-     * @var null|string
-     */
-    private $rawMessage;
+    private ?Headers $headers = null;
+    private ?string $rawHeaders = null;
+    private ?string $rawMessage = null;
 
     /**
      * Get message headers.

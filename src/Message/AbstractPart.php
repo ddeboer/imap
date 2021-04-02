@@ -14,95 +14,7 @@ use Ddeboer\Imap\Message;
  */
 abstract class AbstractPart implements PartInterface
 {
-    /**
-     * @var ImapResourceInterface
-     */
-    protected $resource;
-
-    /**
-     * @var bool
-     */
-    private $structureParsed = false;
-
-    /**
-     * @var array
-     */
-    private $parts = [];
-
-    /**
-     * @var string
-     */
-    private $partNumber;
-
-    /**
-     * @var int
-     */
-    private $messageNumber;
-
-    /**
-     * @var \stdClass
-     */
-    private $structure;
-
-    /**
-     * @var Parameters
-     */
-    private $parameters;
-
-    /**
-     * @var null|string
-     */
-    private $type;
-
-    /**
-     * @var null|string
-     */
-    private $subtype;
-
-    /**
-     * @var null|string
-     */
-    private $encoding;
-
-    /**
-     * @var null|string
-     */
-    private $disposition;
-
-    /**
-     * @var null|string
-     */
-    private $description;
-
-    /**
-     * @var null|string
-     */
-    private $bytes;
-
-    /**
-     * @var null|string
-     */
-    private $lines;
-
-    /**
-     * @var null|string
-     */
-    private $content;
-
-    /**
-     * @var null|string
-     */
-    private $decodedContent;
-
-    /**
-     * @var int
-     */
-    private $key = 0;
-
-    /**
-     * @var array
-     */
-    private static $typesMap = [
+    private const TYPES_MAP = [
         \TYPETEXT        => self::TYPE_TEXT,
         \TYPEMULTIPART   => self::TYPE_MULTIPART,
         \TYPEMESSAGE     => self::TYPE_MESSAGE,
@@ -114,10 +26,7 @@ abstract class AbstractPart implements PartInterface
         \TYPEOTHER       => self::TYPE_OTHER,
     ];
 
-    /**
-     * @var array
-     */
-    private static $encodingsMap = [
+    private const ENCODINGS_MAP = [
         \ENC7BIT            => self::ENCODING_7BIT,
         \ENC8BIT            => self::ENCODING_8BIT,
         \ENCBINARY          => self::ENCODING_BINARY,
@@ -125,15 +34,34 @@ abstract class AbstractPart implements PartInterface
         \ENCQUOTEDPRINTABLE => self::ENCODING_QUOTED_PRINTABLE,
     ];
 
-    /**
-     * @var array
-     */
-    private static $attachmentKeys = [
+    private const ATTACHMENT_KEYS = [
         'name'      => true,
         'filename'  => true,
         'name*'     => true,
         'filename*' => true,
     ];
+
+    protected ImapResourceInterface $resource;
+    private bool $structureParsed = false;
+    /**
+     * @var AbstractPart[]
+     */
+    private array $parts = [];
+    private string $partNumber;
+    private int $messageNumber;
+    private \stdClass $structure;
+    private Parameters $parameters;
+    private ?string $type = null;
+    private ?string $subtype = null;
+    private ?string $encoding = null;
+    private ?string $disposition = null;
+    private ?string $description = null;
+    /** @var null|int|string */
+    private $bytes = null;
+    private ?string $lines = null;
+    private ?string $content = null;
+    private ?string $decodedContent = null;
+    private int $key = 0;
 
     /**
      * Constructor.
@@ -214,7 +142,10 @@ abstract class AbstractPart implements PartInterface
     {
         $this->lazyParseStructure();
 
-        return $this->parameters->get('charset') ?: null;
+        $charset = $this->parameters->get('charset');
+        assert(null === $charset || is_string($charset));
+
+        return $charset !== '' ? $charset : null;
     }
 
     /**
@@ -469,10 +400,10 @@ abstract class AbstractPart implements PartInterface
 
         $this->lazyLoadStructure();
 
-        $this->type = self::$typesMap[$this->structure->type] ?? self::TYPE_UNKNOWN;
+        $this->type = self::TYPES_MAP[$this->structure->type] ?? self::TYPE_UNKNOWN;
 
         // In our context, \ENCOTHER is as useful as an unknown encoding
-        $this->encoding = self::$encodingsMap[$this->structure->encoding] ?? self::ENCODING_UNKNOWN;
+        $this->encoding = self::ENCODINGS_MAP[$this->structure->encoding] ?? self::ENCODING_UNKNOWN;
         if (isset($this->structure->subtype)) {
             $this->subtype = $this->structure->subtype;
         }
@@ -527,7 +458,7 @@ abstract class AbstractPart implements PartInterface
      */
     private static function isAttachment(\stdClass $part): bool
     {
-        if (isset(self::$typesMap[$part->type]) && self::TYPE_MULTIPART === self::$typesMap[$part->type]) {
+        if (isset(self::TYPES_MAP[$part->type]) && self::TYPE_MULTIPART === self::TYPES_MAP[$part->type]) {
             return false;
         }
 
@@ -549,7 +480,7 @@ abstract class AbstractPart implements PartInterface
         // Attachment without Content-Disposition header
         if ($part->ifparameters) {
             foreach ($part->parameters as $parameter) {
-                if (isset(self::$attachmentKeys[\strtolower($parameter->attribute)])) {
+                if (isset(self::ATTACHMENT_KEYS[\strtolower($parameter->attribute)])) {
                     return true;
                 }
             }

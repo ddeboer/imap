@@ -17,25 +17,16 @@ use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
  */
 final class Connection implements ConnectionInterface
 {
+    private ImapResourceInterface $resource;
+    private string $server;
     /**
-     * @var ImapResourceInterface
+     * @var null|MailboxInterface[]
      */
-    private $resource;
-
+    private ?array $mailboxes = null;
     /**
-     * @var string
+     * @var null|array<int|string, \stdClass>
      */
-    private $server;
-
-    /**
-     * @var null|array
-     */
-    private $mailboxes;
-
-    /**
-     * @var null|array
-     */
-    private $mailboxNames;
+    private ?array $mailboxNames = null;
 
     /**
      * Constructor.
@@ -48,25 +39,16 @@ final class Connection implements ConnectionInterface
         $this->server   = $server;
     }
 
-    /**
-     * Get IMAP resource.
-     */
     public function getResource(): ImapResourceInterface
     {
         return $this->resource;
     }
 
-    /**
-     * Delete all messages marked for deletion.
-     */
     public function expunge(): bool
     {
         return \imap_expunge($this->resource->getStream());
     }
 
-    /**
-     * Close connection.
-     */
     public function close(int $flag = 0): bool
     {
         $this->resource->clearLastMailboxUsedCache();
@@ -74,9 +56,6 @@ final class Connection implements ConnectionInterface
         return \imap_close($this->resource->getStream(), $flag);
     }
 
-    /**
-     * Get Mailbox quota.
-     */
     public function getQuota(string $root = 'INBOX'): array
     {
         $errorMessage = null;
@@ -106,16 +85,13 @@ final class Connection implements ConnectionInterface
         return $return;
     }
 
-    /**
-     * Get a list of mailboxes (also known as folders).
-     *
-     * @return MailboxInterface[]
-     */
     public function getMailboxes(): array
     {
         $this->initMailboxNames();
+        assert(null !== $this->mailboxNames);
 
         if (null === $this->mailboxes) {
+
             $this->mailboxes = [];
             foreach ($this->mailboxNames as $mailboxName => $mailboxInfo) {
                 $this->mailboxes[(string) $mailboxName] = $this->getMailbox((string) $mailboxName);
@@ -125,39 +101,24 @@ final class Connection implements ConnectionInterface
         return $this->mailboxes;
     }
 
-    /**
-     * Check that a mailbox with the given name exists.
-     *
-     * @param string $name Mailbox name
-     */
     public function hasMailbox(string $name): bool
     {
         $this->initMailboxNames();
+        assert(null !== $this->mailboxNames);
 
         return isset($this->mailboxNames[$name]);
     }
 
-    /**
-     * Get a mailbox by its name.
-     *
-     * @param string $name Mailbox name
-     *
-     * @throws MailboxDoesNotExistException If mailbox does not exist
-     */
     public function getMailbox(string $name): MailboxInterface
     {
         if (false === $this->hasMailbox($name)) {
             throw new MailboxDoesNotExistException(\sprintf('Mailbox name "%s" does not exist', $name));
         }
+        assert(isset($this->mailboxNames[$name]));
 
         return new Mailbox($this->resource, $name, $this->mailboxNames[$name]);
     }
 
-    /**
-     * Count number of messages not in any mailbox.
-     *
-     * @return int
-     */
     public function count()
     {
         $return = \imap_num_msg($this->resource->getStream());
@@ -169,21 +130,11 @@ final class Connection implements ConnectionInterface
         return $return;
     }
 
-    /**
-     * Check if the connection is still active.
-     *
-     * @throws InvalidResourceException If connection was closed
-     */
     public function ping(): bool
     {
         return \imap_ping($this->resource->getStream());
     }
 
-    /**
-     * Create mailbox.
-     *
-     * @throws CreateMailboxException
-     */
     public function createMailbox(string $name): MailboxInterface
     {
         if (false === \imap_createmailbox($this->resource->getStream(), $this->server . \mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
@@ -196,11 +147,6 @@ final class Connection implements ConnectionInterface
         return $this->getMailbox($name);
     }
 
-    /**
-     * Create mailbox.
-     *
-     * @throws DeleteMailboxException
-     */
     public function deleteMailbox(MailboxInterface $mailbox): void
     {
         if (false === \imap_deletemailbox($this->resource->getStream(), $mailbox->getFullEncodedName())) {
@@ -211,9 +157,6 @@ final class Connection implements ConnectionInterface
         $this->resource->clearLastMailboxUsedCache();
     }
 
-    /**
-     * Get mailbox names.
-     */
     private function initMailboxNames(): void
     {
         if (null !== $this->mailboxNames) {
@@ -227,8 +170,9 @@ final class Connection implements ConnectionInterface
         }
 
         foreach ($mailboxesInfo as $mailboxInfo) {
-            $name                      = \mb_convert_encoding(\str_replace($this->server, '', $mailboxInfo->name), 'UTF-8', 'UTF7-IMAP');
+            $name = \mb_convert_encoding(\str_replace($this->server, '', $mailboxInfo->name), 'UTF-8', 'UTF7-IMAP');
             \assert(\is_string($name));
+
             $this->mailboxNames[$name] = $mailboxInfo;
         }
     }

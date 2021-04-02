@@ -28,6 +28,8 @@ interface AttachmentInterface extends PartInterface
 
     /**
      * Return embedded message.
+     *
+     * @return EmbeddedMessageInterface<PartInterface>
      */
     public function getEmbeddedMessage(): EmbeddedMessageInterface;
 }

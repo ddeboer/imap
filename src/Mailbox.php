@@ -47,17 +47,11 @@ final class Mailbox implements MailboxInterface
         $this->info     = $info;
     }
 
-    /**
-     * Get mailbox decoded name.
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Get mailbox encoded path.
-     */
     public function getEncodedName(): string
     {
         /** @var string $name */
@@ -66,35 +60,21 @@ final class Mailbox implements MailboxInterface
         return (string) \preg_replace('/^{.+}/', '', $name);
     }
 
-    /**
-     * Get mailbox encoded full name.
-     */
     public function getFullEncodedName(): string
     {
         return $this->info->name;
     }
 
-    /**
-     * Get mailbox attributes.
-     */
     public function getAttributes(): int
     {
         return $this->info->attributes;
     }
 
-    /**
-     * Get mailbox delimiter.
-     */
     public function getDelimiter(): string
     {
         return $this->info->delimiter;
     }
 
-    /**
-     * Get number of messages in this mailbox.
-     *
-     * @return int
-     */
     public function count()
     {
         $return = \imap_num_msg($this->resource->getStream());
@@ -106,9 +86,6 @@ final class Mailbox implements MailboxInterface
         return $return;
     }
 
-    /**
-     * Get Mailbox status.
-     */
     public function getStatus(int $flags = null): \stdClass
     {
         $return = \imap_status($this->resource->getStream(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
@@ -120,33 +97,16 @@ final class Mailbox implements MailboxInterface
         return $return;
     }
 
-    /**
-     * Bulk Set Flag for Messages.
-     *
-     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|MessageIterator|string $numbers Message numbers
-     */
     public function setFlag(string $flag, $numbers): bool
     {
         return \imap_setflag_full($this->resource->getStream(), $this->prepareMessageIds($numbers), $flag, \ST_UID);
     }
 
-    /**
-     * Bulk Clear Flag for Messages.
-     *
-     * @param string                       $flag    \Seen, \Answered, \Flagged, \Deleted, and \Draft
-     * @param array|MessageIterator|string $numbers Message numbers
-     */
     public function clearFlag(string $flag, $numbers): bool
     {
         return \imap_clearflag_full($this->resource->getStream(), $this->prepareMessageIds($numbers), $flag, \ST_UID);
     }
 
-    /**
-     * Get message ids.
-     *
-     * @param ConditionInterface $search Search expression (optional)
-     */
     public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false, string $charset = null): MessageIteratorInterface
     {
         if (null === $search) {
@@ -199,11 +159,6 @@ final class Mailbox implements MailboxInterface
         return new MessageIterator($this->resource, $messageNumbers);
     }
 
-    /**
-     * Get message iterator for a sequence.
-     *
-     * @param string $sequence Message numbers
-     */
     public function getMessageSequence(string $sequence): MessageIteratorInterface
     {
         \imap_errors();
@@ -223,11 +178,6 @@ final class Mailbox implements MailboxInterface
         return new MessageIterator($this->resource, $messageNumbers);
     }
 
-    /**
-     * Get a message by message number.
-     *
-     * @param int $number Message number
-     */
     public function getMessage(int $number): MessageInterface
     {
         return new Message($this->resource, $number);
@@ -241,9 +191,6 @@ final class Mailbox implements MailboxInterface
         return $this->getMessages();
     }
 
-    /**
-     * Add a message to the mailbox.
-     */
     public function addMessage(string $message, string $options = null, DateTimeInterface $internalDate = null): bool
     {
         $arguments = [
@@ -261,16 +208,13 @@ final class Mailbox implements MailboxInterface
         return \imap_append(...$arguments);
     }
 
-    /**
-     * Returns a tree of threaded message for the current Mailbox.
-     */
     public function getThread(): array
     {
         \set_error_handler(static function (): bool {
             return true;
         });
 
-        /** @var array|false $tree */
+        /** @var array<string, int>|false $tree */
         $tree = \imap_thread($this->resource->getStream(), \SE_UID);
 
         \restore_error_handler();
@@ -278,14 +222,6 @@ final class Mailbox implements MailboxInterface
         return false !== $tree ? $tree : [];
     }
 
-    /**
-     * Bulk move messages.
-     *
-     * @param array|MessageIterator|string $numbers Message numbers
-     * @param MailboxInterface             $mailbox Destination Mailbox to move the messages to
-     *
-     * @throws \Ddeboer\Imap\Exception\MessageMoveException
-     */
     public function move($numbers, MailboxInterface $mailbox): void
     {
         if (!\imap_mail_copy($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID | \CP_MOVE)) {
@@ -293,14 +229,6 @@ final class Mailbox implements MailboxInterface
         }
     }
 
-    /**
-     * Bulk copy messages.
-     *
-     * @param array|MessageIterator|string $numbers Message numbers
-     * @param MailboxInterface             $mailbox Destination Mailbox to copy the messages to
-     *
-     * @throws \Ddeboer\Imap\Exception\MessageCopyException
-     */
     public function copy($numbers, MailboxInterface $mailbox): void
     {
         if (!\imap_mail_copy($this->resource->getStream(), $this->prepareMessageIds($numbers), $mailbox->getEncodedName(), \CP_UID)) {
@@ -311,7 +239,7 @@ final class Mailbox implements MailboxInterface
     /**
      * Prepare message ids for the use with bulk functions.
      *
-     * @param array|MessageIterator|string $messageIds Message numbers
+     * @param array<int, int|string>|MessageIterator|string $messageIds Message numbers
      */
     private function prepareMessageIds($messageIds): string
     {

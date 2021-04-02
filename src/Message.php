@@ -18,35 +18,12 @@ use Ddeboer\Imap\Exception\MessageUndeleteException;
  */
 final class Message extends Message\AbstractMessage implements MessageInterface
 {
-    /**
-     * @var bool
-     */
-    private $messageNumberVerified = false;
-
-    /**
-     * @var int
-     */
-    private $imapMsgNo = 0;
-
-    /**
-     * @var bool
-     */
-    private $structureLoaded = false;
-
-    /**
-     * @var null|Message\Headers
-     */
-    private $headers;
-
-    /**
-     * @var null|string
-     */
-    private $rawHeaders;
-
-    /**
-     * @var null|string
-     */
-    private $rawMessage;
+    private bool $messageNumberVerified = false;
+    private int $imapMsgNo = 0;
+    private bool $structureLoaded = false;
+    private ?Message\Headers $headers = null;
+    private ?string $rawHeaders = null;
+    private ?string $rawMessage = null;
 
     /**
      * Constructor.
@@ -203,7 +180,10 @@ final class Message extends Message\AbstractMessage implements MessageInterface
      */
     public function isRecent(): ?string
     {
-        return $this->getHeaders()->get('recent');
+        $recent = $this->getHeaders()->get('recent');
+        assert(null === $recent || is_string($recent));
+
+        return $recent;
     }
 
     /**

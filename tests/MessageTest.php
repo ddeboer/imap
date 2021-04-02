@@ -130,9 +130,9 @@ final class MessageTest extends AbstractTest
     public function testLowercaseCharsetAliases(): void
     {
         $refClass   = new ReflectionClass(Transcoder::class);
-        $properties = $refClass->getStaticProperties();
+        $properties = $refClass->getConstants();
         /** @var array $aliases */
-        $aliases = $properties['charsetAliases'];
+        $aliases = $properties['CHARSET_ALIASES'];
 
         $keys        = \array_map('strval', \array_keys($aliases));
         $loweredKeys = \array_map(static function ($charset): string {
