@@ -51,12 +51,17 @@ parameters:
 			path: src/MessageIterator.php
 
 		-
+			message: "#^Parameter \\#1 \\$array of method ArrayIterator\\<int,Ddeboer\\\\Imap\\\\MessageInterface\\>\\:\\:__construct\\(\\) expects array\\<int, Ddeboer\\\\Imap\\\\MessageInterface\\>, array\\<int\\> given\\.$#"
+			count: 1
+			path: src/MessageIterator.php
+
+		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Parameter \\#1 \\$resource of class Ddeboer\\\\Imap\\\\ImapResource constructor expects resource, string given\\.$#"
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertIsInt\\(\\) with int will always evaluate to true\\.$#"
 			count: 1
 			path: tests/ConnectionTest.php
 
@@ -66,7 +71,7 @@ parameters:
 			path: tests/ConnectionTest.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertIsInt\\(\\) with int will always evaluate to true\\.$#"
+			message: "#^Parameter \\#1 \\$resource of class Ddeboer\\\\Imap\\\\ImapResource constructor expects resource, string given\\.$#"
 			count: 1
 			path: tests/ConnectionTest.php
 
