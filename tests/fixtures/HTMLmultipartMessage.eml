@@ -1,0 +1,160 @@
+Return-Path: <anonymSender@me.com>
+Received: from ikarus.efm.de (LHLO ikarus.efm.de) (IP) by
+ hera.efm.de with LMTP; Sun, 26 Jan 2020 14:21:59 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by ikarus.efm.de (Postfix) with ESMTP id 5B36B29C13BD
+	for <anonymReceiver@domain.com>; Sun, 26 Jan 2020 14:21:59 +0100 (CET)
+Authentication-Results: ikarus.efm.de (amavisd-new); dkim=pass (2048-bit key)
+	header.d=me.com
+Received: from ikarus.efm.de ([127.0.0.1])
+	by localhost (ikarus.efm.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 1cNwuNZDLIce for <anonymReceiver@domain.com>;
+	Sun, 26 Jan 2020 14:21:59 +0100 (CET)
+Received: from dgjgj.me.com (dgjgj.me.com [IP])
+	by ikarus.efm.de (Postfix) with ESMTPS id 13AC229C1535
+	for <anonymReceiver@domain.com>; Sun, 26 Jan 2020 14:21:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+	t=1580044907; bh=6knjSDbvcCkbkzBHBb8zRWLBlbRIdJSsu7rA/6wwofw=;
+	h=From:Content-Type:Subject:Date:To:Message-Id;
+	b=06Bhaqz5vIU/JMzsVNUrCcCHh2/w4pg8/lg1n6QAs7mrTfDfZ2KEDLUVFwUABNyO4
+	 hTfhf3qQpu92lx78GUVmkvrOihCKtkTe+/KwSXeGKBo/eXNbe//2jYILnBzmdHfQRs
+	 q5kRLwk8gLJUh7oHEYtz4yaaw5G/sx9RtVK1TjMcyziHwPzaw76pCwlfWNCX0ReLMF
+	 kTfz/ZysJNPlzqfpsS4Wd3OdnXj9EvV4MKld0pj6bgVloAUcgGeH73dSVDNSjzpywT
+	 D7P/LVY/dsSMv3vCJNZjS3PEKN+739jVsCb1ppD1moUci0LXJQp+pET8KSG4CxYQ+n
+	 1F3QoGJN08t+w==
+Received: from mtws-mini.fritz.box (ipservice-IP.pools.vodafone-ip.de [IP])
+	by dgjgj.me.com (Postfix) with ESMTPSA id 14524AC0794;
+	Sun, 26 Jan 2020 13:21:45 +0000 (UTC)
+From: Anonym <anonymSender@me.com>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_B032319E-0F5A-4C17-A479-74974FE57485"
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Betreff
+Date: Sun, 26 Jan 2020 14:21:43 +0100
+References: <20200126130750.CAE3312C1D6B@hera.efm.de>
+To: <anonymReceiver@dmoain.com>,
+ anonymReceiver@domain.com
+In-Reply-To: <20200126130750.CAE3312C1D6B@hera.efm.de>
+Message-Id: <11603C61-17CB-49F7-A368-C7FFB1DFD868@me.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-01-26_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-2001260117
+X-Spam-Bar: ------
+X-Spam-Result: default: False [-6.90 / 15.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_FROM(0.00)[me.com];
+	 MV_CASE(0.50)[];
+	 R_SPF_ALLOW(-0.20)[IP];
+	 DKIM_TRACE(0.00)[me.com:+];
+	 RCPT_COUNT_TWO(0.00)[2];
+	 DMARC_POLICY_ALLOW(-0.50)[me.com,quarantine];
+	 RCVD_IN_DNSWL_LOW(-0.10)[17.58.38.50:from];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+,1:+,2:+,3:~,4:~,5:~,6:~,7:~,8:~,9:~];
+	 FREEMAIL_ENVFROM(0.00)[me.com];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ASN(0.00)[asn:714, ipnet:IP, country:US];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[me.com:s=1a1hai];
+	 RECEIVED_SPAMHAUS_PBL(0.00)[IP:received];
+	 FROM_HAS_DN(0.00)[];
+	 PER_USER_BWL(0.00)[];
+	 MIME_GOOD(-0.10)[multipart/alternative,text/plain,multipart/mixed];
+	 HTML_SHORT_LINK_IMG_2(1.00)[];
+	 DWL_DNSWL_LOW(-1.00)[me.com:dkim];
+	 BAYES_HAM_USER(-3.30)[100.00%];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 RWL_MAILSPIKE_POSSIBLE(0.00)[IP:from];
+	 RCVD_COUNT_TWO(0.00)[2];
+	 TO_ALL(0.00)[];
+	 RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Queue-Id: 13AC229C1535
+X-Rspamd-Server: minerva.efm.de
+
+
+--Apple-Mail=_B032319E-0F5A-4C17-A479-74974FE57485
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+Normaler Text Inhalt
+
+Vielen Dank und beste Gr=C3=BC=C3=9Fe
+
+--Apple-Mail=_B032319E-0F5A-4C17-A479-74974FE57485
+Content-Type: multipart/mixed;
+	boundary="Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075"
+
+
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;" =
+class=3D"">First Part HTML Message<div class=3D""><br class=3D""></div></body></html>=
+
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075
+Content-Disposition: inline;
+	filename="File_1.pdf"
+Content-Type: application/pdf;
+	x-unix-mode=0644;
+	name="File_1.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjMKJcTl8uXrp/Og0M...UVPRgo=
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
+line-break: after-white-space;"><head><meta http-equiv=3D"Content-Type" =
+content=3D"text/html; charset=3Dutf-8"></head><div class=3D""></div><div =
+class=3D""><br class=3D""></div><div class=3D"">Second part HTML Message</div></body></html>=
+
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075
+Content-Disposition: inline;
+	filename=File_2.pdf
+Content-Type: application/pdf;
+	x-unix-mode=0644;
+	name="File_2.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjMKJcTl8uXrp/Og0MTGCjQgMClJUVPRgo=
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><body style="word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;"><head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii"></head><div><div id="AppleMailSignature"><div class="ApplePlainTextBody" style="caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none;"><div></div></div></div></div></body></html>
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075
+Content-Disposition: inline;
+	filename=File_3.pdf
+Content-Type: application/pdf;
+	x-unix-mode=0644;
+	name="File_3.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjMKJcTl8uXrp/Og0MyynFupwNzQwCiUlRU9GCg==
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;" class=3D""><div =
+class=3D"">Last Part HTML Message</div></body></html>=
+
+--Apple-Mail=_334EDA4E-613B-4E97-AAE7-7E883C6F7075--
+
+--Apple-Mail=_B032319E-0F5A-4C17-A479-74974FE57485--
