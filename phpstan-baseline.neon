@@ -76,6 +76,21 @@ parameters:
 			path: tests/ConnectionTest.php
 
 		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) with 'date' and \\*NEVER\\* will always evaluate to true\\.$#"
+			count: 1
+			path: tests/MessageTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) with 'from' and Ddeboer\\\\Imap\\\\Message\\\\Headers will always evaluate to false\\.$#"
+			count: 1
+			path: tests/MessageTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) with 'recent' and \\*NEVER\\* will always evaluate to true\\.$#"
+			count: 1
+			path: tests/MessageTest.php
+
+		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Ddeboer\\\\\\\\Imap\\\\\\\\Message\\\\\\\\EmailAddress' and Ddeboer\\\\Imap\\\\Message\\\\EmailAddress will always evaluate to true\\.$#"
 			count: 2
 			path: tests/MessageTest.php
