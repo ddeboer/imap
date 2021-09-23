@@ -11,7 +11,7 @@ csfix: vendor
 
 .PHONY: static-analysis
 static-analysis: vendor
-	vendor/bin/phpstan analyse
+	$(or ${PHP_BIN},php) vendor/bin/phpstan analyse
 
 wait-for-it:
 	wget -O wait-for-it "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh"
