@@ -109,12 +109,12 @@ jobs:
         run: "vendor/bin/phpunit --no-coverage --no-logging"
 
       - name: "Run tests with coverage"
-        if: ${{ matrix.php-version != '8.0' }}
+        if: ${{ matrix.php-version == '8.0' }}
         timeout-minutes: 3
         run: "vendor/bin/phpunit --coverage-clover=coverage.xml"
 
       - name: "Send code coverage report to Codecov.io"
-        if: ${{ matrix.php-version != '8.0' }}
+        if: ${{ matrix.php-version == '8.0' }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
