@@ -32,7 +32,7 @@ final class ImapResource implements ImapResourceInterface
 
     public function getStream()
     {
-        if (false === \is_resource($this->resource) || 'imap' !== \get_resource_type($this->resource)) {
+        if (false === $this->resource || !($this->resource instanceof \IMAP\Connection)) {
             throw new InvalidResourceException('Supplied resource is not a valid imap resource');
         }
 
