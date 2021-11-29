@@ -1,10 +1,10 @@
 includes:
-    - phar://phpstan.phar/conf/config.levelmax.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - phpstan-baseline.neon
 
 parameters:
+    level: max
     tmpDir: tmp/
     paths:
         - src/

@@ -2,7 +2,7 @@ all: csfix static-analysis test
 	@echo "Done."
 
 vendor: composer.json
-	composer update --ignore-platform-reqs
+	composer update
 	touch vendor
 
 .PHONY: csfix
