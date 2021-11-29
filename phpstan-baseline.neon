@@ -6,7 +6,27 @@ parameters:
 			path: src/ImapResource.php
 
 		-
+			message: "#^Class IMAP\\\\Connection not found\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
 			message: "#^If condition is always false\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
+			message: "#^Instanceof between resource and IMAP\\\\Connection will always evaluate to false\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
+			message: "#^Parameter \\$resource of method Ddeboer\\\\Imap\\\\ImapResource\\:\\:__construct\\(\\) has invalid type IMAP\\\\Connection\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
+			message: "#^Property Ddeboer\\\\Imap\\\\ImapResource\\:\\:\\$resource \\(resource\\) does not accept IMAP\\\\Connection\\|resource\\.$#"
 			count: 1
 			path: src/ImapResource.php
 
@@ -166,7 +186,7 @@ parameters:
 			path: tests/ConnectionTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$resource of class Ddeboer\\\\Imap\\\\ImapResource constructor expects resource, string given\\.$#"
+			message: "#^Parameter \\#1 \\$resource of class Ddeboer\\\\Imap\\\\ImapResource constructor expects IMAP\\\\Connection\\|resource, string given\\.$#"
 			count: 1
 			path: tests/ConnectionTest.php
 

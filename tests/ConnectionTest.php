@@ -35,6 +35,9 @@ final class ConnectionTest extends AbstractTest
         $resource->getStream();
     }
 
+    /**
+     * @requires PHP < 8.1
+     */
     public function testCloseConnection(): void
     {
         $connection = $this->createConnection();
@@ -51,6 +54,18 @@ final class ConnectionTest extends AbstractTest
     }
 
     public function testPing(): void
+    {
+        $connection = $this->createConnection();
+
+        static::assertTrue($connection->ping());
+
+        $connection->close();
+    }
+
+    /**
+     * @requires PHP < 8.1
+     */
+    public function testPingUnavailableAfterClose(): void
     {
         $connection = $this->createConnection();
 
