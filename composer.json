@@ -22,19 +22,19 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0.1",
+        "php": "^8.0.1",
         "ext-iconv": "*",
         "ext-imap": "*",
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^v3.1.0",
-        "laminas/laminas-mail": "^2.15.0",
+        "friendsofphp/php-cs-fixer": "^v3.3.2",
+        "laminas/laminas-mail": "^2.15.1",
         "malukenho/mcbumpface": "^1.1.5",
-        "phpstan/phpstan": "^0.12.99",
-        "phpstan/phpstan-phpunit": "^0.12.22",
-        "phpstan/phpstan-strict-rules": "^0.12.11",
-        "phpunit/phpunit": "^9.5.9"
+        "phpstan/phpstan": "^1.2.0",
+        "phpstan/phpstan-phpunit": "^1.0.0",
+        "phpstan/phpstan-strict-rules": "^1.1.0",
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {

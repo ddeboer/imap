@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.4"
+          - "8.0"
 
     steps:
       - name: "Checkout"
@@ -62,8 +62,8 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.4"
           - "8.0"
+          - "8.1"
 
     env:
       IMAP_SERVER_NAME: dovecot.travis.dev
@@ -104,17 +104,17 @@ jobs:
         run: "composer update --no-interaction --no-progress"
 
       - name: "Run tests without coverage"
-        if: ${{ matrix.php-version != '7.4' }}
+        if: ${{ matrix.php-version != '8.0' }}
         timeout-minutes: 3
         run: "vendor/bin/phpunit --no-coverage --no-logging"
 
       - name: "Run tests with coverage"
-        if: ${{ matrix.php-version == '7.4' }}
+        if: ${{ matrix.php-version == '8.0' }}
         timeout-minutes: 3
         run: "vendor/bin/phpunit --coverage-clover=coverage.xml"
 
       - name: "Send code coverage report to Codecov.io"
-        if: ${{ matrix.php-version == '7.4' }}
+        if: ${{ matrix.php-version == '8.0' }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -129,7 +129,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.4"
+          - "8.0"
 
     steps:
       - name: "Checkout"
@@ -166,7 +166,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.4"
+          - "8.0"
 
     steps:
       - name: "Checkout"
