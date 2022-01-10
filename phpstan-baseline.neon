@@ -6,12 +6,22 @@ parameters:
 			path: src/ImapResource.php
 
 		-
+			message: "#^Class IMAP\\\\Connection not found\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
 			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: src/ImapResource.php
 
 		-
 			message: "#^Instanceof between resource and IMAP\\\\Connection will always evaluate to false\\.$#"
+			count: 1
+			path: src/ImapResource.php
+
+		-
+			message: "#^Parameter \\$resource of method Ddeboer\\\\Imap\\\\ImapResource\\:\\:__construct\\(\\) has invalid type IMAP\\\\Connection\\.$#"
 			count: 1
 			path: src/ImapResource.php
 
