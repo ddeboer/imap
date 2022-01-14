@@ -16,4 +16,12 @@ interface ServerInterface
      * @param string $password Password
      */
     public function authenticate(string $username, string $password): ConnectionInterface;
+
+    /**
+     * Access a (shared) mailbox (for office365) directly while using the credentials of another user (using the authenticate method).
+     *
+     * @param string $mailbox
+     * @return static
+     */
+    public function forMailbox(string $mailbox): static;
 }

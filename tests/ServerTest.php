@@ -59,4 +59,16 @@ final class ServerTest extends AbstractTest
         static::assertStringNotContainsString('inbox', $mailbox);
         static::assertStringContainsString('no_mailbox', $mailbox);
     }
+
+    public function testSetMailbox(): void
+    {
+        $server = new Server((string) \getenv('IMAP_SERVER_NAME'), (string) \getenv('IMAP_SERVER_PORT'), self::IMAP_FLAGS, [], \OP_HALFOPEN);
+        $server->forMailbox('random@mailbox.com');
+
+        $reflection = new \ReflectionClass($server);
+        $reflection_property = $reflection->getProperty('accessMailbox');
+        $reflection_property->setAccessible(true);
+
+        static::assertSame('random@mailbox.com', $reflection_property->getValue($server));
+    }
 }

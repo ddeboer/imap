@@ -21,6 +21,7 @@ final class Server implements ServerInterface
     private array $parameters;
     private int $options;
     private int $retries;
+    private ?string $accessMailbox = null;
 
     /**
      * Constructor.
@@ -74,7 +75,7 @@ final class Server implements ServerInterface
 
         $resource = \imap_open(
             $this->getServerString(),
-            $username,
+            $username.(! is_null($this->accessMailbox) ? '/'.$this->accessMailbox : ''),
             $password,
             $this->options,
             $this->retries,
@@ -109,6 +110,18 @@ final class Server implements ServerInterface
         \imap_alerts();
 
         return new Connection(new ImapResource($resource), $connection);
+    }
+
+    /**
+     * Access a (shared) mailbox (for office365) directly while using the credentials of another user (using the authenticate method).
+     *
+     * @param string $mailbox
+     * @return static
+     */
+    public function forMailbox(string $mailbox): static
+    {
+        $this->accessMailbox = $mailbox;
+        return $this;
     }
 
     /**
