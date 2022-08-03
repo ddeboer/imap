@@ -10,6 +10,7 @@ use Ddeboer\Imap\Exception\ImapStatusException;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageMoveException;
+use Ddeboer\Imap\Exception\RenameMailboxException;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\LogicalOperator\All;
 
@@ -39,6 +40,20 @@ final class Mailbox implements MailboxInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setName(string $name): bool
+    {
+        $oldFullName = $this->getFullEncodedName();
+        $newFullName = str_replace($this->name, $name, $oldFullName);
+
+        $return = \imap_renamemailbox( $this->resource->getStream(), $oldFullName, $newFullName );
+        if( $return === false ){
+            throw new RenameMailboxException('Could not rename mailbox');
+        }
+        $this->name = $name;
+        $this->info->name = $newFullName;
+        return true;
     }
 
     public function getEncodedName(): string
