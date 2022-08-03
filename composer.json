@@ -44,10 +44,5 @@
         "psr-4": {
             "Ddeboer\\Imap\\Tests\\": "tests/"
         }
-    },
-    "config": {
-        "allow-plugins": {
-            "malukenho/mcbumpface": false
-        }
     }
 }
