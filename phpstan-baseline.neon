@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to function is_resource\\(\\) with resource will always evaluate to true\\.$#"
-			count: 1
-			path: src/ImapResource.php
-
-		-
 			message: "#^Class IMAP\\\\Connection not found\\.$#"
 			count: 1
 			path: src/ImapResource.php
@@ -31,11 +26,6 @@ parameters:
 			path: src/ImapResource.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between false and true will always evaluate to false\\.$#"
-			count: 1
-			path: src/ImapResource.php
-
-		-
 			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, array\\<int, Ddeboer\\\\Imap\\\\MessageInterface\\|int\\|string\\> given\\.$#"
 			count: 1
 			path: src/Mailbox.php
@@ -51,8 +41,13 @@ parameters:
 			path: src/Message.php
 
 		-
-			message: "#^Method Ddeboer\\\\Imap\\\\Message\\\\AbstractMessage\\:\\:getAttachments\\(\\) return type has no value type specified in iterable type Ddeboer\\\\Imap\\\\Message\\\\AttachmentInterface\\.$#"
-			count: 1
+			message: "#^Cannot call method getDecodedContent\\(\\) on mixed\\.$#"
+			count: 2
+			path: src/Message/AbstractMessage.php
+
+		-
+			message: "#^Cannot call method getSubtype\\(\\) on mixed\\.$#"
+			count: 2
 			path: src/Message/AbstractMessage.php
 
 		-
@@ -71,27 +66,12 @@ parameters:
 			path: src/Message/AbstractPart.php
 
 		-
-			message: "#^Method Ddeboer\\\\Imap\\\\Message\\\\AbstractPart\\:\\:getParts\\(\\) return type has no value type specified in iterable type Ddeboer\\\\Imap\\\\Message\\\\PartInterface\\.$#"
-			count: 1
-			path: src/Message/AbstractPart.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Message/AbstractPart.php
 
 		-
-			message: "#^Method Ddeboer\\\\Imap\\\\Message\\\\BasicMessageInterface\\:\\:getAttachments\\(\\) return type has no value type specified in iterable type Ddeboer\\\\Imap\\\\Message\\\\AttachmentInterface\\.$#"
-			count: 1
-			path: src/Message/BasicMessageInterface.php
-
-		-
 			message: "#^Interface Ddeboer\\\\Imap\\\\Message\\\\PartInterface extends generic interface RecursiveIterator but does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: src/Message/PartInterface.php
-
-		-
-			message: "#^Method Ddeboer\\\\Imap\\\\Message\\\\PartInterface\\:\\:getParts\\(\\) return type has no value type specified in iterable type Ddeboer\\\\Imap\\\\Message\\\\PartInterface\\.$#"
 			count: 1
 			path: src/Message/PartInterface.php
 
@@ -177,12 +157,7 @@ parameters:
 
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertIsInt\\(\\) with int will always evaluate to true\\.$#"
-			count: 1
-			path: tests/ConnectionTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertIsInt\\(\\) with int\\<0, max\\> will always evaluate to true\\.$#"
-			count: 1
+			count: 2
 			path: tests/ConnectionTest.php
 
 		-

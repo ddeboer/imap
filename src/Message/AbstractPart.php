@@ -400,7 +400,7 @@ abstract class AbstractPart implements PartInterface
             }
 
             if (
-                    'inline' === \strtolower($part->disposition)
+                'inline' === \strtolower($part->disposition)
                 && self::SUBTYPE_PLAIN !== \strtoupper($part->subtype)
                 && self::SUBTYPE_HTML !== \strtoupper($part->subtype)
             ) {

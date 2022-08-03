@@ -284,24 +284,12 @@ Mockability is granted by interfaces present for each API.
 Dig into [MockabilityTest](tests/MockabilityTest.php) for an example of a
 mocked workflow.
 
-## Running the Tests
+## Contributing: run the build locally
 
-This library is functionally tested on [Travis CI](https://travis-ci.org/ddeboer/imap)
-against a local Dovecot server.
+Docker is needed to run the build on your computer.
 
-If you have your own IMAP (test) account, you can run the tests locally by
-providing your IMAP credentials:
+First command you need to run is `make start-imap-server`, which starts an IMAP server locally.
 
-```bash
-$ composer install
-$ IMAP_SERVER_NAME="my.imap.server.com" IMAP_SERVER_PORT="60993" IMAP_USERNAME="johndoe" IMAP_PASSWORD="p4ssword" vendor/bin/phpunit
-```
+Then the local build can be triggered with a bare `make`.
 
-You can also copy `phpunit.xml.dist` file to a custom `phpunit.xml` and put
-these environment variables in it.
-
-**WARNING** Tests create new mailboxes without removing them.
-
-```
-$ docker-compose run tests
-```
+When you finish the development, stop the local IMAP server with `make stop-imap-server`.
