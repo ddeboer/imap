@@ -322,7 +322,7 @@ final class MailboxTest extends AbstractTest
         $this->createTestMessage($anotherMailbox, 'C');
 
         $concatSubjects = static function (MessageIteratorInterface $it): string {
-            $subject = '';
+            $subject    = '';
             foreach ($it as $message) {
                 $subject .= $message->getSubject();
             }
