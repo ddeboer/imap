@@ -45,14 +45,15 @@ final class Mailbox implements MailboxInterface
     public function renameTo(string $name): bool
     {
         $oldFullName = $this->getFullEncodedName();
-        $newFullName = str_replace($this->name, $name, $oldFullName);
+        $newFullName = \str_replace($this->name, $name, $oldFullName);
 
-        $return = \imap_renamemailbox( $this->resource->getStream(), $oldFullName, $newFullName );
-        if( $return === false ){
+        $return = \imap_renamemailbox($this->resource->getStream(), $oldFullName, $newFullName);
+        if (false === $return) {
             throw new RenameMailboxException('Could not rename mailbox');
         }
-        $this->name = $name;
+        $this->name       = $name;
         $this->info->name = $newFullName;
+
         return true;
     }
 
