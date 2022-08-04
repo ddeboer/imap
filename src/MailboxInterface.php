@@ -23,7 +23,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Set new mailbox name
      */
-    public function setName(string $name): bool;
+    public function renameTo(string $name): bool;
 
     /**
      * Get mailbox encoded path.
