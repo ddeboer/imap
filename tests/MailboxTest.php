@@ -41,9 +41,12 @@ final class MailboxTest extends AbstractTest
 
     public function testRenameTo(): void
     {
-        $this->mailbox->renameTo($this->altName);
+        static::assertNotSame($this->mailboxName, $this->altName);
+
+        static::assertTrue($this->mailbox->renameTo($this->altName));
         static::assertSame($this->altName, $this->mailbox->getName());
-        $this->mailbox->renameTo($this->mailboxName);
+
+        static::assertTrue($this->mailbox->renameTo($this->mailboxName));
         static::assertSame($this->mailboxName, $this->mailbox->getName());
     }
 
