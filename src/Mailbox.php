@@ -42,7 +42,7 @@ final class Mailbox implements MailboxInterface
         return $this->name;
     }
 
-    public function setName(string $name): bool
+    public function renameTo(string $name): bool
     {
         $oldFullName = $this->getFullEncodedName();
         $newFullName = str_replace($this->name, $name, $oldFullName);
