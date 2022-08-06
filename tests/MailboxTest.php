@@ -9,6 +9,7 @@ use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
+use Ddeboer\Imap\Exception\RenameMailboxException;
 use Ddeboer\Imap\Exception\ReopenMailboxException;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIterator;
@@ -43,11 +44,18 @@ final class MailboxTest extends AbstractTest
     {
         static::assertNotSame($this->mailboxName, $this->altName);
 
-        static::assertTrue($this->mailbox->renameTo($this->altName));
+        /** @var string $altName */
+        $altName = $this->altName;
+        static::assertTrue($this->mailbox->renameTo($altName));
         static::assertSame($this->altName, $this->mailbox->getName());
 
-        static::assertTrue($this->mailbox->renameTo($this->mailboxName));
+        /** @var string $mailboxName */
+        $mailboxName = $this->mailboxName;
+        static::assertTrue($this->mailbox->renameTo($mailboxName));
         static::assertSame($this->mailboxName, $this->mailbox->getName());
+
+        static::expectException(RenameMailboxException::class);
+        $this->mailbox->renameTo($mailboxName);
     }
 
     public function testGetFullEncodedName(): void
