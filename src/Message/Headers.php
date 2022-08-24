@@ -16,7 +16,7 @@ final class Headers extends Parameters
         foreach ($headers as $key => $value) {
             try {
                 $this[$key] = $this->parseHeader($key, $value);
-            } catch (\Exception $e) {
+            } catch (\Ddeboer\Imap\Exception\UnsupportedCharsetException $e) {
                 // safely skip header with unsupported charset
             }
         }
