@@ -1067,4 +1067,23 @@ final class MessageTest extends AbstractTest
 
         static::assertSame('Hi', \trim($message->getDecodedContent()));
     }
+
+    public function testUndefinedCharset(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('undefined_charset_header'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $expected = [
+            'first.eml'  => 'Subject: FIRST',
+            'chrome.png' => 'ZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklH',
+            'second.eml' => 'Subject: SECOND',
+        ];
+        $headers = $message->getHeaders();
+        static::assertCount(3, $headers);
+        foreach ($headers as $header) {
+            var_dump($header);
+//            static::assertStringContainsString($expected[$attachment->getFilename()], $attachment->getContent());
+        }
+    }
 }
