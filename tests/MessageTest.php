@@ -1074,16 +1074,13 @@ final class MessageTest extends AbstractTest
 
         $message = $this->mailbox->getMessage(1);
 
-        $expected = [
-            'first.eml'  => 'Subject: FIRST',
-            'chrome.png' => 'ZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklH',
-            'second.eml' => 'Subject: SECOND',
-        ];
         $headers = $message->getHeaders();
-        static::assertCount(3, $headers);
-        foreach ($headers as $header) {
-            var_dump($header);
-//            static::assertStringContainsString($expected[$attachment->getFilename()], $attachment->getContent());
-        }
+
+        static::assertGreaterThan(3, \count($headers));
+
+        static::assertArrayHasKey('from', $headers);
+        static::assertArrayHasKey('to', $headers);
+        static::assertArrayHasKey('date', $headers);
+        static::assertArrayNotHasKey('subject', $headers);
     }
 }
