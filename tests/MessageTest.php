@@ -1067,4 +1067,20 @@ final class MessageTest extends AbstractTest
 
         static::assertSame('Hi', \trim($message->getDecodedContent()));
     }
+
+    public function testUndefinedCharset(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('undefined_charset_header'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        $headers = $message->getHeaders();
+
+        static::assertCount(1, $message->getTo());
+        static::assertSame('<201702270351.BGF77614@bla.bla>', $headers['message_id']);
+        static::assertArrayNotHasKey('subject', $headers);
+        static::assertArrayNotHasKey('from', $headers);
+        static::assertNull($message->getSubject());
+        static::assertNull($message->getFrom());
+    }
 }
