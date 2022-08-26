@@ -1076,11 +1076,11 @@ final class MessageTest extends AbstractTest
 
         $headers = $message->getHeaders();
 
-        static::assertGreaterThan(3, \count($headers));
-
-        static::assertArrayHasKey('from', $headers);
-        static::assertArrayHasKey('to', $headers);
-        static::assertArrayHasKey('date', $headers);
+        static::assertCount(1,$message->getTo());
+        static::assertSame('<201702270351.BGF77614@bla.bla>', $headers['message_id']);
         static::assertArrayNotHasKey('subject', $headers);
+        static::assertArrayNotHasKey('from', $headers);
+        static::assertNull($message->getSubject());
+        static::assertNull($message->getFrom());
     }
 }
