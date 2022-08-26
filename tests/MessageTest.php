@@ -1076,7 +1076,7 @@ final class MessageTest extends AbstractTest
 
         $headers = $message->getHeaders();
 
-        static::assertCount(1,$message->getTo());
+        static::assertCount(1, $message->getTo());
         static::assertSame('<201702270351.BGF77614@bla.bla>', $headers['message_id']);
         static::assertArrayNotHasKey('subject', $headers);
         static::assertArrayNotHasKey('from', $headers);
