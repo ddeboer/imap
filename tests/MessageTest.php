@@ -17,7 +17,6 @@ use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageInterface;
 use Laminas\Mail;
 use Laminas\Mime;
-use ReflectionClass;
 
 /**
  * @covers \Ddeboer\Imap\Connection::expunge
@@ -118,7 +117,7 @@ final class MessageTest extends AbstractTest
 
     public function testLowercaseCharsetAliases(): void
     {
-        $refClass   = new ReflectionClass(Transcoder::class);
+        $refClass   = new \ReflectionClass(Transcoder::class);
         $properties = $refClass->getConstants();
         $aliases    = $properties['CHARSET_ALIASES'];
 
@@ -1009,9 +1008,9 @@ final class MessageTest extends AbstractTest
         // of attachments that don't have it
         $refMessage         = new \ReflectionClass($message);
         $refAbstractMessage = $refMessage->getParentClass();
-        static::assertInstanceOf(ReflectionClass::class, $refAbstractMessage);
+        static::assertInstanceOf(\ReflectionClass::class, $refAbstractMessage);
         $refAbstractPart = $refAbstractMessage->getParentClass();
-        static::assertInstanceOf(ReflectionClass::class, $refAbstractPart);
+        static::assertInstanceOf(\ReflectionClass::class, $refAbstractPart);
 
         $refLazyLoadStructure = $refMessage->getMethod('lazyLoadStructure');
         $refLazyLoadStructure->setAccessible(true);

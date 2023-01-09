@@ -1,4 +1,4 @@
-PHP_DOCKER_VERSION := thecodingmachine/php:8.0-v4-cli
+PHP_DOCKER_VERSION := thecodingmachine/php:8.1-v4-cli
 PHP_BIN := docker run -it --rm \
 	--network=ddeboer_imap_network \
 	--env IMAP_SERVER_NAME=ddeboer_imap_server \
@@ -15,6 +15,7 @@ all: csfix static-analysis test
 
 vendor: composer.json
 	$(PHP_BIN) composer update
+	$(PHP_BIN) composer bump
 	touch vendor
 
 .PHONY: csfix
@@ -23,7 +24,7 @@ csfix: vendor
 
 .PHONY: static-analysis
 static-analysis: vendor
-	$(PHP_BIN) vendor/bin/phpstan analyse
+	$(PHP_BIN) vendor/bin/phpstan analyse $(PHPSTAN_FLAGS)
 
 wait-for-it:
 	wget -O wait-for-it "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh"

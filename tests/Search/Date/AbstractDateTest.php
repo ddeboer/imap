@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests\Search\Date;
 
-use DateTimeImmutable;
 use Ddeboer\Imap\Tests\AbstractTest;
 
 /**
@@ -13,13 +12,13 @@ use Ddeboer\Imap\Tests\AbstractTest;
 final class AbstractDateTest extends AbstractTest
 {
     /**
-     * @var DateTimeImmutable
+     * @var \DateTimeImmutable
      */
     protected $date;
 
     protected function setUp(): void
     {
-        $this->date = new DateTimeImmutable('2017-03-02');
+        $this->date = new \DateTimeImmutable('2017-03-02');
     }
 
     public function testDefaultFormat(): void

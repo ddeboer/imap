@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
-use DateTimeImmutable;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Search;
@@ -89,7 +88,7 @@ final class MailboxSearchTest extends AbstractTest
         $specialChars = 'A_ spaces _09!#$%&\'*+-/=?^_`{|}~.(),:;<>@[\\]_èπ€_Z';
         $specialEmail = $specialChars . '@example.com';
 
-        $date = new DateTimeImmutable();
+        $date = new \DateTimeImmutable();
 
         $conditions = [
             new Search\LogicalOperator\All(),

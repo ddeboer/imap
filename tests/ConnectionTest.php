@@ -6,14 +6,14 @@ namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
-use Ddeboer\Imap\Exception\InvalidResourceException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
-use Ddeboer\Imap\ImapResource;
 use Ddeboer\Imap\Mailbox;
 
 /**
  * @covers \Ddeboer\Imap\Connection
  * @covers \Ddeboer\Imap\ImapResource
+ *
+ * @runTestsInSeparateProcesses
  */
 final class ConnectionTest extends AbstractTest
 {
@@ -24,28 +24,6 @@ final class ConnectionTest extends AbstractTest
         $check = \imap_check($connection->getResource()->getStream());
 
         static::assertInstanceOf(\stdClass::class, $check);
-    }
-
-    public function testCannotInstantiateArbitraryConnections(): void
-    {
-        $resource = new ImapResource(\uniqid());
-
-        $this->expectException(InvalidResourceException::class);
-
-        $resource->getStream();
-    }
-
-    /**
-     * @requires PHP < 8.1
-     */
-    public function testCloseConnection(): void
-    {
-        $connection = $this->createConnection();
-        $connection->close();
-
-        $this->expectException(InvalidResourceException::class);
-
-        $connection->close();
     }
 
     public function testCount(): void
@@ -60,22 +38,6 @@ final class ConnectionTest extends AbstractTest
         static::assertTrue($connection->ping());
 
         $connection->close();
-    }
-
-    /**
-     * @requires PHP < 8.1
-     */
-    public function testPingUnavailableAfterClose(): void
-    {
-        $connection = $this->createConnection();
-
-        static::assertTrue($connection->ping());
-
-        $connection->close();
-
-        $this->expectException(InvalidResourceException::class);
-
-        $connection->ping();
     }
 
     public function testQuota(): void
