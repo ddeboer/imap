@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap;
 
-use DateTimeInterface;
 use Ddeboer\Imap\Exception\ImapNumMsgException;
 use Ddeboer\Imap\Exception\ImapStatusException;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
@@ -196,7 +195,7 @@ final class Mailbox implements MailboxInterface
         return $this->getMessages();
     }
 
-    public function addMessage(string $message, string $options = null, DateTimeInterface $internalDate = null): bool
+    public function addMessage(string $message, string $options = null, \DateTimeInterface $internalDate = null): bool
     {
         $arguments = [
             $this->resource->getStream(),
