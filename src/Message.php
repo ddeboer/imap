@@ -133,6 +133,14 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         return $this->rawMessage;
     }
 
+    /**
+     * @param resource|string $file the path to the saved file as a string, or a valid file descriptor
+     */
+    public function saveRawMessage($file): void
+    {
+        $this->doSaveContent($file, '');
+    }
+
     public function getHeaders(): Message\Headers
     {
         if (null === $this->headers) {
