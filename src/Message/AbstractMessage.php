@@ -203,23 +203,13 @@ abstract class AbstractMessage extends AbstractPart
     }
 
     /**
-     * Get body HTML.
+     * Get first body HTML part.
      */
     final public function getBodyHtml(): ?string
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if (self::SUBTYPE_HTML === $part->getSubtype()) {
-                return $part->getDecodedContent();
-            }
-        }
+        $htmlParts = $this->getBodyHtmlParts();
 
-        // If message has no parts and is HTML, return content of message itself.
-        if (self::SUBTYPE_HTML === $this->getSubtype()) {
-            return $this->getDecodedContent();
-        }
-
-        return null;
+        return $htmlParts[0] ?? null;
     }
 
     /**
@@ -266,7 +256,7 @@ abstract class AbstractMessage extends AbstractPart
         $newDom = new \DOMDocument();
 
         $newBody = '';
-        $newDom->loadHTML(\mb_convert_encoding(\implode('', $htmlParts), 'HTML-ENTITIES', 'UTF-8'));
+        $newDom->loadHTML(\implode('', $htmlParts));
 
         $bodyTags = $newDom->getElementsByTagName('body');
 
@@ -277,7 +267,7 @@ abstract class AbstractMessage extends AbstractPart
         }
 
         $newDom = new \DOMDocument();
-        $newDom->loadHTML(\mb_convert_encoding($newBody, 'HTML-ENTITIES', 'UTF-8'));
+        $newDom->loadHTML($newBody);
 
         $completeHtml = $newDom->saveHTML();
 
