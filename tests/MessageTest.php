@@ -748,6 +748,45 @@ final class MessageTest extends AbstractTest
         static::assertSame($fixture, $message->getRawMessage());
     }
 
+    public function testSaveFileRawMessage(): void
+    {
+        $fixture = $this->getFixture('structured_with_attachment');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $filename = \tempnam(\sys_get_temp_dir(), 'testSaveFileRawMessage');
+        if (false === $filename) {
+            static::fail('Unable to create temporary file');
+        }
+
+        $message->saveRawMessage($filename);
+
+        static::assertSame($fixture, \file_get_contents($filename));
+
+        \unlink($filename);
+    }
+
+    public function testSaveResourceRawMessage(): void
+    {
+        $fixture = $this->getFixture('structured_with_attachment');
+        $this->mailbox->addMessage($fixture);
+
+        $message = $this->mailbox->getMessage(1);
+
+        $file = \fopen('php://temp', 'w+');
+        if (false === $file) {
+            static::fail('Unable to create temporary file stream');
+        }
+
+        $message->saveRawMessage($file);
+        \fseek($file, 0);
+
+        static::assertSame($fixture, \stream_get_contents($file));
+
+        \fclose($file);
+    }
+
     public function testAttachmentOnlyEmail(): void
     {
         $fixture = $this->getFixture('mail_that_is_attachment');

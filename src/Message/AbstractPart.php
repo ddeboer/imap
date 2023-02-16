@@ -256,6 +256,26 @@ abstract class AbstractPart implements PartInterface
         return $return;
     }
 
+    /**
+     * Save raw message content to file.
+     *
+     * @param resource|string $file the path to the saved file as a string, or a valid file descriptor
+     */
+    final protected function doSaveContent($file, string $partNumber): void
+    {
+        $return = \imap_savebody(
+            $this->resource->getStream(),
+            $file,
+            $this->getNumber(),
+            $partNumber,
+            \FT_UID | \FT_PEEK
+        );
+
+        if (false === $return) {
+            throw new ImapFetchbodyException('imap_savebody failed');
+        }
+    }
+
     final public function getParts(): array
     {
         $this->lazyParseStructure();
