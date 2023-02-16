@@ -162,4 +162,32 @@ final class EmbeddedMessageTest extends AbstractTest
         static::assertNotEmpty($attachment->getContent());
         static::assertSame('file4.zip', $attachment->getFilename());
     }
+
+    public function testSaveEmbeddedMessage(): void
+    {
+        $mailbox = $this->createMailbox();
+        $raw     = $this->getFixture('embedded_email_without_content_disposition');
+        $mailbox->addMessage($raw);
+
+        $message     = $mailbox->getMessage(1);
+        $attachments = $message->getAttachments();
+
+        // skip 1. non-embedded attachment (file.jpg) to embedded one
+        $attachment = \next($attachments);
+        static::assertNotFalse($attachment);
+        static::assertTrue($attachment->isEmbeddedMessage());
+
+        $embeddedMessage = $attachment->getEmbeddedMessage();
+
+        $file = \fopen('php://temp', 'w+');
+        if (false === $file) {
+            static::fail('Unable to create temporary file stream');
+        }
+
+        $embeddedMessage->saveRawMessage($file);
+        \fseek($file, 0);
+
+        $rawEmbedded = $this->getFixture('embedded_email_without_content_disposition-embedded');
+        static::assertSame($rawEmbedded, \stream_get_contents($file));
+    }
 }
