@@ -7,3 +7,5 @@ composer.lock
 phpunit.xml
 wait-for-it
 coverage/
+
+.DS_Store

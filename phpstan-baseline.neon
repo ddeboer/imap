@@ -22,12 +22,12 @@ parameters:
 
 		-
 			message: "#^Cannot call method getDecodedContent\\(\\) on mixed\\.$#"
-			count: 2
+			count: 3
 			path: src/Message/AbstractMessage.php
 
 		-
 			message: "#^Cannot call method getSubtype\\(\\) on mixed\\.$#"
-			count: 2
+			count: 3
 			path: src/Message/AbstractMessage.php
 
 		-

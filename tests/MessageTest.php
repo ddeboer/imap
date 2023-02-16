@@ -990,6 +990,35 @@ final class MessageTest extends AbstractTest
         }
     }
 
+    public function testMultipleHtmlParts(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('multiple_html_parts_and_attachments'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        // Test attachments
+        $expectedFileNames = [
+            'attachment1.pdf',
+            'attachment2.pdf',
+        ];
+        $attachments = $message->getAttachments();
+        static::assertCount(2, $attachments);
+        foreach ($attachments as $attachment) {
+            static::assertContains($attachment->getFilename(), $expectedFileNames);
+        }
+
+        // Test html parts
+        static::assertCount(3, $message->getBodyHtmlParts());
+
+        // Test html parts
+        $completeBody = $message->getCompleteBodyHtml();
+        $completeBody = null === $completeBody ? '' : $completeBody;
+
+        static::assertStringContainsString('first', $completeBody);
+        static::assertStringContainsString('second', $completeBody);
+        static::assertStringContainsString('last', $completeBody);
+    }
+
     public function testImapMimeHeaderDecodeReturnsFalse(): void
     {
         $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));
