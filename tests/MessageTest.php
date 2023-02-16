@@ -1019,6 +1019,28 @@ final class MessageTest extends AbstractTest
         static::assertStringContainsString('last', $completeBody);
     }
 
+    public function testBodyHtmlEmpty(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('plain_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        static::assertCount(0, $message->getBodyHtmlParts());
+
+        static::assertNull($message->getCompleteBodyHtml());
+    }
+
+    public function testBodyHtmlOnePart(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('html_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        static::assertCount(1, $message->getBodyHtmlParts());
+
+        static::assertNotNull($message->getCompleteBodyHtml());
+    }
+
     public function testImapMimeHeaderDecodeReturnsFalse(): void
     {
         $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));
