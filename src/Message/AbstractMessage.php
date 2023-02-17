@@ -203,23 +203,75 @@ abstract class AbstractMessage extends AbstractPart
     }
 
     /**
-     * Get body HTML.
+     * Get first body HTML part.
      */
     final public function getBodyHtml(): ?string
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $htmlParts = $this->getBodyHtmlParts();
+
+        return $htmlParts[0] ?? null;
+    }
+
+    /**
+     * Get body HTML parts.
+     *
+     * @return string[]
+     */
+    final public function getBodyHtmlParts(): array
+    {
+        $iterator  = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $htmlParts = [];
         foreach ($iterator as $part) {
             if (self::SUBTYPE_HTML === $part->getSubtype()) {
-                return $part->getDecodedContent();
+                $htmlParts[] = $part->getDecodedContent();
             }
+        }
+        if (\count($htmlParts) > 0) {
+            return $htmlParts;
         }
 
         // If message has no parts and is HTML, return content of message itself.
         if (self::SUBTYPE_HTML === $this->getSubtype()) {
-            return $this->getDecodedContent();
+            return [$this->getDecodedContent()];
         }
 
-        return null;
+        return [];
+    }
+
+    /**
+     * Get all body HTML parts merged into 1 html.
+     */
+    final public function getCompleteBodyHtml(): ?string
+    {
+        $htmlParts = $this->getBodyHtmlParts();
+
+        if (1 === \count($htmlParts)) {
+            return $htmlParts[0];
+        }
+        if (0 === \count($htmlParts)) {
+            return null;
+        }
+        \libxml_use_internal_errors(true); // Suppress parse errors, get errors with libxml_get_errors();
+
+        $newDom = new \DOMDocument();
+
+        $newBody = '';
+        $newDom->loadHTML(\implode('', $htmlParts));
+
+        $bodyTags = $newDom->getElementsByTagName('body');
+
+        foreach ($bodyTags as $body) {
+            foreach ($body->childNodes as $node) {
+                $newBody .= $newDom->saveHTML($node);
+            }
+        }
+
+        $newDom = new \DOMDocument();
+        $newDom->loadHTML($newBody);
+
+        $completeHtml = $newDom->saveHTML();
+
+        return false === $completeHtml ? null : $completeHtml;
     }
 
     /**

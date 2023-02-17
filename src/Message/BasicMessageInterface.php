@@ -116,11 +116,25 @@ interface BasicMessageInterface extends PartInterface
     public function getReferences(): array;
 
     /**
-     * Get body HTML.
+     * Get first body HTML part.
      *
      * @return null|string Null if message has no HTML message part
      */
     public function getBodyHtml(): ?string;
+
+    /**
+     * Get all body HTML parts as array.
+     *
+     * @return string[]
+     */
+    public function getBodyHtmlParts(): array;
+
+    /**
+     * Get all body HTML parts merged into 1 html.
+     *
+     * @return null|string Null if message has no HTML message part
+     */
+    public function getCompleteBodyHtml(): ?string;
 
     /**
      * Get body text.
