@@ -206,8 +206,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
 
     public function maskAsSeen(): bool
     {
-        \trigger_error(\sprintf('%s is deprecated and will be removed in 2.0. Use %s::markAsSeen instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
-
         return $this->markAsSeen();
     }
 

@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Exception\AbstractException;
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
 use Ddeboer\Imap\Exception\MessageCopyException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\RenameMailboxException;
+use Ddeboer\Imap\ImapResource;
+use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIterator;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \Ddeboer\Imap\Exception\AbstractException
- * @covers \Ddeboer\Imap\ImapResource
- * @covers \Ddeboer\Imap\Mailbox
- */
-final class MailboxTest extends AbstractTest
+#[CoversClass(AbstractException::class)]
+#[CoversClass(ImapResource::class)]
+#[CoversClass(Mailbox::class)]
+final class MailboxTest extends AbstractTestCase
 {
-    /** @var MailboxInterface */
-    protected $mailbox;
+    private MailboxInterface $mailbox;
 
     protected function setUp(): void
     {
@@ -35,46 +36,46 @@ final class MailboxTest extends AbstractTest
 
     public function testGetName(): void
     {
-        static::assertSame($this->mailboxName, $this->mailbox->getName());
+        self::assertSame($this->mailboxName, $this->mailbox->getName());
     }
 
     public function testRenameTo(): void
     {
-        static::assertNotSame($this->mailboxName, $this->altName);
+        self::assertNotSame($this->mailboxName, $this->altName);
 
         /** @var string $altName */
         $altName = $this->altName;
-        static::assertTrue($this->mailbox->renameTo($altName));
-        static::assertSame($this->altName, $this->mailbox->getName());
+        self::assertTrue($this->mailbox->renameTo($altName));
+        self::assertSame($this->altName, $this->mailbox->getName());
 
         /** @var string $mailboxName */
         $mailboxName = $this->mailboxName;
-        static::assertTrue($this->mailbox->renameTo($mailboxName));
-        static::assertSame($this->mailboxName, $this->mailbox->getName());
+        self::assertTrue($this->mailbox->renameTo($mailboxName));
+        self::assertSame($this->mailboxName, $this->mailbox->getName());
 
-        static::expectException(RenameMailboxException::class);
+        $this->expectException(RenameMailboxException::class);
         $this->mailbox->renameTo($mailboxName);
     }
 
     public function testGetFullEncodedName(): void
     {
-        static::assertIsString($this->mailboxName);
+        self::assertIsString($this->mailboxName);
 
         $fullEncodedName = $this->mailbox->getFullEncodedName();
-        static::assertStringContainsString((string) \getenv('IMAP_SERVER_PORT'), $fullEncodedName);
-        static::assertStringNotContainsString($this->mailboxName, $fullEncodedName);
-        static::assertStringContainsString(\mb_convert_encoding($this->mailboxName, 'UTF7-IMAP', 'UTF-8'), $fullEncodedName);
-        static::assertStringNotContainsString(':' . \getenv('IMAP_SERVER_PORT'), $this->mailbox->getEncodedName());
+        self::assertStringContainsString((string) \getenv('IMAP_SERVER_PORT'), $fullEncodedName);
+        self::assertStringNotContainsString($this->mailboxName, $fullEncodedName);
+        self::assertStringContainsString(\mb_convert_encoding($this->mailboxName, 'UTF7-IMAP', 'UTF-8'), $fullEncodedName);
+        self::assertStringNotContainsString(':' . \getenv('IMAP_SERVER_PORT'), $this->mailbox->getEncodedName());
     }
 
     public function testGetAttributes(): void
     {
-        static::assertGreaterThan(0, $this->mailbox->getAttributes());
+        self::assertGreaterThan(0, $this->mailbox->getAttributes());
     }
 
     public function testGetDelimiter(): void
     {
-        static::assertNotEmpty($this->mailbox->getDelimiter());
+        self::assertNotEmpty($this->mailbox->getDelimiter());
     }
 
     public function testGetMessages(): void
@@ -84,14 +85,14 @@ final class MailboxTest extends AbstractTest
             ++$directMethodInc;
         }
 
-        static::assertSame(3, $directMethodInc);
+        self::assertSame(3, $directMethodInc);
 
         $aggregateIteratorMethodInc = 0;
         foreach ($this->mailbox as $message) {
             ++$aggregateIteratorMethodInc;
         }
 
-        static::assertSame(3, $aggregateIteratorMethodInc);
+        self::assertSame(3, $aggregateIteratorMethodInc);
     }
 
     public function testGetMessageSequence(): void
@@ -100,19 +101,19 @@ final class MailboxTest extends AbstractTest
         foreach ($this->mailbox->getMessageSequence('1:*') as $message) {
             ++$inc;
         }
-        static::assertSame(3, $inc);
+        self::assertSame(3, $inc);
 
         $inc = 0;
         foreach ($this->mailbox->getMessageSequence('1:2') as $message) {
             ++$inc;
         }
 
-        static::assertSame(2, $inc);
+        self::assertSame(2, $inc);
         $inc = 0;
         foreach ($this->mailbox->getMessageSequence('99998:99999') as $message) {
             ++$inc;
         }
-        static::assertSame(0, $inc);
+        self::assertSame(0, $inc);
     }
 
     public function testGetMessageSequenceThrowsException(): void
@@ -133,25 +134,25 @@ final class MailboxTest extends AbstractTest
 
     public function testCount(): void
     {
-        static::assertSame(3, $this->mailbox->count());
+        self::assertSame(3, $this->mailbox->count());
     }
 
     public function testDefaultStatus(): void
     {
         $status = $this->mailbox->getStatus();
 
-        static::assertSame(\SA_ALL, $status->flags);
-        static::assertSame(3, $status->messages);
-        static::assertSame(4, $status->uidnext);
+        self::assertSame(\SA_ALL, $status->flags);
+        self::assertSame(3, $status->messages);
+        self::assertSame(4, $status->uidnext);
     }
 
     public function testCustomStatusFlag(): void
     {
         $status = $this->mailbox->getStatus(\SA_MESSAGES);
 
-        static::assertSame(\SA_MESSAGES, $status->flags);
-        static::assertSame(3, $status->messages);
-        static::assertFalse(isset($status->uidnext), 'uidnext shouldn\'t be set');
+        self::assertSame(\SA_MESSAGES, $status->flags);
+        self::assertSame(3, $status->messages);
+        self::assertFalse(isset($status->uidnext), 'uidnext shouldn\'t be set');
     }
 
     public function testBulkSetFlags(): void
@@ -167,27 +168,27 @@ final class MailboxTest extends AbstractTest
 
         foreach ($messages as $uid) {
             $message = $this->mailbox->getMessage($uid);
-            static::assertFalse($message->isFlagged());
+            self::assertFalse($message->isFlagged());
         }
 
         $this->mailbox->setFlag('\\Flagged', $messages);
 
         foreach ($messages as $uid) {
             $message = $this->mailbox->getMessage($uid);
-            static::assertTrue($message->isFlagged());
+            self::assertTrue($message->isFlagged());
         }
 
         $this->mailbox->clearFlag('\\Flagged', $messages);
 
         foreach ($messages as $uid) {
             $message = $this->mailbox->getMessage($uid);
-            static::assertFalse($message->isFlagged());
+            self::assertFalse($message->isFlagged());
         }
 
         // Set flag for messages from another mailbox
         $anotherMailbox->setFlag('\\Flagged', [1, 2, 3]);
 
-        static::assertTrue($anotherMailbox->getMessage(2)->isFlagged());
+        self::assertTrue($anotherMailbox->getMessage(2)->isFlagged());
     }
 
     public function testBulkSetFlagsNumbersParameter(): void
@@ -209,7 +210,7 @@ final class MailboxTest extends AbstractTest
 
         foreach ($uids as $uid) {
             $message = $mailbox->getMessage($uid);
-            static::assertTrue($message->isSeen());
+            self::assertTrue($message->isSeen());
         }
 
         $mailbox->clearFlag('\\Seen', '1,2,3,4:6');
@@ -220,7 +221,7 @@ final class MailboxTest extends AbstractTest
 
         foreach ($uids as $uid) {
             $message = $mailbox->getMessage($uid);
-            static::assertFalse($message->isSeen());
+            self::assertFalse($message->isSeen());
         }
     }
 
@@ -252,11 +253,11 @@ final class MailboxTest extends AbstractTest
             '2.branch' => 0,
         ];
 
-        static::assertSame($expected, $mailboxOne->getThread());
+        self::assertSame($expected, $mailboxOne->getThread());
 
         $emptyMailbox = $this->createMailbox();
 
-        static::assertEmpty($emptyMailbox->getThread());
+        self::assertEmpty($emptyMailbox->getThread());
     }
 
     public function testAppendOptionalArguments(): void
@@ -267,8 +268,8 @@ final class MailboxTest extends AbstractTest
 
         $message = $mailbox->getMessage(1);
 
-        static::assertTrue($message->isSeen());
-        static::assertSame(' 3-Jan-2012 09:30:03 +0000', $message->getHeaders()->get('maildate'));
+        self::assertTrue($message->isSeen());
+        self::assertSame(' 3-Jan-2012 09:30:03 +0000', $message->getHeaders()->get('maildate'));
     }
 
     public function testBulkMove(): void
@@ -278,12 +279,12 @@ final class MailboxTest extends AbstractTest
         // Test move by id
         $messages = [1, 2, 3];
 
-        static::assertSame(0, $anotherMailbox->count());
+        self::assertSame(0, $anotherMailbox->count());
         $this->mailbox->move($messages, $anotherMailbox);
         $this->getConnection()->expunge();
 
-        static::assertSame(3, $anotherMailbox->count());
-        static::assertSame(0, $this->mailbox->count());
+        self::assertSame(3, $anotherMailbox->count());
+        self::assertSame(0, $this->mailbox->count());
 
         // move back by iterator
         /** @var MessageIterator $messages */
@@ -291,8 +292,8 @@ final class MailboxTest extends AbstractTest
         $anotherMailbox->move($messages, $this->mailbox);
         $this->getConnection()->expunge();
 
-        static::assertSame(0, $anotherMailbox->count());
-        static::assertSame(3, $this->mailbox->count());
+        self::assertSame(0, $anotherMailbox->count());
+        self::assertSame(3, $this->mailbox->count());
 
         // Somehow mailbox deleting in Dovecot in Github CI doesn't work :\
         if (false !== \getenv('CI')) {
@@ -309,12 +310,12 @@ final class MailboxTest extends AbstractTest
         $anotherMailbox = $this->createMailbox();
         $messages       = [1, 2, 3];
 
-        static::assertSame(0, $anotherMailbox->count());
-        static::assertSame(3, $this->mailbox->count());
+        self::assertSame(0, $anotherMailbox->count());
+        self::assertSame(3, $this->mailbox->count());
         $this->mailbox->copy($messages, $anotherMailbox);
 
-        static::assertSame(3, $anotherMailbox->count());
-        static::assertSame(3, $this->mailbox->count());
+        self::assertSame(3, $anotherMailbox->count());
+        self::assertSame(3, $this->mailbox->count());
 
         // test failing bulk copy - try to move to a non-existent mailbox
         $this->getConnection()->deleteMailbox($anotherMailbox);
@@ -338,10 +339,10 @@ final class MailboxTest extends AbstractTest
             return $subject;
         };
 
-        static::assertSame('BAC', $concatSubjects($anotherMailbox->getMessages()));
-        static::assertSame('ABC', $concatSubjects($anotherMailbox->getMessages(null, \SORTSUBJECT)));
-        static::assertSame('CBA', $concatSubjects($anotherMailbox->getMessages(null, \SORTSUBJECT, true)));
-        static::assertSame('B', $concatSubjects($anotherMailbox->getMessages(new Search\Text\Subject('B'), \SORTSUBJECT, true)));
+        self::assertSame('BAC', $concatSubjects($anotherMailbox->getMessages()));
+        self::assertSame('ABC', $concatSubjects($anotherMailbox->getMessages(null, \SORTSUBJECT)));
+        self::assertSame('CBA', $concatSubjects($anotherMailbox->getMessages(null, \SORTSUBJECT, true)));
+        self::assertSame('B', $concatSubjects($anotherMailbox->getMessages(new Search\Text\Subject('B'), \SORTSUBJECT, true)));
     }
 
     public function testGetMessagesWithUtf8Subject(): void
@@ -354,21 +355,21 @@ final class MailboxTest extends AbstractTest
         $messagesFound = '';
         foreach ($anotherMailbox->getMessages(new Search\Text\Body(\mb_convert_encoding('б', 'Windows-1251', 'UTF-8')), null, false, 'Windows-1251') as $message) {
             $subject = $message->getSubject();
-            static::assertIsString($subject);
+            self::assertIsString($subject);
 
             $messagesFound .= \substr($subject, 0, 1);
         }
 
-        static::assertSame('23', $messagesFound);
+        self::assertSame('23', $messagesFound);
 
         $messagesFound = '';
         foreach ($anotherMailbox->getMessages(new Search\Text\Body(\mb_convert_encoding('П', 'Windows-1251', 'UTF-8')), \SORTSUBJECT, true, 'Windows-1251') as $message) {
             $subject = $message->getSubject();
-            static::assertIsString($subject);
+            self::assertIsString($subject);
 
             $messagesFound .= \substr($subject, 0, 1);
         }
 
-        static::assertSame('31', $messagesFound);
+        self::assertSame('31', $messagesFound);
     }
 }

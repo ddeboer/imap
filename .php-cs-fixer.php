@@ -49,7 +49,7 @@ return (new PhpCsFixer\Config())
         'php_unit_set_up_tear_down_visibility'      => true,
         'php_unit_strict'                           => true,
         'php_unit_test_annotation'                  => true,
-        'php_unit_test_case_static_method_calls'    => true,
+        'php_unit_test_case_static_method_calls'    => false,
         'php_unit_test_class_requires_covers'       => false,
         'phpdoc_add_missing_param_annotation'       => true,
         'phpdoc_order'                              => true,

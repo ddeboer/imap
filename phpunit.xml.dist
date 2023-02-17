@@ -2,9 +2,12 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-        convertDeprecationsToExceptions="true"
+        displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnTestsThatTriggerErrors="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
         colors="true"
-        verbose="true"
+        cacheDirectory=".phpunit.cache"
 >
   <php>
     <ini name="error_reporting" value="E_ALL"/>
@@ -14,7 +17,7 @@
       <directory suffix=".php">./src</directory>
     </include>
     <report>
-      <html outputDirectory="coverage" />
+      <html outputDirectory="coverage"/>
       <text outputFile="php://stdout" showOnlySummary="true"/>
     </report>
   </coverage>

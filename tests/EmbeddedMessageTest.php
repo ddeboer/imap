@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\NotEmbeddedMessageException;
+use Ddeboer\Imap\Message\AbstractMessage;
+use Ddeboer\Imap\Message\Attachment;
 use Ddeboer\Imap\Message\EmailAddress;
+use Ddeboer\Imap\Message\EmbeddedMessage;
 use Ddeboer\Imap\Message\PartInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \Ddeboer\Imap\Message\AbstractMessage
- * @covers \Ddeboer\Imap\Message\Attachment
- * @covers \Ddeboer\Imap\Message\EmbeddedMessage
- */
-final class EmbeddedMessageTest extends AbstractTest
+#[CoversClass(AbstractMessage::class)]
+#[CoversClass(Attachment::class)]
+#[CoversClass(EmbeddedMessage::class)]
+final class EmbeddedMessageTest extends AbstractTestCase
 {
     public function testEmbeddedMessage(): void
     {
@@ -23,27 +25,27 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $message    = $mailbox->getMessage(1);
         $attachment = $message->getAttachments()[0];
-        static::assertTrue($attachment->isEmbeddedMessage());
+        self::assertTrue($attachment->isEmbeddedMessage());
 
         $emailDate       = new \DateTimeImmutable('29 Jan 2016 14:22:13 +0100');
         $embeddedMessage = $attachment->getEmbeddedMessage();
-        static::assertNull($embeddedMessage->getBodyHtml());
-        static::assertSame('demo text', $embeddedMessage->getBodyText());
-        static::assertSame([], $embeddedMessage->getCc());
+        self::assertNull($embeddedMessage->getBodyHtml());
+        self::assertSame('demo text', $embeddedMessage->getBodyText());
+        self::assertSame([], $embeddedMessage->getCc());
 
         $actualDate = $embeddedMessage->getDate();
-        static::assertInstanceOf(\DateTimeImmutable::class, $actualDate);
-        static::assertSame($emailDate->format(\DATE_ISO8601), $actualDate->format(\DATE_ISO8601));
+        self::assertInstanceOf(\DateTimeImmutable::class, $actualDate);
+        self::assertSame($emailDate->format(\DATE_ISO8601), $actualDate->format(\DATE_ISO8601));
 
-        static::assertSame('demo', $embeddedMessage->getSubject());
+        self::assertSame('demo', $embeddedMessage->getSubject());
 
         $actualFrom = $embeddedMessage->getFrom();
-        static::assertInstanceOf(EmailAddress::class, $actualFrom);
-        static::assertSame('demo-from@cerstor.cz', $actualFrom->getFullAddress());
+        self::assertInstanceOf(EmailAddress::class, $actualFrom);
+        self::assertSame('demo-from@cerstor.cz', $actualFrom->getFullAddress());
 
-        static::assertSame('demo-to@cerstor.cz', $embeddedMessage->getTo()[0]->getFullAddress());
+        self::assertSame('demo-to@cerstor.cz', $embeddedMessage->getTo()[0]->getFullAddress());
 
-        static::assertFalse($message->isSeen());
+        self::assertFalse($message->isSeen());
     }
 
     public function testEmbeddedAttachment(): void
@@ -55,17 +57,17 @@ final class EmbeddedMessageTest extends AbstractTest
         $embeddedMessage = $mailbox->getMessage(1)->getAttachments()[0]->getEmbeddedMessage();
 
         $embeddedAttachment = $embeddedMessage->getAttachments()[0];
-        static::assertSame('testfile.txt', $embeddedAttachment->getFilename());
-        static::assertSame(29, $embeddedAttachment->getSize());
-        static::assertSame('attachment', $embeddedAttachment->getDisposition());
-        static::assertSame('IHRoaXMgaXMgY29udGVudCBvZiB0ZXN0IGZpbGU=', $embeddedAttachment->getContent());
-        static::assertSame('base64', $embeddedAttachment->getEncoding());
-        static::assertSame(PartInterface::TYPE_TEXT, $embeddedAttachment->getType());
-        static::assertSame(PartInterface::SUBTYPE_PLAIN, $embeddedAttachment->getSubtype());
-        static::assertSame(' this is content of test file', $embeddedAttachment->getDecodedContent());
-        static::assertSame('testfile.txt', $embeddedAttachment->getFilename());
+        self::assertSame('testfile.txt', $embeddedAttachment->getFilename());
+        self::assertSame(29, $embeddedAttachment->getSize());
+        self::assertSame('attachment', $embeddedAttachment->getDisposition());
+        self::assertSame('IHRoaXMgaXMgY29udGVudCBvZiB0ZXN0IGZpbGU=', $embeddedAttachment->getContent());
+        self::assertSame('base64', $embeddedAttachment->getEncoding());
+        self::assertSame(PartInterface::TYPE_TEXT, $embeddedAttachment->getType());
+        self::assertSame(PartInterface::SUBTYPE_PLAIN, $embeddedAttachment->getSubtype());
+        self::assertSame(' this is content of test file', $embeddedAttachment->getDecodedContent());
+        self::assertSame('testfile.txt', $embeddedAttachment->getFilename());
 
-        static::assertFalse($embeddedAttachment->isEmbeddedMessage());
+        self::assertFalse($embeddedAttachment->isEmbeddedMessage());
 
         $this->expectException(NotEmbeddedMessageException::class);
 
@@ -79,43 +81,43 @@ final class EmbeddedMessageTest extends AbstractTest
         $mailbox->addMessage($raw);
 
         $message = $mailbox->getMessage(1);
-        static::assertSame('3-third-subject', $message->getSubject());
-        static::assertSame('3-third-content', $message->getBodyText());
+        self::assertSame('3-third-subject', $message->getSubject());
+        self::assertSame('3-third-content', $message->getBodyText());
 
         $attachments = $message->getAttachments();
-        static::assertCount(3, $attachments);
+        self::assertCount(3, $attachments);
 
         $attachment = \current($attachments);
-        static::assertNotFalse($attachment);
-        static::assertTrue($attachment->isEmbeddedMessage());
+        self::assertNotFalse($attachment);
+        self::assertTrue($attachment->isEmbeddedMessage());
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
-        static::assertSame('2-second-subject', $embeddedMessage->getSubject());
-        static::assertSame('2-second-content', $embeddedMessage->getBodyText());
+        self::assertSame('2-second-subject', $embeddedMessage->getSubject());
+        self::assertSame('2-second-content', $embeddedMessage->getBodyText());
 
         $embeddedAttachments = $embeddedMessage->getAttachments();
-        static::assertCount(2, $embeddedAttachments);
+        self::assertCount(2, $embeddedAttachments);
 
         $embeddedAttachment = \current($embeddedAttachments);
-        static::assertNotFalse($embeddedAttachment);
-        static::assertTrue($embeddedAttachment->isEmbeddedMessage());
+        self::assertNotFalse($embeddedAttachment);
+        self::assertTrue($embeddedAttachment->isEmbeddedMessage());
 
         $secondEmbeddedMessage = $embeddedAttachment->getEmbeddedMessage();
-        static::assertSame('1-first-subject', $secondEmbeddedMessage->getSubject());
-        static::assertSame('1-first-content', $secondEmbeddedMessage->getBodyText());
+        self::assertSame('1-first-subject', $secondEmbeddedMessage->getSubject());
+        self::assertSame('1-first-content', $secondEmbeddedMessage->getBodyText());
 
         $secondEmbeddedAttachments = $secondEmbeddedMessage->getAttachments();
-        static::assertCount(1, $secondEmbeddedAttachments);
+        self::assertCount(1, $secondEmbeddedAttachments);
 
         $secondEmbeddedAttachment = \current($secondEmbeddedAttachments);
-        static::assertNotFalse($secondEmbeddedAttachment);
-        static::assertTrue($secondEmbeddedAttachment->isEmbeddedMessage());
+        self::assertNotFalse($secondEmbeddedAttachment);
+        self::assertTrue($secondEmbeddedAttachment->isEmbeddedMessage());
 
         $thirdEmbeddedMessage = $secondEmbeddedAttachment->getEmbeddedMessage();
-        static::assertSame('0-zero-subject', $thirdEmbeddedMessage->getSubject());
-        static::assertSame('0-zero-content', $thirdEmbeddedMessage->getBodyText());
+        self::assertSame('0-zero-subject', $thirdEmbeddedMessage->getSubject());
+        self::assertSame('0-zero-content', $thirdEmbeddedMessage->getBodyText());
 
-        static::assertCount(0, $thirdEmbeddedMessage->getAttachments());
+        self::assertCount(0, $thirdEmbeddedMessage->getAttachments());
     }
 
     public function testEmbeddedMessageWithoutContentDisposition(): void
@@ -126,41 +128,41 @@ final class EmbeddedMessageTest extends AbstractTest
 
         $message     = $mailbox->getMessage(1);
         $attachments = $message->getAttachments();
-        static::assertCount(6, $attachments);
+        self::assertCount(6, $attachments);
 
         $attachment = \current($attachments);
-        static::assertNotFalse($attachment);
-        static::assertNotEmpty($attachment->getContent());
-        static::assertSame('file.jpg', $attachment->getFilename());
+        self::assertNotFalse($attachment);
+        self::assertNotEmpty($attachment->getContent());
+        self::assertSame('file.jpg', $attachment->getFilename());
 
         $attachment = \next($attachments);
-        static::assertNotFalse($attachment);
-        static::assertTrue($attachment->isEmbeddedMessage());
+        self::assertNotFalse($attachment);
+        self::assertTrue($attachment->isEmbeddedMessage());
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
-        static::assertSame('embedded_message_subject', $embeddedMessage->getSubject());
-        static::assertNotEmpty($embeddedMessage->getBodyText());
-        static::assertNotEmpty($embeddedMessage->getBodyHtml());
+        self::assertSame('embedded_message_subject', $embeddedMessage->getSubject());
+        self::assertNotEmpty($embeddedMessage->getBodyText());
+        self::assertNotEmpty($embeddedMessage->getBodyHtml());
 
         $attachment = \next($attachments);
-        static::assertNotFalse($attachment);
-        static::assertNotEmpty($attachment->getContent());
-        static::assertSame('file1.xlsx', $attachment->getFilename());
+        self::assertNotFalse($attachment);
+        self::assertNotEmpty($attachment->getContent());
+        self::assertSame('file1.xlsx', $attachment->getFilename());
 
         $attachment = \next($attachments);
-        static::assertNotFalse($attachment);
-        static::assertNotEmpty($attachment->getContent());
-        static::assertSame('file2.xlsx', $attachment->getFilename());
+        self::assertNotFalse($attachment);
+        self::assertNotEmpty($attachment->getContent());
+        self::assertSame('file2.xlsx', $attachment->getFilename());
 
         $attachment = \next($attachments);
-        static::assertNotFalse($attachment);
-        static::assertNotEmpty($attachment->getContent());
-        static::assertSame('file3.xlsx', $attachment->getFilename());
+        self::assertNotFalse($attachment);
+        self::assertNotEmpty($attachment->getContent());
+        self::assertSame('file3.xlsx', $attachment->getFilename());
 
         $attachment = \next($attachments);
-        static::assertNotFalse($attachment);
-        static::assertNotEmpty($attachment->getContent());
-        static::assertSame('file4.zip', $attachment->getFilename());
+        self::assertNotFalse($attachment);
+        self::assertNotEmpty($attachment->getContent());
+        self::assertSame('file4.zip', $attachment->getFilename());
     }
 
     public function testSaveEmbeddedMessage(): void
@@ -174,20 +176,20 @@ final class EmbeddedMessageTest extends AbstractTest
 
         // skip 1. non-embedded attachment (file.jpg) to embedded one
         $attachment = \next($attachments);
-        static::assertNotFalse($attachment);
-        static::assertTrue($attachment->isEmbeddedMessage());
+        self::assertNotFalse($attachment);
+        self::assertTrue($attachment->isEmbeddedMessage());
 
         $embeddedMessage = $attachment->getEmbeddedMessage();
 
         $file = \fopen('php://temp', 'w+');
         if (false === $file) {
-            static::fail('Unable to create temporary file stream');
+            self::fail('Unable to create temporary file stream');
         }
 
         $embeddedMessage->saveRawMessage($file);
         \fseek($file, 0);
 
         $rawEmbedded = $this->getFixture('embedded_email_without_content_disposition-embedded');
-        static::assertSame($rawEmbedded, \stream_get_contents($file));
+        self::assertSame($rawEmbedded, \stream_get_contents($file));
     }
 }

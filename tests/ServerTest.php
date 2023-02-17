@@ -7,11 +7,10 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\Connection;
 use Ddeboer\Imap\Exception\AuthenticationFailedException;
 use Ddeboer\Imap\Server;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \Ddeboer\Imap\Server
- */
-final class ServerTest extends AbstractTest
+#[CoversClass(Server::class)]
+final class ServerTest extends AbstractTestCase
 {
     public function testValidConnection(): void
     {
@@ -19,7 +18,7 @@ final class ServerTest extends AbstractTest
 
         $check = \imap_check($connection->getResource()->getStream());
 
-        static::assertInstanceOf(\stdClass::class, $check);
+        self::assertInstanceOf(\stdClass::class, $check);
     }
 
     public function testFailedAuthenticate(): void
@@ -35,12 +34,12 @@ final class ServerTest extends AbstractTest
     public function testEmptyPort(): void
     {
         if ('993' !== (string) \getenv('IMAP_SERVER_PORT')) {
-            static::markTestSkipped('Active IMAP test server must have 993 port for this test');
+            self::markTestSkipped('Active IMAP test server must have 993 port for this test');
         }
 
         $server = new Server((string) \getenv('IMAP_SERVER_NAME'), '', self::IMAP_FLAGS);
 
-        static::assertInstanceOf(Connection::class, $server->authenticate((string) \getenv('IMAP_USERNAME'), (string) \getenv('IMAP_PASSWORD')));
+        self::assertInstanceOf(Connection::class, $server->authenticate((string) \getenv('IMAP_USERNAME'), (string) \getenv('IMAP_PASSWORD')));
     }
 
     public function testCustomOptions(): void
@@ -51,12 +50,12 @@ final class ServerTest extends AbstractTest
 
         $check = \imap_check($connection->getResource()->getStream());
 
-        static::assertNotFalse($check);
+        self::assertNotFalse($check);
 
         $mailbox = \strtolower($check->Mailbox);
 
-        static::assertStringContainsString((string) \getenv('IMAP_USERNAME'), $mailbox);
-        static::assertStringNotContainsString('inbox', $mailbox);
-        static::assertStringContainsString('no_mailbox', $mailbox);
+        self::assertStringContainsString((string) \getenv('IMAP_USERNAME'), $mailbox);
+        self::assertStringNotContainsString('inbox', $mailbox);
+        self::assertStringContainsString('no_mailbox', $mailbox);
     }
 }

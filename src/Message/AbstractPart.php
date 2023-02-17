@@ -56,8 +56,7 @@ abstract class AbstractPart implements PartInterface
     private ?string $encoding    = null;
     private ?string $disposition = null;
     private ?string $description = null;
-    /** @var null|int|string */
-    private $bytes;
+    private string|int|null $bytes;
     private ?string $lines          = null;
     private ?string $content        = null;
     private ?string $decodedContent = null;

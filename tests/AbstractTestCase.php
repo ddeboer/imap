@@ -11,7 +11,7 @@ use Laminas\Mail;
 use Laminas\Mime;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractTest extends TestCase
+abstract class AbstractTestCase extends TestCase
 {
     public const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
 
@@ -81,14 +81,14 @@ abstract class AbstractTest extends TestCase
             );
         }
 
-        static::assertIsString($messageString);
+        self::assertIsString($messageString);
         $mailbox->addMessage($messageString);
     }
 
     final protected function getFixture(string $fixture): string
     {
         $content = \file_get_contents(\sprintf('%s/fixtures/%s.eml', __DIR__, $fixture));
-        static::assertIsString($content);
+        self::assertIsString($content);
 
         return $content;
     }

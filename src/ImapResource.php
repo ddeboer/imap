@@ -13,7 +13,7 @@ use IMAP\Connection;
 final class ImapResource implements ImapResourceInterface
 {
     private Connection $resource;
-    private ?MailboxInterface $mailbox           = null;
+    private ?MailboxInterface $mailbox;
     private static ?string $lastMailboxUsedCache = null;
 
     /**
