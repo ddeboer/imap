@@ -40,7 +40,7 @@ final class MessageIterator extends \ArrayIterator implements MessageIteratorInt
                 . ' try to cycle this "%s" with a native php function like foreach or with the method getArrayCopy(),'
                 . ' or check it by calling the methods valid().',
                 \is_object($current) ? \get_class($current) : \gettype($current),
-                static::class
+                self::class
             ));
         }
 

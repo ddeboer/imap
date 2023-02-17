@@ -5,48 +5,74 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Tests;
 
 use Ddeboer\Imap\Exception\InvalidSearchCriteriaException;
+use Ddeboer\Imap\Mailbox;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Search;
+use Ddeboer\Imap\Search\AbstractDate;
+use Ddeboer\Imap\Search\AbstractText;
+use Ddeboer\Imap\Search\Date\Before;
+use Ddeboer\Imap\Search\Date\On;
+use Ddeboer\Imap\Search\Date\Since;
+use Ddeboer\Imap\Search\Email\Bcc;
+use Ddeboer\Imap\Search\Email\Cc;
+use Ddeboer\Imap\Search\Email\From;
+use Ddeboer\Imap\Search\Email\To;
+use Ddeboer\Imap\Search\Flag\Answered;
+use Ddeboer\Imap\Search\Flag\Flagged;
+use Ddeboer\Imap\Search\Flag\Recent;
+use Ddeboer\Imap\Search\Flag\Seen;
+use Ddeboer\Imap\Search\Flag\Unanswered;
+use Ddeboer\Imap\Search\Flag\Unflagged;
+use Ddeboer\Imap\Search\Flag\Unseen;
+use Ddeboer\Imap\Search\LogicalOperator\All;
+use Ddeboer\Imap\Search\LogicalOperator\OrConditions;
+use Ddeboer\Imap\Search\RawExpression;
+use Ddeboer\Imap\Search\State\Deleted;
+use Ddeboer\Imap\Search\State\NewMessage;
+use Ddeboer\Imap\Search\State\Old;
+use Ddeboer\Imap\Search\State\Undeleted;
+use Ddeboer\Imap\Search\Text\Body;
+use Ddeboer\Imap\Search\Text\Keyword;
+use Ddeboer\Imap\Search\Text\Subject;
+use Ddeboer\Imap\Search\Text\Text;
+use Ddeboer\Imap\Search\Text\Unkeyword;
 use Ddeboer\Imap\SearchExpression;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Depends;
 
-/**
- * @covers \Ddeboer\Imap\Mailbox::getMessages
- * @covers \Ddeboer\Imap\Search\AbstractDate
- * @covers \Ddeboer\Imap\Search\AbstractText
- * @covers \Ddeboer\Imap\Search\Date\Before
- * @covers \Ddeboer\Imap\Search\Date\On
- * @covers \Ddeboer\Imap\Search\Date\Since
- * @covers \Ddeboer\Imap\Search\Email\Bcc
- * @covers \Ddeboer\Imap\Search\Email\Cc
- * @covers \Ddeboer\Imap\Search\Email\From
- * @covers \Ddeboer\Imap\Search\Email\To
- * @covers \Ddeboer\Imap\Search\Flag\Answered
- * @covers \Ddeboer\Imap\Search\Flag\Flagged
- * @covers \Ddeboer\Imap\Search\Flag\Recent
- * @covers \Ddeboer\Imap\Search\Flag\Seen
- * @covers \Ddeboer\Imap\Search\Flag\Unanswered
- * @covers \Ddeboer\Imap\Search\Flag\Unflagged
- * @covers \Ddeboer\Imap\Search\Flag\Unseen
- * @covers \Ddeboer\Imap\Search\LogicalOperator\All
- * @covers \Ddeboer\Imap\Search\LogicalOperator\OrConditions
- * @covers \Ddeboer\Imap\Search\RawExpression
- * @covers \Ddeboer\Imap\Search\State\Deleted
- * @covers \Ddeboer\Imap\Search\State\NewMessage
- * @covers \Ddeboer\Imap\Search\State\Old
- * @covers \Ddeboer\Imap\Search\State\Undeleted
- * @covers \Ddeboer\Imap\Search\Text\Body
- * @covers \Ddeboer\Imap\Search\Text\Keyword
- * @covers \Ddeboer\Imap\Search\Text\Subject
- * @covers \Ddeboer\Imap\Search\Text\Text
- * @covers \Ddeboer\Imap\Search\Text\Unkeyword
- * @covers \Ddeboer\Imap\SearchExpression
- */
-final class MailboxSearchTest extends AbstractTest
+#[CoversClass(Mailbox::class)]
+#[CoversClass(AbstractDate::class)]
+#[CoversClass(AbstractText::class)]
+#[CoversClass(Before::class)]
+#[CoversClass(On::class)]
+#[CoversClass(Since::class)]
+#[CoversClass(Bcc::class)]
+#[CoversClass(Cc::class)]
+#[CoversClass(From::class)]
+#[CoversClass(To::class)]
+#[CoversClass(Answered::class)]
+#[CoversClass(Flagged::class)]
+#[CoversClass(Recent::class)]
+#[CoversClass(Seen::class)]
+#[CoversClass(Unanswered::class)]
+#[CoversClass(Unflagged::class)]
+#[CoversClass(Unseen::class)]
+#[CoversClass(All::class)]
+#[CoversClass(OrConditions::class)]
+#[CoversClass(RawExpression::class)]
+#[CoversClass(Deleted::class)]
+#[CoversClass(NewMessage::class)]
+#[CoversClass(Old::class)]
+#[CoversClass(Undeleted::class)]
+#[CoversClass(Body::class)]
+#[CoversClass(Keyword::class)]
+#[CoversClass(Subject::class)]
+#[CoversClass(Text::class)]
+#[CoversClass(Unkeyword::class)]
+#[CoversClass(SearchExpression::class)]
+final class MailboxSearchTest extends AbstractTestCase
 {
-    /**
-     * @var MailboxInterface
-     */
-    protected $mailbox;
+    private MailboxInterface $mailbox;
 
     protected function setUp(): void
     {
@@ -61,12 +87,12 @@ final class MailboxSearchTest extends AbstractTest
 
         $messages = $this->mailbox->getMessages(new Search\Text\Subject($firstSubject));
 
-        static::assertCount(1, $messages);
-        static::assertSame($firstSubject, $messages->current()->getSubject());
+        self::assertCount(1, $messages);
+        self::assertSame($firstSubject, $messages->current()->getSubject());
 
         $messages = $this->mailbox->getMessages(new Search\Text\Subject(\uniqid('none_')));
 
-        static::assertCount(0, $messages);
+        self::assertCount(0, $messages);
     }
 
     public function testUnknownCriterion(): void
@@ -80,7 +106,7 @@ final class MailboxSearchTest extends AbstractTest
     {
         $messages = $this->mailbox->getMessages(new Search\RawExpression('ON "1-Oct-2017"'));
 
-        static::assertCount(0, $messages);
+        self::assertCount(0, $messages);
     }
 
     public function testSearchEscapes(): void
@@ -124,16 +150,16 @@ final class MailboxSearchTest extends AbstractTest
 
         $messages = $this->mailbox->getMessages($searchExpression);
 
-        static::assertCount(0, $messages);
+        self::assertCount(0, $messages);
     }
 
     public function testSpacesAndDoubleQuoteEscape(): void
     {
-        static::markTestIncomplete('Unable to get spaces and double quote search together');
+        self::markTestIncomplete('Unable to get spaces and double quote search together');
 
         // $spaceAndDoubleQuoteCondition = new Search\Text\Text('A " Z');
         // $messages = $this->mailbox->getMessages($spaceAndDoubleQuoteCondition);
-        // static::assertCount(0, $messages);
+        // self::assertCount(0, $messages);
     }
 
     public function testOrConditionFunctionality(): Search\LogicalOperator\OrConditions
@@ -143,19 +169,17 @@ final class MailboxSearchTest extends AbstractTest
             new Search\Text\Subject(\uniqid()),
         ]);
 
-        static::assertStringContainsString('(', $orCondition->toString());
+        self::assertStringContainsString('(', $orCondition->toString());
 
         return $orCondition;
     }
 
-    /**
-     * @depends testOrConditionFunctionality
-     */
+    #[Depends('testOrConditionFunctionality')]
     public function testOrConditionUsage(Search\LogicalOperator\OrConditions $orCondition): void
     {
-        static::markTestIncomplete('OR condition isn\'t supported by the current c-client library');
+        self::markTestIncomplete('OR condition isn\'t supported by the current c-client library');
 
         // $messages = $this->mailbox->getMessages($orCondition);
-        // static::assertCount(0, $messages);
+        // self::assertCount(0, $messages);
     }
 }

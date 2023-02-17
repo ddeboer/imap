@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Tests;
 
+use Ddeboer\Imap\Connection;
 use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use Ddeboer\Imap\ImapResource;
 use Ddeboer\Imap\Mailbox;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-/**
- * @covers \Ddeboer\Imap\Connection
- * @covers \Ddeboer\Imap\ImapResource
- *
- * @runTestsInSeparateProcesses
- */
-final class ConnectionTest extends AbstractTest
+#[CoversClass(Connection::class)]
+#[CoversClass(ImapResource::class)]
+#[RunTestsInSeparateProcesses]
+final class ConnectionTest extends AbstractTestCase
 {
     public function testValidResourceStream(): void
     {
@@ -23,19 +24,19 @@ final class ConnectionTest extends AbstractTest
 
         $check = \imap_check($connection->getResource()->getStream());
 
-        static::assertInstanceOf(\stdClass::class, $check);
+        self::assertInstanceOf(\stdClass::class, $check);
     }
 
     public function testCount(): void
     {
-        static::assertIsInt($this->getConnection()->count());
+        self::assertIsInt($this->getConnection()->count());
     }
 
     public function testPing(): void
     {
         $connection = $this->createConnection();
 
-        static::assertTrue($connection->ping());
+        self::assertTrue($connection->ping());
 
         $connection->close();
     }
@@ -43,31 +44,31 @@ final class ConnectionTest extends AbstractTest
     public function testQuota(): void
     {
         if (false === \getenv('IMAP_QUOTAROOT_SUPPORTED')) {
-            static::markTestSkipped('IMAP quota root support is disabled.');
+            self::markTestSkipped('IMAP quota root support is disabled.');
         }
 
         $quota = $this->getConnection()->getQuota();
 
-        static::assertArrayHasKey('usage', $quota);
-        static::assertIsInt($quota['usage']);
+        self::assertArrayHasKey('usage', $quota);
+        self::assertIsInt($quota['usage']);
 
-        static::assertArrayHasKey('limit', $quota);
+        self::assertArrayHasKey('limit', $quota);
         // @see quota_rule in .travis/dovecot_install.sh
-        static::assertSame(1048576, $quota['limit']);
+        self::assertSame(1048576, $quota['limit']);
     }
 
     public function testGetMailboxes(): void
     {
         $mailboxes = $this->getConnection()->getMailboxes();
         foreach ($mailboxes as $mailbox) {
-            static::assertInstanceOf(Mailbox::class, $mailbox);
+            self::assertInstanceOf(Mailbox::class, $mailbox);
         }
     }
 
     public function testGetMailbox(): void
     {
         $mailbox = $this->getConnection()->getMailbox('INBOX');
-        static::assertInstanceOf(Mailbox::class, $mailbox);
+        self::assertInstanceOf(Mailbox::class, $mailbox);
     }
 
     public function testCreateMailbox(): void
@@ -76,8 +77,8 @@ final class ConnectionTest extends AbstractTest
 
         $name    = \uniqid('test_');
         $mailbox = $connection->createMailbox($name);
-        static::assertSame($name, $mailbox->getName());
-        static::assertSame($name, $connection->getMailbox($name)->getName());
+        self::assertSame($name, $mailbox->getName());
+        self::assertSame($name, $connection->getMailbox($name)->getName());
 
         $connection->deleteMailbox($mailbox);
 
@@ -109,7 +110,7 @@ final class ConnectionTest extends AbstractTest
 
     public function testEscapesMailboxNames(): void
     {
-        static::assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid(self::SPECIAL_CHARS)));
+        self::assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid(self::SPECIAL_CHARS)));
     }
 
     public function testCustomExceptionOnInvalidMailboxName(): void
@@ -117,7 +118,7 @@ final class ConnectionTest extends AbstractTest
         $this->expectException(CreateMailboxException::class);
         $this->expectExceptionMessageMatches('/CANNOT/');
 
-        static::assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid("\t")));
+        self::assertInstanceOf(Mailbox::class, $this->getConnection()->createMailbox(\uniqid("\t")));
     }
 
     public function testGetInvalidMailbox(): void
@@ -130,11 +131,11 @@ final class ConnectionTest extends AbstractTest
     {
         $number  = (string) \mt_rand(100, 999);
         $conn    = $this->getConnection();
-        $mailbox = $conn->createMailbox($number);
+        $conn->createMailbox($number);
 
         $mailboxes = $conn->getMailboxes();
 
-        static::assertArrayHasKey($number, $mailboxes);
+        self::assertArrayHasKey($number, $mailboxes);
     }
 
     public function testMailboxSelectionAfterReconnect(): void
@@ -150,7 +151,7 @@ final class ConnectionTest extends AbstractTest
         $mailbox    = $connection->getMailbox($mailboxName);
 
         // This fails if we haven't properly reselected the mailbox
-        static::assertSame('Reconnect test', $mailbox->getMessages()->current()->getSubject());
+        self::assertSame('Reconnect test', $mailbox->getMessages()->current()->getSubject());
 
         $connection->close();
     }

@@ -1,0 +1,122 @@
+name: "CI"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+env:
+  INI_VALUES: zend.assertions=1,error_reporting=-1
+
+jobs:
+  composer-json-lint:
+    name: "Lint composer.json"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+          tools: composer-normalize,composer-require-checker,composer-unused
+      - uses: "ramsey/composer-install@v2"
+
+      - run: "composer validate --strict"
+      - run: "composer-normalize --dry-run"
+      - run: "composer-require-checker check --config-file=$(realpath composer-require-checker.json)"
+      - run: "composer-unused"
+
+  tests:
+    name: "Tests"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+        code-coverage:
+          - "none"
+        include:
+          - php-version: "8.1"
+            code-coverage: "pcov"
+
+    env:
+      IMAP_SERVER_NAME: dovecot.travis.dev
+      IMAP_SERVER_PORT: 993
+      IMAP_USERNAME: dovecot_travis_testuser
+      IMAP_PASSWORD: dovecot_travis_testpwd
+      IMAP_QUOTAROOT_SUPPORTED: true
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "${{ matrix.code-coverage }}"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+          extensions: "imap"
+      - uses: "ramsey/composer-install@v2"
+
+      - run: "sh .github/dovecot_install.sh"
+
+      - name: "Run tests without coverage"
+        if: ${{ matrix.code-coverage == 'none' }}
+        timeout-minutes: 3
+        run: "vendor/bin/phpunit --no-coverage --no-logging"
+
+      - name: "Run tests with coverage"
+        if: ${{ matrix.code-coverage != 'none' }}
+        timeout-minutes: 3
+        run: "vendor/bin/phpunit --no-coverage  --no-logging --coverage-clover=coverage.xml"
+
+      - name: "Send code coverage report to Codecov.io"
+        if: ${{ matrix.code-coverage != 'none' }}
+        uses: "codecov/codecov-action@v1"
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          fail_ci_if_error: true
+
+  coding-standards:
+    name: "Coding Standards"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+      - uses: "ramsey/composer-install@v2"
+
+      - run: "vendor/bin/php-cs-fixer fix --verbose --dry-run --diff"
+
+  static-analysis:
+    name: "Static Analysis"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+      - uses: "ramsey/composer-install@v2"
+
+      - run: "vendor/bin/phpstan analyse --no-progress --error-format=github"

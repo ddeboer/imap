@@ -4,11 +4,11 @@ about: Something is broken?
 labels: bug
 ---
 
-| Q | A
-| --- | ---
-| ddeboer/imap version | x.y.z
-| PHP version | x.y.z
-| IMAP provider | Like imap.gmail.com
+| Q                    | A                   |
+|----------------------|---------------------|
+| ddeboer/imap version | x.y.z               |
+| PHP version          | x.y.z               |
+| IMAP provider        | Like imap.gmail.com |
 
 #### Summary
 
