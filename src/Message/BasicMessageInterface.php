@@ -132,7 +132,7 @@ interface BasicMessageInterface extends PartInterface
     /**
      * Get all body HTML parts merged into 1 html.
      *
-     * @return null|string Null if message has no HTML message part
+     * @return null|string Null if message has no HTML message parts
      */
     public function getCompleteBodyHtml(): ?string;
 
@@ -140,6 +140,20 @@ interface BasicMessageInterface extends PartInterface
      * Get body text.
      */
     public function getBodyText(): ?string;
+
+    /**
+     * Get all body PLAIN parts as array.
+     *
+     * @return string[]
+     */
+    public function getBodyTextParts(): array;
+
+    /**
+     * Get all body PLAIN parts merged into 1 string.
+     *
+     * @return null|string Null if message has no PLAIN message parts
+     */
+    public function getCompleteBodyText(): ?string;
 
     /**
      * Get attachments (if any) linked to this e-mail.

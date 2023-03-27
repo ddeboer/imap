@@ -1082,6 +1082,57 @@ final class MessageTest extends AbstractTestCase
         self::assertNotNull($message->getCompleteBodyHtml());
     }
 
+    public function testMultipleTextParts(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('multiple_plain_parts_and_attachments'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        // Test attachments
+        $expectedFileNames = [
+            'attachment1.pdf',
+            'attachment2.pdf',
+        ];
+        $attachments = $message->getAttachments();
+        self::assertCount(2, $attachments);
+        foreach ($attachments as $attachment) {
+            self::assertContains($attachment->getFilename(), $expectedFileNames);
+        }
+
+        // Test html parts
+        self::assertCount(3, $message->getBodyTextParts());
+
+        // Test html parts
+        $completeBody = $message->getCompleteBodyText();
+        $completeBody = null === $completeBody ? '' : $completeBody;
+
+        self::assertStringContainsString('first', $completeBody);
+        self::assertStringContainsString('second', $completeBody);
+        self::assertStringContainsString('last', $completeBody);
+    }
+
+    public function testBodyTextEmpty(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('html_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        self::assertCount(0, $message->getBodyTextParts());
+
+        self::assertNull($message->getCompleteBodyText());
+    }
+
+    public function testBodyTextOnePart(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('plain_only'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        self::assertCount(1, $message->getBodyTextParts());
+
+        self::assertNotNull($message->getCompleteBodyText());
+    }
+
     public function testImapMimeHeaderDecodeReturnsFalse(): void
     {
         $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));
