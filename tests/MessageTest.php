@@ -1049,7 +1049,7 @@ final class MessageTest extends AbstractTestCase
         }
 
         // Test html parts
-        self::assertCount(3, $message->getBodyHtmlParts());
+        self::assertCount(3, $message->getAllContentsByType(Message::SUBTYPE_HTML));
 
         // Test html parts
         $completeBody = $message->getCompleteBodyHtml();
@@ -1066,7 +1066,7 @@ final class MessageTest extends AbstractTestCase
 
         $message = $this->mailbox->getMessage(1);
 
-        self::assertCount(0, $message->getBodyHtmlParts());
+        self::assertCount(0, $message->getAllContentsByType(Message::SUBTYPE_HTML));
 
         self::assertNull($message->getCompleteBodyHtml());
     }
@@ -1077,7 +1077,7 @@ final class MessageTest extends AbstractTestCase
 
         $message = $this->mailbox->getMessage(1);
 
-        self::assertCount(1, $message->getBodyHtmlParts());
+        self::assertCount(1, $message->getAllContentsByType(Message::SUBTYPE_HTML));
 
         self::assertNotNull($message->getCompleteBodyHtml());
     }
@@ -1100,7 +1100,7 @@ final class MessageTest extends AbstractTestCase
         }
 
         // Test html parts
-        self::assertCount(3, $message->getBodyTextParts());
+        self::assertCount(3, $message->getAllContentsByType(Message::SUBTYPE_PLAIN));
 
         // Test html parts
         $completeBody = $message->getCompleteBodyText();
@@ -1117,7 +1117,7 @@ final class MessageTest extends AbstractTestCase
 
         $message = $this->mailbox->getMessage(1);
 
-        self::assertCount(0, $message->getBodyTextParts());
+        self::assertCount(0, $message->getAllContentsByType(Message::SUBTYPE_PLAIN));
 
         self::assertNull($message->getCompleteBodyText());
     }
@@ -1128,7 +1128,7 @@ final class MessageTest extends AbstractTestCase
 
         $message = $this->mailbox->getMessage(1);
 
-        self::assertCount(1, $message->getBodyTextParts());
+        self::assertCount(1, $message->getAllContentsByType(Message::SUBTYPE_PLAIN));
 
         self::assertNotNull($message->getCompleteBodyText());
     }

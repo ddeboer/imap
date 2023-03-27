@@ -207,7 +207,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getBodyHtml(): ?string
     {
-        $htmlParts = $this->getBodyHtmlParts();
+        $htmlParts = $this->getAllContentsByType(self::SUBTYPE_HTML);
 
         return $htmlParts[0] ?? null;
     }
@@ -217,21 +217,22 @@ abstract class AbstractMessage extends AbstractPart
      *
      * @return string[]
      */
-    final public function getBodyHtmlParts(): array
+    final public function getAllContentsByType(string $type): array
     {
         $iterator  = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        $htmlParts = [];
+        $parts     = [];
+        /** @var PartInterface $part */
         foreach ($iterator as $part) {
-            if (self::SUBTYPE_HTML === $part->getSubtype()) {
-                $htmlParts[] = $part->getDecodedContent();
+            if ($type === $part->getSubtype()) {
+                $parts[] = $part->getDecodedContent();
             }
         }
-        if (\count($htmlParts) > 0) {
-            return $htmlParts;
+        if (\count($parts) > 0) {
+            return $parts;
         }
 
         // If message has no parts and is HTML, return content of message itself.
-        if (self::SUBTYPE_HTML === $this->getSubtype()) {
+        if ($type === $this->getSubtype()) {
             return [$this->getDecodedContent()];
         }
 
@@ -243,7 +244,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getCompleteBodyHtml(): ?string
     {
-        $htmlParts = $this->getBodyHtmlParts();
+        $htmlParts = $this->getAllContentsByType(self::SUBTYPE_HTML);
 
         if (1 === \count($htmlParts)) {
             return $htmlParts[0];
@@ -279,35 +280,9 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getBodyText(): ?string
     {
-        $plainParts = $this->getBodyTextParts();
+        $plainParts = $this->getAllContentsByType(self::SUBTYPE_PLAIN);
 
         return $plainParts[0] ?? null;
-    }
-
-    /**
-     * Get all body PLAIN parts as array.
-     *
-     * @return string[]
-     */
-    final public function getBodyTextParts(): array
-    {
-        $iterator   = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        $plainParts = [];
-        foreach ($iterator as $part) {
-            if (self::SUBTYPE_PLAIN === $part->getSubtype()) {
-                $plainParts[] = $part->getDecodedContent();
-            }
-        }
-        if (\count($plainParts) > 0) {
-            return $plainParts;
-        }
-
-        // If message has no parts and is HTML, return content of message itself.
-        if (self::SUBTYPE_PLAIN === $this->getSubtype()) {
-            return [$this->getDecodedContent()];
-        }
-
-        return [];
     }
 
     /**
@@ -317,7 +292,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getCompleteBodyText(): ?string
     {
-        $plainParts = $this->getBodyTextParts();
+        $plainParts = $this->getAllContentsByType(self::SUBTYPE_PLAIN);
 
         if (1 === \count($plainParts)) {
             return $plainParts[0];
@@ -326,7 +301,7 @@ abstract class AbstractMessage extends AbstractPart
             return null;
         }
 
-        return \implode(' ', $plainParts);
+        return \implode("\n", $plainParts);
     }
 
     /**

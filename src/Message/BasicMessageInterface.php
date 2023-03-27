@@ -116,18 +116,18 @@ interface BasicMessageInterface extends PartInterface
     public function getReferences(): array;
 
     /**
+     * Get message parts by type.
+     *
+     * @return string[]
+     */
+    public function getAllContentsByType(string $type): array;
+
+    /**
      * Get first body HTML part.
      *
      * @return null|string Null if message has no HTML message part
      */
     public function getBodyHtml(): ?string;
-
-    /**
-     * Get all body HTML parts as array.
-     *
-     * @return string[]
-     */
-    public function getBodyHtmlParts(): array;
 
     /**
      * Get all body HTML parts merged into 1 html.
@@ -140,13 +140,6 @@ interface BasicMessageInterface extends PartInterface
      * Get body text.
      */
     public function getBodyText(): ?string;
-
-    /**
-     * Get all body PLAIN parts as array.
-     *
-     * @return string[]
-     */
-    public function getBodyTextParts(): array;
 
     /**
      * Get all body PLAIN parts merged into 1 string.
