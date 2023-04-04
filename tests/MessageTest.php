@@ -1049,6 +1049,7 @@ final class MessageTest extends AbstractTestCase
         }
 
         // Test html parts
+        self::assertCount(3, $message->getBodyHtmlParts());
         self::assertCount(3, $message->getAllContentsByType(Message::SUBTYPE_HTML));
 
         // Test html parts

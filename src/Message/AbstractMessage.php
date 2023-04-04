@@ -213,7 +213,7 @@ abstract class AbstractMessage extends AbstractPart
     }
 
     /**
-     * Get body HTML parts.
+     * Get all contents parts of specific type (self::SUBTYPE_HTML or self::SUBTYPE_PLAIN).
      *
      * @return string[]
      */
@@ -231,12 +231,22 @@ abstract class AbstractMessage extends AbstractPart
             return $parts;
         }
 
-        // If message has no parts and is HTML, return content of message itself.
+        // If message has no parts and is of right type, return content of message.
         if ($type === $this->getSubtype()) {
             return [$this->getDecodedContent()];
         }
 
         return [];
+    }
+
+    /**
+     * Get body HTML parts.
+     *
+     * @return string[]
+     */
+    final public function getBodyHtmlParts(): array
+    {
+        return $this->getAllContentsByType(self::SUBTYPE_HTML);
     }
 
     /**

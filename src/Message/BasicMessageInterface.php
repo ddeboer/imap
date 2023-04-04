@@ -130,6 +130,13 @@ interface BasicMessageInterface extends PartInterface
     public function getBodyHtml(): ?string;
 
     /**
+     * Get all body HTML parts as array.
+     *
+     * @return string[]
+     */
+    public function getBodyHtmlParts(): array;
+
+    /**
      * Get all body HTML parts merged into 1 html.
      *
      * @return null|string Null if message has no HTML message parts
