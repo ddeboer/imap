@@ -120,7 +120,7 @@ interface BasicMessageInterface extends PartInterface
      *
      * @return string[]
      */
-    public function getAllContentsByType(string $type): array;
+    public function getAllContentsBySubtype(string $subtype): array;
 
     /**
      * Get first body HTML part.
