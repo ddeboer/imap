@@ -89,7 +89,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
 
         \restore_error_handler();
 
-        if (\is_numeric($msgno) && $msgno > 0) {
+        if ($msgno > 0) {
             $this->imapMsgNo = $msgno;
 
             return;
