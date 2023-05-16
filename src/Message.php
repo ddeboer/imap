@@ -80,7 +80,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
         $this->messageNumberVerified = true;
 
-        $msgno = null;
         \set_error_handler(static function (): bool {
             return true;
         });
