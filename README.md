@@ -157,7 +157,7 @@ By the way most of the common search criteria are available and functioning, bro
 References:
 
 1. https://stackoverflow.com/questions/36356715/imap-search-unknown-search-criterion-or
-1. imap-2007f.tar.gz: `./src/c-client/mail.c` and `./docs/internal.txt`
+2. imap-2007f.tar.gz: `./src/c-client/mail.c` and `./docs/internal.txt`
 
 #### Message Properties and Operations
 
@@ -182,7 +182,7 @@ $message->isDraft();
 $message->isSeen();
 ```
 
-Get message headers as a [\Ddeboer\Imap\Message\Headers](/src/Ddeboer/Imap/Message/Headers.php) object:
+Get message headers as a [\Ddeboer\Imap\Message\Headers](/src/Message/Headers.php) object:
 
 ```php
 $message->getHeaders();
