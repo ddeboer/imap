@@ -379,7 +379,7 @@ abstract class AbstractPart implements PartInterface
 
         // When the message is not multipart and the body is the attachment content
         // Prevents infinite recursion
-        if (self::isAttachment($this->structure) && !$this instanceof Attachment) {
+        if (!$this instanceof Attachment && self::isAttachment($this->structure)) {
             $this->parts[] = new Attachment($this->resource, $this->getNumber(), '1', $this->structure);
         }
 
