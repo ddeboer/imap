@@ -391,12 +391,11 @@ abstract class AbstractPart implements PartInterface
             }
             foreach ($parts as $key => $partStructure) {
                 $partNumber = (!$this instanceof Message) ? $this->partNumber . '.' : '';
-                $partNumber .= (string) ($key + 1);
+                $partNumber .= $key + 1;
 
                 $newPartClass = self::isAttachment($partStructure)
                     ? Attachment::class
-                    : SimplePart::class
-                ;
+                    : SimplePart::class;
 
                 $this->parts[] = new $newPartClass($this->resource, $this->getNumber(), $partNumber, $partStructure);
             }
