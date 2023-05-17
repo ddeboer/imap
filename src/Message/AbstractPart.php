@@ -379,7 +379,7 @@ abstract class AbstractPart implements PartInterface
 
         // When the message is not multipart and the body is the attachment content
         // Prevents infinite recursion
-        if (self::isAttachment($this->structure) && !$this instanceof Attachment) {
+        if (!$this instanceof Attachment && self::isAttachment($this->structure)) {
             $this->parts[] = new Attachment($this->resource, $this->getNumber(), '1', $this->structure);
         }
 
@@ -391,12 +391,11 @@ abstract class AbstractPart implements PartInterface
             }
             foreach ($parts as $key => $partStructure) {
                 $partNumber = (!$this instanceof Message) ? $this->partNumber . '.' : '';
-                $partNumber .= (string) ($key + 1);
+                $partNumber .= $key + 1;
 
                 $newPartClass = self::isAttachment($partStructure)
                     ? Attachment::class
-                    : SimplePart::class
-                ;
+                    : SimplePart::class;
 
                 $this->parts[] = new $newPartClass($this->resource, $this->getNumber(), $partNumber, $partStructure);
             }
@@ -446,10 +445,6 @@ abstract class AbstractPart implements PartInterface
         }
          */
 
-        if (self::SUBTYPE_RFC822 === \strtoupper($part->subtype)) {
-            return true;
-        }
-
-        return false;
+        return self::SUBTYPE_RFC822 === \strtoupper($part->subtype);
     }
 }
