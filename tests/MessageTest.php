@@ -632,7 +632,7 @@ final class MessageTest extends AbstractTestCase
     {
         $headers = 'From: from@there.com' . "\r\n"
             . 'To: to@here.com' . "\n"
-             . "\r\n";
+            . "\r\n";
         $originalMessage = $headers . 'Content' . "\n";
 
         $this->mailbox->addMessage($originalMessage);

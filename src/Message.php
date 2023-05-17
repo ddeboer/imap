@@ -80,7 +80,6 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
         $this->messageNumberVerified = true;
 
-        $msgno = null;
         \set_error_handler(static function (): bool {
             return true;
         });
@@ -89,7 +88,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
 
         \restore_error_handler();
 
-        if (\is_numeric($msgno) && $msgno > 0) {
+        if ($msgno > 0) {
             $this->imapMsgNo = $msgno;
 
             return;

@@ -341,7 +341,7 @@ abstract class AbstractMessage extends AbstractPart
                 $attachments[] = $childPart;
             }
             if ($childPart->hasChildren()) {
-                $attachments = \array_merge($attachments, self::gatherAttachments($childPart));
+                $attachments = [...$attachments, ...self::gatherAttachments($childPart)];
             }
         }
 

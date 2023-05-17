@@ -56,7 +56,6 @@ final class Headers extends Parameters
             case 'sender':
             case 'return_path':
                 \assert(\is_array($value));
-                /** @var \stdClass $address */
                 foreach ($value as $address) {
                     if (isset($address->mailbox)) {
                         $address->host     = $address->host ?? null;
