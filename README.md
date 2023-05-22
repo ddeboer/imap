@@ -188,11 +188,21 @@ Get message headers as a [\Ddeboer\Imap\Message\Headers](/src/Message/Headers.ph
 $message->getHeaders();
 ```
 
-Get message body as HTML or plain text:
+Get message body as HTML or plain text (only first part):
 
 ```php
 $message->getBodyHtml();    // Content of text/html part, if present
 $message->getBodyText();    // Content of text/plain part, if present
+```
+
+
+Get complete body (all parts):
+
+```php
+$body = $message->getCompleteBodyHtml();    // Content of text/html part, if present
+if ($body === null) { // If body is null, there are no HTML parts, so let's try getting the text body
+    $body = $message->getCompleteBodyText();    // Content of text/plain part, if present
+}
 ```
 
 Reading the message body keeps the message as unseen.

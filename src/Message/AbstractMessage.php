@@ -207,9 +207,36 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getBodyHtml(): ?string
     {
-        $htmlParts = $this->getBodyHtmlParts();
+        $htmlParts = $this->getAllContentsBySubtype(self::SUBTYPE_HTML);
 
         return $htmlParts[0] ?? null;
+    }
+
+    /**
+     * Get all contents parts of specific subtype (self::SUBTYPE_HTML or self::SUBTYPE_PLAIN).
+     *
+     * @return string[]
+     */
+    final public function getAllContentsBySubtype(string $subtype): array
+    {
+        $iterator  = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $parts     = [];
+        /** @var PartInterface $part */
+        foreach ($iterator as $part) {
+            if ($subtype === $part->getSubtype()) {
+                $parts[] = $part->getDecodedContent();
+            }
+        }
+        if (\count($parts) > 0) {
+            return $parts;
+        }
+
+        // If message has no parts and is of right type, return content of message.
+        if ($subtype === $this->getSubtype()) {
+            return [$this->getDecodedContent()];
+        }
+
+        return [];
     }
 
     /**
@@ -219,23 +246,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getBodyHtmlParts(): array
     {
-        $iterator  = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        $htmlParts = [];
-        foreach ($iterator as $part) {
-            if (self::SUBTYPE_HTML === $part->getSubtype()) {
-                $htmlParts[] = $part->getDecodedContent();
-            }
-        }
-        if (\count($htmlParts) > 0) {
-            return $htmlParts;
-        }
-
-        // If message has no parts and is HTML, return content of message itself.
-        if (self::SUBTYPE_HTML === $this->getSubtype()) {
-            return [$this->getDecodedContent()];
-        }
-
-        return [];
+        return $this->getAllContentsBySubtype(self::SUBTYPE_HTML);
     }
 
     /**
@@ -243,7 +254,7 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getCompleteBodyHtml(): ?string
     {
-        $htmlParts = $this->getBodyHtmlParts();
+        $htmlParts = $this->getAllContentsBySubtype(self::SUBTYPE_HTML);
 
         if (1 === \count($htmlParts)) {
             return $htmlParts[0];
@@ -279,19 +290,28 @@ abstract class AbstractMessage extends AbstractPart
      */
     final public function getBodyText(): ?string
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $part) {
-            if (self::SUBTYPE_PLAIN === $part->getSubtype()) {
-                return $part->getDecodedContent();
-            }
+        $plainParts = $this->getAllContentsBySubtype(self::SUBTYPE_PLAIN);
+
+        return $plainParts[0] ?? null;
+    }
+
+    /**
+     * Get all body PLAIN parts merged into 1 string.
+     *
+     * @return null|string Null if message has no PLAIN message parts
+     */
+    final public function getCompleteBodyText(): ?string
+    {
+        $plainParts = $this->getAllContentsBySubtype(self::SUBTYPE_PLAIN);
+
+        if (1 === \count($plainParts)) {
+            return $plainParts[0];
+        }
+        if (0 === \count($plainParts)) {
+            return null;
         }
 
-        // If message has no parts, return content of message itself.
-        if (self::SUBTYPE_PLAIN === $this->getSubtype()) {
-            return $this->getDecodedContent();
-        }
-
-        return null;
+        return \implode("\n", $plainParts);
     }
 
     /**

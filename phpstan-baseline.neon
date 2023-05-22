@@ -11,16 +11,6 @@ parameters:
 			path: src/Mailbox.php
 
 		-
-			message: "#^Cannot call method getDecodedContent\\(\\) on mixed\\.$#"
-			count: 2
-			path: src/Message/AbstractMessage.php
-
-		-
-			message: "#^Cannot call method getSubtype\\(\\) on mixed\\.$#"
-			count: 2
-			path: src/Message/AbstractMessage.php
-
-		-
 			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be true\\.$#"
 			count: 1
 			path: src/Message/AbstractPart.php
