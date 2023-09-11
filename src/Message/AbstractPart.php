@@ -284,8 +284,6 @@ abstract class AbstractPart implements PartInterface
 
     /**
      * Get current child part.
-     *
-     * @return mixed
      */
     #[\ReturnTypeWillChange]
     final public function current()

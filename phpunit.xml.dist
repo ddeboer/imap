@@ -13,9 +13,6 @@
     <ini name="error_reporting" value="E_ALL"/>
   </php>
   <coverage>
-    <include>
-      <directory suffix=".php">./src</directory>
-    </include>
     <report>
       <html outputDirectory="coverage"/>
       <text outputFile="php://stdout" showOnlySummary="true"/>
@@ -26,4 +23,9 @@
       <directory>./tests/</directory>
     </testsuite>
   </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </source>
 </phpunit>
