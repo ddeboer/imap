@@ -47,7 +47,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Get Mailbox status.
      */
-    public function getStatus(int $flags = null): \stdClass;
+    public function getStatus(?int $flags = null): \stdClass;
 
     /**
      * Bulk Set Flag for Messages.
@@ -70,7 +70,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      *
      * @param ConditionInterface $search Search expression (optional)
      */
-    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false, string $charset = null): MessageIteratorInterface;
+    public function getMessages(?ConditionInterface $search = null, ?int $sortCriteria = null, bool $descending = false, ?string $charset = null): MessageIteratorInterface;
 
     /**
      * Get message iterator for a sequence.
@@ -96,7 +96,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
     /**
      * Add a message to the mailbox.
      */
-    public function addMessage(string $message, string $options = null, \DateTimeInterface $internalDate = null): bool;
+    public function addMessage(string $message, ?string $options = null, ?\DateTimeInterface $internalDate = null): bool;
 
     /**
      * Returns a tree of threaded message for the current Mailbox.
@@ -111,7 +111,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * @param array<int, int|string>|MessageIterator|string $numbers Message numbers
      * @param MailboxInterface                              $mailbox Destination Mailbox to move the messages to
      *
-     * @throws \Ddeboer\Imap\Exception\MessageMoveException
+     * @throws Exception\MessageMoveException
      */
     public function move($numbers, self $mailbox): void;
 
@@ -121,7 +121,7 @@ interface MailboxInterface extends \Countable, \IteratorAggregate
      * @param array<int, int|string>|MessageIterator|string $numbers Message numbers
      * @param MailboxInterface                              $mailbox Destination Mailbox to copy the messages to
      *
-     * @throws \Ddeboer\Imap\Exception\MessageCopyException
+     * @throws Exception\MessageCopyException
      */
     public function copy($numbers, self $mailbox): void;
 }

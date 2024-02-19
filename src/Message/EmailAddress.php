@@ -14,7 +14,7 @@ final class EmailAddress
     private ?string $name;
     private ?string $address;
 
-    public function __construct(string $mailbox, string $hostname = null, string $name = null)
+    public function __construct(string $mailbox, ?string $hostname = null, ?string $name = null)
     {
         $this->mailbox  = $mailbox;
         $this->hostname = $hostname;

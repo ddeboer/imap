@@ -85,12 +85,12 @@ final class MailboxSearchTest extends AbstractTestCase
         $this->createTestMessage($this->mailbox, $firstSubject);
         $this->createTestMessage($this->mailbox, \uniqid('second_'));
 
-        $messages = $this->mailbox->getMessages(new Search\Text\Subject($firstSubject));
+        $messages = $this->mailbox->getMessages(new Subject($firstSubject));
 
         self::assertCount(1, $messages);
         self::assertSame($firstSubject, $messages->current()->getSubject());
 
-        $messages = $this->mailbox->getMessages(new Search\Text\Subject(\uniqid('none_')));
+        $messages = $this->mailbox->getMessages(new Subject(\uniqid('none_')));
 
         self::assertCount(0, $messages);
     }
@@ -104,7 +104,7 @@ final class MailboxSearchTest extends AbstractTestCase
 
     public function testRawExpressionCondition(): void
     {
-        $messages = $this->mailbox->getMessages(new Search\RawExpression('ON "1-Oct-2017"'));
+        $messages = $this->mailbox->getMessages(new RawExpression('ON "1-Oct-2017"'));
 
         self::assertCount(0, $messages);
     }
@@ -117,30 +117,30 @@ final class MailboxSearchTest extends AbstractTestCase
         $date = new \DateTimeImmutable();
 
         $conditions = [
-            new Search\LogicalOperator\All(),
-            new Search\Date\Since($date),
-            new Search\Date\Before($date),
-            new Search\Date\On($date),
-            new Search\Email\Bcc($specialEmail),
-            new Search\Email\Cc($specialEmail),
-            new Search\Email\From($specialEmail),
-            new Search\Email\To($specialEmail),
-            new Search\Flag\Answered(),
-            new Search\Flag\Flagged(),
-            new Search\Flag\Recent(),
-            new Search\Flag\Seen(),
-            new Search\Flag\Unanswered(),
-            new Search\Flag\Unflagged(),
-            new Search\Flag\Unseen(),
-            new Search\State\Deleted(),
-            new Search\State\NewMessage(),
-            new Search\State\Old(),
-            new Search\State\Undeleted(),
-            new Search\Text\Body($specialChars),
-            new Search\Text\Keyword($specialChars),
-            new Search\Text\Subject($specialChars),
-            new Search\Text\Text($specialChars),
-            new Search\Text\Unkeyword($specialChars),
+            new All(),
+            new Since($date),
+            new Before($date),
+            new On($date),
+            new Bcc($specialEmail),
+            new Cc($specialEmail),
+            new From($specialEmail),
+            new To($specialEmail),
+            new Answered(),
+            new Flagged(),
+            new Recent(),
+            new Seen(),
+            new Unanswered(),
+            new Unflagged(),
+            new Unseen(),
+            new Deleted(),
+            new NewMessage(),
+            new Old(),
+            new Undeleted(),
+            new Body($specialChars),
+            new Keyword($specialChars),
+            new Subject($specialChars),
+            new Text($specialChars),
+            new Unkeyword($specialChars),
         ];
 
         $searchExpression = new SearchExpression();
@@ -162,11 +162,11 @@ final class MailboxSearchTest extends AbstractTestCase
         // self::assertCount(0, $messages);
     }
 
-    public function testOrConditionFunctionality(): Search\LogicalOperator\OrConditions
+    public function testOrConditionFunctionality(): OrConditions
     {
-        $orCondition = new Search\LogicalOperator\OrConditions([
-            new Search\Text\Body(\uniqid()),
-            new Search\Text\Subject(\uniqid()),
+        $orCondition = new OrConditions([
+            new Body(\uniqid()),
+            new Subject(\uniqid()),
         ]);
 
         self::assertStringContainsString('(', $orCondition->toString());
@@ -175,7 +175,7 @@ final class MailboxSearchTest extends AbstractTestCase
     }
 
     #[Depends('testOrConditionFunctionality')]
-    public function testOrConditionUsage(Search\LogicalOperator\OrConditions $orCondition): void
+    public function testOrConditionUsage(OrConditions $orCondition): void
     {
         self::markTestIncomplete('OR condition isn\'t supported by the current c-client library');
 

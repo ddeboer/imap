@@ -19,7 +19,7 @@ final class ImapResource implements ImapResourceInterface
     /**
      * Constructor.
      */
-    public function __construct(Connection $resource, MailboxInterface $mailbox = null)
+    public function __construct(Connection $resource, ?MailboxInterface $mailbox = null)
     {
         $this->resource = $resource;
         $this->mailbox  = $mailbox;

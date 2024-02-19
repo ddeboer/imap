@@ -93,7 +93,7 @@ final class Mailbox implements MailboxInterface
         return $return;
     }
 
-    public function getStatus(int $flags = null): \stdClass
+    public function getStatus(?int $flags = null): \stdClass
     {
         $return = \imap_status($this->resource->getStream(), $this->getFullEncodedName(), $flags ?? \SA_ALL);
 
@@ -114,7 +114,7 @@ final class Mailbox implements MailboxInterface
         return \imap_clearflag_full($this->resource->getStream(), $this->prepareMessageIds($numbers), $flag, \ST_UID);
     }
 
-    public function getMessages(ConditionInterface $search = null, int $sortCriteria = null, bool $descending = false, string $charset = null): MessageIteratorInterface
+    public function getMessages(?ConditionInterface $search = null, ?int $sortCriteria = null, bool $descending = false, ?string $charset = null): MessageIteratorInterface
     {
         if (null === $search) {
             $search = new All();
@@ -191,7 +191,7 @@ final class Mailbox implements MailboxInterface
         return $this->getMessages();
     }
 
-    public function addMessage(string $message, string $options = null, \DateTimeInterface $internalDate = null): bool
+    public function addMessage(string $message, ?string $options = null, ?\DateTimeInterface $internalDate = null): bool
     {
         $arguments = [
             $this->resource->getStream(),

@@ -37,7 +37,7 @@ abstract class AbstractTestCase extends TestCase
         return $server->authenticate((string) \getenv('IMAP_USERNAME'), (string) \getenv('IMAP_PASSWORD'));
     }
 
-    final protected function createMailbox(ConnectionInterface $connection = null): MailboxInterface
+    final protected function createMailbox(?ConnectionInterface $connection = null): MailboxInterface
     {
         $connection        = $connection ?? $this->getConnection();
         $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
@@ -49,10 +49,10 @@ abstract class AbstractTestCase extends TestCase
     final protected function createTestMessage(
         MailboxInterface $mailbox,
         string $subject,
-        string $contents = null,
-        string $encoding = null,
-        string $charset = null,
-        string $overwriteCharset = null
+        ?string $contents = null,
+        ?string $encoding = null,
+        ?string $charset = null,
+        ?string $overwriteCharset = null
     ): void {
         $bodyPart = new Mime\Part($contents ?? \uniqid($subject));
         $bodyPart->setType(Mime\Mime::TYPE_TEXT);
