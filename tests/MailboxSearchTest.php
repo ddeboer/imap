@@ -111,7 +111,7 @@ final class MailboxSearchTest extends AbstractTestCase
 
     public function testSearchEscapes(): void
     {
-        $specialChars = 'A_ spaces _09!#$%&\'*+-/=?^_`{|}~.(),:;<>@[\\]_èπ€_Z';
+        $specialChars = 'A_ spaces _09!#$%&\'*+-/=?^_`{|}~.(),:;<>@[\]_èπ€_Z';
         $specialEmail = $specialChars . '@example.com';
 
         $date = new \DateTimeImmutable();

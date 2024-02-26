@@ -171,14 +171,14 @@ final class MailboxTest extends AbstractTestCase
             self::assertFalse($message->isFlagged());
         }
 
-        $this->mailbox->setFlag('\\Flagged', $messages);
+        $this->mailbox->setFlag('\Flagged', $messages);
 
         foreach ($messages as $uid) {
             $message = $this->mailbox->getMessage($uid);
             self::assertTrue($message->isFlagged());
         }
 
-        $this->mailbox->clearFlag('\\Flagged', $messages);
+        $this->mailbox->clearFlag('\Flagged', $messages);
 
         foreach ($messages as $uid) {
             $message = $this->mailbox->getMessage($uid);
@@ -186,7 +186,7 @@ final class MailboxTest extends AbstractTestCase
         }
 
         // Set flag for messages from another mailbox
-        $anotherMailbox->setFlag('\\Flagged', [1, 2, 3]);
+        $anotherMailbox->setFlag('\Flagged', [1, 2, 3]);
 
         self::assertTrue($anotherMailbox->getMessage(2)->isFlagged());
     }
@@ -201,20 +201,20 @@ final class MailboxTest extends AbstractTestCase
             $this->createTestMessage($mailbox, 'Message ' . $uid);
         }
 
-        $mailbox->setFlag('\\Seen', [
+        $mailbox->setFlag('\Seen', [
             '1,2',
             '3',
             '4:6',
         ]);
-        $mailbox->setFlag('\\Seen', '7,8:10');
+        $mailbox->setFlag('\Seen', '7,8:10');
 
         foreach ($uids as $uid) {
             $message = $mailbox->getMessage($uid);
             self::assertTrue($message->isSeen());
         }
 
-        $mailbox->clearFlag('\\Seen', '1,2,3,4:6');
-        $mailbox->clearFlag('\\Seen', [
+        $mailbox->clearFlag('\Seen', '1,2,3,4:6');
+        $mailbox->clearFlag('\Seen', [
             '7:9',
             '10',
         ]);
@@ -264,7 +264,7 @@ final class MailboxTest extends AbstractTestCase
     {
         $mailbox = $this->createMailbox();
 
-        $mailbox->addMessage($this->getFixture('thread/unrelated'), '\\Seen', new \DateTimeImmutable('2012-01-03T10:30:03+01:00'));
+        $mailbox->addMessage($this->getFixture('thread/unrelated'), '\Seen', new \DateTimeImmutable('2012-01-03T10:30:03+01:00'));
 
         $message = $mailbox->getMessage(1);
 

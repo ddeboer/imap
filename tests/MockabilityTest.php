@@ -81,13 +81,11 @@ final class MockabilityTest extends TestCase
 
         self::assertCount(1, $loopedMessages);
         $foundMessage = \current($loopedMessages);
-        self::assertInstanceOf(MessageInterface::class, $foundMessage);
-        $attachments = $foundMessage->getAttachments();
+        $attachments  = $foundMessage->getAttachments();
 
         self::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
-        self::assertNotFalse($attachment);
         self::assertSame($attachmentFilename, $attachment->getFilename());
     }
 }
