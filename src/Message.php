@@ -210,7 +210,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
 
     public function markAsSeen(): bool
     {
-        return $this->setFlag('\\Seen');
+        return $this->setFlag('\Seen');
     }
 
     public function copy(MailboxInterface $mailbox): void

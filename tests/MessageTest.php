@@ -49,7 +49,7 @@ final class MessageTest extends AbstractTestCase
     ];
 
     private const CHARSETS = [
-        'ASCII'        => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+        'ASCII'        => '! "#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
         'GB18030'      => "　、。〃々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〝〞〡〢〣〤〥〦〧〨〩〾一\u{200b}丁\u{200b}丂踰\u{200b}踱\u{200b}踲\u{200b}",
         'ISO-8859-6'   => 'ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىي',
         'ISO-8859-7'   => 'ΆΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ2ΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ',
@@ -337,7 +337,7 @@ final class MessageTest extends AbstractTestCase
         self::assertSame('This one: is "right"', $cc[0]->getName());
         self::assertSame('dong.com', $cc[0]->getHostname());
         self::assertSame('ding@dong.com', $cc[0]->getAddress());
-        self::assertSame('"This one: is \\"right\\"" <ding@dong.com>', $cc[0]->getFullAddress());
+        self::assertSame('"This one: is \"right\"" <ding@dong.com>', $cc[0]->getFullAddress());
 
         self::assertInstanceOf(EmailAddress::class, $cc[1]);
         self::assertSame('No-address', $cc[1]->getMailbox());
@@ -531,7 +531,6 @@ final class MessageTest extends AbstractTestCase
         self::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
-        self::assertNotFalse($attachment);
         self::assertSame('Hi!', $attachment->getDecodedContent());
     }
 
@@ -572,7 +571,6 @@ final class MessageTest extends AbstractTestCase
             self::assertCount(1, $emails, $type);
 
             $email = \current($emails);
-            self::assertNotFalse($email);
             self::assertSame(\sprintf('%s@here.com', \strtolower($type)), $email->getAddress(), $type);
         }
     }
@@ -679,15 +677,15 @@ final class MessageTest extends AbstractTestCase
 
         self::assertFalse($message->isFlagged());
 
-        $message->setFlag('\\Flagged');
+        $message->setFlag('\Flagged');
 
         self::assertTrue($message->isFlagged());
 
-        $message->clearFlag('\\Flagged');
+        $message->clearFlag('\Flagged');
 
         self::assertFalse($message->isFlagged());
 
-        $message->setFlag('\\Seen');
+        $message->setFlag('\Seen');
         self::assertSame('R', $message->isRecent());
         self::assertTrue($message->isSeen());
     }
@@ -1008,7 +1006,6 @@ final class MessageTest extends AbstractTestCase
         self::assertCount(1, $attachments);
 
         $attachment = \current($attachments);
-        self::assertNotFalse($attachment);
         self::assertSame('Price4VladDaKar.xlsx', $attachment->getFilename());
     }
 

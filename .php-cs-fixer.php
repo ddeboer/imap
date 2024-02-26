@@ -21,7 +21,6 @@ return (new PhpCsFixer\Config())
         'concat_space'                              => ['spacing' => 'one'],
         'echo_tag_syntax'                           => ['format' => 'long'],
         'error_suppression'                         => false,
-        'escape_implicit_backslashes'               => true,
         'explicit_indirect_variable'                => true,
         'explicit_string_variable'                  => true,
         'fully_qualified_strict_types'              => true,
@@ -63,6 +62,7 @@ return (new PhpCsFixer\Config())
         'space_after_semicolon'                     => true,
         'static_lambda'                             => true,
         'strict_comparison'                         => true,
+        'string_implicit_backslashes'               => true,
         'string_line_ending'                        => true,
     ])
     ->setFinder(

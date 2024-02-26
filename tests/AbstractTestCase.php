@@ -15,7 +15,7 @@ abstract class AbstractTestCase extends TestCase
 {
     public const IMAP_FLAGS = '/imap/ssl/novalidate-cert';
 
-    public const SPECIAL_CHARS = 'A_\\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
+    public const SPECIAL_CHARS = 'A_\|!"£$%&()=?àèìòùÀÈÌÒÙ<>-@#[]_ß_б_π_€_✔_你_يد_Z_';
 
     protected ?string $mailboxName;
     protected ?string $altName;
