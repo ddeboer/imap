@@ -26,7 +26,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
           tools: composer-normalize,composer-require-checker,composer-unused
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - run: "composer validate --strict"
       - run: "composer-normalize --dry-run"
@@ -61,7 +61,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
           extensions: "imap"
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - run: "sh .github/dovecot_install.sh"
 
@@ -98,7 +98,7 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - run: "vendor/bin/php-cs-fixer fix --verbose --dry-run --diff"
 
@@ -117,6 +117,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - run: "vendor/bin/phpstan analyse --no-progress --error-format=github"
