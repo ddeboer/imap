@@ -1,4 +1,4 @@
-PHP_DOCKER_VERSION := thecodingmachine/php:8.2-v4-cli
+PHP_DOCKER_VERSION := thecodingmachine/php:8.3-v4-cli
 PHP_BIN := docker run -it --rm \
 	--network=ddeboer_imap_network \
 	--env IMAP_SERVER_NAME=ddeboer_imap_server \

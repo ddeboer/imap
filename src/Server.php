@@ -39,7 +39,7 @@ final class Server implements ServerInterface
         string $flags = '/imap/ssl/validate-cert',
         array $parameters = [],
         int $options = 0,
-        int $retries = 1
+        int $retries = 1,
     ) {
         if (!\function_exists('imap_open')) {
             throw new \RuntimeException('IMAP extension must be enabled');

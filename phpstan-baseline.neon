@@ -119,3 +119,13 @@ parameters:
 			message: "#^Cannot access property \\$parts on mixed\\.$#"
 			count: 2
 			path: tests/MessageTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) expects array\\|ArrayAccess\\<\\(int\\|string\\), mixed\\>, Ddeboer\\\\Imap\\\\Message\\\\Headers given\\.$#"
+			count: 3
+			path: tests/MessageTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayNotHasKey\\(\\) expects array\\|ArrayAccess\\<\\(int\\|string\\), mixed\\>, Ddeboer\\\\Imap\\\\Message\\\\Headers given\\.$#"
+			count: 2
+			path: tests/MessageTest.php

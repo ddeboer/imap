@@ -7,11 +7,9 @@ namespace Ddeboer\Imap;
 use Ddeboer\Imap\Exception\ImapFetchheaderException;
 use Ddeboer\Imap\Exception\InvalidHeadersException;
 use Ddeboer\Imap\Exception\MessageCopyException;
-use Ddeboer\Imap\Exception\MessageDeleteException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
 use Ddeboer\Imap\Exception\MessageMoveException;
 use Ddeboer\Imap\Exception\MessageStructureException;
-use Ddeboer\Imap\Exception\MessageUndeleteException;
 
 /**
  * An IMAP message (e-mail).
@@ -238,18 +236,15 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to true on header
         $this->clearHeaders();
 
-        if (!\imap_delete($this->resource->getStream(), (string) $this->getNumber(), \FT_UID)) {
-            throw new MessageDeleteException(\sprintf('Message "%s" cannot be deleted', $this->getNumber()));
-        }
+        \imap_delete($this->resource->getStream(), (string) $this->getNumber(), \FT_UID);
     }
 
     public function undelete(): void
     {
         // 'deleted' header changed, force to reload headers, would be better to set deleted flag to false on header
         $this->clearHeaders();
-        if (!\imap_undelete($this->resource->getStream(), (string) $this->getNumber(), \FT_UID)) {
-            throw new MessageUndeleteException(\sprintf('Message "%s" cannot be undeleted', $this->getNumber()));
-        }
+
+        \imap_undelete($this->resource->getStream(), (string) $this->getNumber(), \FT_UID);
     }
 
     public function setFlag(string $flag): bool
