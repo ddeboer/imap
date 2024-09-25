@@ -74,7 +74,7 @@ abstract class AbstractPart implements PartInterface
         ImapResourceInterface $resource,
         int $messageNumber,
         string $partNumber,
-        \stdClass $structure
+        \stdClass $structure,
     ) {
         $this->resource      = $resource;
         $this->messageNumber = $messageNumber;

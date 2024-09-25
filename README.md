@@ -7,7 +7,7 @@
 
 A PHP IMAP library to read and process e-mails over IMAP protocol, built with robust Object-Oriented architecture.
 
-This library requires PHP >= 8.2 with [IMAP](https://www.php.net/manual/en/book.imap.php),
+This library requires PHP >= 8.3 with [IMAP](https://www.php.net/manual/en/book.imap.php),
 [iconv](https://www.php.net/manual/en/book.iconv.php) and
 [Multibyte String](https://www.php.net/manual/en/book.mbstring.php) extensions installed.
 

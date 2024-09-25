@@ -52,7 +52,7 @@ abstract class AbstractTestCase extends TestCase
         ?string $contents = null,
         ?string $encoding = null,
         ?string $charset = null,
-        ?string $overwriteCharset = null
+        ?string $overwriteCharset = null,
     ): void {
         $bodyPart = new Mime\Part($contents ?? \uniqid($subject));
         $bodyPart->setType(Mime\Mime::TYPE_TEXT);
