@@ -62,6 +62,8 @@ jobs:
           ini-values: "${{ env.INI_VALUES }}"
           extensions: "imap"
       - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--ignore-platform-req=php"
 
       - run: "sh .github/dovecot_install.sh"
 
