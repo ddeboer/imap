@@ -10,6 +10,7 @@ use Ddeboer\Imap\Exception\ImapGetmailboxesException;
 use Ddeboer\Imap\Exception\ImapNumMsgException;
 use Ddeboer\Imap\Exception\ImapQuotaException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use Ddeboer\Imap\Exception\SubscribeMailboxException;
 
 /**
  * A connection to an IMAP server that is authenticated for a user.
@@ -175,6 +176,13 @@ final class Connection implements ConnectionInterface
             \assert(\is_string($name));
 
             $this->mailboxNames[$name] = $mailboxInfo;
+        }
+    }
+
+    public function subscribeMailbox(string $name): void
+    {
+        if (false === \imap_subscribe($this->resource->getStream(), $this->server . \mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'))) {
+            throw new SubscribeMailboxException(\sprintf('Can not subscribe to "%s" mailbox at "%s"', $name, $this->server));
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Ddeboer\Imap;
 use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use Ddeboer\Imap\Exception\SubscribeMailboxException;
 
 /**
  * A connection to an IMAP server that is authenticated for a user.
@@ -76,4 +77,11 @@ interface ConnectionInterface extends \Countable
      * @throws DeleteMailboxException
      */
     public function deleteMailbox(MailboxInterface $mailbox): void;
+
+    /**
+     * Subscribe to mailbox.
+     *
+     * @throws SubscribeMailboxException
+     */
+    public function subscribeMailbox(string $name): void;
 }

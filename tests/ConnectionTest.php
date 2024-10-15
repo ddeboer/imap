@@ -8,6 +8,7 @@ use Ddeboer\Imap\Connection;
 use Ddeboer\Imap\Exception\CreateMailboxException;
 use Ddeboer\Imap\Exception\DeleteMailboxException;
 use Ddeboer\Imap\Exception\MailboxDoesNotExistException;
+use Ddeboer\Imap\Exception\SubscribeMailboxException;
 use Ddeboer\Imap\ImapResource;
 use Ddeboer\Imap\Mailbox;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -154,5 +155,19 @@ final class ConnectionTest extends AbstractTestCase
         self::assertSame('Reconnect test', $mailbox->getMessages()->current()->getSubject());
 
         $connection->close();
+    }
+
+    public function testSubscribeMailbox(): void
+    {
+        $connection = $this->getConnection();
+
+        $name    = \uniqid('test_');
+        $mailbox = $connection->createMailbox($name);
+        $connection->subscribeMailbox($name);
+
+        $connection->deleteMailbox($mailbox);
+
+        $this->expectException(SubscribeMailboxException::class);
+        $connection->subscribeMailbox($name);
     }
 }
