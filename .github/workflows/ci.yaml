@@ -79,7 +79,7 @@ jobs:
 
       - name: "Send code coverage report to Codecov.io"
         if: ${{ matrix.code-coverage != 'none' }}
-        uses: "codecov/codecov-action@v4"
+        uses: "codecov/codecov-action@v5"
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
