@@ -14,7 +14,7 @@ use Ddeboer\Imap\Exception\MessageStructureException;
 /**
  * An IMAP message (e-mail).
  */
-final class Message extends Message\AbstractMessage implements MessageInterface
+class Message extends Message\AbstractMessage implements MessageInterface
 {
     private bool $messageNumberVerified = false;
     private int $imapMsgNo              = 0;

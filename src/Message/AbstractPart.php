@@ -239,7 +239,7 @@ abstract class AbstractPart implements PartInterface
     /**
      * Get raw message content.
      */
-    final protected function doGetContent(string $partNumber): string
+    protected function doGetContent(string $partNumber): string
     {
         $return = \imap_fetchbody(
             $this->resource->getStream(),
@@ -260,7 +260,7 @@ abstract class AbstractPart implements PartInterface
      *
      * @param resource|string $file the path to the saved file as a string, or a valid file descriptor
      */
-    final protected function doSaveContent($file, string $partNumber): void
+    protected function doSaveContent($file, string $partNumber): void
     {
         $return = \imap_savebody(
             $this->resource->getStream(),

@@ -6,7 +6,7 @@ namespace Ddeboer\Imap\Message;
 
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 
-final class Headers extends Parameters
+class Headers extends Parameters
 {
     public function __construct(\stdClass $headers)
     {

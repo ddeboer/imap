@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Ddeboer\Imap\Message;
 
-final class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageInterface
+class EmbeddedMessage extends AbstractMessage implements EmbeddedMessageInterface
 {
-    private ?Headers $headers   = null;
-    private ?string $rawHeaders = null;
-    private ?string $rawMessage = null;
+    protected ?Headers $headers   = null;
+    protected ?string $rawHeaders = null;
+    protected ?string $rawMessage = null;
 
     public function getHeaders(): Headers
     {
