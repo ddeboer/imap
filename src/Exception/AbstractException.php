@@ -18,7 +18,6 @@ abstract class AbstractException extends \RuntimeException
         \E_USER_ERROR           => 'E_USER_ERROR',
         \E_USER_WARNING         => 'E_USER_WARNING',
         \E_USER_NOTICE          => 'E_USER_NOTICE',
-        \E_STRICT               => 'E_STRICT',
         \E_RECOVERABLE_ERROR    => 'E_RECOVERABLE_ERROR',
         \E_DEPRECATED           => 'E_DEPRECATED',
         \E_USER_DEPRECATED      => 'E_USER_DEPRECATED',
@@ -29,6 +28,8 @@ abstract class AbstractException extends \RuntimeException
         $errorType = '';
         if (isset(self::ERROR_LABELS[$code])) {
             $errorType = \sprintf('[%s] ', self::ERROR_LABELS[$code]);
+        } elseif ($code === 2048) {
+            $errorType = \PHP_VERSION_ID >= 70400 ? 'E_NOTICE' : 'E_STRICT';
         }
 
         $joinString      = "\n- ";
