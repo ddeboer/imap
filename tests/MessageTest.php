@@ -1130,6 +1130,17 @@ final class MessageTest extends AbstractTestCase
         self::assertNotNull($message->getCompleteBodyText());
     }
 
+    public function testNoHtmlAttachmentsAsMessagePart(): void
+    {
+        $this->mailbox->addMessage($this->getFixture('html_attachment'));
+
+        $message = $this->mailbox->getMessage(1);
+
+        self::assertCount(2, $message->getAllContentsBySubtype(Message::SUBTYPE_HTML));
+
+        self::assertNotNull($message->getCompleteBodyText());
+    }
+
     public function testImapMimeHeaderDecodeReturnsFalse(): void
     {
         $this->mailbox->addMessage($this->getFixture('imap_mime_header_decode_returns_false'));

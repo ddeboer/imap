@@ -1,0 +1,77 @@
+Return-Path: <from@there.com>
+Delivered-To: to@there.com
+Received: from example.com ([fe4d:6569:6363:6f57::c])
+	by 9585f23163db with LMTP
+	id SDlOOtTIPmhR4gMA+/h/WA
+	(envelope-from <from@there.com>)
+	for <to@there.com>; Tue, 03 Jun 2025 12:05:08 +0200
+X-Original-To: to@there.com
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_4E2C0CD3-6530-404F-B5F9-149D0F00F940"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6.1.2\))
+Subject: =?utf-8?Q?Test?=
+Message-Id: <E73218CE-61B9-450A-A516-B58718330C98@there.com>
+Date: Tue, 3 Jun 2025 12:04:48 +0200
+To: Receiver <to@there.com>
+X-Mailer: Apple Mail (2.3731.700.6.1.2)
+
+--Apple-Mail=_4E2C0CD3-6530-404F-B5F9-149D0F00F940
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+Redacted content
+
+www.there.com <http://www.there.com/>=EF=BF=BC
+
+
+--Apple-Mail=_4E2C0CD3-6530-404F-B5F9-149D0F00F940
+Content-Type: multipart/mixed;
+	boundary="Apple-Mail=_93422487-EFC0-4258-8132-30AFE6755CDF"
+
+
+--Apple-Mail=_93422487-EFC0-4258-8132-30AFE6755CDF
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; =
+charset=3Dutf-8"></head><body>
+Redacted content</body><=
+/html>=
+
+--Apple-Mail=_93422487-EFC0-4258-8132-30AFE6755CDF
+Content-Disposition: attachment;
+	filename=test.html
+Content-Type: text/html;
+	x-unix-mode=0644;
+	name="test.html"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html class=3D"no-js" lang=3D"de">
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3DUTF-8">
+    <meta charset=3D"utf-8">
+    <meta http-equiv=3D"x-ua-compatible" content=3D"ie=3Dedge">
+    <meta name=3D"viewport" content=3D"width=3Ddevice-width, =
+initial-scale=3D1.0" user-scalable=3D"no">
+    <title>Redacted Title</title>
+  </head>
+  <body id=3D"body">
+   Redacted content
+</body>
+</html>
+
+--Apple-Mail=_93422487-EFC0-4258-8132-30AFE6755CDF
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head><meta http-equiv="content-type" content="text/html; charset=us-ascii"></head><body><div>
+</div>
+<br></body></html>
+--Apple-Mail=_93422487-EFC0-4258-8132-30AFE6755CDF--
+
+--Apple-Mail=_4E2C0CD3-6530-404F-B5F9-149D0F00F940--

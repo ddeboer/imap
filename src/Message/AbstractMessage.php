@@ -223,6 +223,9 @@ abstract class AbstractMessage extends AbstractPart
         $parts     = [];
         /** @var PartInterface $part */
         foreach ($iterator as $part) {
+            if ('attachment' === $part->getDisposition()) {
+                continue;
+            }
             if ($subtype === $part->getSubtype()) {
                 $parts[] = $part->getDecodedContent();
             }
