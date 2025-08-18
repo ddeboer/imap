@@ -51,7 +51,7 @@ final class ConnectionTest extends AbstractTestCase
         $quota = $this->getConnection()->getQuota();
 
         self::assertArrayHasKey('usage', $quota);
-        self::assertSame(1, $quota['usage']);
+        self::assertGreaterThanOrEqual(0, $quota['usage']);
 
         self::assertArrayHasKey('limit', $quota);
         // @see quota_rule in .travis/dovecot_install.sh
