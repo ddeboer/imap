@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ddeboer\Imap\Message;
 
 /**
- * @extends \ArrayIterator<int|string, int|string|\stdClass[]>
+ * @extends \ArrayIterator<int|string, int|\stdClass[]|string>
  */
 class Parameters extends \ArrayIterator
 {

@@ -28,11 +28,6 @@ final class Connection implements ConnectionInterface
      */
     private ?array $mailboxNames = null;
 
-    /**
-     * Constructor.
-     *
-     * @throws \InvalidArgumentException
-     */
     public function __construct(ImapResourceInterface $resource, string $server)
     {
         $this->resource = $resource;
@@ -128,6 +123,8 @@ final class Connection implements ConnectionInterface
         if (false === $return) {
             throw new ImapNumMsgException('imap_num_msg failed');
         }
+
+        \assert(0 <= $return);
 
         return $return;
     }

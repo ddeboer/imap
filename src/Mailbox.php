@@ -45,7 +45,7 @@ final class Mailbox implements MailboxInterface
     {
         $encodedName = \mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8');
         $oldFullName = $this->getFullEncodedName();
-        $newFullName = \preg_replace('/' . \preg_quote(\mb_convert_encoding($this->name, 'UTF7-IMAP', 'UTF-8')) . '$/', $encodedName, $oldFullName);
+        $newFullName = \preg_replace('/' . \preg_quote(\mb_convert_encoding($this->name, 'UTF7-IMAP', 'UTF-8'), '/') . '$/', $encodedName, $oldFullName);
         \assert(null !== $newFullName);
 
         $return = \imap_renamemailbox($this->resource->getStream(), $oldFullName, $newFullName);
@@ -89,6 +89,8 @@ final class Mailbox implements MailboxInterface
         if (false === $return) {
             throw new ImapNumMsgException('imap_num_msg failed');
         }
+
+        \assert(0 <= $return);
 
         return $return;
     }
