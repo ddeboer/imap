@@ -59,12 +59,13 @@ final class MailboxTest extends AbstractTestCase
 
     public function testGetFullEncodedName(): void
     {
-        self::assertIsString($this->mailboxName);
+        $mailboxName = $this->mailboxName;
+        self::assertIsString($mailboxName);
 
         $fullEncodedName = $this->mailbox->getFullEncodedName();
         self::assertStringContainsString((string) \getenv('IMAP_SERVER_PORT'), $fullEncodedName);
-        self::assertStringNotContainsString($this->mailboxName, $fullEncodedName);
-        self::assertStringContainsString(\mb_convert_encoding($this->mailboxName, 'UTF7-IMAP', 'UTF-8'), $fullEncodedName);
+        self::assertStringNotContainsString($mailboxName, $fullEncodedName);
+        self::assertStringContainsString(\mb_convert_encoding($mailboxName, 'UTF7-IMAP', 'UTF-8'), $fullEncodedName);
         self::assertStringNotContainsString(':' . \getenv('IMAP_SERVER_PORT'), $this->mailbox->getEncodedName());
     }
 

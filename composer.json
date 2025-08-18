@@ -30,12 +30,12 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.64.0",
+        "friendsofphp/php-cs-fixer": "^3.86.0",
         "laminas/laminas-mail": "^2.25.1",
-        "phpstan/phpstan": "^1.12.4",
-        "phpstan/phpstan-phpunit": "^1.4.0",
-        "phpstan/phpstan-strict-rules": "^1.6.1",
-        "phpunit/phpunit": "^12.0.2"
+        "phpstan/phpstan": "^2.1.22",
+        "phpstan/phpstan-phpunit": "^2.0.7",
+        "phpstan/phpstan-strict-rules": "^2.0.6",
+        "phpunit/phpunit": "^12.3.5"
     },
     "autoload": {
         "psr-4": {

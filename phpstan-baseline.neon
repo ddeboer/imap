@@ -1,131 +1,139 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^If condition is always false\\.$#"
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
 			count: 1
 			path: src/ImapResource.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, array\\<int, Ddeboer\\\\Imap\\\\MessageInterface\\|int\\|string\\> given\\.$#"
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<int, Ddeboer\\Imap\\MessageInterface\|int\|string\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/Mailbox.php
 
 		-
-			message: "#^Call to function base64_decode\\(\\) requires parameter \\#2 to be true\\.$#"
+			message: '#^Call to function base64_decode\(\) requires parameter \#2 to be true\.$#'
+			identifier: function.strict
 			count: 1
 			path: src/Message/AbstractPart.php
 
 		-
-			message: "#^Method Ddeboer\\\\Imap\\\\Message\\\\AbstractPart\\:\\:getChildren\\(\\) return type with generic interface RecursiveIterator does not specify its types\\: TKey, TValue$#"
+			message: '#^Method Ddeboer\\Imap\\Message\\AbstractPart\:\:getChildren\(\) return type with generic interface RecursiveIterator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Message/AbstractPart.php
 
 		-
-			message: "#^Method Ddeboer\\\\Imap\\\\Message\\\\AbstractPart\\:\\:getChildren\\(\\) should return RecursiveIterator\\|null but returns mixed\\.$#"
+			message: '#^Property Ddeboer\\Imap\\Message\\AbstractPart\:\:\$bytes \(int\|string\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Message/AbstractPart.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			message: '#^Property Ddeboer\\Imap\\Message\\AbstractPart\:\:\$lines \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Message/AbstractPart.php
 
 		-
-			message: "#^Interface Ddeboer\\\\Imap\\\\Message\\\\PartInterface extends generic interface RecursiveIterator but does not specify its types\\: TKey, TValue$#"
+			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Message/AbstractPart.php
+
+		-
+			message: '#^Interface Ddeboer\\Imap\\Message\\PartInterface extends generic interface RecursiveIterator but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Message/PartInterface.php
 
 		-
-			message: "#^Call to function is_int\\(\\) with Ddeboer\\\\Imap\\\\MessageInterface will always evaluate to false\\.$#"
+			message: '#^Call to function is_int\(\) with Ddeboer\\Imap\\MessageInterface will always evaluate to false\.$#'
+			identifier: function.impossibleType
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Class ArrayIterator specifies template type TKey of interface Iterator as int but it's already specified as mixed\\.$#"
+			message: '#^Class ArrayIterator specifies template type TKey of interface Iterator as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Class ArrayIterator specifies template type TKey of interface Traversable as int but it's already specified as mixed\\.$#"
+			message: '#^Class ArrayIterator specifies template type TKey of interface Traversable as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Interface Iterator specifies template type TKey of interface Traversable as int but it's already specified as mixed\\.$#"
+			message: '#^Interface Iterator specifies template type TKey of interface Traversable as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 2
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Interface SeekableIterator specifies template type TKey of interface Iterator as int but it's already specified as mixed\\.$#"
+			message: '#^Interface SeekableIterator specifies template type TKey of interface Iterator as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Interface SeekableIterator specifies template type TKey of interface Traversable as int but it's already specified as mixed\\.$#"
+			message: '#^Interface SeekableIterator specifies template type TKey of interface Traversable as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of method ArrayIterator\\<int,Ddeboer\\\\Imap\\\\MessageInterface\\>\\:\\:__construct\\(\\) expects array\\<int, Ddeboer\\\\Imap\\\\MessageInterface\\>, array\\<int\\> given\\.$#"
+			message: '#^Parameter \#1 \$array of method ArrayIterator\<int,Ddeboer\\Imap\\MessageInterface\>\:\:__construct\(\) expects array\<int, Ddeboer\\Imap\\MessageInterface\>, array\<int\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Property Ddeboer\\\\Imap\\\\MessageIterator\\:\\:\\$resource is never read, only written\\.$#"
+			message: '#^Property Ddeboer\\Imap\\MessageIterator\:\:\$resource is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 1
 			path: src/MessageIterator.php
 
 		-
-			message: "#^Class ArrayIterator specifies template type TKey of interface Iterator as int but it's already specified as mixed\\.$#"
+			message: '#^Class ArrayIterator specifies template type TKey of interface Iterator as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/Test/RawMessageIterator.php
 
 		-
-			message: "#^Class ArrayIterator specifies template type TKey of interface Traversable as int but it's already specified as mixed\\.$#"
+			message: '#^Class ArrayIterator specifies template type TKey of interface Traversable as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/Test/RawMessageIterator.php
 
 		-
-			message: "#^Interface Iterator specifies template type TKey of interface Traversable as int but it's already specified as mixed\\.$#"
+			message: '#^Interface Iterator specifies template type TKey of interface Traversable as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 2
 			path: src/Test/RawMessageIterator.php
 
 		-
-			message: "#^Interface SeekableIterator specifies template type TKey of interface Iterator as int but it's already specified as mixed\\.$#"
+			message: '#^Interface SeekableIterator specifies template type TKey of interface Iterator as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/Test/RawMessageIterator.php
 
 		-
-			message: "#^Interface SeekableIterator specifies template type TKey of interface Traversable as int but it's already specified as mixed\\.$#"
+			message: '#^Interface SeekableIterator specifies template type TKey of interface Traversable as int but it''s already specified as mixed\.$#'
+			identifier: generics.interfaceConflict
 			count: 1
 			path: src/Test/RawMessageIterator.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertIsInt\\(\\) with int will always evaluate to true\\.$#"
-			count: 2
-			path: tests/ConnectionTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Ddeboer\\\\\\\\Imap\\\\\\\\Message\\\\\\\\EmailAddress' and Ddeboer\\\\Imap\\\\Message\\\\EmailAddress will always evaluate to true\\.$#"
-			count: 2
-			path: tests/MessageTest.php
-
-		-
-			message: "#^Cannot access property \\$parts on mixed\\.$#"
-			count: 2
-			path: tests/MessageTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) expects array\\|ArrayAccess\\<\\(int\\|string\\), mixed\\>, Ddeboer\\\\Imap\\\\Message\\\\Headers given\\.$#"
-			count: 3
-			path: tests/MessageTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayNotHasKey\\(\\) expects array\\|ArrayAccess\\<\\(int\\|string\\), mixed\\>, Ddeboer\\\\Imap\\\\Message\\\\Headers given\\.$#"
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Ddeboer\\\\Imap\\\\Message\\\\EmailAddress'' and Ddeboer\\Imap\\Message\\EmailAddress will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
 			count: 2
 			path: tests/MessageTest.php

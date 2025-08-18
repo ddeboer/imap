@@ -30,7 +30,7 @@ final class ConnectionTest extends AbstractTestCase
 
     public function testCount(): void
     {
-        self::assertIsInt($this->getConnection()->count());
+        self::assertSame(0, $this->getConnection()->count());
     }
 
     public function testPing(): void
@@ -51,7 +51,7 @@ final class ConnectionTest extends AbstractTestCase
         $quota = $this->getConnection()->getQuota();
 
         self::assertArrayHasKey('usage', $quota);
-        self::assertIsInt($quota['usage']);
+        self::assertSame(1, $quota['usage']);
 
         self::assertArrayHasKey('limit', $quota);
         // @see quota_rule in .travis/dovecot_install.sh

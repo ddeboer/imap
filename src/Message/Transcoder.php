@@ -313,6 +313,7 @@ final class Transcoder
 
         try {
             $decodedText = \mb_convert_encoding($text, 'UTF-8', $fromCharset);
+            \assert(false !== $decodedText);
         } catch (\Error $error) {
             $errorMessage = $error->getMessage();
         }
