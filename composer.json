@@ -21,8 +21,18 @@
             "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
         }
     ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/Slamdunk"
+        },
+        {
+            "type": "paypal",
+            "url": "https://paypal.me/filippotessarotto"
+        }
+    ],
     "require": {
-        "php": "~8.3.0 || ~8.4.0",
+        "php": "~8.4.0 || ~8.5.0",
         "ext-dom": "*",
         "ext-iconv": "*",
         "ext-imap": "*",
@@ -30,12 +40,13 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.86.0",
-        "laminas/laminas-mail": "^2.25.1",
-        "phpstan/phpstan": "^2.1.22",
+        "egulias/email-validator": "^4.0.4",
+        "friendsofphp/php-cs-fixer": "^3.89.0",
+        "phpstan/phpstan": "^2.1.31",
         "phpstan/phpstan-phpunit": "^2.0.7",
-        "phpstan/phpstan-strict-rules": "^2.0.6",
-        "phpunit/phpunit": "^12.3.5"
+        "phpstan/phpstan-strict-rules": "^2.0.7",
+        "phpunit/phpunit": "^12.4.1",
+        "symfony/mime": "^7.3.4"
     },
     "autoload": {
         "psr-4": {

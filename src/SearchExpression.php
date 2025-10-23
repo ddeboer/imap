@@ -35,9 +35,7 @@ final class SearchExpression implements ConditionInterface
      */
     public function toString(): string
     {
-        $conditions = \array_map(static function (ConditionInterface $condition): string {
-            return $condition->toString();
-        }, $this->conditions);
+        $conditions = \array_map(static fn (ConditionInterface $condition): string => $condition->toString(), $this->conditions);
 
         return \implode(' ', $conditions);
     }

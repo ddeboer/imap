@@ -7,9 +7,9 @@ namespace Ddeboer\Imap\Tests;
 use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Server;
-use Laminas\Mail;
-use Laminas\Mime;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\TextPart;
 
 abstract class AbstractTestCase extends TestCase
 {
@@ -39,7 +39,7 @@ abstract class AbstractTestCase extends TestCase
 
     final protected function createMailbox(?ConnectionInterface $connection = null): MailboxInterface
     {
-        $connection        = $connection ?? $this->getConnection();
+        $connection ??= $this->getConnection();
         $this->mailboxName = \uniqid('mailbox_' . self::SPECIAL_CHARS);
         $this->altName     = \uniqid('mailbox_' . self::SPECIAL_CHARS);
 
@@ -54,23 +54,18 @@ abstract class AbstractTestCase extends TestCase
         ?string $charset = null,
         ?string $overwriteCharset = null,
     ): void {
-        $bodyPart = new Mime\Part($contents ?? \uniqid($subject));
-        $bodyPart->setType(Mime\Mime::TYPE_TEXT);
-        if (null !== $encoding) {
-            $bodyPart->setEncoding($encoding);
-        }
-        if (null !== $charset) {
-            $bodyPart->setCharset($charset);
-        }
+        $textPart = new TextPart(
+            $contents ?? \uniqid($subject),
+            $charset,
+            'plain',
+            $encoding,
+        );
 
-        $bodyMessage = new Mime\Message();
-        $bodyMessage->addPart($bodyPart);
-
-        $message = new Mail\Message();
-        $message->addFrom('from@here.com');
-        $message->addTo('to@there.com');
-        $message->setSubject($subject);
-        $message->setBody($bodyMessage);
+        $message = new Email();
+        $message->from('from@here.com');
+        $message->to('to@there.com');
+        $message->subject($subject);
+        $message->setBody($textPart);
 
         $messageString = $message->toString();
         if (null !== $overwriteCharset) {

@@ -317,13 +317,13 @@ abstract class AbstractPart implements PartInterface
     }
 
     #[\ReturnTypeWillChange]
-    final public function next()
+    final public function next(): void
     {
         ++$this->key;
     }
 
     #[\ReturnTypeWillChange]
-    final public function rewind()
+    final public function rewind(): void
     {
         $this->key = 0;
     }
@@ -405,7 +405,7 @@ abstract class AbstractPart implements PartInterface
      */
     private static function isAttachment(\stdClass $part): bool
     {
-        if (isset(self::TYPES_MAP[$part->type]) && self::TYPE_MULTIPART === self::TYPES_MAP[$part->type]) {
+        if (\is_int($part->type) && isset(self::TYPES_MAP[$part->type]) && self::TYPE_MULTIPART === self::TYPES_MAP[$part->type]) {
             return false;
         }
 

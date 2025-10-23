@@ -137,3 +137,15 @@ parameters:
 			identifier: staticMethod.alreadyNarrowedType
 			count: 2
 			path: tests/MessageTest.php
+
+		-
+			message: '#^Offset string\|null might not exist on array\{''data\.xml''\: ''PHhtbC8\+'', ''postacert\.eml''\: ''test\-content'', ''smime\.p7s''\: ''MQ\=\=''\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/MessageTest.php
+
+		-
+			message: '#^Offset string\|null might not exist on array\{''first\.eml''\: ''Subject\: FIRST'', ''chrome\.png''\: ''ZFM4jELaoSdLtElJrUj…'', ''second\.eml''\: ''Subject\: SECOND''\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/MessageTest.php

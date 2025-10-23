@@ -46,9 +46,7 @@ final class ImapResource implements ImapResourceInterface
             return;
         }
 
-        \set_error_handler(static function (): bool {
-            return true;
-        });
+        \set_error_handler(static fn (): bool => true);
 
         \imap_reopen($this->resource, $this->mailbox->getFullEncodedName());
 
