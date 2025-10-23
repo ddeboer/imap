@@ -78,9 +78,7 @@ final class Message extends Message\AbstractMessage implements MessageInterface
         }
         $this->messageNumberVerified = true;
 
-        \set_error_handler(static function (): bool {
-            return true;
-        });
+        \set_error_handler(static fn (): bool => true);
 
         $msgno = \imap_msgno($this->resource->getStream(), $messageNumber);
 

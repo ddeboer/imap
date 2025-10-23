@@ -23,10 +23,11 @@ use Ddeboer\Imap\Message\SimplePart;
 use Ddeboer\Imap\Message\Transcoder;
 use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIterator;
-use Laminas\Mail;
-use Laminas\Mime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\Multipart\MixedPart;
+use Symfony\Component\Mime\Part\TextPart;
 
 #[CoversClass(Connection::class)]
 #[CoversClass(Message::class)]
@@ -42,10 +43,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 final class MessageTest extends AbstractTestCase
 {
     private const ENCODINGS = [
-        Mime\Mime::ENCODING_7BIT,
-        Mime\Mime::ENCODING_8BIT,
-        Mime\Mime::ENCODING_QUOTEDPRINTABLE,
-        Mime\Mime::ENCODING_BASE64,
+        'quoted-printable',
+        'base64',
+        '8bit',
     ];
 
     private const CHARSETS = [
@@ -136,15 +136,11 @@ final class MessageTest extends AbstractTestCase
         self::assertIsArray($aliases);
 
         $keys        = \array_map('strval', \array_keys($aliases));
-        $loweredKeys = \array_map(static function (string $charset): string {
-            return \strtolower($charset);
-        }, $keys);
+        $loweredKeys = \array_map(static fn (string $charset): string => \strtolower($charset), $keys);
 
         self::assertSame($loweredKeys, $keys, 'Charset aliases key must be lowercase');
 
-        $sameAliases = \array_filter($aliases, static function ($value, $key): bool {
-            return \strtolower((string) $value) === \strtolower((string) $key);
-        }, \ARRAY_FILTER_USE_BOTH);
+        $sameAliases = \array_filter($aliases, static fn ($value, $key): bool => \strtolower((string) $value) === \strtolower((string) $key), \ARRAY_FILTER_USE_BOTH);
 
         self::assertSame([], $sameAliases, 'There must not be self-referencing aliases');
 
@@ -916,23 +912,22 @@ final class MessageTest extends AbstractTestCase
     {
         $parts = [];
         foreach (self::CHARSETS as $charset => $charList) {
-            $part = new Mime\Part(\mb_convert_encoding($charList, $charset, 'UTF-8'));
-            $part->setType('text/xml');
-            $part->setEncoding(Mime\Mime::ENCODING_BASE64);
-            $part->setCharset($charset);
-            $part->setDisposition(Mime\Mime::DISPOSITION_ATTACHMENT);
-            $part->setFileName(\sprintf('%s.xml', $charset));
+            $part = new TextPart(
+                \mb_convert_encoding($charList, $charset, 'UTF-8'),
+                $charset,
+                'xml',
+                'base64',
+            );
+            $part->setName(\sprintf('%s.xml', $charset));
+            $part->setDisposition('attachment');
             $parts[] = $part;
         }
 
-        $mimeMessage = new Mime\Message();
-        $mimeMessage->setParts($parts);
-
-        $message = new Mail\Message();
-        $message->addFrom('from@here.com');
-        $message->addTo('to@there.com');
-        $message->setSubject('Charsets');
-        $message->setBody($mimeMessage);
+        $message = new Email();
+        $message->from('from@here.com');
+        $message->to('to@there.com');
+        $message->subject('Charsets');
+        $message->setBody(new MixedPart(...$parts));
 
         $messageString = $message->toString();
         $messageString = \preg_replace('/; charset=.+/', '', $messageString);

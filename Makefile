@@ -1,4 +1,4 @@
-PHP_DOCKER_VERSION := thecodingmachine/php:8.3-v4-cli
+DOCKER_TAG := ddeboer-imap-local-dev
 PHP_BIN := docker run -it --rm \
 	--network=ddeboer_imap_network \
 	--env IMAP_SERVER_NAME=ddeboer_imap_server \
@@ -8,7 +8,8 @@ PHP_BIN := docker run -it --rm \
 	--env PHP_EXTENSION_IMAP=1 \
 	--env PHP_EXTENSION_PCOV=1 \
 	-v "$(PWD)":"$(PWD)" -w "$(PWD)" \
-	$(PHP_DOCKER_VERSION)
+	-u "$(shell id -u)":"$(shell id -g)" \
+	$(DOCKER_TAG)
 
 all: csfix static-analysis test
 	@echo "Done."
@@ -16,6 +17,7 @@ all: csfix static-analysis test
 vendor: composer.json
 	$(PHP_BIN) composer update
 	$(PHP_BIN) composer bump
+	$(PHP_BIN) composer-normalize
 	touch vendor
 
 .PHONY: csfix
@@ -24,7 +26,7 @@ csfix: vendor
 
 .PHONY: static-analysis
 static-analysis: vendor
-	$(PHP_BIN) vendor/bin/phpstan analyse $(PHPSTAN_FLAGS)
+	$(PHP_BIN) vendor/bin/phpstan analyse --memory-limit=256M $(PHPSTAN_FLAGS)
 
 wait-for-it:
 	wget -O wait-for-it "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh"
@@ -32,7 +34,7 @@ wait-for-it:
 
 .PHONY: start-imap-server
 start-imap-server: wait-for-it
-	docker pull $(PHP_DOCKER_VERSION)
+	docker build -t $(DOCKER_TAG) .
 	docker pull antespi/docker-imap-devel:latest
 	docker network create ddeboer_imap_network
 	docker run \

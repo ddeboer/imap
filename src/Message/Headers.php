@@ -58,7 +58,7 @@ final class Headers extends Parameters
                 \assert(\is_array($value));
                 foreach ($value as $address) {
                     if (isset($address->mailbox)) {
-                        $address->host     = $address->host ?? null;
+                        $address->host ??= null;
                         $address->personal = isset($address->personal) ? $this->decode($address->personal) : null;
                     }
                 }
