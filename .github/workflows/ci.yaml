@@ -75,15 +75,7 @@ jobs:
       - name: "Run tests with coverage"
         if: ${{ matrix.code-coverage != 'none' }}
         timeout-minutes: 3
-        run: "vendor/bin/phpunit --no-coverage  --no-logging --coverage-clover=coverage.xml"
-
-      - name: "Send code coverage report to Codecov.io"
-        if: ${{ matrix.code-coverage != 'none' }}
-        uses: "codecov/codecov-action@v5"
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
-          fail_ci_if_error: true
+        run: "vendor/bin/phpunit --no-coverage  --no-logging --coverage-text"
 
   coding-standards:
     name: "Coding Standards"
