@@ -1,0 +1,31 @@
+Return-Path: <b.schur@nodus-it.de>
+Delivered-To: b.schur@nodus-it.de
+To: <info@nodus-it.de>
+From: Nodus IT | Bastian Schur <b.schur@nodus-it.de>
+Subject: Test #1
+Message-ID: <9f2f56ac-39e5-83a9-3cc6-947b300a798d@nodus-it.de>
+Date: Thu, 14 Nov 2019 11:23:39 +0100
+Content-Type: multipart/mixed;
+    boundary="------------A14EB21F2391734320F0CC3C"
+Content-Language: en-US
+MIME-Version: 1.0
+
+--------------A14EB21F2391734320F0CC3C
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+
+Hi
+
+--------------A14EB21F2391734320F0CC3C
+Content-Type: text/csv; charset="UTF-8";
+    name="=?UTF-8?Q?Z=c3=a4hlerstanderfassung=5f2019=5f=5f=5fTest1=2ecsv?="
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+    filename*0*="UTF-8''%5A%C3%A4%68%6C%65%72%73%74%61%6E%64%65%72%66%61%73%73";
+    filename*1*="%75%6E%67%5F%32%30%31%39%5F%5F%5F%54%65%73%74%31%2E%63%73%76"
+
+Nummer,Standort,Hersteller,Ger=C3=A4t,Seriennummer,S/W,Farbe,Scans,Datum
+5761,"Mustra=C3=9Fe 5, 12345 Musterhausen",Brother,ABC,123456789,20000,3000=
+0,12345,10.11.19
+
+--------------A14EB21F2391734320F0CC3C--
