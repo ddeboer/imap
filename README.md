@@ -3,7 +3,6 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/ddeboer/imap.svg)](https://packagist.org/packages/ddeboer/imap)
 [![Downloads](https://img.shields.io/packagist/dt/ddeboer/imap.svg)](https://packagist.org/packages/ddeboer/imap)
 [![Integrate](https://github.com/ddeboer/imap/workflows/CI/badge.svg)](https://github.com/ddeboer/imap/actions)
-[![Code Coverage](https://codecov.io/gh/ddeboer/imap/coverage.svg?branch=master)](https://codecov.io/gh/ddeboer/imap?branch=master)
 
 A PHP IMAP library to read and process e-mails over IMAP protocol, built with robust Object-Oriented architecture.
 
