@@ -41,12 +41,12 @@
     },
     "require-dev": {
         "egulias/email-validator": "^4.0.4",
-        "friendsofphp/php-cs-fixer": "^3.89.0",
-        "phpstan/phpstan": "^2.1.31",
-        "phpstan/phpstan-phpunit": "^2.0.7",
-        "phpstan/phpstan-strict-rules": "^2.0.7",
-        "phpunit/phpunit": "^12.4.1",
-        "symfony/mime": "^7.3.4 || ^8.0.0"
+        "friendsofphp/php-cs-fixer": "^3.95.10",
+        "phpstan/phpstan": "^2.2.2",
+        "phpstan/phpstan-phpunit": "^2.0.16",
+        "phpstan/phpstan-strict-rules": "^2.0.11",
+        "phpunit/phpunit": "^12.5.30",
+        "symfony/mime": "^7.3.4 || ^8.1.0"
     },
     "autoload": {
         "psr-4": {

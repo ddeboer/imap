@@ -82,14 +82,14 @@ final class MailboxTest extends AbstractTestCase
     public function testGetMessages(): void
     {
         $directMethodInc = 0;
-        foreach ($this->mailbox->getMessages() as $message) {
+        foreach ($this->mailbox->getMessages() as $message1) {
             ++$directMethodInc;
         }
 
         self::assertSame(3, $directMethodInc);
 
         $aggregateIteratorMethodInc = 0;
-        foreach ($this->mailbox as $message) {
+        foreach ($this->mailbox as $message2) {
             ++$aggregateIteratorMethodInc;
         }
 
@@ -99,19 +99,19 @@ final class MailboxTest extends AbstractTestCase
     public function testGetMessageSequence(): void
     {
         $inc = 0;
-        foreach ($this->mailbox->getMessageSequence('1:*') as $message) {
+        foreach ($this->mailbox->getMessageSequence('1:*') as $message1) {
             ++$inc;
         }
         self::assertSame(3, $inc);
 
         $inc = 0;
-        foreach ($this->mailbox->getMessageSequence('1:2') as $message) {
+        foreach ($this->mailbox->getMessageSequence('1:2') as $message2) {
             ++$inc;
         }
 
         self::assertSame(2, $inc);
         $inc = 0;
-        foreach ($this->mailbox->getMessageSequence('99998:99999') as $message) {
+        foreach ($this->mailbox->getMessageSequence('99998:99999') as $message3) {
             ++$inc;
         }
         self::assertSame(0, $inc);
