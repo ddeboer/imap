@@ -1,4 +1,4 @@
-FROM php:8.4
+FROM php:8.5
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
