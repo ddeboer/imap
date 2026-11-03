@@ -8,7 +8,7 @@ $config->setRules([
     '@Symfony'                                  => true,
     '@Symfony:risky'                            => true,
     '@PHPUnit10x0Migration:risky'               => true,
-    '@PHP8x4Migration'                          => true,
+    '@PHP8x5Migration'                          => true,
     '@PHP8x2Migration:risky'                    => true,
     'align_multiline_comment'                   => ['comment_type' => 'all_multiline'],
     'array_indentation'                         => true,

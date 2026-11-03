@@ -822,8 +822,9 @@ final class MessageTest extends AbstractTestCase
         ];
 
         foreach ($attachments as $attachment) {
-            $expectedContains = $expected[$attachment->getFilename()];
-            self::assertStringContainsString($expectedContains, $attachment->getContent(), \sprintf('Attachment filename: %s', $attachment->getFilename()));
+            $filename = $attachment->getFilename();
+            self::assertNotNull($filename);
+            self::assertStringContainsString($expected[$filename], $attachment->getContent(), \sprintf('Attachment filename: %s', $filename));
         }
     }
 
@@ -968,7 +969,9 @@ final class MessageTest extends AbstractTestCase
 
         $parts = [];
         foreach ($message->getParts() as $part) {
-            $parts[$part->getSubtype()] = $part;
+            $subtype = $part->getSubtype();
+            self::assertNotNull($subtype);
+            $parts[$subtype] = $part;
         }
 
         self::assertArrayHasKey(PartInterface::SUBTYPE_PLAIN, $parts);
@@ -1018,7 +1021,9 @@ final class MessageTest extends AbstractTestCase
         $attachments = $message->getAttachments();
         self::assertCount(3, $attachments);
         foreach ($attachments as $attachment) {
-            self::assertStringContainsString($expected[$attachment->getFilename()], $attachment->getContent());
+            $filename = $attachment->getFilename();
+            self::assertNotNull($filename);
+            self::assertStringContainsString($expected[$filename], $attachment->getContent());
         }
     }
 
